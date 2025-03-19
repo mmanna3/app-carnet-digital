@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/app/hooks/use-auth';
+import CommonStyles from '@/constants/CommonStyles';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -38,39 +39,45 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Liga App Delegados</Text>
-        
-        <TextInput
-          style={styles.input}
-          placeholder="Usuario"
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-          editable={!loading}
-        />
-        
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          editable={!loading}
-        />
-        
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          )}
-        </TouchableOpacity>
+      <Text style={styles.title}>Carnet virtual</Text>
+      <Text style={styles.subtitulo}>
+        ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la
+        administración de la liga.
+      </Text>
+      
+      <TextInput
+        style={CommonStyles.input}
+        placeholder="Usuario"
+        placeholderTextColor="#555"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+        editable={!loading}
+      />
+      
+      <TextInput
+        style={CommonStyles.input}
+        placeholder="Contraseña"
+        placeholderTextColor="#555"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        editable={!loading}
+      />
+      
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      
+      <TouchableOpacity 
+        style={[styles.button, loading && styles.buttonDisabled]}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+        )}
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -81,18 +88,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    padding: 20,
+    // maxWidth: 500,
   },
   formContainer: {
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 300,
     alignSelf: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 30,
     textAlign: 'center',
+    color: 'black'
+  },
+  subtitulo: {
+    fontSize: 20,
+    marginTop: 20,
+    marginBottom: 30,
+    // marginHorizontal: 30,
+    textAlign: "center",
+    color: "black",
   },
   input: {
     height: 50,
