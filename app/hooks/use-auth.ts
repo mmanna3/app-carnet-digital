@@ -4,6 +4,7 @@ import { LoginDTO, LoginResponseDTO } from '../api/clients'
 import { api } from '../api/api'
 
 interface AuthState {
+  usuario: string | null
   token: string | null
   isAuthenticated: boolean
   login: (usuario: string, password: string) => Promise<LoginResponseDTO>
@@ -13,6 +14,7 @@ interface AuthState {
 export const useAuth = create<AuthState>()(
   persist(
     (set) => ({
+      usuario: null,
       token: null,
       isAuthenticated: false,
       login: async (usuario: string, password: string) => {
@@ -24,7 +26,7 @@ export const useAuth = create<AuthState>()(
           const response = await api.login(loginRequest)
       
           if (response.exito) {
-            set({ token: response.token, isAuthenticated: true })
+            set({ token: response.token, usuario: usuario, isAuthenticated: true })
           }
       
           return response
