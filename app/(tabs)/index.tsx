@@ -1,27 +1,40 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
-import { useAuth } from '@/app/hooks/use-auth';
+import React from 'react';
+import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
+import { EquipoBaseDTO } from '../api/clients';
 
-export default function TabOneScreen() {
-  const { usuario } = useAuth();
-
+export default function EquiposScreen() {
   const { data, isLoading, isError } = useApiQuery({
     key: ['equipos'],
-    fn: async () =>
-      await api.equiposDelDelegado(),
-    transformarResultado: (resultado) => {console.log(resultado)}
-  })
+    fn: async () => await api.equiposDelDelegado(),
+    transformarResultado: (resultado) => resultado
+  });
 
+  if (isLoading) {
+    return <Text>Cargando equipos...</Text>;
+  }
+
+  if (isError) {
+    return <Text>Error al cargar los equipos.</Text>;
+  }
+
+  const renderItem = ({ item }: { item: EquipoBaseDTO }) => (
+    <TouchableOpacity onPress={() => console.log(item.id)} style={styles.item}>
+      <Text style={styles.title}>{item.nombre}</Text>
+      <Text style={styles.subtitle}>Torneo: {item.torneo}</Text>
+    </TouchableOpacity>
+  );
+
+  if (data)
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text style={styles.userText}>Usuario: {usuario || 'No hay usuario'}</Text>
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={styles.titulo}>{data.club}</Text>
+      <FlatList
+        data={data.equipos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id!.toString()}
+      />
     </View>
   );
 }
@@ -29,20 +42,32 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f8f8f8',
+    padding: 10,
   },
-  title: {
-    fontSize: 20,
+  item: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  titulo: {
+    padding: 20,
+    fontSize: 24,
     fontWeight: 'bold',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-  userText: {
-    fontSize: 16,
-    marginTop: 20,
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
   },
 });
