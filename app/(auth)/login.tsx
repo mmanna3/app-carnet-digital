@@ -22,15 +22,15 @@ export default function LoginScreen() {
     try {
       setError('');
       setLoading(true);
-      const success = await login(username, password);
+      const respuesta = await login(username, password);
       
-      if (success) {
+      if (respuesta.exito) {
         router.replace('/(tabs)');
       } else {
-        setError('Usuario o contraseña incorrectos');
+        setError(respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.');
       }
     } catch (err) {
-      setError('Error al intentar iniciar sesión');
+      setError('Error comunicándose con el servidor');
       console.error(err);
     } finally {
       setLoading(false);
