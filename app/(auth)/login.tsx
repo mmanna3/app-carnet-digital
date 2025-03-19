@@ -3,6 +3,7 @@ import { View, TextInput, TouchableOpacity, Text, StyleSheet, ActivityIndicator 
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/app/hooks/use-auth';
 import CommonStyles from '@/constants/CommonStyles';
+import Colores from '@/constants/Colores';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -39,7 +40,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-      <Text style={styles.title}>Carnet virtual</Text>
+      <Text style={styles.title}>Carnet digital</Text>
       <Text style={styles.subtitulo}>
         ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la
         administración de la liga.
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: Colores.verde,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
