@@ -84,6 +84,7 @@ function RootLayoutNav() {
           <Stack.Screen 
             name="modal" 
             options={{ 
+              headerShown: false,
               presentation: 'modal',
               gestureEnabled: false // Prevent swipe to dismiss
             }} 
