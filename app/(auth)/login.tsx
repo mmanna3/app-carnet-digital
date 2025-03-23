@@ -25,7 +25,7 @@ export default function LoginScreen() {
       const respuesta = await login(username, password);
       
       if (respuesta.exito) {
-        router.replace('/(tabs)');
+        router.push('/modal');
       } else {
         setError(respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.');
       }

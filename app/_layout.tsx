@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { useAuth } from './hooks/use-auth';
+import { useTeam } from './hooks/use-team';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export {
@@ -27,16 +28,20 @@ function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+  const { selectedTeamId } = useTeam();
 
   useEffect(() => {
     const inAuthGroup = segments[0] === '(auth)';
+    const inModal = segments[0] === 'modal';
     
     if (!isAuthenticated && !inAuthGroup) {
       router.replace('/(auth)/login');
     } else if (isAuthenticated && inAuthGroup) {
-      router.replace('/(tabs)');
+      router.replace('/modal');
+    } else if (isAuthenticated && !selectedTeamId && !inModal) {
+      router.replace('/modal');
     }
-  }, [isAuthenticated, segments]);
+  }, [isAuthenticated, segments, selectedTeamId]);
 }
 
 export default function RootLayout() {
@@ -72,13 +77,19 @@ function RootLayoutNav() {
 
   return (
     <QueryClientProvider client={queryClient}>
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="modal" 
+            options={{ 
+              presentation: 'modal',
+              gestureEnabled: false // Prevent swipe to dismiss
+            }} 
+          />
+        </Stack>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

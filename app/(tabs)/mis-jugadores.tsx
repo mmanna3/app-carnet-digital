@@ -1,22 +1,30 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import useApiQuery from '../../api/custom-hooks/use-api-query';
-import { api } from '../../api/api';
-import { CarnetDigitalDTO } from '../../api/clients';
+import useApiQuery from '../api/custom-hooks/use-api-query';
+import { api } from '../api/api';
+import { CarnetDigitalDTO } from '../api/clients';
+import { useTeam } from '../hooks/use-team';
 
-export default function EquipoDetalleScreen() {
-  const { id } = useLocalSearchParams();
-  const equipoId = typeof id === 'string' ? parseInt(id) : Array.isArray(id) ? parseInt(id[0]) : undefined;
-
+export default function MisJugadoresScreen() {
+  const { selectedTeamId } = useTeam();
+  
   const { data: jugadores, isLoading, isError } = useApiQuery({
-    key: ['carnets', equipoId],
+    key: ['carnets', selectedTeamId],
     fn: async () => {
-      if (!equipoId) throw new Error('ID de equipo inválido');
-      return await api.carnets(equipoId);
+      if (!selectedTeamId) throw new Error('No hay equipo seleccionado');
+      return await api.carnets(selectedTeamId);
     },
-    transformarResultado: (resultado) => resultado
+    transformarResultado: (resultado) => resultado,
+    activado: !!selectedTeamId
   });
+
+  if (!selectedTeamId) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.mensaje}>Debes seleccionar un equipo primero</Text>
+      </View>
+    );
+  }
 
   if (isLoading) {
     return <Text style={styles.mensaje}>Cargando jugadores...</Text>;
