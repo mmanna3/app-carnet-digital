@@ -4,20 +4,20 @@ import { router } from 'expo-router';
 import useApiQuery from './api/custom-hooks/use-api-query';
 import { api } from './api/api';
 import { EquipoBaseDTO } from './api/clients';
-import { useTeam } from './hooks/use-team';
+import { useEquipoStore } from './hooks/use-equipo-store';
 
-export default function TeamSelectionModal() {
+export default function TeamSelectionScreen() {
   const { data, isLoading, isError } = useApiQuery({
     key: ['equipos'],
     fn: async () => await api.equiposDelDelegado(),
     transformarResultado: (resultado) => resultado
   });
 
-  const { setSelectedTeam } = useTeam();
+  const { seleccionarEquipo } = useEquipoStore();
 
   const handleTeamSelect = (team: EquipoBaseDTO) => {
-    if (team.id) {
-      setSelectedTeam(team.id);
+    if (team.id && team.nombre) {
+      seleccionarEquipo(team.id, team.nombre);
       router.replace('/mis-jugadores');
     }
   };
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 4,
   },
-});
+}); 

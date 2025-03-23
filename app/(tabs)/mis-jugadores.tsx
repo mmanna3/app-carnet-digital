@@ -3,22 +3,22 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '../api/clients';
-import { useTeam } from '../hooks/use-team';
+import { useEquipoStore } from '../hooks/use-equipo-store';
 
 export default function MisJugadoresScreen() {
-  const { selectedTeamId } = useTeam();
+  const { equipoSeleccionadoId } = useEquipoStore();
   
   const { data: jugadores, isLoading, isError } = useApiQuery({
-    key: ['carnets', selectedTeamId],
+    key: ['carnets', equipoSeleccionadoId],
     fn: async () => {
-      if (!selectedTeamId) throw new Error('No hay equipo seleccionado');
-      return await api.carnets(selectedTeamId);
+      if (!equipoSeleccionadoId) throw new Error('No hay equipo seleccionado');
+      return await api.carnets(equipoSeleccionadoId);
     },
     transformarResultado: (resultado) => resultado,
-    activado: !!selectedTeamId
+    activado: !!equipoSeleccionadoId
   });
 
-  if (!selectedTeamId) {
+  if (!equipoSeleccionadoId) {
     return (
       <View style={styles.container}>
         <Text style={styles.mensaje}>Debes seleccionar un equipo primero</Text>

@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import Colors from '@/constants/Colores';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useEquipoStore } from '../hooks/use-equipo-store';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -29,6 +30,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { equipoSeleccionadoNombre } = useEquipoStore();
 
   return (
     <Tabs
@@ -39,7 +41,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="mis-jugadores"
         options={{
-          title: 'Mis Jugadores',
+          title: equipoSeleccionadoNombre || 'Mis Jugadores',
+          tabBarLabel: 'Mis Jugadores',
           tabBarIcon: ({ color }) => <FontAwesome name="users" size={24} color={color} />,
         }}
       />
@@ -53,7 +56,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="pendientes"
         options={{
-          title: 'Pendientes',
+          title: equipoSeleccionadoNombre || 'Pendientes',
+          tabBarLabel: 'Pendientes',
           tabBarIcon: ({ color }) => <FontAwesome name="clock-o" size={24} color={color} />,
         }}
       />

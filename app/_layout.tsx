@@ -8,7 +8,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { useAuth } from './hooks/use-auth';
-import { useTeam } from './hooks/use-team';
+import { useEquipoStore } from './hooks/use-equipo-store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export {
@@ -28,20 +28,20 @@ function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
   const { isAuthenticated } = useAuth();
-  const { selectedTeamId } = useTeam();
+  const { equipoSeleccionadoId } = useEquipoStore();
 
   useEffect(() => {
     const inAuthGroup = segments[0] === '(auth)';
-    const inModal = segments[0] === 'modal';
+    const inSeleccionEquipo = segments[0] === 'seleccion-de-equipo';
     
     if (!isAuthenticated && !inAuthGroup) {
       router.replace('/(auth)/login');
     } else if (isAuthenticated && inAuthGroup) {
-      router.replace('/modal');
-    } else if (isAuthenticated && !selectedTeamId && !inModal) {
-      router.replace('/modal');
+      router.replace('/seleccion-de-equipo');
+    } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
+      router.replace('/seleccion-de-equipo');
     }
-  }, [isAuthenticated, segments, selectedTeamId]);
+  }, [isAuthenticated, segments, equipoSeleccionadoId]);
 }
 
 export default function RootLayout() {
@@ -72,7 +72,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-
   const queryClient = new QueryClient()
 
   return (
@@ -82,7 +81,7 @@ function RootLayoutNav() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen 
-            name="modal" 
+            name="seleccion-de-equipo" 
             options={{ 
               headerShown: false,
               presentation: 'modal',
