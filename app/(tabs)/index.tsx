@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
 import { EquipoBaseDTO } from '../api/clients';
@@ -20,7 +21,10 @@ export default function EquiposScreen() {
   }
 
   const renderItem = ({ item }: { item: EquipoBaseDTO }) => (
-    <TouchableOpacity onPress={() => console.log(item.id)} style={styles.item}>
+    <TouchableOpacity 
+      onPress={() => router.push(`/equipo/${item.id}`)} 
+      style={styles.item}
+    >
       <Text style={styles.title}>{item.nombre}</Text>
       <Text style={styles.subtitle}>Torneo: {item.torneo}</Text>
     </TouchableOpacity>
