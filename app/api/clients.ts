@@ -157,7 +157,7 @@ export class Client {
      * @param equipoId (optional) 
      * @return Success
      */
-    jugadoresPendientes(equipoId: number | undefined): Promise<CarnetDigitalDTO[]> {
+    jugadoresPendientes(equipoId: number | undefined): Promise<CarnetDigitalPendienteDTO[]> {
         let url_ = this.baseUrl + "/api/carnet-digital/jugadores-pendientes?";
         if (equipoId === null)
             throw new Error("The parameter 'equipoId' cannot be null.");
@@ -177,7 +177,7 @@ export class Client {
         });
     }
 
-    protected processJugadoresPendientes(response: Response): Promise<CarnetDigitalDTO[]> {
+    protected processJugadoresPendientes(response: Response): Promise<CarnetDigitalPendienteDTO[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -187,7 +187,7 @@ export class Client {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(CarnetDigitalDTO.fromJS(item));
+                    result200!.push(CarnetDigitalPendienteDTO.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -199,7 +199,7 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<CarnetDigitalDTO[]>(null as any);
+        return Promise.resolve<CarnetDigitalPendienteDTO[]>(null as any);
     }
 
     /**
@@ -1731,6 +1731,74 @@ export interface ICarnetDigitalDTO {
     fotoCarnet?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
+}
+
+export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
+    id?: number;
+    dni!: string;
+    nombre!: string;
+    apellido!: string;
+    fechaNacimiento!: Date;
+    fotoCarnet?: string | undefined;
+    torneo?: string | undefined;
+    estado?: number;
+    motivo?: string | undefined;
+
+    constructor(data?: ICarnetDigitalPendienteDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dni = _data["dni"];
+            this.nombre = _data["nombre"];
+            this.apellido = _data["apellido"];
+            this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
+            this.fotoCarnet = _data["fotoCarnet"];
+            this.torneo = _data["torneo"];
+            this.estado = _data["estado"];
+            this.motivo = _data["motivo"];
+        }
+    }
+
+    static fromJS(data: any): CarnetDigitalPendienteDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CarnetDigitalPendienteDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dni"] = this.dni;
+        data["nombre"] = this.nombre;
+        data["apellido"] = this.apellido;
+        data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
+        data["fotoCarnet"] = this.fotoCarnet;
+        data["torneo"] = this.torneo;
+        data["estado"] = this.estado;
+        data["motivo"] = this.motivo;
+        return data;
+    }
+}
+
+export interface ICarnetDigitalPendienteDTO {
+    id?: number;
+    dni: string;
+    nombre: string;
+    apellido: string;
+    fechaNacimiento: Date;
+    fotoCarnet?: string | undefined;
+    torneo?: string | undefined;
+    estado?: number;
+    motivo?: string | undefined;
 }
 
 export class ClubDTO implements IClubDTO {
