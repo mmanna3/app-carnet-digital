@@ -44,45 +44,73 @@ export default function MisJugadoresScreen() {
     return año.slice(-2);
   };
 
+  const obtenerAñoCompleto = (fechaNacimiento: Date) => {
+    return new Date(fechaNacimiento).getFullYear();
+  };
+
+  // Agrupar jugadores por categoría
+  const jugadoresPorCategoria = jugadores.reduce((acc, jugador) => {
+    const año = obtenerAñoCompleto(jugador.fechaNacimiento);
+    if (!acc[año]) {
+      acc[año] = [];
+    }
+    acc[año].push(jugador);
+    return acc;
+  }, {} as Record<number, CarnetDigitalDTO[]>);
+
+  // Ordenar las categorías de menor a mayor (más viejos primero)
+  const categorias = Object.keys(jugadoresPorCategoria)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  const renderCarnet = (jugador: CarnetDigitalDTO) => {
+    const estado = jugador.estado as EstadoJugador;
+    const debesMostrarEstado = mostrarEstado(estado);
+
+    return (
+      <View key={jugador.id} style={styles.carnet}>
+        {debesMostrarEstado && (
+          <View style={[styles.carnetHeader, { backgroundColor: obtenerColorEstado(estado) }]}>
+            <Text style={styles.estado}>
+              {obtenerTextoEstado(estado)}
+            </Text>
+          </View>
+        )}
+        <View style={styles.carnetBody}>
+          <Text style={styles.equipo}>{equipoSeleccionadoNombre}</Text>
+          <Text style={styles.torneo}>{jugador.torneo}</Text>
+          {jugador.fotoCarnet && (
+            <View style={styles.fotoContainer}>
+              <Image 
+                source={{ uri: jugador.fotoCarnet }} 
+                style={styles.foto}
+                resizeMode="cover"
+              />
+            </View>
+          )}
+          <Text style={styles.dato}>{jugador.dni}</Text>
+          <Text style={styles.dato}>{jugador.nombre}</Text>
+          <Text style={styles.dato}>{jugador.apellido}</Text>
+          <Text style={styles.dato}>
+            {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
+          </Text>
+          <Text style={styles.categoria}>Cat {obtenerCategoria(jugador.fechaNacimiento)}</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.carnetesContainer}>
-        {jugadores.map((jugador) => {
-          const estado = jugador.estado as EstadoJugador;
-          const debesMostrarEstado = mostrarEstado(estado);
-
-          return (
-            <View key={jugador.id} style={styles.carnet}>
-              {debesMostrarEstado && (
-                <View style={[styles.carnetHeader, { backgroundColor: obtenerColorEstado(estado) }]}>
-                  <Text style={styles.estado}>
-                    {obtenerTextoEstado(estado)}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.carnetBody}>
-                <Text style={styles.equipo}>{equipoSeleccionadoNombre}</Text>
-                <Text style={styles.torneo}>{jugador.torneo}</Text>
-                {jugador.fotoCarnet && (
-                  <View style={styles.fotoContainer}>
-                    <Image 
-                      source={{ uri: jugador.fotoCarnet }} 
-                      style={styles.foto}
-                      resizeMode="cover"
-                    />
-                  </View>
-                )}
-                <Text style={styles.dato}>{jugador.dni}</Text>
-                <Text style={styles.dato}>{jugador.nombre}</Text>
-                <Text style={styles.dato}>{jugador.apellido}</Text>
-                <Text style={styles.dato}>
-                  {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
-                </Text>
-                <Text style={styles.categoria}>Cat {obtenerCategoria(jugador.fechaNacimiento)}</Text>
-              </View>
+        {categorias.map((año) => (
+          <View key={año}>
+            <View style={styles.categoriaHeader}>
+              <Text style={styles.categoriaTexto}>Categoría {año}</Text>
             </View>
-          );
-        })}
+            {jugadoresPorCategoria[año].map(renderCarnet)}
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -100,6 +128,23 @@ const styles = StyleSheet.create({
   },
   carnetesContainer: {
     padding: 10,
+  },
+  categoriaHeader: {
+    backgroundColor: '#2196F3',
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  categoriaTexto: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   carnet: {
     backgroundColor: '#fff',
