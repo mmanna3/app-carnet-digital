@@ -4,9 +4,10 @@ import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '../api/clients';
 import { useEquipoStore } from '../hooks/use-equipo-store';
+import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador';
 
 export default function MisJugadoresScreen() {
-  const { equipoSeleccionadoId } = useEquipoStore();
+  const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore();
   
   const { data: jugadores, isLoading, isError } = useApiQuery({
     key: ['carnets', equipoSeleccionadoId],
@@ -34,40 +35,54 @@ export default function MisJugadoresScreen() {
     return <Text style={styles.mensaje}>Error al cargar los jugadores.</Text>;
   }
 
+  const mostrarEstado = (estado: EstadoJugador) => {
+    return estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido;
+  };
+
+  const obtenerCategoria = (fechaNacimiento: Date) => {
+    const año = new Date(fechaNacimiento).getFullYear().toString();
+    return año.slice(-2);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.carnetesContainer}>
-        {jugadores.map((jugador) => (
-          <View key={jugador.id} style={styles.carnet}>
-            <View style={styles.carnetHeader}>
-              <Text style={styles.estado}>
-                {jugador.estado === 1 ? 'ACTIVO' : 
-                 jugador.estado === 2 ? 'PENDIENTE' :
-                 jugador.estado === 3 ? 'RECHAZADO' :
-                 jugador.estado === 4 ? 'INHABILITADO' :
-                 jugador.estado === 5 ? 'SUSPENDIDO' :
-                 jugador.estado === 6 ? 'FICHAJE NO PAGO' : 'DESCONOCIDO'}
-              </Text>
-            </View>
-            <View style={styles.carnetBody}>
-              <Text style={styles.nombre}>{jugador.nombre} {jugador.apellido}</Text>
-              <Text style={styles.info}>DNI: {jugador.dni}</Text>
-              <Text style={styles.info}>
-                Fecha Nac.: {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
-              </Text>
-              {jugador.fotoCarnet && (
-                <View style={styles.fotoContainer}>
-                  <Text style={styles.fotoLabel}>Foto Carnet</Text>
-                  <Image 
-                    source={{ uri: jugador.fotoCarnet }} 
-                    style={styles.foto}
-                    resizeMode="cover"
-                  />
+        {jugadores.map((jugador) => {
+          const estado = jugador.estado as EstadoJugador;
+          const debesMostrarEstado = mostrarEstado(estado);
+
+          return (
+            <View key={jugador.id} style={styles.carnet}>
+              {debesMostrarEstado && (
+                <View style={[styles.carnetHeader, { backgroundColor: obtenerColorEstado(estado) }]}>
+                  <Text style={styles.estado}>
+                    {obtenerTextoEstado(estado)}
+                  </Text>
                 </View>
               )}
+              <View style={styles.carnetBody}>
+                <Text style={styles.equipo}>{equipoSeleccionadoNombre}</Text>
+                <Text style={styles.torneo}>{jugador.torneo}</Text>
+                {jugador.fotoCarnet && (
+                  <View style={styles.fotoContainer}>
+                    <Image 
+                      source={{ uri: jugador.fotoCarnet }} 
+                      style={styles.foto}
+                      resizeMode="cover"
+                    />
+                  </View>
+                )}
+                <Text style={styles.dato}>{jugador.dni}</Text>
+                <Text style={styles.dato}>{jugador.nombre}</Text>
+                <Text style={styles.dato}>{jugador.apellido}</Text>
+                <Text style={styles.dato}>
+                  {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
+                </Text>
+                <Text style={styles.categoria}>Cat {obtenerCategoria(jugador.fechaNacimiento)}</Text>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </View>
     </ScrollView>
   );
@@ -98,7 +113,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   carnetHeader: {
-    backgroundColor: '#2196F3',
     padding: 12,
   },
   estado: {
@@ -109,29 +123,41 @@ const styles = StyleSheet.create({
   },
   carnetBody: {
     padding: 16,
+    alignItems: 'center',
   },
-  nombre: {
+  equipo: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
+    textAlign: 'center',
+    color: '#333333',
   },
-  info: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 4,
+  torneo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   fotoContainer: {
-    marginTop: 12,
-    alignItems: 'center',
-  },
-  fotoLabel: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
+    marginVertical: 12,
+    width: 200,
+    height: 200,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
   foto: {
-    width: 120,
-    height: 160,
-    borderRadius: 8,
+    width: '100%',
+    height: '100%',
+  },
+  dato: {
+    fontSize: 16,
+    marginVertical: 4,
+    textAlign: 'center',
+  },
+  categoria: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 8,
+    textAlign: 'center',
   },
 }); 

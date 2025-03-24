@@ -105,6 +105,104 @@ export class Client {
     }
 
     /**
+     * @param codigoAlfanumerico (optional) 
+     * @return Success
+     */
+    carnetsPorCodigoAlfanumerico(codigoAlfanumerico: string | undefined): Promise<CarnetDigitalDTO[]> {
+        let url_ = this.baseUrl + "/api/carnet-digital/carnets-por-codigo-alfanumerico?";
+        if (codigoAlfanumerico === null)
+            throw new Error("The parameter 'codigoAlfanumerico' cannot be null.");
+        else if (codigoAlfanumerico !== undefined)
+            url_ += "codigoAlfanumerico=" + encodeURIComponent("" + codigoAlfanumerico) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCarnetsPorCodigoAlfanumerico(_response);
+        });
+    }
+
+    protected processCarnetsPorCodigoAlfanumerico(response: Response): Promise<CarnetDigitalDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CarnetDigitalDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CarnetDigitalDTO[]>(null as any);
+    }
+
+    /**
+     * @param equipoId (optional) 
+     * @return Success
+     */
+    jugadoresPendientes(equipoId: number | undefined): Promise<CarnetDigitalDTO[]> {
+        let url_ = this.baseUrl + "/api/carnet-digital/jugadores-pendientes?";
+        if (equipoId === null)
+            throw new Error("The parameter 'equipoId' cannot be null.");
+        else if (equipoId !== undefined)
+            url_ += "equipoId=" + encodeURIComponent("" + equipoId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processJugadoresPendientes(_response);
+        });
+    }
+
+    protected processJugadoresPendientes(response: Response): Promise<CarnetDigitalDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CarnetDigitalDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CarnetDigitalDTO[]>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -1578,6 +1676,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
     apellido!: string;
     fechaNacimiento!: Date;
     fotoCarnet?: string | undefined;
+    torneo?: string | undefined;
     estado?: number;
 
     constructor(data?: ICarnetDigitalDTO) {
@@ -1597,6 +1696,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
             this.apellido = _data["apellido"];
             this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
             this.fotoCarnet = _data["fotoCarnet"];
+            this.torneo = _data["torneo"];
             this.estado = _data["estado"];
         }
     }
@@ -1616,6 +1716,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
         data["apellido"] = this.apellido;
         data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
         data["fotoCarnet"] = this.fotoCarnet;
+        data["torneo"] = this.torneo;
         data["estado"] = this.estado;
         return data;
     }
@@ -1628,6 +1729,7 @@ export interface ICarnetDigitalDTO {
     apellido: string;
     fechaNacimiento: Date;
     fotoCarnet?: string | undefined;
+    torneo?: string | undefined;
     estado?: number;
 }
 
