@@ -6,6 +6,8 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { MenuProvider } from 'react-native-popup-menu';
+import HeaderMenu from '../components/header-menu';
 
 import Colors from '@/constants/Colores';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -33,34 +35,39 @@ export default function TabLayout() {
   const { equipoSeleccionadoNombre } = useEquipoStore();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colorScheme === 'dark' ? '#fff' : '#000',
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="mis-jugadores"
-        options={{
-          title: equipoSeleccionadoNombre || 'Mis Jugadores',
-          tabBarLabel: 'Mis Jugadores',
-          tabBarIcon: ({ color }) => <FontAwesome name="users" size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="buscar"
-        options={{
-          title: 'Buscar',
-          tabBarIcon: ({ color }) => <FontAwesome name="search" size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="pendientes"
-        options={{
-          title: equipoSeleccionadoNombre || 'Pendientes',
-          tabBarLabel: 'Pendientes',
-          tabBarIcon: ({ color }) => <FontAwesome name="clock-o" size={24} color={color} />,
-        }}
-      />
-    </Tabs>
+    <MenuProvider skipInstanceCheck>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Tabs
+          screenOptions={{
+            tabBarActiveTintColor: colorScheme === 'dark' ? '#fff' : '#000',
+            headerShown: useClientOnlyValue(false, true),
+            headerRight: () => <HeaderMenu />,
+          }}>
+          <Tabs.Screen
+            name="mis-jugadores"
+            options={{
+              title: equipoSeleccionadoNombre || 'Mis Jugadores',
+              tabBarLabel: 'Mis Jugadores',
+              tabBarIcon: ({ color }) => <FontAwesome name="users" size={24} color={color} />,
+            }}
+          />
+          <Tabs.Screen
+            name="buscar"
+            options={{
+              title: 'Buscar',
+              tabBarIcon: ({ color }) => <FontAwesome name="search" size={24} color={color} />,
+            }}
+          />
+          <Tabs.Screen
+            name="pendientes"
+            options={{
+              title: equipoSeleccionadoNombre || 'Pendientes',
+              tabBarLabel: 'Pendientes',
+              tabBarIcon: ({ color }) => <FontAwesome name="clock-o" size={24} color={color} />,
+            }}
+          />
+        </Tabs>
+      </ThemeProvider>
+    </MenuProvider>
   );
 }
