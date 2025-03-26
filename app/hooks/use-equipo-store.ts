@@ -26,4 +26,6 @@ export const useEquipoStore = create<EquipoState>()(
       name: 'equipo-storage'
     }
   )
-) 
+)
+
+export default useEquipoStore; 

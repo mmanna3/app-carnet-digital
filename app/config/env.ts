@@ -24,4 +24,6 @@ const getEnvironment = (): Environment => {
 export const getEnvVars = () => {
   const environment = getEnvironment();
   return ENV[environment];
-}; 
+};
+
+export default getEnvVars; 

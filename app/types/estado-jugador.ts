@@ -7,6 +7,8 @@ export enum EstadoJugador {
   AprobadoPendienteDePago = 6
 }
 
+export default EstadoJugador;
+
 export function obtenerTextoEstado(estado: EstadoJugador): string {
   switch (estado) {
     case EstadoJugador.FichajePendienteDeAprobacion:
