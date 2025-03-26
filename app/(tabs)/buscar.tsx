@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TextInput } from 'react-native';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '../api/clients';
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador';
+import Boton from '@/components/boton';
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('');
@@ -108,15 +109,12 @@ export default function BuscarScreen() {
           autoCapitalize="characters"
           maxLength={7}
         />
-        <TouchableOpacity 
-          style={styles.boton} 
+        <Boton 
+          texto={isLoading ? "Buscando..." : "Ver jugadores"}
           onPress={buscarJugadores}
-          disabled={isLoading}
-        >
-          <Text style={styles.botonTexto}>
-            {isLoading ? 'Buscando...' : 'Ver jugadores'}
-          </Text>
-        </TouchableOpacity>
+          deshabilitado={isLoading}
+          cargando={isLoading}
+        />
         {error && <Text style={styles.error}>{error}</Text>}
       </View>
 
@@ -165,17 +163,6 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     marginBottom: 16,
-  },
-  boton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
-    padding: 14,
-    alignItems: 'center',
-  },
-  botonTexto: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   error: {
     color: '#e53935',

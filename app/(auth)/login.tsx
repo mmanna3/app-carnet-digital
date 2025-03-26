@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/app/hooks/use-auth';
 import CommonStyles from '@/constants/CommonStyles';
 import Colores from '@/constants/Colores';
+import Boton from '@/components/boton';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
@@ -74,17 +75,12 @@ export default function LoginScreen() {
       
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       
-      <TouchableOpacity 
-        style={[styles.button, loading && styles.buttonDisabled]}
+      <Boton 
+        texto={loading ? "Iniciando Sesión..." : "Iniciar Sesión"}
         onPress={handleLogin}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        )}
-      </TouchableOpacity>
+        deshabilitado={loading}
+        cargando={loading}
+      />
       </View>
     </View>
   );

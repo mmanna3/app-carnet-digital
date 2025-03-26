@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { api } from '@/app/api/api';
 import { CambiarPasswordDTO } from '@/app/api/clients';
 import CommonStyles from '@/constants/CommonStyles';
 import Colores from '@/constants/Colores';
 import { useAuth } from '@/app/hooks/use-auth';
+import Boton from '@/components/boton';
 
 export default function CambiarPasswordScreen() {
   const params = useLocalSearchParams();
@@ -92,17 +93,12 @@ export default function CambiarPasswordScreen() {
         
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]}
+        <Boton 
+          texto={loading ? "Cambiando Contraseña..." : "Cambiar Contraseña"}
           onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Cambiar Contraseña</Text>
-          )}
-        </TouchableOpacity>
+          deshabilitado={loading}
+          cargando={loading}
+        />
       </View>
     </View>
   );
@@ -134,19 +130,5 @@ const styles = StyleSheet.create({
   errorText: {
     color: Colores.rojo,
     textAlign: 'center',
-  },
-  button: {
-    backgroundColor: Colores.azul,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 }); 
