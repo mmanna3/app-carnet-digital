@@ -1758,6 +1758,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
     apellido!: string;
     fechaNacimiento!: Date;
     fotoCarnet?: string | undefined;
+    equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
 
@@ -1778,6 +1779,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
             this.apellido = _data["apellido"];
             this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
             this.fotoCarnet = _data["fotoCarnet"];
+            this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
             this.estado = _data["estado"];
         }
@@ -1798,6 +1800,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
         data["apellido"] = this.apellido;
         data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
         data["fotoCarnet"] = this.fotoCarnet;
+        data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
         data["estado"] = this.estado;
         return data;
@@ -1811,6 +1814,7 @@ export interface ICarnetDigitalDTO {
     apellido: string;
     fechaNacimiento: Date;
     fotoCarnet?: string | undefined;
+    equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
 }
@@ -1822,6 +1826,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
     apellido!: string;
     fechaNacimiento!: Date;
     fotoCarnet?: string | undefined;
+    equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
     motivo?: string | undefined;
@@ -1843,6 +1848,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
             this.apellido = _data["apellido"];
             this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
             this.fotoCarnet = _data["fotoCarnet"];
+            this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
             this.estado = _data["estado"];
             this.motivo = _data["motivo"];
@@ -1864,6 +1870,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
         data["apellido"] = this.apellido;
         data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
         data["fotoCarnet"] = this.fotoCarnet;
+        data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
         data["estado"] = this.estado;
         data["motivo"] = this.motivo;
@@ -1878,6 +1885,7 @@ export interface ICarnetDigitalPendienteDTO {
     apellido: string;
     fechaNacimiento: Date;
     fotoCarnet?: string | undefined;
+    equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
     motivo?: string | undefined;

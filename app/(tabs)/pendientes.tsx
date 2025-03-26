@@ -66,7 +66,6 @@ export default function PendientesScreen() {
               <Carnet
                 key={jugador.id}
                 jugador={jugador}
-                equipoNombre={equipoSeleccionadoNombre || undefined}
                 mostrarEstado={true}
                 mostrarMotivo={true}
               />

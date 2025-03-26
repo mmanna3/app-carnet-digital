@@ -5,12 +5,11 @@ import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/
 
 interface CarnetProps {
   jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO;
-  equipoNombre?: string;
   mostrarEstado?: boolean;
   mostrarMotivo?: boolean;
 }
 
-export default function Carnet({ jugador, equipoNombre, mostrarEstado = false, mostrarMotivo = false }: CarnetProps) {
+export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo = false }: CarnetProps) {
   const estado = jugador.estado as EstadoJugador;
   const debeMostrarEstado = mostrarEstado || estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido;
 
@@ -29,7 +28,7 @@ export default function Carnet({ jugador, equipoNombre, mostrarEstado = false, m
         </View>
       )}
       <View style={styles.carnetBody}>
-        {equipoNombre && <Text style={styles.equipo}>{equipoNombre}</Text>}
+        <Text style={styles.equipo}>{jugador.equipo}</Text>
         <Text style={styles.torneo}>{jugador.torneo}</Text>
         {jugador.fotoCarnet && (
           <View style={styles.fotoContainer}>
