@@ -28,24 +28,48 @@ export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo =
         </View>
       )}
       <View style={styles.carnetBody}>
-        <Text style={styles.equipo}>{jugador.equipo}</Text>
-        <Text style={styles.torneo}>{jugador.torneo}</Text>
-        {jugador.fotoCarnet && (
-          <View style={styles.fotoContainer}>
-            <Image 
-              source={{ uri: jugador.fotoCarnet }} 
-              style={styles.foto}
-              resizeMode="cover"
-            />
+        <View style={styles.headerSection}>
+          <Text style={styles.equipo}>{jugador.equipo}</Text>
+          <Text style={styles.torneo}>{jugador.torneo}</Text>
+        </View>
+        
+        <View style={styles.photoSection}>
+          {jugador.fotoCarnet && (
+            <View style={styles.fotoContainer}>
+              <Image 
+                source={{ uri: jugador.fotoCarnet }} 
+                style={styles.foto}
+                resizeMode="cover"
+              />
+            </View>
+          )}
+        </View>
+
+        <View style={styles.infoSection}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>DNI:</Text>
+            <Text style={styles.infoValue}>{jugador.dni}</Text>
           </View>
-        )}
-        <Text style={styles.dato}>{jugador.dni}</Text>
-        <Text style={styles.dato}>{jugador.nombre}</Text>
-        <Text style={styles.dato}>{jugador.apellido}</Text>
-        <Text style={styles.dato}>
-          {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
-        </Text>
-        <Text style={styles.categoria}>Cat {obtenerCategoria(jugador.fechaNacimiento)}</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Nombre:</Text>
+            <Text style={styles.infoValue}>{jugador.nombre}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Apellido:</Text>
+            <Text style={styles.infoValue}>{jugador.apellido}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Fecha Nac:</Text>
+            <Text style={styles.infoValue}>
+              {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Categoría:</Text>
+            <Text style={styles.infoValue}>Cat {obtenerCategoria(jugador.fechaNacimiento)}</Text>
+          </View>
+        </View>
+
         {mostrarMotivo && 'motivo' in jugador && jugador.motivo && (
           <View style={styles.motivoContainer}>
             <Text style={styles.motivoTitulo}>Motivo:</Text>
@@ -60,75 +84,100 @@ export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo =
 const styles = StyleSheet.create({
   carnet: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 16,
+    borderRadius: 16,
+    margin: 16,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
   },
   carnetHeader: {
     padding: 12,
+    borderBottomWidth: 2,
+    borderBottomColor: '#e0e0e0',
   },
   estado: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
   carnetBody: {
     padding: 16,
+  },
+  headerSection: {
     alignItems: 'center',
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 12,
   },
   equipo: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-    color: '#333333',
+    marginBottom: 4,
+    color: '#1a1a1a',
   },
   torneo: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    textAlign: 'center',
+    color: '#666',
+  },
+  photoSection: {
+    alignItems: 'center',
+    marginBottom: 16,
   },
   fotoContainer: {
-    marginVertical: 12,
-    width: 200,
-    height: 200,
-    borderRadius: 4,
+    width: 160,
+    height: 160,
+    borderRadius: 8,
     overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
   },
   foto: {
     width: '100%',
     height: '100%',
   },
-  dato: {
-    fontSize: 16,
-    marginVertical: 4,
-    textAlign: 'center',
+  infoSection: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
+    padding: 12,
   },
-  categoria: {
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  infoLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 8,
-    textAlign: 'center',
+    fontWeight: '600',
+    color: '#666',
+  },
+  infoValue: {
+    fontSize: 16,
+    color: '#333',
   },
   motivoContainer: {
-    marginTop: 12,
+    marginTop: 16,
     padding: 12,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff3f3',
     borderRadius: 8,
-    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ffcdd2',
   },
   motivoTitulo: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
-    color: '#666',
+    color: '#d32f2f',
   },
   motivoTexto: {
     fontSize: 14,
