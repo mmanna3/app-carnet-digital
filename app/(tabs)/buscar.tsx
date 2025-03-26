@@ -103,6 +103,7 @@ export default function BuscarScreen() {
         <Text style={styles.titulo}>Ingresá el código del equipo</Text>
         <TextInput
           style={styles.input}
+          placeholderTextColor='#999'
           placeholder="Ej: ABC1234"
           value={codigoEquipo}
           onChangeText={setCodigoEquipo}
