@@ -5,6 +5,7 @@ import { api } from '../api/api';
 import { CarnetDigitalPendienteDTO } from '../api/clients';
 import { useEquipoStore } from '../hooks/use-equipo-store';
 import Carnet from '../components/carnet';
+import { EstadoJugador } from '../types/estado-jugador';
 
 export default function PendientesScreen() {
   const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore();
@@ -35,34 +36,19 @@ export default function PendientesScreen() {
     return <Text style={styles.mensaje}>Error al cargar los jugadores pendientes.</Text>;
   }
 
-  const obtenerAñoCompleto = (fechaNacimiento: Date) => {
-    return new Date(fechaNacimiento).getFullYear();
-  };
-
-  // Agrupar jugadores por categoría
-  const jugadoresPorCategoria = jugadores.reduce((acc, jugador) => {
-    const año = obtenerAñoCompleto(jugador.fechaNacimiento);
-    if (!acc[año]) {
-      acc[año] = [];
-    }
-    acc[año].push(jugador);
-    return acc;
-  }, {} as Record<number, CarnetDigitalPendienteDTO[]>);
-
-  // Ordenar las categorías de menor a mayor (más viejos primero)
-  const categorias = Object.keys(jugadoresPorCategoria)
-    .map(Number)
-    .sort((a, b) => a - b);
+  // Separar jugadores por estado
+  const jugadoresRechazados = jugadores.filter(j => j.estado === EstadoJugador.FichajeRechazado);
+  const jugadoresPendientes = jugadores.filter(j => j.estado === EstadoJugador.FichajePendienteDeAprobacion);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.carnetesContainer}>
-        {categorias.map((año) => (
-          <View key={año}>
-            <View style={styles.categoriaHeader}>
-              <Text style={styles.categoriaTexto}>Categoría {año}</Text>
+        {jugadoresRechazados.length > 0 && (
+          <View>
+            <View style={[styles.estadoHeader, { backgroundColor: '#EF5350' }]}>
+              <Text style={styles.estadoTexto}>Fichajes Rechazados</Text>
             </View>
-            {jugadoresPorCategoria[año].map((jugador) => (
+            {jugadoresRechazados.map((jugador) => (
               <Carnet
                 key={jugador.id}
                 jugador={jugador}
@@ -71,7 +57,27 @@ export default function PendientesScreen() {
               />
             ))}
           </View>
-        ))}
+        )}
+
+        {jugadoresPendientes.length > 0 && (
+          <View>
+            <View style={[styles.estadoHeader, { backgroundColor: '#FFA726' }]}>
+              <Text style={styles.estadoTexto}>Pendientes de Aprobación</Text>
+            </View>
+            {jugadoresPendientes.map((jugador) => (
+              <Carnet
+                key={jugador.id}
+                jugador={jugador}
+                mostrarEstado={true}
+                mostrarMotivo={true}
+              />
+            ))}
+          </View>
+        )}
+
+        {jugadoresRechazados.length === 0 && jugadoresPendientes.length === 0 && (
+          <Text style={styles.mensaje}>No hay jugadores pendientes</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -90,8 +96,7 @@ const styles = StyleSheet.create({
   carnetesContainer: {
     padding: 10,
   },
-  categoriaHeader: {
-    backgroundColor: '#2196F3',
+  estadoHeader: {
     padding: 12,
     marginBottom: 16,
     borderRadius: 8,
@@ -101,7 +106,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  categoriaTexto: {
+  estadoTexto: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
