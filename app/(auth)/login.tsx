@@ -27,6 +27,12 @@ export default function LoginScreen() {
       if (respuesta.exito) {
         router.push('/seleccion-de-equipo');
       } else {
+        if (respuesta.error === 'El usuario debe cambiar la contraseña') {
+          router.push({
+            pathname: '/cambiar-password',
+            params: { usuario: username }
+          });
+        }
         setError(respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.');
       }
     } catch (err) {

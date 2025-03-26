@@ -245,6 +245,48 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    cambiarPassword(body: CambiarPasswordDTO | undefined): Promise<LoginResponseDTO> {
+        let url_ = this.baseUrl + "/api/Auth/cambiar-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCambiarPassword(_response);
+        });
+    }
+
+    protected processCambiarPassword(response: Response): Promise<LoginResponseDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LoginResponseDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<LoginResponseDTO>(null as any);
+    }
+
+    /**
      * @return Success
      */
     clubAll(): Promise<ClubDTO[]> {
@@ -1667,6 +1709,46 @@ export interface ICambiarEstadoDelJugadorDTO {
     jugadorId?: number;
     jugadorEquipoId?: number;
     motivo?: string | undefined;
+}
+
+export class CambiarPasswordDTO implements ICambiarPasswordDTO {
+    usuario!: string;
+    passwordNuevo!: string;
+
+    constructor(data?: ICambiarPasswordDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.usuario = _data["usuario"];
+            this.passwordNuevo = _data["passwordNuevo"];
+        }
+    }
+
+    static fromJS(data: any): CambiarPasswordDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CambiarPasswordDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["usuario"] = this.usuario;
+        data["passwordNuevo"] = this.passwordNuevo;
+        return data;
+    }
+}
+
+export interface ICambiarPasswordDTO {
+    usuario: string;
+    passwordNuevo: string;
 }
 
 export class CarnetDigitalDTO implements ICarnetDigitalDTO {

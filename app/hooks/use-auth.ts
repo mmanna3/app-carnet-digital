@@ -9,6 +9,7 @@ interface AuthState {
   isAuthenticated: boolean
   login: (usuario: string, password: string) => Promise<LoginResponseDTO>
   logout: () => void
+  setAuthState: (token: string, usuario: string) => void
 }
 
 export const useAuth = create<AuthState>()(
@@ -36,6 +37,9 @@ export const useAuth = create<AuthState>()(
       },
       logout: () => {
         set({ token: null, isAuthenticated: false })
+      },
+      setAuthState: (token: string, usuario: string) => {
+        set({ token, usuario, isAuthenticated: true })
       }
     }),
     {
