@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "liga-app-delegados",
-    "slug": "liga-app-delegados",
+    "name": "carnet-digital",
+    "slug": "carnet-digital",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carnetdigital.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -42,5 +46,11 @@
       }
     },
     "owner": "mmanna"
+  },
+  "android": {
+    "package": "com.carnetdigital.app"
+  },
+  "ios": {
+    "bundleIdentifier": "com.carnetdigital.app"
   }
 }

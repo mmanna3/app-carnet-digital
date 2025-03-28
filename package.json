@@ -1,5 +1,5 @@
 {
-  "name": "liga-app-delegados",
+  "name": "carnet-digital",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -14,6 +14,7 @@
     "ios:prod": "expo start --ios --no-dev",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "test:e2e": "maestro test --format html e2e/basic_test.yaml",
     "build:android": "expo build:android",
     "build:ios": "expo build:ios"
   },

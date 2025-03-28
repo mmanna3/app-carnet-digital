@@ -1,0 +1,4 @@
+appId: com.carnetdigital.app
+---
+- launchApp
+- assertVisible: "carnet-digital" 
