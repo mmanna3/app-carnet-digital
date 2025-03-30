@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
+    "limpiar": "rm -rf node_modules && rm package-lock.json && rm -rf .expo && rm -rf .expo-shared && npm i",
     "start": "expo start",
     "start:dev": "expo start --dev-client",
     "start:prod": "expo start --no-dev",
