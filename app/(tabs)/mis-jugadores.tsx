@@ -4,10 +4,12 @@ import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '../api/clients';
 import { useEquipoStore } from '../hooks/use-equipo-store';
+import { useAuth } from '../hooks/use-auth';
 import Carnet from '../components/carnet';
 
 export default function MisJugadoresScreen() {
-  const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore();
+  const { equipoSeleccionadoId } = useEquipoStore();
+  const { isAuthenticated } = useAuth();
   
   const { data: jugadores, isLoading, isError } = useApiQuery({
     key: ['carnets', equipoSeleccionadoId],
@@ -16,8 +18,12 @@ export default function MisJugadoresScreen() {
       return await api.carnets(equipoSeleccionadoId);
     },
     transformarResultado: (resultado) => resultado,
-    activado: !!equipoSeleccionadoId
+    activado: !!equipoSeleccionadoId && isAuthenticated
   });
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (!equipoSeleccionadoId) {
     return (
@@ -66,7 +72,6 @@ export default function MisJugadoresScreen() {
               <Carnet
                 key={jugador.id}
                 jugador={jugador}
-                equipoNombre={equipoSeleccionadoNombre || undefined}
               />
             ))}
           </View>
