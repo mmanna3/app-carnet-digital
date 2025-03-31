@@ -26,19 +26,35 @@ export const useAuth = create<AuthState>()(
           })
           const response = await api.login(loginRequest)
       
-          if (response.exito) {
+          if (response.exito && response.token) {
             set({ token: response.token, usuario: usuario, isAuthenticated: true })
+            return response
           }
       
-          return response
+          return new LoginResponseDTO({ 
+            exito: false, 
+            error: response.error || 'Error de autenticación' 
+          })
         } catch (error: any) {
-          return new LoginResponseDTO({ error: JSON.parse(error.response).error || 'Hubo un error conectándose al servidor'})
+          const errorMessage = error.response 
+            ? JSON.parse(error.response).error 
+            : 'Hubo un error conectándose al servidor'
+          return new LoginResponseDTO({ 
+            exito: false, 
+            error: errorMessage 
+          })
         }
       },
       logout: () => {
-        set({ token: null, isAuthenticated: false })
+        set({ token: null, usuario: null, isAuthenticated: false })
+        // Limpiar cualquier dato persistente adicional si es necesario
+        localStorage.removeItem('auth-storage')
       },
       setAuthState: (token: string, usuario: string) => {
+        if (!token || !usuario) {
+          set({ token: null, usuario: null, isAuthenticated: false })
+          return
+        }
         set({ token, usuario, isAuthenticated: true })
       }
     }),
