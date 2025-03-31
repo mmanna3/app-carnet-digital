@@ -1,4 +1,4 @@
-appId: com.carnetdigital.app
+appId: com.blueservant.carnetdigital
 ---
 - launchApp
 - assertVisible: "carnet-digital" 

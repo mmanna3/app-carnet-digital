@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.carnetdigital.app",
+      "bundleIdentifier": "com.blueservant.carnetdigital",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -48,9 +48,9 @@
     "owner": "mmanna"
   },
   "android": {
-    "package": "com.carnetdigital.app"
+    "package": "com.blueservant.carnetdigital"
   },
   "ios": {
-    "bundleIdentifier": "com.carnetdigital.app"
+    "bundleIdentifier": "com.blueservant.carnetdigital"
   }
 }
