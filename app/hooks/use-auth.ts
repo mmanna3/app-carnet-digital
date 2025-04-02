@@ -47,8 +47,6 @@ export const useAuth = create<AuthState>()(
       },
       logout: () => {
         set({ token: null, usuario: null, isAuthenticated: false })
-        // Limpiar cualquier dato persistente adicional si es necesario
-        localStorage.removeItem('auth-storage')
       },
       setAuthState: (token: string, usuario: string) => {
         if (!token || !usuario) {
