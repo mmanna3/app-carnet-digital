@@ -2,20 +2,20 @@
   "expo": {
     "name": "carnet-digital",
     "slug": "carnet-digital",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3ea334"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.carnetdigital.app",
+      "bundleIdentifier": "com.blueservant.carnetdigital",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.blueservant.carnetdigital"
     },
     "web": {
       "bundler": "metro",
@@ -48,9 +49,9 @@
     "owner": "mmanna"
   },
   "android": {
-    "package": "com.carnetdigital.app"
+    "package": "com.blueservant.carnetdigital"
   },
   "ios": {
-    "bundleIdentifier": "com.carnetdigital.app"
+    "bundleIdentifier": "com.blueservant.carnetdigital"
   }
 }

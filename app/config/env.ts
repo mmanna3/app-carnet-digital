@@ -4,7 +4,7 @@ type Environment = 'development' | 'production';
 
 const ENV = {
   development: {
-    apiUrl: 'http://192.168.0.193:5072',
+    apiUrl: 'http://192.168.0.198:5072',
   },
   production: {
     apiUrl: 'https://luefi.liga.com.ar',

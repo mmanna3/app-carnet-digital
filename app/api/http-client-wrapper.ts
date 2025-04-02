@@ -1,4 +1,5 @@
 import { useAuth } from "../hooks/use-auth"
+import { router } from "expo-router"
 
 
 export class HttpClientWrapper {
@@ -6,7 +7,7 @@ export class HttpClientWrapper {
 
   constructor() {}
 
-  fetch(url: RequestInfo, init?: RequestInit): Promise<Response> {
+  async fetch(url: RequestInfo, init?: RequestInit): Promise<Response> {
     const token = useAuth.getState().token
     const isPublicRoute = this.isPublicRoute(url.toString())
 
@@ -29,7 +30,15 @@ export class HttpClientWrapper {
       }
     }
 
-    return window.fetch(url, init)
+    const response = await window.fetch(url, init)
+    
+    // Manejar token expirado
+    if (response.status === 401 && !isPublicRoute) {
+      useAuth.getState().logout()
+      router.replace('/(auth)/login')
+    }
+
+    return response
   }
 
   private isPublicRoute(url: string): boolean {

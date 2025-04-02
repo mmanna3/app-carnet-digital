@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Slot, Stack, useSegments, useRouter } from 'expo-router';
+import { Slot, Stack, useSegments, useRouter, useRootNavigationState } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -29,19 +29,25 @@ function useProtectedRoute() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { equipoSeleccionadoId } = useEquipoStore();
+  const navigationState = useRootNavigationState();
 
   useEffect(() => {
+    if (!navigationState?.key) return;
+
     const inAuthGroup = segments[0] === '(auth)';
     const inSeleccionEquipo = segments[0] === 'seleccion-de-equipo';
     
     if (!isAuthenticated && !inAuthGroup) {
-      router.replace('/(auth)/login');
+      // Prevent navigation loop
+      if (!inAuthGroup) {
+        router.replace('/(auth)/login');
+      }
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/seleccion-de-equipo');
     } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
       router.replace('/seleccion-de-equipo');
     }
-  }, [isAuthenticated, segments, equipoSeleccionadoId]);
+  }, [isAuthenticated, segments, equipoSeleccionadoId, navigationState?.key]);
 }
 
 export default function RootLayout() {
@@ -72,7 +78,14 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 2,
+        refetchOnWindowFocus: false,
+      },
+    },
+  })
 
   return (
     <QueryClientProvider client={queryClient}>
