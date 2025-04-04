@@ -41,7 +41,7 @@ export function obtenerColorEstado(estado: EstadoJugador): string {
     case EstadoJugador.Inhabilitado:
       return '#E53935'; // Rojo oscuro
     case EstadoJugador.AprobadoPendienteDePago:
-      return '#FFB74D'; // Naranja claro
+      return '#2513c2'; // Azul
     default:
       return '#9E9E9E'; // Gris
   }

@@ -39,6 +39,7 @@ export default function PendientesScreen() {
   // Separar jugadores por estado
   const jugadoresRechazados = jugadores.filter(j => j.estado === EstadoJugador.FichajeRechazado);
   const jugadoresPendientes = jugadores.filter(j => j.estado === EstadoJugador.FichajePendienteDeAprobacion);
+  const jugadoresAprobadosPendientesDePago = jugadores.filter(j => j.estado === EstadoJugador.AprobadoPendienteDePago);
 
   return (
     <ScrollView style={styles.container}>
@@ -59,6 +60,23 @@ export default function PendientesScreen() {
           </View>
         )}
 
+        {jugadoresAprobadosPendientesDePago.length > 0 && (
+          <View>
+            <View style={[styles.estadoHeader, { backgroundColor: '#2513c2' }]}>
+              <Text style={styles.estadoTexto}>Pendientes de Pago</Text>
+            </View>
+            {jugadoresAprobadosPendientesDePago.map((jugador) => (
+              <Carnet
+                key={jugador.id}
+                jugador={jugador}
+                mostrarEstado={true}
+                mostrarMotivo={false}
+              />
+            ))}
+          </View>
+        )}
+
+
         {jugadoresPendientes.length > 0 && (
           <View>
             <View style={[styles.estadoHeader, { backgroundColor: '#FFA726' }]}>
@@ -75,7 +93,10 @@ export default function PendientesScreen() {
           </View>
         )}
 
-        {jugadoresRechazados.length === 0 && jugadoresPendientes.length === 0 && (
+        {jugadoresRechazados.length === 0 
+          && jugadoresPendientes.length === 0 
+          && jugadoresAprobadosPendientesDePago.length === 0 
+          && (
           <Text style={styles.mensaje}>No hay jugadores pendientes</Text>
         )}
       </View>
