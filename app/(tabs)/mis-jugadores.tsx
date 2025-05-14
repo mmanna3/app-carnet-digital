@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import useApiQuery from '../api/custom-hooks/use-api-query';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '../api/clients';
@@ -10,6 +10,8 @@ import Carnet from '../components/carnet';
 export default function MisJugadoresScreen() {
   const { equipoSeleccionadoId } = useEquipoStore();
   const { isAuthenticated } = useAuth();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({});
   
   const { data: jugadores, isLoading, isError } = useApiQuery({
     key: ['carnets', equipoSeleccionadoId],
@@ -60,24 +62,64 @@ export default function MisJugadoresScreen() {
     .map(Number)
     .sort((a, b) => a - b);
 
+  const scrollToCategory = (año: number) => {
+    const position = categoryPositions[año];
+    if (position !== undefined && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: position, animated: true });
+    }
+  };
+
+  const handleCategoryLayout = (año: number, event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setCategoryPositions(prev => ({
+      ...prev,
+      [año]: y
+    }));
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.carnetesContainer}>
-        {categorias.map((año) => (
-          <View key={año}>
-            <View style={styles.categoriaHeader}>
-              <Text style={styles.categoriaTexto}>Categoría {año}</Text>
-            </View>
-            {jugadoresPorCategoria[año].map((jugador) => (
-              <Carnet
-                key={jugador.id}
-                jugador={jugador}
-              />
-            ))}
-          </View>
-        ))}
+    <View style={styles.container}>
+      <View style={styles.categoryButtonsContainer}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryButtonsContent}
+        >
+          {categorias.map((año) => (
+            <TouchableOpacity
+              key={`button-${año}`}
+              style={styles.categoryButton}
+              onPress={() => scrollToCategory(año)}
+            >
+              <Text style={styles.categoryButtonText}>{año}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
-    </ScrollView>
+      <ScrollView 
+        ref={scrollViewRef} 
+        style={styles.scrollView}
+      >
+        <View style={styles.carnetesContainer}>
+          {categorias.map((año) => (
+            <View 
+              key={año}
+              onLayout={(event) => handleCategoryLayout(año, event)}
+            >
+              <View style={styles.categoriaHeader}>
+                <Text style={styles.categoriaTexto}>Categoría {año}</Text>
+              </View>
+              {jugadoresPorCategoria[año].map((jugador) => (
+                <Carnet
+                  key={jugador.id}
+                  jugador={jugador}
+                />
+              ))}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -86,10 +128,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f8f8',
   },
-  mensaje: {
+  categoryButtonsContainer: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    zIndex: 1,
+  },
+  categoryButtonsContent: {
+    paddingHorizontal: 10,
+  },
+  categoryButton: {
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+  categoryButtonText: {
+    color: '#fff',
     fontSize: 16,
-    textAlign: 'center',
-    padding: 20,
+    fontWeight: '600',
+  },
+  scrollView: {
+    flex: 1,
   },
   carnetesContainer: {
     padding: 10,
@@ -110,5 +172,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  mensaje: {
+    fontSize: 16,
+    textAlign: 'center',
+    padding: 20,
   },
 }); 
