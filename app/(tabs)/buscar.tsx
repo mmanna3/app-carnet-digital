@@ -1,14 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Platform, Alert } from 'react-native';
 import { api } from '../api/api';
 import { CarnetDigitalDTO } from '@/app/api/clients';
 import Boton from '@/components/boton';
 import Carnet from '../components/carnet';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('');
   const [jugadores, setJugadores] = useState<CarnetDigitalDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({});
@@ -69,6 +72,215 @@ export default function BuscarScreen() {
     }));
   };
 
+  const generatePDF = async () => {
+    if (jugadores.length === 0) return;
+
+    setIsGeneratingPDF(true);
+    try {
+      const fechaGeneracion = new Date().toLocaleString('es-AR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      // Ordenar jugadores por fecha de nacimiento (más viejos primero)
+      const jugadoresOrdenados = [...jugadores].sort((a, b) => 
+        new Date(a.fechaNacimiento).getTime() - new Date(b.fechaNacimiento).getTime()
+      );
+
+      // Dividir jugadores en grupos de 9 (3x3 por página)
+      const jugadoresPorPagina = [];
+      for (let i = 0; i < jugadoresOrdenados.length; i += 9) {
+        jugadoresPorPagina.push(jugadoresOrdenados.slice(i, i + 9));
+      }
+
+      // Función para generar el HTML de un carnet
+      const generarCarnetHTML = (jugador: CarnetDigitalDTO) => `
+        <div class="carnet">
+          <div class="carnet-header">
+            <h3>${jugador.nombre} ${jugador.apellido}</h3>
+          </div>
+          <div class="carnet-body">
+            <img src="${jugador.fotoCarnet || 'https://via.placeholder.com/100'}" />
+            <div class="carnet-info">
+              <p class="dni">DNI: ${jugador.dni}</p>
+              <p>Fecha Nacimiento: ${new Date(jugador.fechaNacimiento).toLocaleDateString()}</p>
+              <p class="categoria">Categoría: ${new Date(jugador.fechaNacimiento).getFullYear()}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Create HTML content for the PDF
+      const htmlContent = `
+        <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+            <style>
+              @page {
+                size: letter;
+                margin: 0;
+              }
+              body { 
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: #f5f5f5;
+              }
+              .page {
+                page-break-after: always;
+                padding: 20px;
+                min-height: 100vh;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+              }
+              .header {
+                text-align: center;
+                padding: 20px;
+                background-color: #2196F3;
+                color: white;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              }
+              .header h1 {
+                margin: 0;
+                font-size: 24px;
+              }
+              .header p {
+                margin: 5px 0 0 0;
+                font-size: 14px;
+                opacity: 0.9;
+              }
+              .carnet-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 20px;
+                height: calc(100vh - 120px);
+              }
+              .carnet {
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                flex-direction: column;
+                height: 200px;
+                position: relative;
+              }
+              .carnet-header {
+                background: linear-gradient(135deg, #2196F3, #1976D2);
+                padding: 8px;
+                text-align: center;
+                color: white;
+              }
+              .carnet-header h3 {
+                margin: 0;
+                font-size: 14px;
+                font-weight: bold;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+              }
+              .carnet-body {
+                padding: 10px;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: white;
+              }
+              .carnet img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                margin-bottom: 8px;
+                border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              }
+              .carnet-info {
+                text-align: center;
+                width: 100%;
+                padding: 0 5px;
+              }
+              .carnet-info p {
+                margin: 2px 0;
+                font-size: 11px;
+                color: #666;
+                line-height: 1.3;
+              }
+              .carnet-info .dni {
+                font-weight: bold;
+                color: #333;
+                margin-top: 3px;
+                font-size: 12px;
+              }
+              .carnet-info .categoria {
+                color: #2196F3;
+                font-weight: bold;
+                margin-top: 3px;
+                font-size: 12px;
+              }
+              .carnet::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-radius: 12px;
+                box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+                pointer-events: none;
+              }
+            </style>
+          </head>
+          <body>
+            ${jugadoresPorPagina.map((pagina, index) => `
+              <div class="page">
+                ${index === 0 ? `
+                  <div class="header">
+                    <h1>${jugadores[0]?.equipo || 'Equipo'}</h1>
+                    <p>Generado el ${fechaGeneracion}</p>
+                  </div>
+                ` : ''}
+                <div class="carnet-grid">
+                  ${pagina.map(jugador => generarCarnetHTML(jugador)).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `;
+
+      const { uri } = await Print.printToFileAsync({
+        html: htmlContent,
+        width: 612, // US Letter width in points
+        height: 792, // US Letter height in points
+      });
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'application/pdf',
+          dialogTitle: `Carnets ${codigoEquipo}`,
+          UTI: 'com.adobe.pdf'
+        });
+      } else {
+        Alert.alert(
+          'PDF Generado',
+          `El PDF se ha guardado en: ${uri}`,
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Alert.alert('Error', 'No se pudo generar el PDF');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {jugadores.length > 0 && (
@@ -112,6 +324,16 @@ export default function BuscarScreen() {
             cargando={isLoading}
           />
           {error && <Text style={styles.error}>{error}</Text>}
+          {jugadores.length > 0 && (
+            <View style={styles.pdfButtonContainer}>
+              <Boton 
+                texto={isGeneratingPDF ? "Generando PDF..." : "Generar PDF"}
+                onPress={generatePDF}
+                deshabilitado={isGeneratingPDF}
+                cargando={isGeneratingPDF}
+              />
+            </View>
+          )}
         </View>
 
         {jugadores.length > 0 && (
@@ -212,5 +434,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  pdfButtonContainer: {
+    marginTop: 10,
   },
 }); 
