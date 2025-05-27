@@ -2,22 +2,34 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Alert } from 'react-native';
 import { CarnetDigitalDTO } from '@/app/api/clients';
+import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador';
 
-const generarCarnetHTML = (jugador: CarnetDigitalDTO) => `
-  <div class="carnet">
-    <div class="carnet-header">
-      <h3>${jugador.nombre} ${jugador.apellido}</h3>
-    </div>
-    <div class="carnet-body">
-      <img src="${jugador.fotoCarnet || 'https://via.placeholder.com/100'}" />
-      <div class="carnet-info">
-        <p class="dni">DNI: ${jugador.dni}</p>
-        <p>Fecha Nacimiento: ${new Date(jugador.fechaNacimiento).toLocaleDateString()}</p>
-        <p class="categoria">Categoría: ${new Date(jugador.fechaNacimiento).getFullYear()}</p>
+const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
+  const estado = jugador.estado as EstadoJugador;
+  const debeMostrarEstado = estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido;
+
+  return `
+    <div class="carnet">
+      ${debeMostrarEstado ? `
+        <div class="carnet-header estado" style="background: ${obtenerColorEstado(estado)}">
+          <h3>${obtenerTextoEstado(estado)}</h3>
+        </div>
+      ` : `
+        <div class="carnet-header">
+          <h3>${jugador.nombre} ${jugador.apellido}</h3>
+        </div>
+      `}
+      <div class="carnet-body">
+        <img src="${jugador.fotoCarnet || 'https://via.placeholder.com/100'}" />
+        <div class="carnet-info">
+          <p class="dni">DNI: ${jugador.dni}</p>
+          <p>Fecha Nacimiento: ${new Date(jugador.fechaNacimiento).toLocaleDateString()}</p>
+          <p class="categoria">Categoría: ${new Date(jugador.fechaNacimiento).getFullYear()}</p>
+        </div>
       </div>
     </div>
-  </div>
-`;
+  `;
+};
 
 const getPDFStyles = () => `
   * { print-color-adjust: exact !important; }
@@ -85,6 +97,11 @@ const getPDFStyles = () => `
     text-align: center;
     color: white;
   }
+  .carnet-header.estado {
+    background: none;
+    padding: 12px;
+    border-bottom: 2px solid #e0e0e0;
+  }
   .carnet-header h3 {
     margin: 0;
     font-size: 14px;
@@ -92,6 +109,11 @@ const getPDFStyles = () => `
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     letter-spacing: 0.3px;
+  }
+  .carnet-header.estado h3 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
   }
   .carnet-body {
     padding: 12px;
