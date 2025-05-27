@@ -3,15 +3,20 @@
 
 Subir versión en app.json
 
-Primero ``ios:build``
+Primero ``npm run ios:build``
 
-Después ``ios:deploy``
+Después ``npm run ios:deploy``
 
 
 ## Deploy Android al store
 
 Subir versión en app.json
 
-Primero ``android:build``
+Primero ``npm run android:build``
 
-Después ``android:deploy``
+Después ``npm run android:deploy``
+
+
+## Credenciales
+
+
