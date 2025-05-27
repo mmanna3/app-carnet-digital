@@ -18,7 +18,7 @@ export function obtenerTextoEstado(estado: EstadoJugador): string {
     case EstadoJugador.Activo:
       return 'ACTIVO';
     case EstadoJugador.Suspendido:
-      return 'SUSPENDIDO';
+      return 'CARNET SUSPENDIDO';
     case EstadoJugador.Inhabilitado:
       return 'INHABILITADO';
     case EstadoJugador.AprobadoPendienteDePago:
