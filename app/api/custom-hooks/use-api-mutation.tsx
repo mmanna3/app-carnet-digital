@@ -12,7 +12,7 @@ const useApiMutation = <T,>({
   fn,
   mensajeDeExito = 'Operación exitosa',
   antesDeMensajeExito = () => {},
-  mensajeDeError = 'Ocurrió un error inesperado'
+  mensajeDeError = 'Ocurrió un error inesperado',
 }: IProps<T>) => {
   const mutation = useMutation({
     mutationFn: async (args: T) => {
@@ -23,8 +23,7 @@ const useApiMutation = <T,>({
 
       const mensaje =
         error instanceof Error
-          ? JSON.parse((error as unknown as { response: string }).response)
-              .title
+          ? JSON.parse((error as unknown as { response: string }).response).title
           : mensajeDeError
       console.log()
 
@@ -33,7 +32,7 @@ const useApiMutation = <T,>({
     onSuccess: () => {
       antesDeMensajeExito()
       // toast.success(mensajeDeExito)
-    }
+    },
   })
 
   return mutation

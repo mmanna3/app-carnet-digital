@@ -61,7 +61,9 @@ describe('Carnet', () => {
 
   describe('header de estado', () => {
     it('NO muestra el header cuando el jugador está Activo y mostrarEstado=false', () => {
-      render(<Carnet jugador={crearJugador({ estado: EstadoJugador.Activo })} mostrarEstado={false} />)
+      render(
+        <Carnet jugador={crearJugador({ estado: EstadoJugador.Activo })} mostrarEstado={false} />
+      )
       expect(screen.queryByText('ACTIVO')).toBeNull()
     })
 
@@ -76,7 +78,9 @@ describe('Carnet', () => {
     })
 
     it('muestra el estado cuando mostrarEstado=true aunque sea Activo', () => {
-      render(<Carnet jugador={crearJugador({ estado: EstadoJugador.Activo })} mostrarEstado={true} />)
+      render(
+        <Carnet jugador={crearJugador({ estado: EstadoJugador.Activo })} mostrarEstado={true} />
+      )
       expect(screen.getByText('ACTIVO')).toBeTruthy()
     })
 

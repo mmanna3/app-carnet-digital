@@ -1,35 +1,35 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs, ErrorBoundary } from 'expo-router';
-import { Pressable } from 'react-native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { MenuProvider } from 'react-native-popup-menu';
-import HeaderMenu from '../components/header-menu';
+import React from 'react'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { Link, Tabs, ErrorBoundary } from 'expo-router'
+import { Pressable } from 'react-native'
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+import { useEffect } from 'react'
+import { MenuProvider } from 'react-native-popup-menu'
+import HeaderMenu from '../components/header-menu'
 
-import Colors from '@/constants/Colores';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import { useEquipoStore } from '../hooks/use-equipo-store';
+import Colors from '@/constants/Colores'
+import { useClientOnlyValue } from '@/components/useClientOnlyValue'
+import { useEquipoStore } from '../hooks/use-equipo-store'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+  name: React.ComponentProps<typeof FontAwesome>['name']
+  color: string
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
 }
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-};
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function TabLayout() {
-  const { equipoSeleccionadoNombre } = useEquipoStore();
+  const { equipoSeleccionadoNombre } = useEquipoStore()
 
   return (
     <MenuProvider skipInstanceCheck>
@@ -51,7 +51,8 @@ export default function TabLayout() {
           },
           headerShown: useClientOnlyValue(false, true),
           headerRight: () => <HeaderMenu />,
-        }}>
+        }}
+      >
         <Tabs.Screen
           name="mis-jugadores"
           options={{
@@ -77,5 +78,5 @@ export default function TabLayout() {
         />
       </Tabs>
     </MenuProvider>
-  );
+  )
 }

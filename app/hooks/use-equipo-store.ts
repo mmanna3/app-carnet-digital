@@ -13,19 +13,21 @@ export const useEquipoStore = create<EquipoState>()(
     (set) => ({
       equipoSeleccionadoId: null,
       equipoSeleccionadoNombre: null,
-      seleccionarEquipo: (id: number, nombre: string) => set({ 
-        equipoSeleccionadoId: id,
-        equipoSeleccionadoNombre: nombre
-      }),
-      limpiarEquipoSeleccionado: () => set({ 
-        equipoSeleccionadoId: null,
-        equipoSeleccionadoNombre: null
-      }),
+      seleccionarEquipo: (id: number, nombre: string) =>
+        set({
+          equipoSeleccionadoId: id,
+          equipoSeleccionadoNombre: nombre,
+        }),
+      limpiarEquipoSeleccionado: () =>
+        set({
+          equipoSeleccionadoId: null,
+          equipoSeleccionadoNombre: null,
+        }),
     }),
     {
-      name: 'equipo-storage'
+      name: 'equipo-storage',
     }
   )
 )
 
-export default useEquipoStore; 
+export default useEquipoStore

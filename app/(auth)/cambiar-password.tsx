@@ -1,68 +1,66 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { api } from '@/app/api/api';
-import { CambiarPasswordDTO } from '@/app/api/clients';
-import CommonStyles from '@/constants/CommonStyles';
-import Colores from '@/constants/Colores';
-import { useAuth } from '@/app/hooks/use-auth';
-import Boton from '@/components/boton';
+import { useState } from 'react'
+import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { useRouter, useLocalSearchParams } from 'expo-router'
+import { api } from '@/app/api/api'
+import { CambiarPasswordDTO } from '@/app/api/clients'
+import CommonStyles from '@/constants/CommonStyles'
+import Colores from '@/constants/Colores'
+import { useAuth } from '@/app/hooks/use-auth'
+import Boton from '@/components/boton'
 
 export default function CambiarPasswordScreen() {
-  const params = useLocalSearchParams();
-  const usuario = params.usuario as string;
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { setAuthState } = useAuth();
+  const params = useLocalSearchParams()
+  const usuario = params.usuario as string
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const { setAuthState } = useAuth()
 
   const handleSubmit = async () => {
     if (!newPassword || !confirmPassword) {
-      setError('Por favor complete todos los campos');
-      return;
+      setError('Por favor complete todos los campos')
+      return
     }
 
     if (newPassword !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
+      setError('Las contraseñas no coinciden')
+      return
     }
 
     try {
-      setError('');
-      setLoading(true);
+      setError('')
+      setLoading(true)
       const request = new CambiarPasswordDTO({
         usuario,
-        passwordNuevo: newPassword
-      });
-      
-      const response = await api.cambiarPassword(request);
-      
+        passwordNuevo: newPassword,
+      })
+
+      const response = await api.cambiarPassword(request)
+
       if (response.exito) {
-        setAuthState(response.token!, usuario);
-        router.push('/seleccion-de-equipo');
+        setAuthState(response.token!, usuario)
+        router.push('/seleccion-de-equipo')
       } else {
-        setError(response.error || 'Hubo un error al cambiar la contraseña');
+        setError(response.error || 'Hubo un error al cambiar la contraseña')
       }
     } catch (err) {
-      setError('Error comunicándose con el servidor');
-      console.error(err);
+      setError('Error comunicándose con el servidor')
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
         <Text style={styles.title}>Cambiar Contraseña</Text>
-        <Text style={styles.subtitle}>
-          Por favor ingrese su nueva contraseña
-        </Text>
-        
+        <Text style={styles.subtitle}>Por favor ingrese su nueva contraseña</Text>
+
         <TextInput
           style={CommonStyles.input}
           placeholder="Usuario"
@@ -70,7 +68,7 @@ export default function CambiarPasswordScreen() {
           value={usuario}
           editable={false}
         />
-        
+
         <TextInput
           style={CommonStyles.input}
           placeholder="Nueva Contraseña"
@@ -80,7 +78,7 @@ export default function CambiarPasswordScreen() {
           secureTextEntry
           editable={!loading}
         />
-        
+
         <TextInput
           style={CommonStyles.input}
           placeholder="Confirmar Nueva Contraseña"
@@ -90,18 +88,18 @@ export default function CambiarPasswordScreen() {
           secureTextEntry
           editable={!loading}
         />
-        
+
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        
-        <Boton 
-          texto={loading ? "Cambiando Contraseña..." : "Cambiar Contraseña"}
+
+        <Boton
+          texto={loading ? 'Cambiando Contraseña...' : 'Cambiar Contraseña'}
           onPress={handleSubmit}
           deshabilitado={loading}
           cargando={loading}
         />
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -131,4 +129,4 @@ const styles = StyleSheet.create({
     color: Colores.rojo,
     textAlign: 'center',
   },
-}); 
+})

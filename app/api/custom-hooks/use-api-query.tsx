@@ -8,15 +8,13 @@ interface IProps<TData, TTransformed = TData> {
   onError?: (error: unknown) => void
 }
 
-const useApiQuery = <TData, TTransformed = TData>(
-  props: IProps<TData, TTransformed>
-) => {
+const useApiQuery = <TData, TTransformed = TData>(props: IProps<TData, TTransformed>) => {
   return useQuery<TData, Error, TTransformed>({
     enabled: props.activado,
     queryKey: props.key,
     throwOnError: true,
     queryFn: async () => await props.fn(),
-    select: props.transformarResultado
+    select: props.transformarResultado,
   } as UseQueryOptions<TData, Error, TTransformed>)
 }
 

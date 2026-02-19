@@ -1,24 +1,29 @@
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
-import { Alert } from 'react-native';
-import { CarnetDigitalDTO } from '@/app/api/clients';
-import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador';
+import * as Print from 'expo-print'
+import * as Sharing from 'expo-sharing'
+import { Alert } from 'react-native'
+import { CarnetDigitalDTO } from '@/app/api/clients'
+import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
 
 const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
-  const estado = jugador.estado as EstadoJugador;
-  const debeMostrarEstado = estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido;
+  const estado = jugador.estado as EstadoJugador
+  const debeMostrarEstado =
+    estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido
 
   return `
     <div class="carnet">
-      ${debeMostrarEstado ? `
+      ${
+        debeMostrarEstado
+          ? `
         <div class="carnet-header estado" style="background: ${obtenerColorEstado(estado)}">
           <h3>${obtenerTextoEstado(estado)}</h3>
         </div>
-      ` : `
+      `
+          : `
         <div class="carnet-header">
           <h3>${jugador.nombre} ${jugador.apellido}</h3>
         </div>
-      `}
+      `
+      }
       <div class="carnet-body">
         <img src="${jugador.fotoCarnet || 'https://via.placeholder.com/100'}" />
         <div class="carnet-info">
@@ -28,8 +33,8 @@ const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
         </div>
       </div>
     </div>
-  `;
-};
+  `
+}
 
 const getPDFStyles = () => `
   * { print-color-adjust: exact !important; }
@@ -169,10 +174,10 @@ const getPDFStyles = () => `
     box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.1);
     pointer-events: none;
   }
-`;
+`
 
 export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: string) => {
-  if (jugadores.length === 0) return;
+  if (jugadores.length === 0) return
 
   try {
     const fechaGeneracion = new Date().toLocaleString('es-AR', {
@@ -180,18 +185,18 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    });
+      minute: '2-digit',
+    })
 
     // Ordenar jugadores por fecha de nacimiento (más viejos primero)
-    const jugadoresOrdenados = [...jugadores].sort((a, b) => 
-      new Date(a.fechaNacimiento).getTime() - new Date(b.fechaNacimiento).getTime()
-    );
+    const jugadoresOrdenados = [...jugadores].sort(
+      (a, b) => new Date(a.fechaNacimiento).getTime() - new Date(b.fechaNacimiento).getTime()
+    )
 
     // Dividir jugadores en grupos de 9 (3x3 por página)
-    const jugadoresPorPagina = [];
+    const jugadoresPorPagina = []
     for (let i = 0; i < jugadoresOrdenados.length; i += 9) {
-      jugadoresPorPagina.push(jugadoresOrdenados.slice(i, i + 9));
+      jugadoresPorPagina.push(jugadoresOrdenados.slice(i, i + 9))
     }
 
     const htmlContent = `
@@ -203,45 +208,45 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
           </style>
         </head>
         <body>
-          ${jugadoresPorPagina.map((pagina) => `
+          ${jugadoresPorPagina
+            .map(
+              (pagina) => `
             <div class="page">
               <div class="header">
                 <h1>${jugadores[0]?.equipo || 'Equipo'}</h1>
                 <p>Generado el ${fechaGeneracion}</p>
               </div>
               <div class="carnet-grid">
-                ${pagina.map(jugador => generarCarnetHTML(jugador)).join('')}
+                ${pagina.map((jugador) => generarCarnetHTML(jugador)).join('')}
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </body>
       </html>
-    `;
+    `
 
     const { uri } = await Print.printToFileAsync({
       html: htmlContent,
       width: 612, // US Letter width in points
       height: 792, // US Letter height in points
-    });
+    })
 
     if (await Sharing.isAvailableAsync()) {
       await Sharing.shareAsync(uri, {
         mimeType: 'application/pdf',
         dialogTitle: `Carnets ${codigoEquipo}`,
-        UTI: 'com.adobe.pdf'
-      });
+        UTI: 'com.adobe.pdf',
+      })
     } else {
-      Alert.alert(
-        'PDF Generado',
-        `El PDF se ha guardado en: ${uri}`,
-        [{ text: 'OK' }]
-      );
+      Alert.alert('PDF Generado', `El PDF se ha guardado en: ${uri}`, [{ text: 'OK' }])
     }
 
-    return uri;
+    return uri
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    Alert.alert('Error', 'No se pudo generar el PDF');
-    throw error;
+    console.error('Error generating PDF:', error)
+    Alert.alert('Error', 'No se pudo generar el PDF')
+    throw error
   }
-}; 
+}

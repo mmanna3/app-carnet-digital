@@ -35,8 +35,7 @@ const crearJugador = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 })
 
-const htmlGenerado = () =>
-  mockPrint.printToFileAsync.mock.calls[0][0].html as string
+const htmlGenerado = () => mockPrint.printToFileAsync.mock.calls[0][0].html as string
 
 describe('generatePDF', () => {
   beforeEach(() => {
@@ -129,7 +128,9 @@ describe('generatePDF', () => {
 
     it('muestra nombre y apellido para jugadores Activos', async () => {
       await generatePDF(
-        [crearJugador({ estado: EstadoJugador.Activo, nombre: 'Carlos', apellido: 'García' })] as any,
+        [
+          crearJugador({ estado: EstadoJugador.Activo, nombre: 'Carlos', apellido: 'García' }),
+        ] as any,
         'EQUIPO-01'
       )
 

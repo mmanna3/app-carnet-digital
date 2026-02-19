@@ -1,22 +1,22 @@
-import React from 'react';
-import { StyleSheet, Platform, Text, View } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
-import { useAuth } from '../hooks/use-auth';
+import React from 'react'
+import { StyleSheet, Platform, Text, View } from 'react-native'
+import { Entypo } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
+import { useAuth } from '../hooks/use-auth'
 
 export default function HeaderMenu() {
-  const router = useRouter();
-  const { logout } = useAuth();
+  const router = useRouter()
+  const { logout } = useAuth()
 
   const handleCambiarEquipo = () => {
-    router.push('/seleccion-de-equipo');
-  };
+    router.push('/seleccion-de-equipo')
+  }
 
   const handleCerrarSesion = () => {
-    logout();
-    router.replace('/(auth)/login');
-  };
+    logout()
+    router.replace('/(auth)/login')
+  }
 
   return (
     <View style={styles.container}>
@@ -36,7 +36,7 @@ export default function HeaderMenu() {
         </MenuOptions>
       </Menu>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     color: '#333',
     padding: 10,
   },
-});
+})
 
 const optionsStyles = {
   optionsContainer: {
@@ -71,4 +71,4 @@ const optionsStyles = {
       },
     }),
   },
-}; 
+}

@@ -33,9 +33,7 @@ describe('useAuth store', () => {
 
   describe('login exitoso', () => {
     it('setea token, usuario e isAuthenticated en true', async () => {
-      mockLogin.mockResolvedValue(
-        new LoginResponseDTO({ exito: true, token: 'jwt-abc-123' })
-      )
+      mockLogin.mockResolvedValue(new LoginResponseDTO({ exito: true, token: 'jwt-abc-123' }))
 
       await useAuth.getState().login('delegado1', 'password123')
 
@@ -46,9 +44,7 @@ describe('useAuth store', () => {
     })
 
     it('retorna la respuesta del servidor con exito=true', async () => {
-      mockLogin.mockResolvedValue(
-        new LoginResponseDTO({ exito: true, token: 'jwt-abc-123' })
-      )
+      mockLogin.mockResolvedValue(new LoginResponseDTO({ exito: true, token: 'jwt-abc-123' }))
 
       const result = await useAuth.getState().login('delegado1', 'password123')
 

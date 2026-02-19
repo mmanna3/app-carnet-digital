@@ -1,30 +1,33 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/app/api/clients';
-import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador';
+import React from 'react'
+import { View, Text, StyleSheet, Image } from 'react-native'
+import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/app/api/clients'
+import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
 
 interface CarnetProps {
-  jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO;
-  mostrarEstado?: boolean;
-  mostrarMotivo?: boolean;
+  jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO
+  mostrarEstado?: boolean
+  mostrarMotivo?: boolean
 }
 
-export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo = false }: CarnetProps) {
-  const estado = jugador.estado as EstadoJugador;
-  const debeMostrarEstado = mostrarEstado || estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido;
+export default function Carnet({
+  jugador,
+  mostrarEstado = false,
+  mostrarMotivo = false,
+}: CarnetProps) {
+  const estado = jugador.estado as EstadoJugador
+  const debeMostrarEstado =
+    mostrarEstado || estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido
 
   const obtenerCategoria = (fechaNacimiento: Date) => {
-    const año = new Date(fechaNacimiento).getFullYear().toString();
-    return año.slice(-2);
-  };
+    const año = new Date(fechaNacimiento).getFullYear().toString()
+    return año.slice(-2)
+  }
 
   return (
     <View style={styles.carnet}>
       {debeMostrarEstado && (
         <View style={[styles.carnetHeader, { backgroundColor: obtenerColorEstado(estado) }]}>
-          <Text style={styles.estado}>
-            {obtenerTextoEstado(estado)}
-          </Text>
+          <Text style={styles.estado}>{obtenerTextoEstado(estado)}</Text>
         </View>
       )}
       <View style={styles.carnetBody}>
@@ -32,15 +35,11 @@ export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo =
           <Text style={styles.equipo}>{jugador.equipo}</Text>
           <Text style={styles.torneo}>{jugador.torneo}</Text>
         </View>
-        
+
         <View style={styles.photoSection}>
           {jugador.fotoCarnet && (
             <View style={styles.fotoContainer}>
-              <Image 
-                source={{ uri: jugador.fotoCarnet }} 
-                style={styles.foto}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: jugador.fotoCarnet }} style={styles.foto} resizeMode="cover" />
             </View>
           )}
         </View>
@@ -78,7 +77,7 @@ export default function Carnet({ jugador, mostrarEstado = false, mostrarMotivo =
         )}
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -181,4 +180,4 @@ const styles = StyleSheet.create({
     color: '#333',
     lineHeight: 20,
   },
-}); 
+})

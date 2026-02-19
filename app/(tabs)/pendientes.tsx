@@ -1,45 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import useApiQuery from '../api/custom-hooks/use-api-query';
-import { api } from '../api/api';
-import { CarnetDigitalPendienteDTO } from '../api/clients';
-import { useEquipoStore } from '../hooks/use-equipo-store';
-import Carnet from '../components/carnet';
-import { EstadoJugador } from '../types/estado-jugador';
+import React from 'react'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import useApiQuery from '../api/custom-hooks/use-api-query'
+import { api } from '../api/api'
+import { CarnetDigitalPendienteDTO } from '../api/clients'
+import { useEquipoStore } from '../hooks/use-equipo-store'
+import Carnet from '../components/carnet'
+import { EstadoJugador } from '../types/estado-jugador'
 
 export default function PendientesScreen() {
-  const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore();
-  
-  const { data: jugadores, isLoading, isError } = useApiQuery({
+  const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore()
+
+  const {
+    data: jugadores,
+    isLoading,
+    isError,
+  } = useApiQuery({
     key: ['jugadores-pendientes', equipoSeleccionadoId],
     fn: async () => {
-      if (!equipoSeleccionadoId) throw new Error('No hay equipo seleccionado');
-      return await api.jugadoresPendientes(equipoSeleccionadoId);
+      if (!equipoSeleccionadoId) throw new Error('No hay equipo seleccionado')
+      return await api.jugadoresPendientes(equipoSeleccionadoId)
     },
     transformarResultado: (resultado) => resultado,
-    activado: !!equipoSeleccionadoId
-  });
+    activado: !!equipoSeleccionadoId,
+  })
 
   if (!equipoSeleccionadoId) {
     return (
       <View style={styles.container}>
         <Text style={styles.mensaje}>Debes seleccionar un equipo primero</Text>
       </View>
-    );
+    )
   }
 
   if (isLoading) {
-    return <Text style={styles.mensaje}>Cargando jugadores pendientes...</Text>;
+    return <Text style={styles.mensaje}>Cargando jugadores pendientes...</Text>
   }
 
   if (isError || !jugadores) {
-    return <Text style={styles.mensaje}>Error al cargar los jugadores pendientes.</Text>;
+    return <Text style={styles.mensaje}>Error al cargar los jugadores pendientes.</Text>
   }
 
   // Separar jugadores por estado
-  const jugadoresRechazados = jugadores.filter(j => j.estado === EstadoJugador.FichajeRechazado);
-  const jugadoresPendientes = jugadores.filter(j => j.estado === EstadoJugador.FichajePendienteDeAprobacion);
-  const jugadoresAprobadosPendientesDePago = jugadores.filter(j => j.estado === EstadoJugador.AprobadoPendienteDePago);
+  const jugadoresRechazados = jugadores.filter((j) => j.estado === EstadoJugador.FichajeRechazado)
+  const jugadoresPendientes = jugadores.filter(
+    (j) => j.estado === EstadoJugador.FichajePendienteDeAprobacion
+  )
+  const jugadoresAprobadosPendientesDePago = jugadores.filter(
+    (j) => j.estado === EstadoJugador.AprobadoPendienteDePago
+  )
 
   return (
     <ScrollView style={styles.container}>
@@ -76,7 +84,6 @@ export default function PendientesScreen() {
           </View>
         )}
 
-
         {jugadoresPendientes.length > 0 && (
           <View>
             <View style={[styles.estadoHeader, { backgroundColor: '#FFA726' }]}>
@@ -93,15 +100,14 @@ export default function PendientesScreen() {
           </View>
         )}
 
-        {jugadoresRechazados.length === 0 
-          && jugadoresPendientes.length === 0 
-          && jugadoresAprobadosPendientesDePago.length === 0 
-          && (
-          <Text style={styles.mensaje}>No hay jugadores pendientes</Text>
-        )}
+        {jugadoresRechazados.length === 0 &&
+          jugadoresPendientes.length === 0 &&
+          jugadoresAprobadosPendientesDePago.length === 0 && (
+            <Text style={styles.mensaje}>No hay jugadores pendientes</Text>
+          )}
       </View>
     </ScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -133,4 +139,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-}); 
+})

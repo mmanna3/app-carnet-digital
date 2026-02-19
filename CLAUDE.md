@@ -53,10 +53,12 @@ app/
 ### State Management
 
 **Zustand stores** (persisted to device storage):
+
 - `app/hooks/use-auth.ts` — token, username, isAuthenticated; key `auth-storage`
 - `app/hooks/use-equipo-store.ts` — selected team id/name; key `equipo-storage`
 
 **TanStack React Query** for server state:
+
 - `app/api/custom-hooks/use-api-query.tsx` — wraps `useQuery` with 2 retries, no refetch on focus, optional data transform
 - `app/api/custom-hooks/use-api-mutation.tsx` — wraps `useMutation` with error parsing
 

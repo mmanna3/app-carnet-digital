@@ -1,95 +1,107 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Platform, Alert } from 'react-native';
-import { api } from '../api/api';
-import { CarnetDigitalDTO } from '@/app/api/clients';
-import Boton from '@/components/boton';
-import Carnet from '../components/carnet';
-import { generatePDF } from '../utils/pdfGenerator';
+import React, { useState, useRef } from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+  Alert,
+} from 'react-native'
+import { api } from '../api/api'
+import { CarnetDigitalDTO } from '@/app/api/clients'
+import Boton from '@/components/boton'
+import Carnet from '../components/carnet'
+import { generatePDF } from '../utils/pdfGenerator'
 
 export default function BuscarScreen() {
-  const [codigoEquipo, setCodigoEquipo] = useState('');
-  const [jugadores, setJugadores] = useState<CarnetDigitalDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({});
+  const [codigoEquipo, setCodigoEquipo] = useState('')
+  const [jugadores, setJugadores] = useState<CarnetDigitalDTO[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const scrollViewRef = useRef<ScrollView>(null)
+  const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({})
 
   const buscarJugadores = async () => {
     if (!codigoEquipo.trim()) {
-      setError('Ingresá un código de equipo');
-      return;
+      setError('Ingresá un código de equipo')
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
     try {
-      const resultado = await api.carnetsPorCodigoAlfanumerico(codigoEquipo.trim());
-      setJugadores(resultado);
+      const resultado = await api.carnetsPorCodigoAlfanumerico(codigoEquipo.trim())
+      setJugadores(resultado)
       if (resultado.length === 0) {
-        setError('No se encontraron jugadores para este equipo');
+        setError('No se encontraron jugadores para este equipo')
       }
     } catch (err) {
-      setError('Error al buscar jugadores. Verificá el código e intentá nuevamente.');
-      setJugadores([]);
+      setError('Error al buscar jugadores. Verificá el código e intentá nuevamente.')
+      setJugadores([])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const obtenerAñoCompleto = (fechaNacimiento: Date) => {
-    return new Date(fechaNacimiento).getFullYear();
-  };
+    return new Date(fechaNacimiento).getFullYear()
+  }
 
   // Agrupar jugadores por categoría
-  const jugadoresPorCategoria = jugadores.reduce((acc, jugador) => {
-    const año = obtenerAñoCompleto(jugador.fechaNacimiento);
-    if (!acc[año]) {
-      acc[año] = [];
-    }
-    acc[año].push(jugador);
-    return acc;
-  }, {} as Record<number, CarnetDigitalDTO[]>);
+  const jugadoresPorCategoria = jugadores.reduce(
+    (acc, jugador) => {
+      const año = obtenerAñoCompleto(jugador.fechaNacimiento)
+      if (!acc[año]) {
+        acc[año] = []
+      }
+      acc[año].push(jugador)
+      return acc
+    },
+    {} as Record<number, CarnetDigitalDTO[]>
+  )
 
   // Ordenar las categorías de menor a mayor (más viejos primero)
   const categorias = Object.keys(jugadoresPorCategoria)
     .map(Number)
-    .sort((a, b) => a - b);
+    .sort((a, b) => a - b)
 
   const scrollToCategory = (año: number) => {
-    const position = categoryPositions[año];
+    const position = categoryPositions[año]
     if (position !== undefined && scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: position, animated: true });
+      scrollViewRef.current.scrollTo({ y: position, animated: true })
     }
-  };
+  }
 
   const handleCategoryLayout = (año: number, event: any) => {
-    const { y } = event.nativeEvent.layout;
-    setCategoryPositions(prev => ({
+    const { y } = event.nativeEvent.layout
+    setCategoryPositions((prev) => ({
       ...prev,
-      [año]: y
-    }));
-  };
+      [año]: y,
+    }))
+  }
 
   const handleGeneratePDF = async () => {
-    if (jugadores.length === 0) return;
+    if (jugadores.length === 0) return
 
-    setIsGeneratingPDF(true);
+    setIsGeneratingPDF(true)
     try {
-      await generatePDF(jugadores, codigoEquipo);
+      await generatePDF(jugadores, codigoEquipo)
     } catch (error) {
-      console.error('Error in handleGeneratePDF:', error);
+      console.error('Error in handleGeneratePDF:', error)
     } finally {
-      setIsGeneratingPDF(false);
+      setIsGeneratingPDF(false)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
       {jugadores.length > 0 && (
         <View style={styles.categoryButtonsContainer}>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoryButtonsContent}
           >
@@ -105,23 +117,20 @@ export default function BuscarScreen() {
           </ScrollView>
         </View>
       )}
-      <ScrollView 
-        ref={scrollViewRef} 
-        style={styles.scrollView}
-      >
+      <ScrollView ref={scrollViewRef} style={styles.scrollView}>
         <View style={styles.searchContainer}>
           <Text style={styles.titulo}>Ingresá el código del equipo</Text>
           <TextInput
             style={styles.input}
-            placeholderTextColor='#999'
+            placeholderTextColor="#999"
             placeholder="Ej: ABC1234"
             value={codigoEquipo}
             onChangeText={setCodigoEquipo}
             autoCapitalize="characters"
             maxLength={7}
           />
-          <Boton 
-            texto={isLoading ? "Buscando..." : "Ver jugadores"}
+          <Boton
+            texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
             onPress={buscarJugadores}
             deshabilitado={isLoading}
             cargando={isLoading}
@@ -129,8 +138,8 @@ export default function BuscarScreen() {
           {error && <Text style={styles.error}>{error}</Text>}
           {jugadores.length > 0 && (
             <View style={styles.pdfButtonContainer}>
-              <Boton 
-                texto={isGeneratingPDF ? "Generando PDF..." : "Generar PDF"}
+              <Boton
+                texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
                 onPress={handleGeneratePDF}
                 deshabilitado={isGeneratingPDF}
                 cargando={isGeneratingPDF}
@@ -142,18 +151,12 @@ export default function BuscarScreen() {
         {jugadores.length > 0 && (
           <View style={styles.carnetesContainer}>
             {categorias.map((año) => (
-              <View 
-                key={año}
-                onLayout={(event) => handleCategoryLayout(año, event)}
-              >
+              <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
                 <View style={styles.categoriaHeader}>
                   <Text style={styles.categoriaTexto}>Categoría {año}</Text>
                 </View>
                 {jugadoresPorCategoria[año].map((jugador) => (
-                  <Carnet
-                    key={jugador.id}
-                    jugador={jugador}
-                  />
+                  <Carnet key={jugador.id} jugador={jugador} />
                 ))}
               </View>
             ))}
@@ -161,7 +164,7 @@ export default function BuscarScreen() {
         )}
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -241,4 +244,4 @@ const styles = StyleSheet.create({
   pdfButtonContainer: {
     marginTop: 10,
   },
-}); 
+})

@@ -1,0 +1,5 @@
+node_modules
+.expo
+dist
+# Cliente NSwag auto-generado — no formatear manualmente
+app/api/clients.ts

@@ -1,6 +1,5 @@
-import { useAuth } from "../hooks/use-auth"
-import { router } from "expo-router"
-
+import { useAuth } from '../hooks/use-auth'
+import { router } from 'expo-router'
 
 export class HttpClientWrapper {
   private publicRoutes = ['/api/Auth/login', '/api/Publico']
@@ -26,12 +25,12 @@ export class HttpClientWrapper {
 
       init.headers = {
         ...headers,
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       }
     }
 
     const response = await fetch(url, init)
-    
+
     // Manejar token expirado
     if (response.status === 401 && !isPublicRoute) {
       useAuth.getState().logout()

@@ -1,89 +1,90 @@
-import { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/app/hooks/use-auth';
-import CommonStyles from '@/constants/CommonStyles';
-import Colores from '@/constants/Colores';
-import Boton from '@/components/boton';
+import { useState } from 'react'
+import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { useRouter } from 'expo-router'
+import { useAuth } from '@/app/hooks/use-auth'
+import CommonStyles from '@/constants/CommonStyles'
+import Colores from '@/constants/Colores'
+import Boton from '@/components/boton'
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { login } = useAuth();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const { login } = useAuth()
 
   const handleLogin = async () => {
     if (!username || !password) {
-      setError('Por favor ingrese usuario y contraseña');
-      return;
+      setError('Por favor ingrese usuario y contraseña')
+      return
     }
 
     try {
-      setError('');
-      setLoading(true);
-      const respuesta = await login(username, password);
-      
+      setError('')
+      setLoading(true)
+      const respuesta = await login(username, password)
+
       if (respuesta.exito) {
-        router.push('/seleccion-de-equipo');
+        router.push('/seleccion-de-equipo')
       } else {
         if (respuesta.error === 'El usuario debe cambiar la contraseña') {
           router.push({
             pathname: '/cambiar-password',
-            params: { usuario: username }
-          });
+            params: { usuario: username },
+          })
         }
-        setError(respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.');
+        setError(
+          respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.'
+        )
       }
     } catch (err) {
-      setError('Error comunicándose con el servidor');
-      console.error(err);
+      setError('Error comunicándose con el servidor')
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-      <Text style={styles.title}>Carnet digital</Text>
-      <Text style={styles.subtitulo}>
-        ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la
-        administración de la liga.
-      </Text>
-      
-      <TextInput
-        style={CommonStyles.input}
-        placeholder="Usuario"
-        placeholderTextColor="#555"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-        editable={!loading}
-      />
-      
-      <TextInput
-        style={CommonStyles.input}
-        placeholder="Contraseña"
-        placeholderTextColor="#555"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        editable={!loading}
-      />
-      
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      
-      <Boton 
-        texto={loading ? "Iniciando Sesión..." : "Iniciar Sesión"}
-        onPress={handleLogin}
-        deshabilitado={loading}
-        cargando={loading}
-      />
+        <Text style={styles.title}>Carnet digital</Text>
+        <Text style={styles.subtitulo}>
+          ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la administración de la liga.
+        </Text>
+
+        <TextInput
+          style={CommonStyles.input}
+          placeholder="Usuario"
+          placeholderTextColor="#555"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+          editable={!loading}
+        />
+
+        <TextInput
+          style={CommonStyles.input}
+          placeholder="Contraseña"
+          placeholderTextColor="#555"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          editable={!loading}
+        />
+
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+        <Boton
+          texto={loading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
+          onPress={handleLogin}
+          deshabilitado={loading}
+          cargando={loading}
+        />
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -102,15 +103,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'black'
+    color: 'black',
   },
   subtitulo: {
     fontSize: 20,
     marginTop: 20,
     marginBottom: 30,
     // marginHorizontal: 30,
-    textAlign: "center",
-    color: "black",
+    textAlign: 'center',
+    color: 'black',
   },
   input: {
     height: 50,
@@ -143,4 +144,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-}); 
+})

@@ -1,33 +1,40 @@
-import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import Colores from '@/constants/Colores';
+import React from 'react'
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from 'react-native'
+import Colores from '@/constants/Colores'
 
 interface BotonProps {
-  onPress: () => void;
-  texto: string;
-  deshabilitado?: boolean;
-  cargando?: boolean;
-  estilo?: ViewStyle;
-  estiloTexto?: TextStyle;
-  disabled?: boolean;
+  onPress: () => void
+  texto: string
+  deshabilitado?: boolean
+  cargando?: boolean
+  estilo?: ViewStyle
+  estiloTexto?: TextStyle
+  disabled?: boolean
 }
 
-export default function Boton({ 
-  onPress, 
-  texto, 
-  deshabilitado = false, 
+export default function Boton({
+  onPress,
+  texto,
+  deshabilitado = false,
   cargando = false,
   estilo,
   estiloTexto,
-  disabled = false
+  disabled = false,
 }: BotonProps) {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={[
         styles.boton,
         (deshabilitado || disabled) && styles.botonDeshabilitado,
         cargando && styles.botonDeshabilitado,
-        estilo
+        estilo,
       ]}
       onPress={onPress}
       disabled={deshabilitado || cargando || disabled}
@@ -38,7 +45,7 @@ export default function Boton({
         <Text style={[styles.textoBoton, estiloTexto]}>{texto}</Text>
       )}
     </TouchableOpacity>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -58,4 +65,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+})

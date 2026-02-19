@@ -22,26 +22,26 @@ export const useAuth = create<AuthState>()(
         try {
           const loginRequest = new LoginDTO({
             usuario,
-            password
+            password,
           })
           const response = await api.login(loginRequest)
-      
+
           if (response.exito && response.token) {
             set({ token: response.token, usuario: usuario, isAuthenticated: true })
             return response
           }
-      
-          return new LoginResponseDTO({ 
-            exito: false, 
-            error: response.error || 'Error de autenticación' 
+
+          return new LoginResponseDTO({
+            exito: false,
+            error: response.error || 'Error de autenticación',
           })
         } catch (error: any) {
-          const errorMessage = error.response 
-            ? JSON.parse(error.response).error 
+          const errorMessage = error.response
+            ? JSON.parse(error.response).error
             : 'Hubo un error conectándose al servidor'
-          return new LoginResponseDTO({ 
-            exito: false, 
-            error: errorMessage 
+          return new LoginResponseDTO({
+            exito: false,
+            error: errorMessage,
           })
         }
       },
@@ -54,12 +54,12 @@ export const useAuth = create<AuthState>()(
           return
         }
         set({ token, usuario, isAuthenticated: true })
-      }
+      },
     }),
     {
-      name: 'auth-storage'
+      name: 'auth-storage',
     }
   )
 )
 
-export default useAuth;
+export default useAuth
