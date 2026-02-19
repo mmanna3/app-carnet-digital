@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, TextInput, Text } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/app/hooks/use-auth'
-import CommonStyles from '@/constants/CommonStyles'
-import Colores from '@/constants/Colores'
 import Boton from '@/components/boton'
 
 export default function LoginScreen() {
@@ -47,15 +45,15 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Carnet digital</Text>
-        <Text style={styles.subtitulo}>
+    <View className="flex-1 bg-white justify-center">
+      <View className="w-full max-w-[300px] self-center">
+        <Text className="text-3xl font-bold text-center text-black">Carnet digital</Text>
+        <Text className="text-xl mt-5 mb-8 text-center text-black">
           ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la administración de la liga.
         </Text>
 
         <TextInput
-          style={CommonStyles.input}
+          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
           placeholder="Usuario"
           placeholderTextColor="#555"
           value={username}
@@ -65,7 +63,7 @@ export default function LoginScreen() {
         />
 
         <TextInput
-          style={CommonStyles.input}
+          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
           placeholder="Contraseña"
           placeholderTextColor="#555"
           value={password}
@@ -74,7 +72,7 @@ export default function LoginScreen() {
           editable={!loading}
         />
 
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {error ? <Text className="text-red-500 mb-2.5 text-center">{error}</Text> : null}
 
         <Boton
           texto={loading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
@@ -86,62 +84,3 @@ export default function LoginScreen() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    // maxWidth: 500,
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 300,
-    alignSelf: 'center',
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'black',
-  },
-  subtitulo: {
-    fontSize: 20,
-    marginTop: 20,
-    marginBottom: 30,
-    // marginHorizontal: 30,
-    textAlign: 'center',
-    color: 'black',
-  },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: Colores.verde,
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-})

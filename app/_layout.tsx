@@ -1,3 +1,4 @@
+import '../global.css'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
@@ -24,7 +25,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
-function useProtectedRoute() {
+function useProtectedRoute(loaded: boolean) {
   const segments = useSegments()
   const router = useRouter()
   const { isAuthenticated } = useAuth()
@@ -33,47 +34,19 @@ function useProtectedRoute() {
 
   useEffect(() => {
     if (!navigationState?.key) return
+    if (!loaded) return
 
     const inAuthGroup = segments[0] === '(auth)'
     const inSeleccionEquipo = segments[0] === 'seleccion-de-equipo'
 
     if (!isAuthenticated && !inAuthGroup) {
-      // Prevent navigation loop
-      if (!inAuthGroup) {
-        router.replace('/(auth)/login')
-      }
+      router.replace('/(auth)/login')
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/seleccion-de-equipo')
     } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
       router.replace('/seleccion-de-equipo')
     }
-  }, [isAuthenticated, segments, equipoSeleccionadoId, navigationState?.key])
-}
-
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  })
-
-  useProtectedRoute()
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error
-  }, [error])
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync()
-    }
-  }, [loaded])
-
-  if (!loaded) {
-    return null
-  }
-
-  return <RootLayoutNav />
+  }, [isAuthenticated, segments, equipoSeleccionadoId, navigationState?.key, loaded])
 }
 
 const queryClient = new QueryClient({
@@ -85,8 +58,29 @@ const queryClient = new QueryClient({
   },
 })
 
-function RootLayoutNav() {
+export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ...FontAwesome.font,
+  })
   const colorScheme = useColorScheme()
+
+  useEffect(() => {
+    if (error) throw error
+  }, [error])
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync()
+    }
+  }, [loaded])
+
+  useProtectedRoute(loaded)
+
+  if (!loaded) {
+    // Slot es un navegador válido; evita el error de "navigate before mounting"
+    return <Slot />
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -99,7 +93,7 @@ function RootLayoutNav() {
             options={{
               headerShown: false,
               presentation: 'modal',
-              gestureEnabled: false, // Prevent swipe to dismiss
+              gestureEnabled: false,
             }}
           />
         </Stack>

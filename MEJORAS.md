@@ -65,7 +65,7 @@ Corre ESLint y Prettier automáticamente en cada commit.
 
 ---
 
-## 2. NativeWind — design system + theming multi-liga en un solo paso
+## 2. NativeWind — design system + theming multi-liga en un solo paso ✅ HECHO
 
 **NativeWind** es Tailwind CSS para React Native. Reemplaza `StyleSheet.create({...})` con clases `className`, exactamente igual que en web. Internamente sigue compilando a StyleSheet, por lo que no hay overhead de runtime.
 

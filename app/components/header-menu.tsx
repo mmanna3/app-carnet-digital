@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform, Text, View } from 'react-native'
+import { Platform, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
@@ -19,39 +19,25 @@ export default function HeaderMenu() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="mr-2.5">
       <Menu>
         <MenuTrigger>
-          <View style={styles.menuButton}>
+          <View className="p-2">
             <Entypo name="dots-three-vertical" size={24} color="#333" />
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
           <MenuOption onSelect={handleCambiarEquipo}>
-            <Text style={styles.optionText}>Cambiar equipo</Text>
+            <Text className="text-base text-[#333] p-2.5">Cambiar equipo</Text>
           </MenuOption>
           <MenuOption onSelect={handleCerrarSesion}>
-            <Text style={styles.optionText}>Cerrar sesión</Text>
+            <Text className="text-base text-[#333] p-2.5">Cerrar sesión</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginRight: 10,
-  },
-  menuButton: {
-    padding: 8,
-  },
-  optionText: {
-    fontSize: 16,
-    color: '#333',
-    padding: 10,
-  },
-})
 
 const optionsStyles = {
   optionsContainer: {

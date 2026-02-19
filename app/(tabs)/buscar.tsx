@@ -1,14 +1,5 @@
 import React, { useState, useRef } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Alert,
-} from 'react-native'
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { api } from '../api/api'
 import { CarnetDigitalDTO } from '@/app/api/clients'
 import Boton from '@/components/boton'
@@ -50,7 +41,6 @@ export default function BuscarScreen() {
     return new Date(fechaNacimiento).getFullYear()
   }
 
-  // Agrupar jugadores por categoría
   const jugadoresPorCategoria = jugadores.reduce(
     (acc, jugador) => {
       const año = obtenerAñoCompleto(jugador.fechaNacimiento)
@@ -63,7 +53,6 @@ export default function BuscarScreen() {
     {} as Record<number, CarnetDigitalDTO[]>
   )
 
-  // Ordenar las categorías de menor a mayor (más viejos primero)
   const categorias = Object.keys(jugadoresPorCategoria)
     .map(Number)
     .sort((a, b) => a - b)
@@ -97,31 +86,33 @@ export default function BuscarScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#f8f8f8]">
       {jugadores.length > 0 && (
-        <View style={styles.categoryButtonsContainer}>
+        <View className="bg-white py-2.5 border-b border-gray-200 z-[1]">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoryButtonsContent}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
           >
             {categorias.map((año) => (
               <TouchableOpacity
                 key={`button-${año}`}
-                style={styles.categoryButton}
+                className="bg-primary px-5 py-2 rounded-full mx-1.5"
                 onPress={() => scrollToCategory(año)}
               >
-                <Text style={styles.categoryButtonText}>{año}</Text>
+                <Text className="text-white text-base font-semibold">{año}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
       )}
-      <ScrollView ref={scrollViewRef} style={styles.scrollView}>
-        <View style={styles.searchContainer}>
-          <Text style={styles.titulo}>Ingresá el código del equipo</Text>
+      <ScrollView ref={scrollViewRef} className="flex-1">
+        <View className="p-5 bg-white rounded-xl m-2.5 shadow elevation-3">
+          <Text className="text-xl font-bold mb-4 text-center text-[#333]">
+            Ingresá el código del equipo
+          </Text>
           <TextInput
-            style={styles.input}
+            className="bg-[#f5f5f5] rounded-lg p-3 text-base mb-4"
             placeholderTextColor="#999"
             placeholder="Ej: ABC1234"
             value={codigoEquipo}
@@ -135,9 +126,9 @@ export default function BuscarScreen() {
             deshabilitado={isLoading}
             cargando={isLoading}
           />
-          {error && <Text style={styles.error}>{error}</Text>}
+          {error && <Text className="text-[#e53935] mt-3 text-center">{error}</Text>}
           {jugadores.length > 0 && (
-            <View style={styles.pdfButtonContainer}>
+            <View className="mt-2.5">
               <Boton
                 texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
                 onPress={handleGeneratePDF}
@@ -149,11 +140,11 @@ export default function BuscarScreen() {
         </View>
 
         {jugadores.length > 0 && (
-          <View style={styles.carnetesContainer}>
+          <View className="p-2.5">
             {categorias.map((año) => (
               <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
-                <View style={styles.categoriaHeader}>
-                  <Text style={styles.categoriaTexto}>Categoría {año}</Text>
+                <View className="bg-primary p-3 mb-4 rounded-lg shadow-sm">
+                  <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
                 </View>
                 {jugadoresPorCategoria[año].map((jugador) => (
                   <Carnet key={jugador.id} jugador={jugador} />
@@ -166,82 +157,3 @@ export default function BuscarScreen() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-  },
-  categoryButtonsContainer: {
-    backgroundColor: '#fff',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    zIndex: 1,
-  },
-  categoryButtonsContent: {
-    paddingHorizontal: 10,
-  },
-  categoryButton: {
-    backgroundColor: '#2196F3',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginHorizontal: 5,
-  },
-  categoryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  searchContainer: {
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    margin: 10,
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  titulo: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
-    color: '#333',
-  },
-  input: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  error: {
-    color: '#e53935',
-    marginTop: 12,
-    textAlign: 'center',
-  },
-  carnetesContainer: {
-    padding: 10,
-  },
-  categoriaHeader: {
-    backgroundColor: '#2196F3',
-    padding: 12,
-    marginBottom: 16,
-    borderRadius: 8,
-    boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)',
-    elevation: 2,
-  },
-  categoriaTexto: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  pdfButtonContainer: {
-    marginTop: 10,
-  },
-})

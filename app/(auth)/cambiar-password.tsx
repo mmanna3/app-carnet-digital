@@ -1,12 +1,8 @@
-'use client'
-
 import { useState } from 'react'
-import { View, TextInput, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, TextInput, Text } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { api } from '@/app/api/api'
 import { CambiarPasswordDTO } from '@/app/api/clients'
-import CommonStyles from '@/constants/CommonStyles'
-import Colores from '@/constants/Colores'
 import { useAuth } from '@/app/hooks/use-auth'
 import Boton from '@/components/boton'
 
@@ -56,13 +52,15 @@ export default function CambiarPasswordScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Cambiar Contraseña</Text>
-        <Text style={styles.subtitle}>Por favor ingrese su nueva contraseña</Text>
+    <View className="flex-1 bg-white p-5">
+      <View className="flex-1 justify-center gap-5">
+        <Text className="text-2xl font-bold text-black text-center">Cambiar Contraseña</Text>
+        <Text className="text-base text-black text-center mb-5">
+          Por favor ingrese su nueva contraseña
+        </Text>
 
         <TextInput
-          style={CommonStyles.input}
+          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
           placeholder="Usuario"
           placeholderTextColor="#555"
           value={usuario}
@@ -70,7 +68,7 @@ export default function CambiarPasswordScreen() {
         />
 
         <TextInput
-          style={CommonStyles.input}
+          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
           placeholder="Nueva Contraseña"
           placeholderTextColor="#555"
           value={newPassword}
@@ -80,7 +78,7 @@ export default function CambiarPasswordScreen() {
         />
 
         <TextInput
-          style={CommonStyles.input}
+          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
           placeholder="Confirmar Nueva Contraseña"
           placeholderTextColor="#555"
           value={confirmPassword}
@@ -89,7 +87,7 @@ export default function CambiarPasswordScreen() {
           editable={!loading}
         />
 
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {error ? <Text className="text-red-500 text-center">{error}</Text> : null}
 
         <Boton
           texto={loading ? 'Cambiando Contraseña...' : 'Cambiar Contraseña'}
@@ -101,32 +99,3 @@ export default function CambiarPasswordScreen() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colores.light.background,
-    padding: 20,
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colores.light.text,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colores.light.text,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  errorText: {
-    color: Colores.rojo,
-    textAlign: 'center',
-  },
-})

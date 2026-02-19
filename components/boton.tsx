@@ -1,22 +1,11 @@
 import React from 'react'
-import {
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native'
-import Colores from '@/constants/Colores'
+import { TouchableOpacity, Text, ActivityIndicator } from 'react-native'
 
 interface BotonProps {
   onPress: () => void
   texto: string
   deshabilitado?: boolean
   cargando?: boolean
-  estilo?: ViewStyle
-  estiloTexto?: TextStyle
-  disabled?: boolean
 }
 
 export default function Boton({
@@ -24,45 +13,19 @@ export default function Boton({
   texto,
   deshabilitado = false,
   cargando = false,
-  estilo,
-  estiloTexto,
-  disabled = false,
 }: BotonProps) {
+  const isDisabled = deshabilitado || cargando
   return (
     <TouchableOpacity
-      style={[
-        styles.boton,
-        (deshabilitado || disabled) && styles.botonDeshabilitado,
-        cargando && styles.botonDeshabilitado,
-        estilo,
-      ]}
+      className={`bg-primary h-[50px] rounded-lg justify-center items-center mt-2.5${isDisabled ? ' opacity-70' : ''}`}
       onPress={onPress}
-      disabled={deshabilitado || cargando || disabled}
+      disabled={isDisabled}
     >
       {cargando ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={[styles.textoBoton, estiloTexto]}>{texto}</Text>
+        <Text className="text-white text-base font-semibold">{texto}</Text>
       )}
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  boton: {
-    backgroundColor: Colores.verde,
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  botonDeshabilitado: {
-    opacity: 0.7,
-  },
-  textoBoton: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-})
