@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { zustandStorage } from '../storage/zustand-storage'
 
 interface EquipoState {
   equipoSeleccionadoId: number | null
@@ -26,6 +27,7 @@ export const useEquipoStore = create<EquipoState>()(
     }),
     {
       name: 'equipo-storage',
+      storage: zustandStorage,
     }
   )
 )

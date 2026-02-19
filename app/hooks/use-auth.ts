@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { zustandStorage } from '../storage/zustand-storage'
 import { LoginDTO, LoginResponseDTO } from '../api/clients'
 import { api } from '../api/api'
 
@@ -58,6 +59,7 @@ export const useAuth = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
+      storage: zustandStorage,
     }
   )
 )
