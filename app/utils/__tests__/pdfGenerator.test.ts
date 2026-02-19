@@ -35,14 +35,17 @@ const crearJugador = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 })
 
-const htmlGenerado = () => mockPrint.printToFileAsync.mock.calls[0][0].html as string
+const htmlGenerado = () => mockPrint.printToFileAsync.mock.calls[0]![0]!.html as string
 
 describe('generatePDF', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     // Restaurar el default luego de cada test que lo sobreescriba
     mockSharing.isAvailableAsync.mockResolvedValue(true)
-    mockPrint.printToFileAsync.mockResolvedValue({ uri: 'file://carnets-generados.pdf' })
+    mockPrint.printToFileAsync.mockResolvedValue({
+      uri: 'file://carnets-generados.pdf',
+      numberOfPages: 1,
+    })
   })
 
   describe('lista vacía', () => {

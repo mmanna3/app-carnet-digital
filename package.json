@@ -21,6 +21,7 @@
     "test": "jest --watchAll",
     "test:ci": "jest --no-coverage",
     "test:e2e": "maestro test --format html e2e/basic_test.yaml",
+    "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
