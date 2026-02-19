@@ -30,7 +30,7 @@ export class HttpClientWrapper {
       }
     }
 
-    const response = await window.fetch(url, init)
+    const response = await fetch(url, init)
     
     // Manejar token expirado
     if (response.status === 401 && !isPublicRoute) {
