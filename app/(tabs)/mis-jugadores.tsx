@@ -5,6 +5,7 @@ import { api } from '../api/api'
 import { CarnetDigitalDTO } from '../api/clients'
 import { useEquipoStore } from '../hooks/use-equipo-store'
 import { useAuth } from '../hooks/use-auth'
+import { queryKeys } from '../api/query-keys'
 import Carnet from '../components/carnet'
 
 export default function MisJugadoresScreen() {
@@ -18,7 +19,7 @@ export default function MisJugadoresScreen() {
     isLoading,
     isError,
   } = useApiQuery({
-    key: ['carnets', equipoSeleccionadoId],
+    key: queryKeys.carnets.byEquipo(equipoSeleccionadoId),
     fn: async () => {
       if (!equipoSeleccionadoId) throw new Error('No hay equipo seleccionado')
       return await api.carnets(equipoSeleccionadoId)

@@ -5,10 +5,11 @@ import useApiQuery from './api/custom-hooks/use-api-query'
 import { api } from './api/api'
 import { EquipoBaseDTO } from './api/clients'
 import { useEquipoStore } from './hooks/use-equipo-store'
+import { queryKeys } from './api/query-keys'
 
 export default function TeamSelectionScreen() {
   const { data, isLoading, isError } = useApiQuery({
-    key: ['equipos'],
+    key: queryKeys.equipos.all,
     fn: async () => await api.equiposDelDelegado(),
     transformarResultado: (resultado) => resultado,
   })

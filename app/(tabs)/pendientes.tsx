@@ -4,6 +4,7 @@ import useApiQuery from '../api/custom-hooks/use-api-query'
 import { api } from '../api/api'
 import { CarnetDigitalPendienteDTO } from '../api/clients'
 import { useEquipoStore } from '../hooks/use-equipo-store'
+import { queryKeys } from '../api/query-keys'
 import Carnet from '../components/carnet'
 import { EstadoJugador } from '../types/estado-jugador'
 
@@ -15,7 +16,7 @@ export default function PendientesScreen() {
     isLoading,
     isError,
   } = useApiQuery({
-    key: ['jugadores-pendientes', equipoSeleccionadoId],
+    key: queryKeys.jugadores.pendientes(equipoSeleccionadoId),
     fn: async () => {
       if (!equipoSeleccionadoId) throw new Error('No hay equipo seleccionado')
       return await api.jugadoresPendientes(equipoSeleccionadoId)
