@@ -97,7 +97,7 @@ export default function BuscarScreen() {
             {categorias.map((año) => (
               <TouchableOpacity
                 key={`button-${año}`}
-                className="bg-primary px-5 py-2 rounded-full mx-1.5"
+                className="bg-liga-600 px-5 py-2 rounded-full mx-1.5"
                 onPress={() => scrollToCategory(año)}
               >
                 <Text className="text-white text-base font-semibold">{año}</Text>
@@ -143,7 +143,7 @@ export default function BuscarScreen() {
           <View className="p-2.5">
             {categorias.map((año) => (
               <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
-                <View className="bg-primary p-3 mb-4 rounded-lg shadow-sm">
+                <View className="bg-liga-600 p-3 mb-4 rounded-lg shadow-sm">
                   <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
                 </View>
                 {jugadoresPorCategoria[año].map((jugador) => (

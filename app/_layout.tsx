@@ -5,11 +5,13 @@ import { useFonts } from 'expo-font'
 import { Slot, Stack, useSegments, useRouter, useRootNavigationState } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
+import Constants from 'expo-constants'
 import 'react-native-reanimated'
 
 import { useColorScheme } from '@/components/useColorScheme'
 import { useAuth } from './hooks/use-auth'
 import { useEquipoStore } from './hooks/use-equipo-store'
+import { useLigaStore } from './hooks/use-liga-store'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export {
@@ -18,8 +20,7 @@ export {
 } from 'expo-router'
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: 'home',
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -30,7 +31,10 @@ function useProtectedRoute(loaded: boolean) {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
   const { equipoSeleccionadoId } = useEquipoStore()
+  const ligaSeleccionadaId = useLigaStore((s) => s.ligaSeleccionadaId)
   const navigationState = useRootNavigationState()
+
+  const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
 
   useEffect(() => {
     if (!navigationState?.key) return
@@ -38,15 +42,32 @@ function useProtectedRoute(loaded: boolean) {
 
     const inAuthGroup = segments[0] === '(auth)'
     const inSeleccionEquipo = segments[0] === 'seleccion-de-equipo'
+    const inSeleccionLiga = (segments[0] as string) === 'seleccion-de-liga'
+    const inHome = (segments[0] as string) === 'home'
+    const inFichajes = (segments[0] as string) === 'fichajes'
 
-    if (!isAuthenticated && !inAuthGroup) {
-      router.replace('/(auth)/login')
+    if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
+      router.replace('/seleccion-de-liga' as any)
+      return
+    }
+
+    // No autenticado: Home (UNILIGA o MULTILIGA con liga elegida), (auth) o seleccion-de-liga
+    if (!isAuthenticated && !inAuthGroup && !inSeleccionLiga && !inHome && !inFichajes) {
+      router.replace('/home' as any)
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/seleccion-de-equipo')
     } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
       router.replace('/seleccion-de-equipo')
     }
-  }, [isAuthenticated, segments, equipoSeleccionadoId, navigationState?.key, loaded])
+  }, [
+    esMultiliga,
+    ligaSeleccionadaId,
+    isAuthenticated,
+    segments,
+    equipoSeleccionadoId,
+    navigationState?.key,
+    loaded,
+  ])
 }
 
 const queryClient = new QueryClient({
@@ -86,8 +107,14 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="home" options={{ headerShown: false }} />
+          <Stack.Screen name="fichajes" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="seleccion-de-liga"
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
           <Stack.Screen
             name="seleccion-de-equipo"
             options={{

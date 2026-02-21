@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, TextInput, Text } from 'react-native'
+import { View, TextInput, Text, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/app/hooks/use-auth'
 import Boton from '@/components/boton'
@@ -46,6 +46,9 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1 bg-white justify-center">
+      <TouchableOpacity onPress={() => router.back()} className="absolute top-12 left-5 z-10">
+        <Text className="text-base text-liga-600">← Volver</Text>
+      </TouchableOpacity>
       <View className="w-full max-w-[300px] self-center">
         <Text className="text-3xl font-bold text-center text-black">Carnet digital</Text>
         <Text className="text-xl mt-5 mb-8 text-center text-black">

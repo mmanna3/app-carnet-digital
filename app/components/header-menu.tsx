@@ -2,15 +2,29 @@ import React from 'react'
 import { Platform, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import Constants from 'expo-constants'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 import { useAuth } from '../hooks/use-auth'
+import { useEquipoStore } from '../hooks/use-equipo-store'
+import { useLigaStore } from '../hooks/use-liga-store'
 
 export default function HeaderMenu() {
   const router = useRouter()
   const { logout } = useAuth()
+  const { limpiarEquipoSeleccionado } = useEquipoStore()
+  const { limpiarLiga } = useLigaStore()
+
+  const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
 
   const handleCambiarEquipo = () => {
     router.push('/seleccion-de-equipo')
+  }
+
+  const handleCambiarLiga = () => {
+    logout()
+    limpiarEquipoSeleccionado()
+    limpiarLiga()
+    router.replace('/seleccion-de-liga' as any)
   }
 
   const handleCerrarSesion = () => {
@@ -27,6 +41,11 @@ export default function HeaderMenu() {
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
+          {esMultiliga && (
+            <MenuOption onSelect={handleCambiarLiga}>
+              <Text className="text-base text-[#333] p-2.5">Cambiar liga</Text>
+            </MenuOption>
+          )}
           <MenuOption onSelect={handleCambiarEquipo}>
             <Text className="text-base text-[#333] p-2.5">Cambiar equipo</Text>
           </MenuOption>

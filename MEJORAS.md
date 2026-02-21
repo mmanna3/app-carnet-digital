@@ -176,7 +176,7 @@ export const queryKeys = {
 
 ## 5. Arquitectura multi-liga (white-label)
 
-El approach oficial de Expo es **`app.config.ts` dinámico + variable de entorno `LEAGUE_ID`**.
+El approach oficial de Expo es **`app.config.ts` dinámico + variable de entorno `LIGA_ID`**.
 
 ### 5a. Estructura de archivos
 
@@ -255,9 +255,9 @@ export const luefiConfig: LeagueConfig = {
 import { ExpoConfig } from 'expo/config'
 import { luefiConfig } from './league-configs/luefi'
 
-const LEAGUE_ID = process.env.LEAGUE_ID ?? 'luefi'
+const LIGA_ID = process.env.LIGA_ID ?? 'luefi'
 const configs = { luefi: luefiConfig }
-const league = configs[LEAGUE_ID]
+const league = configs[LIGA_ID]
 
 export default (): ExpoConfig => ({
   name: league.appName,
@@ -265,7 +265,7 @@ export default (): ExpoConfig => ({
   scheme: league.scheme,
   // ... resto dinámico
   extra: {
-    leagueId: LEAGUE_ID,
+    leagueId: LIGA_ID,
     leagueName: league.leagueDisplayName,
     apiUrl: league.apiUrl,
     colors: league.colors,
@@ -281,11 +281,11 @@ export default (): ExpoConfig => ({
   "build": {
     "production-luefi": {
       "autoIncrement": true,
-      "env": { "LEAGUE_ID": "luefi" }
+      "env": { "LIGA_ID": "luefi" }
     },
     "production-rosario": {
       "autoIncrement": true,
-      "env": { "LEAGUE_ID": "liga-rosario" }
+      "env": { "LIGA_ID": "liga-rosario" }
     }
   }
 }

@@ -1,92 +1,97 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Este archivo guía a Claude Code al trabajar con el código de este repositorio.
 
-## Project Overview
+## Descripción del proyecto
 
-React Native + Expo app for managing digital sports player registration cards ("carnets"). Delegates log in, select their team, and view/search player cards with their registration status. Targets iOS, Android, and Web.
+App React Native + Expo para gestionar carnets digitales de jugadores. Los delegados inician sesión, eligen su equipo y ven/buscan carnets con el estado de registro. Soporta iOS, Android y Web.
 
-## Commands
+## Comandos
+
+**Importante:** Todos los comandos requieren `LIGA_ID` (start, build, deploy). Si no está definido, fallan.
 
 ```bash
-# Development
-npm start                # Start Expo dev server
-npm run start:dev        # Start with dev client
-npm run ios              # Run on iOS simulator
-npm run android          # Run on Android emulator
+# Desarrollo
+LIGA_ID=edefi npm start           # UNILIGA (app EDeFI)
+LIGA_ID=multiliga npm start       # MULTILIGA (selección de liga)
+LIGA_ID=edefi npm run start:dev   # Con dev client
+LIGA_ID=edefi npm run ios         # Simulador iOS
+LIGA_ID=edefi npm run android     # Emulador Android
 
 # Testing
-npm test                 # Jest (watch mode)
-npm run test:e2e         # Maestro E2E tests (HTML output)
+LIGA_ID=edefi npm run test:ci     # Jest
+npm run test:e2e                    # Maestro E2E
 
-# Build & Deploy
-npm run ios:build        # EAS build for iOS
-npm run ios:deploy       # Deploy to App Store
-npm run android:build    # EAS build for Android
-npm run android:deploy   # Deploy to Play Store
+# Build y deploy
+LIGA_ID=edefi npm run ios:build
+LIGA_ID=edefi npm run ios:deploy
+LIGA_ID=multiliga npm run ios:build   # App MULTILIGA
 
-# Maintenance
-npm run limpiar          # Clean dependencies and caches
+# Mantenimiento
+npm run limpiar          # Limpiar dependencias y cachés
 ```
 
-**Deployment workflow** (README): bump version in `app.json`, then run build → deploy.
+**Workflow de deploy:** subir versión en `app.config.ts`, luego build → deploy con el mismo `LIGA_ID`.
 
-## Architecture
+## Arquitectura
+
+### UNILIGA vs MULTILIGA
+
+- **UNILIGA:** Una app por liga (un ícono en el store). Liga fija en build. `APPS_UNILIGAS = ['edefi']`.
+- **MULTILIGA:** Una app "Carnet Digital" con varias ligas. Usuario selecciona liga al inicio. `LIGAS_DE_APP_MULTILIGA = ['luefi']`.
+
+### Archivos clave
+
+- `configs-por-liga/datos.js` — Fuente única: LIGAS, APPS_UNILIGAS, LIGAS_DE_APP_MULTILIGA, CONFIG_APP_MULTILIGA
+- `configs-por-liga/color-base.js` — Color base para Tailwind y splash (verde→green, negro→gray, etc.)
+- `app.config.ts` — Config de Expo según LIGA_ID (uniliga o multiliga)
+- `app/config/liga.ts` — Config en runtime: `getConfigLiga()`, `useConfigLiga()`. UNILIGA: desde extra. MULTILIGA: desde useLigaStore + ligasDisponibles
+- `app/hooks/use-liga-store.ts` — Liga seleccionada (MULTILIGA); key `liga-storage`
+- `app/seleccion-de-liga.tsx` — Pantalla de selección de liga (MULTILIGA)
+- `assets/ligas/<id>/` — Assets por liga (icon.png, favicon.png)
+
+**Colores liga:** Cada liga define `colorBase` (verde, negro, azul, rojo). Clases NativeWind `liga-*`: `bg-liga-600`, `text-liga-500`, etc.
 
 ### Routing (Expo Router — file-based)
 
 ```
 app/
-├── _layout.tsx                  # Root layout: auth guard + QueryClient provider
-├── (auth)/                      # Unauthenticated routes
+├── _layout.tsx                  # Root layout: auth guard + QueryClient
+├── (auth)/                      # Rutas sin auth
 │   ├── login.tsx
-│   └── cambiar-password.tsx     # Forced password change on first login
-├── (tabs)/                      # Main app (requires auth + team selection)
-│   ├── mis-jugadores.tsx        # Active players for selected team
-│   ├── buscar.tsx               # Public search by team code; generates PDFs
-│   └── pendientes.tsx           # Pending/rejected/unpaid registrations
-└── seleccion-de-equipo.tsx      # Team selection modal (blocks access to tabs)
+│   └── cambiar-password.tsx
+├── (tabs)/                     # App principal (requiere auth + equipo)
+│   ├── mis-jugadores.tsx
+│   ├── buscar.tsx
+│   └── pendientes.tsx
+├── seleccion-de-liga.tsx       # Selección de liga (MULTILIGA, antes de login)
+└── seleccion-de-equipo.tsx     # Modal de selección de equipo
 ```
 
-**Auth guard** in `app/_layout.tsx`: uses `useSegments()` to redirect unauthenticated users to login, and authenticated users without a team to `seleccion-de-equipo`.
+**Auth guard:** MULTILIGA sin liga → seleccion-de-liga. No autenticado → login. Autenticado sin equipo → seleccion-de-equipo.
 
 ### State Management
 
-**Zustand stores** (persisted to device storage):
+**Zustand stores** (persistidos):
 
-- `app/hooks/use-auth.ts` — token, username, isAuthenticated; key `auth-storage`
-- `app/hooks/use-equipo-store.ts` — selected team id/name; key `equipo-storage`
+- `app/hooks/use-auth.ts` — token, usuario; key `auth-storage`
+- `app/hooks/use-equipo-store.ts` — equipo seleccionado; key `equipo-storage`
+- `app/hooks/use-liga-store.ts` — liga seleccionada (MULTILIGA); key `liga-storage`
 
-**TanStack React Query** for server state:
-
-- `app/api/custom-hooks/use-api-query.tsx` — wraps `useQuery` with 2 retries, no refetch on focus, optional data transform
-- `app/api/custom-hooks/use-api-mutation.tsx` — wraps `useMutation` with error parsing
+**TanStack React Query** para estado del servidor.
 
 ### API Layer
 
-- `app/api/clients.ts` — **auto-generated** NSwag/OpenAPI client (~99KB). Do not edit manually; re-generate from Swagger if the backend changes.
-- `app/api/http-client-wrapper.ts` — Axios interceptor that injects JWT Bearer token. Public routes (`/api/Auth/login`, `/api/Publico`) skip auth. 401 responses trigger logout + redirect to login.
-- `app/config/env.ts` — API base URL (`https://luefi.liga.com.ar`). `__DEV__` flag available for dev/prod branching.
+- `app/api/clients.ts` — Cliente NSwag/OpenAPI **auto-generado**. No editar.
+- `app/api/http-client-wrapper.ts` — Interceptor JWT. 401 → logout.
+- `app/api/api.ts` — Proxy que usa `getConfigLiga().apiUrl`. En MULTILIGA, la API cambia según la liga seleccionada.
 
-### Player Status
+### Componentes clave
 
-Defined in `app/types/estado-jugador.ts`. States: `FichajePendienteDeAprobacion`, `FichajeRechazado`, `Activo`, `Suspendido`, `Inhabilitado`, `AprobadoPendienteDePago`. Each has a color mapping used throughout the UI.
+- `app/components/carnet.tsx` — Tarjeta de jugador
+- `components/boton.tsx` — Botón unificado
+- `app/components/header-menu.tsx` — Menú (Cambiar liga en MULTILIGA, Cambiar equipo, Cerrar sesión)
 
-### PDF Generation
+### Path alias
 
-`app/utils/pdfGenerator.ts` — Builds an HTML template with player cards (3×3 grid, 9 per page), sorted by birth date. Uses `expo-print` to render and `expo-sharing` to share. Called from the `buscar` tab.
-
-### Key Components
-
-- `app/components/carnet.tsx` — Reusable player card (photo, DNI, name, birth date, category, optional status badge)
-- `components/boton.tsx` — Unified button with loading/disabled states
-- `app/components/header-menu.tsx` — Tab header popup menu (logout, etc.)
-
-### Constants
-
-- `constants/Colores.ts` — Brand colors (primary green `#01aa59`, primary blue `#0038ba`)
-- `constants/CommonStyles.ts` — Shared input field styles
-
-### Path Alias
-
-`@/*` resolves to the repository root (configured in `tsconfig.json`).
+`@/*` resuelve a la raíz del repo.

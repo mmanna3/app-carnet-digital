@@ -1,16 +1,16 @@
 import React from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Tabs, ErrorBoundary } from 'expo-router'
-import { Pressable } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import HeaderMenu from '../components/header-menu'
+import { useEquipoStore } from '../hooks/use-equipo-store'
 
 import Colors from '@/constants/Colores'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
-import { useEquipoStore } from '../hooks/use-equipo-store'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {

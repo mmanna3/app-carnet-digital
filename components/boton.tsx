@@ -17,7 +17,7 @@ export default function Boton({
   const isDisabled = deshabilitado || cargando
   return (
     <TouchableOpacity
-      className={`bg-primary h-[50px] rounded-lg justify-center items-center mt-2.5${isDisabled ? ' opacity-70' : ''}`}
+      className={`bg-liga-600 h-[50px] rounded-lg justify-center items-center mt-2.5${isDisabled ? ' opacity-70' : ''}`}
       onPress={onPress}
       disabled={isDisabled}
     >
