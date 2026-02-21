@@ -1,0 +1,53 @@
+import React from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { Feather } from '@expo/vector-icons'
+import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
+import Cabecera from './cabecera'
+
+interface Props {
+  onVolver: () => void
+}
+
+export default function PantallaIntro({ onVolver }: Props) {
+  const { irANuevo, irAYaFichado } = useFichajeStore()
+
+  return (
+    <View className="flex-1 bg-blue-50">
+      <Cabecera titulo="Fichaje" onBack={onVolver} />
+
+      <View className="px-6 pt-6 gap-3">
+        <TouchableOpacity
+          onPress={irANuevo}
+          className="bg-blue-600 rounded-2xl p-4 shadow-md"
+          activeOpacity={0.85}
+        >
+          <View className="bg-white/20 rounded-xl p-2 mb-3 self-start">
+            <Feather name="user-plus" size={20} color="white" />
+          </View>
+          <Text className="text-white text-lg font-semibold mb-1">
+            ¿Es la primera vez que te fichás en la liga?
+          </Text>
+          <Text className="text-blue-100 text-sm leading-tight">
+            Fichate con el código de equipo que te dio tu delegado
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={irAYaFichado}
+          className="bg-liga-600 rounded-2xl p-4 shadow-md"
+          activeOpacity={0.85}
+        >
+          <View className="bg-white/10 rounded-xl p-2 mb-3 self-start">
+            <Feather name="users" size={20} color="white" />
+          </View>
+          <Text className="text-white text-lg font-semibold mb-1">
+            ¿Ya jugás en un equipo y querés ficharte en otro?
+          </Text>
+          <Text className="text-blue-100 text-sm leading-tight">
+            Fichate con el código de equipo y tu DNI
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}

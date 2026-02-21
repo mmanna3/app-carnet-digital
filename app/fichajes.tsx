@@ -1,18 +1,45 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
+import { useFichajeStore } from './hooks/use-fichaje-store'
+import PantallaIntro from '@/components/fichajes/pantalla-intro'
+import PantallaConfirmacion from '@/components/fichajes/pantalla-confirmacion'
+import PasoCodigoEquipo from '@/components/fichajes/paso-codigo-equipo'
+import PasoDatosJugador from '@/components/fichajes/nuevo/paso-datos-jugador'
+import PasoFoto from '@/components/fichajes/nuevo/paso-foto'
+import PasoFotosDni from '@/components/fichajes/nuevo/paso-fotos-dni'
+import PasoAutorizacion from '@/components/fichajes/nuevo/paso-autorizacion'
+import PasoDni from '@/components/fichajes/ya-fichado/paso-dni'
+
+const MENSAJE_CONFIRMACION =
+  'Vas a recibir la confirmación de tu fichaje por parte de tu delegado.'
 
 export default function FichajesScreen() {
   const router = useRouter()
-  return (
-    <View className="flex-1 bg-[#f8f8f8] p-5">
-      <TouchableOpacity onPress={() => router.back()} className="py-2 mb-4">
-        <Text className="text-base text-liga-600">← Volver</Text>
-      </TouchableOpacity>
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-lg text-gray-600">Fichajes</Text>
-        <Text className="text-sm text-gray-500 mt-2">Próximamente</Text>
-      </View>
-    </View>
-  )
+  const { flujo, paso, resetear } = useFichajeStore()
+
+  const handleVolverInicio = () => {
+    resetear()
+    router.replace('/home' as any)
+  }
+
+  if (flujo === 'intro') {
+    return <PantallaIntro onVolver={handleVolverInicio} />
+  }
+
+  if (flujo === 'nuevo') {
+    if (paso === 1) return <PasoCodigoEquipo />
+    if (paso === 2) return <PasoDatosJugador />
+    if (paso === 3) return <PasoFoto />
+    if (paso === 4) return <PasoFotosDni />
+    if (paso === 5) return <PasoAutorizacion />
+    if (paso === 6) return <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+  }
+
+  if (flujo === 'yaFichado') {
+    if (paso === 1) return <PasoCodigoEquipo />
+    if (paso === 2) return <PasoDni />
+    if (paso === 3) return <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+  }
+
+  return null
 }

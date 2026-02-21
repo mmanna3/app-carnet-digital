@@ -9,7 +9,7 @@ import { useAuth } from './hooks/use-auth'
 import { useConfigLiga } from './config/liga'
 
 /** Logos de ligas (require estático para Metro) */
-const LOGOS_LIGAS: Record<string, ReturnType<typeof require>> = {
+const LOGOS_LIGAS: Record<string, number> = {
   edefi: require('@/assets/ligas/edefi/icon.png'),
   luefi: require('@/assets/ligas/luefi/icono.png'),
 }
@@ -95,8 +95,8 @@ export default function HomeScreen() {
           <View className="bg-white/20 rounded-xl p-2 mb-3 self-start">
             <Feather name="users" size={20} color="white" />
           </View>
-          <Text className="text-white font-semibold mb-1">Fichaje</Text>
-          <Text className="text-blue-100 text-xs leading-tight">
+          <Text className="text-white text-lg font-semibold mb-1">Fichaje</Text>
+          <Text className="text-blue-100 text-sm leading-snug">
             Fichaje de nuevo jugador
           </Text>
         </TouchableOpacity>
@@ -110,8 +110,8 @@ export default function HomeScreen() {
           <View className="bg-white/10 rounded-xl p-2 mb-3 self-start">
             <Feather name="clipboard" size={20} color="white" />
           </View>
-          <Text className="text-white font-semibold mb-1">Delegados/DT</Text>
-          <Text className="text-gray-300 text-xs leading-tight">
+          <Text className="text-white text-lg font-semibold mb-1">Delegados/DT</Text>
+          <Text className="text-gray-300 text-sm leading-snug">
             Accedé a tu panel de gestión
           </Text>
         </TouchableOpacity>
@@ -123,7 +123,7 @@ export default function HomeScreen() {
           onPress={handleSeleccionarOtraLiga}
           className="mt-12 py-2 items-center"
         >
-          <Text className="text-[11px] text-gray-500">Seleccionar otra liga</Text>
+          <Text className="text-sm text-gray-500">Seleccionar otra liga</Text>
         </TouchableOpacity>
       )}
     </View>
