@@ -11,10 +11,10 @@
     "start": "expo start",
     "start:dev": "expo start --dev-client",
     "start:prod": "expo start --no-dev",
-    "android": "expo start --android",
+    "android": "expo run:android",
     "android:dev": "expo start --android --dev-client",
     "android:prod": "expo start --android --no-dev",
-    "ios": "expo start --ios",
+    "ios": "expo run:ios",
     "ios:dev": "expo start --ios --dev-client",
     "ios:prod": "expo start --ios --no-dev",
     "web": "expo start --web",
@@ -25,7 +25,9 @@
     "lint": "expo lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "generate:api": "nswag run nswag.json"
+    "generate:api": "nswag run nswag.json",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean && node scripts/patch-splash-background.js"
   },
   "jest": {
     "preset": "jest-expo",

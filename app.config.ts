@@ -73,6 +73,7 @@ export default (): ExpoConfig => ({
   scheme: config.scheme,
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
+  backgroundColor: splashHex,
   splash: {
     image: config.splashImage,
     resizeMode: 'contain',
@@ -84,6 +85,7 @@ export default (): ExpoConfig => ({
     infoPlist: { ITSAppUsesNonExemptEncryption: false },
   },
   android: {
+    backgroundColor: splashHex,
     adaptiveIcon: {
       foregroundImage: config.adaptiveIconForeground,
       backgroundColor: splashHex,
@@ -97,6 +99,7 @@ export default (): ExpoConfig => ({
   },
   plugins: [
     'expo-router',
+    'expo-system-ui',
     [
       'expo-splash-screen',
       {
