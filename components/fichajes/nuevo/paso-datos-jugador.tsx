@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import CampoTexto from '../campo-texto'
 import BotonWizard from '../boton-wizard'
-
-const FECHA_DEFAULT = new Date(2000, 0, 1)
-const FECHA_MIN = new Date(1930, 0, 1)
+import ModalFechaNacimiento from '../modal-fecha-nacimiento'
 
 const formatearFecha = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
@@ -33,11 +30,6 @@ export default function PasoDatosJugador() {
 
   const dniValido = dni.trim().length >= 7 && dni.trim().length <= 9
   const puedeAvanzar = nombre.trim() && apellido.trim() && dniValido && !!fechaNac
-
-  const onCambioFecha = (_: any, date?: Date) => {
-    if (Platform.OS === 'android') setMostrarPicker(false)
-    if (date) setFechaNac(date)
-  }
 
   const handleContinuar = async () => {
     setError(null)
@@ -115,24 +107,6 @@ export default function PasoDatosJugador() {
               </TouchableOpacity>
             </View>
 
-            {mostrarPicker && (
-              <DateTimePicker
-                value={fechaNac ?? FECHA_DEFAULT}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={onCambioFecha}
-                maximumDate={new Date()}
-                minimumDate={FECHA_MIN}
-                locale="es-AR"
-              />
-            )}
-
-            {mostrarPicker && Platform.OS === 'ios' && (
-              <TouchableOpacity onPress={() => setMostrarPicker(false)} className="items-end">
-                <Text className="text-liga-600 font-semibold text-base">Listo</Text>
-              </TouchableOpacity>
-            )}
-
             {error && (
               <Text className="text-red-500 text-sm text-center">{error}</Text>
             )}
@@ -146,6 +120,13 @@ export default function PasoDatosJugador() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <ModalFechaNacimiento
+        visible={mostrarPicker}
+        value={fechaNac}
+        onClose={() => setMostrarPicker(false)}
+        onChange={setFechaNac}
+      />
     </View>
   )
 }

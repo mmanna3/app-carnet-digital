@@ -57,7 +57,7 @@ export default function PasoCodigoEquipo() {
           />
 
           {nombreEquipo && !error && (
-            <Text className="text-green-600 text-sm font-medium text-center">{nombreEquipo}</Text>
+            <Text className="text-green-600 text-sm font-medium text-center">Tu equipo es: <Text className="font-bold">{nombreEquipo}</Text></Text>
           )}
 
           {error && (
