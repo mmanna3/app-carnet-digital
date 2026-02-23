@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { View, Text, TouchableOpacity, Modal, Pressable, Platform } from 'react-native'
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker'
 
 const FECHA_DEFAULT = new Date(2000, 0, 1)
 const FECHA_MIN = new Date(1930, 0, 1)
@@ -12,9 +12,33 @@ interface Props {
   onChange: (date: Date) => void
 }
 
+const pickerProps = {
+  mode: 'date' as const,
+  maximumDate: new Date(),
+  minimumDate: FECHA_MIN,
+  textColor: 'black' as const,
+  locale: 'es-AR' as const,
+}
+
 export default function ModalFechaNacimiento({ visible, value, onClose, onChange }: Props) {
-  const onCambioFecha = (_: any, date?: Date) => {
+  const onCambioFecha = (event: DateTimePickerEvent, date?: Date) => {
     if (date) onChange(date)
+    if (Platform.OS === 'android' && (event.type === 'set' || event.type === 'dismissed')) {
+      onClose()
+    }
+  }
+
+  if (!visible) return null
+
+  if (Platform.OS === 'android') {
+    return (
+      <DateTimePicker
+        value={value ?? FECHA_DEFAULT}
+        display="default"
+        onChange={onCambioFecha}
+        {...pickerProps}
+      />
+    )
   }
 
   return (
@@ -37,13 +61,9 @@ export default function ModalFechaNacimiento({ visible, value, onClose, onChange
           </View>
           <DateTimePicker
             value={value ?? FECHA_DEFAULT}
-            mode="date"
             display="spinner"
             onChange={onCambioFecha}
-            maximumDate={new Date()}
-            minimumDate={FECHA_MIN}
-            textColor="black"
-            locale="es-AR"
+            {...pickerProps}
           />
           <TouchableOpacity
             onPress={onClose}

@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# Mientras no las necesite, las autogenera Expo
+android/
+ios/
+
 # Expo
 .expo/
 dist/

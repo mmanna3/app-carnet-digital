@@ -100,10 +100,30 @@ Cada liga define `colorBase`: `verde`, `negro`, `azul` o `rojo`. Las clases Nati
 ```bash
 LIGA_ID=edefi npm run test:ci      # Recomendado
 LIGA_ID=multiliga npm run test:ci
-npm run test:e2e
 ```
 
 Tests de config: `configs-por-liga/__tests__/` (color-base, datos)
+
+### Tests E2E (Maestro)
+
+`npm run start` solo levanta Metro; no compila ni instala la app. Para E2E hay que **compilar e instalar** la app en el emulador/simulador primero:
+
+```bash
+# Terminal 1: Metro
+LIGA_ID=edefi npm run start
+
+# Terminal 2: compilar e instalar en el emulador (solo la primera vez o tras cambios nativos)
+LIGA_ID=edefi npm run android   # Android
+# o
+LIGA_ID=edefi npm run ios      # iOS
+
+# Cuando la app esté instalada y Metro corriendo:
+npm run test:e2e:android       # Android
+npm run test:e2e:ios           # iOS
+npm run test:e2e               # usa el dispositivo conectado
+```
+
+**Importante:** usar `LIGA_ID` en mayúsculas (no `liga_id`).
 
 
 ## Otros comandos
