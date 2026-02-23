@@ -31,3 +31,55 @@ jobs:
 
       - name: Tests
         run: npm run test:ci
+
+  e2e:
+    name: E2E (Maestro)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Prebuild (EDeFI)
+        run: LIGA_ID=edefi npm run prebuild:clean
+
+      - name: Instalar Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: E2E con emulador Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          profile: pixel_7
+          script: |
+            export PATH="$PATH:$HOME/.maestro/bin"
+            # Metro en background (la app se conecta vía 10.0.2.2:8081)
+            LIGA_ID=edefi npx expo start --no-dev &
+            sleep 25
+            # Build e instalar app
+            LIGA_ID=edefi npx expo run:android --no-bundler
+            sleep 15
+            # Maestro
+            maestro test e2e/
