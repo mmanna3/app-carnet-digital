@@ -16,6 +16,7 @@ export default function PasoDni() {
 
   return (
     <KeyboardAvoidingView
+      testID="paso-dni"
       className="flex-1 bg-gray-50"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
@@ -30,6 +31,7 @@ export default function PasoDni() {
 
         <View className="gap-3">
           <CampoTexto
+            inputTestID="input-dni"
             label="Tu DNI"
             placeholder="Ingresá tu DNI"
             value={dni}
@@ -37,6 +39,7 @@ export default function PasoDni() {
             keyboardType="numeric"
           />
           <BotonWizard
+            testID="boton-continuar"
             texto="Continuar"
             icono="arrow-right"
             onPress={() => irAPaso(3)}

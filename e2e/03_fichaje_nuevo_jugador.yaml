@@ -1,0 +1,38 @@
+appId: com.blueservant.edefi
+---
+# Flujo "nuevo jugador": home → intro → código equipo → datos jugador
+# (no se puede automatizar más allá porque el paso de foto requiere interacción nativa)
+- launchApp
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "card-fichaje"
+# PantallaIntro
+- assertVisible:
+    id: "card-nuevo"
+- tapOn:
+    id: "card-nuevo"
+# PasoCodigoEquipo (paso 1 de 5)
+- assertVisible:
+    id: "paso-codigo-equipo"
+- tapOn:
+    id: "input-codigo-equipo"
+- inputText: "ABC123"
+- waitForAnimationToEnd
+- tapOn:
+    id: "boton-validar"
+# PasoDatosJugador (paso 2 de 5)
+- assertVisible:
+    id: "paso-datos-jugador"
+- tapOn:
+    id: "input-nombre"
+- inputText: "Juan"
+- tapOn:
+    id: "input-apellido"
+- inputText: "Pérez"
+- tapOn:
+    id: "input-dni-jugador"
+- inputText: "12345678"
+- waitForAnimationToEnd

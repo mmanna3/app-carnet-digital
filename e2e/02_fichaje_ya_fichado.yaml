@@ -1,0 +1,36 @@
+appId: com.blueservant.edefi
+---
+# Flujo completo "ya fichado": home → intro → código equipo → DNI → confirmación
+- launchApp
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "card-fichaje"
+# PantallaIntro
+- assertVisible:
+    id: "card-ya-fichado"
+- tapOn:
+    id: "card-ya-fichado"
+# PasoCodigoEquipo (paso 1 de 3)
+- assertVisible:
+    id: "paso-codigo-equipo"
+- tapOn:
+    id: "input-codigo-equipo"
+- inputText: "ABC123"
+- waitForAnimationToEnd
+- tapOn:
+    id: "boton-validar"
+# PasoDni (paso 2 de 3)
+- assertVisible:
+    id: "paso-dni"
+- tapOn:
+    id: "input-dni"
+- inputText: "12345678"
+- waitForAnimationToEnd
+- tapOn:
+    id: "boton-continuar"
+# PantallaConfirmacion (paso 3 de 3)
+- assertVisible:
+    id: "pantalla-confirmacion"

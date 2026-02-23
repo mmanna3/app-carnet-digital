@@ -8,6 +8,7 @@ interface Props {
   icono?: keyof typeof Feather.glyphMap
   variante?: 'primario' | 'oscuro'
   deshabilitado?: boolean
+  testID?: string
 }
 
 export default function BotonWizard({
@@ -16,12 +17,14 @@ export default function BotonWizard({
   icono,
   variante = 'primario',
   deshabilitado = false,
+  testID,
 }: Props) {
   const bg = deshabilitado ? 'bg-gray-300' : variante === 'primario' ? 'bg-liga-600' : 'bg-gray-800'
   const colorIcono = deshabilitado ? '#6b7280' : 'white'
 
   return (
     <TouchableOpacity
+      testID={testID}
       onPress={onPress}
       disabled={deshabilitado}
       activeOpacity={0.85}

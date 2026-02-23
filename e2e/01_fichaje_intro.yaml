@@ -1,0 +1,21 @@
+appId: com.blueservant.edefi
+---
+# Navega al wizard de fichaje y verifica la pantalla de intro
+- launchApp
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "card-fichaje"
+- assertVisible:
+    id: "pantalla-intro"
+- assertVisible:
+    id: "card-nuevo"
+- assertVisible:
+    id: "card-ya-fichado"
+# Volver al home con el botón de la cabecera
+- tapOn:
+    id: "boton-atras"
+- assertVisible:
+    id: "card-fichaje"

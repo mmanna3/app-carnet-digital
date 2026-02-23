@@ -26,7 +26,7 @@ export default function PasoDatosJugador() {
   }
 
   return (
-    <View style={{ flex: 1 }} className="bg-gray-50">
+    <View testID="paso-datos-jugador" style={{ flex: 1 }} className="bg-gray-50">
       {/* Cabecera y progreso fuera del KeyboardAvoidingView para no comprimir el scroll */}
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAPaso(1)} />
       <Progreso totalPasos={5} pasoActual={2} />
@@ -48,18 +48,21 @@ export default function PasoDatosJugador() {
 
           <View className="gap-3">
             <CampoTexto
+              inputTestID="input-nombre"
               label="Tu nombre"
               placeholder="Ingresá tu nombre"
               value={nombre}
               onChangeText={setNombre}
             />
             <CampoTexto
+              inputTestID="input-apellido"
               label="Tu apellido"
               placeholder="Ingresá tu apellido"
               value={apellido}
               onChangeText={setApellido}
             />
             <CampoTexto
+              inputTestID="input-dni-jugador"
               label="Tu DNI"
               placeholder="Ingresá tu DNI"
               value={dni}

@@ -1,4 +1,12 @@
-appId: com.blueservant.carnetdigital
+appId: com.blueservant.edefi
 ---
 - launchApp
-- assertVisible: 'carnet-digital'
+# Dismiss the "Open in EDeFI?" dialog that appears on dev builds
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd
+- assertVisible:
+    id: "card-fichaje"
+- assertVisible:
+    id: "card-delegados"

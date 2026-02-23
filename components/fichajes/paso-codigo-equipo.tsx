@@ -14,6 +14,7 @@ export default function PasoCodigoEquipo() {
 
   return (
     <KeyboardAvoidingView
+      testID="paso-codigo-equipo"
       className="flex-1 bg-gray-50"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
@@ -30,12 +31,14 @@ export default function PasoCodigoEquipo() {
 
         <View className="gap-3">
           <CampoTexto
+            inputTestID="input-codigo-equipo"
             placeholder="Ingresá el código"
             value={codigoEquipo}
             onChangeText={setCodigoEquipo}
             autoCapitalize="characters"
           />
           <BotonWizard
+            testID="boton-validar"
             texto="Validar"
             icono="check"
             onPress={() => irAPaso(2)}

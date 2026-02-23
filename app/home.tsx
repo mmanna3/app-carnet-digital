@@ -88,6 +88,7 @@ export default function HomeScreen() {
       <View className="px-6 pt-6 flex-row gap-3">
         {/* Fichaje */}
         <TouchableOpacity
+          testID="card-fichaje"
           onPress={handleFichajes}
           className="flex-1 bg-blue-600 rounded-2xl p-4 shadow-md"
           activeOpacity={0.85}
@@ -103,6 +104,7 @@ export default function HomeScreen() {
 
         {/* Delegados/DT */}
         <TouchableOpacity
+          testID="card-delegados"
           onPress={handleDelegadosDT}
           className="flex-1 bg-gray-800 rounded-2xl p-4 shadow-md"
           activeOpacity={0.85}

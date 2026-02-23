@@ -12,11 +12,12 @@ export default function PantallaIntro({ onVolver }: Props) {
   const { irANuevo, irAYaFichado } = useFichajeStore()
 
   return (
-    <View className="flex-1 bg-blue-50">
+    <View testID="pantalla-intro" className="flex-1 bg-blue-50">
       <Cabecera titulo="Fichaje" onBack={onVolver} />
 
       <View className="px-6 pt-6 gap-3">
         <TouchableOpacity
+          testID="card-nuevo"
           onPress={irANuevo}
           className="bg-blue-600 rounded-2xl p-4 shadow-md"
           activeOpacity={0.85}
@@ -33,6 +34,7 @@ export default function PantallaIntro({ onVolver }: Props) {
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="card-ya-fichado"
           onPress={irAYaFichado}
           className="bg-liga-600 rounded-2xl p-4 shadow-md"
           activeOpacity={0.85}
