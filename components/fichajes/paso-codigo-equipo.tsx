@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from './cabecera'
 import Progreso from './progreso'
@@ -7,10 +7,25 @@ import CampoTexto from './campo-texto'
 import BotonWizard from './boton-wizard'
 
 export default function PasoCodigoEquipo() {
-  const { flujo, codigoEquipo, setCodigoEquipo, irAIntro, irAPaso } = useFichajeStore()
+  const { flujo, codigoEquipo, nombreEquipo, setCodigoEquipo, irAIntro, irAPaso, validarCodigoEquipo } =
+    useFichajeStore()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const totalPasos = flujo === 'nuevo' ? 5 : 3
   const titulo = flujo === 'nuevo' ? 'Fichaje de nuevo jugador' : 'Fichaje'
+
+  const handleValidar = async () => {
+    setError(null)
+    setLoading(true)
+    const result = await validarCodigoEquipo()
+    setLoading(false)
+    if (result.ok) {
+      irAPaso(2)
+    } else {
+      setError(result.error ?? 'Código inválido')
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -34,15 +49,27 @@ export default function PasoCodigoEquipo() {
             inputTestID="input-codigo-equipo"
             placeholder="Ingresá el código"
             value={codigoEquipo}
-            onChangeText={setCodigoEquipo}
+            onChangeText={(v) => {
+              setCodigoEquipo(v)
+              setError(null)
+            }}
             autoCapitalize="characters"
           />
+
+          {nombreEquipo && !error && (
+            <Text className="text-green-600 text-sm font-medium text-center">{nombreEquipo}</Text>
+          )}
+
+          {error && (
+            <Text className="text-red-500 text-sm text-center">{error}</Text>
+          )}
+
           <BotonWizard
             testID="boton-validar"
-            texto="Validar"
-            icono="check"
-            onPress={() => irAPaso(2)}
-            deshabilitado={!codigoEquipo.trim()}
+            texto={loading ? 'Validando...' : 'Validar'}
+            icono={loading ? undefined : 'check'}
+            onPress={handleValidar}
+            deshabilitado={!codigoEquipo.trim() || loading}
           />
         </View>
       </ScrollView>

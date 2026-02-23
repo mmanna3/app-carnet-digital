@@ -14,15 +14,41 @@ const formatearFecha = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
 
 export default function PasoDatosJugador() {
-  const { nombre, apellido, dni, fechaNac, setNombre, setApellido, setDni, setFechaNac, irAPaso } =
-    useFichajeStore()
+  const {
+    nombre,
+    apellido,
+    dni,
+    fechaNac,
+    nombreEquipo,
+    setNombre,
+    setApellido,
+    setDni,
+    setFechaNac,
+    irAPaso,
+    validarDniNuevo,
+  } = useFichajeStore()
   const [mostrarPicker, setMostrarPicker] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const puedeAvanzar = nombre.trim() && apellido.trim() && dni.trim() && !!fechaNac
+  const dniValido = dni.trim().length >= 7 && dni.trim().length <= 9
+  const puedeAvanzar = nombre.trim() && apellido.trim() && dniValido && !!fechaNac
 
   const onCambioFecha = (_: any, date?: Date) => {
     if (Platform.OS === 'android') setMostrarPicker(false)
     if (date) setFechaNac(date)
+  }
+
+  const handleContinuar = async () => {
+    setError(null)
+    setLoading(true)
+    const result = await validarDniNuevo()
+    setLoading(false)
+    if (result.ok) {
+      irAPaso(3)
+    } else {
+      setError(result.error ?? 'Error al validar el DNI')
+    }
   }
 
   return (
@@ -43,7 +69,11 @@ export default function PasoDatosJugador() {
         >
           <View className="mb-6">
             <Text className="text-gray-900 text-lg font-semibold mb-1">Datos generales</Text>
-            <Text className="text-gray-500 text-sm">Ingresá tus datos personales</Text>
+            {nombreEquipo ? (
+              <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+            ) : (
+              <Text className="text-gray-500 text-sm">Ingresá tus datos personales</Text>
+            )}
           </View>
 
           <View className="gap-3">
@@ -52,21 +82,24 @@ export default function PasoDatosJugador() {
               label="Tu nombre"
               placeholder="Ingresá tu nombre"
               value={nombre}
-              onChangeText={setNombre}
+              onChangeText={(v) => setNombre(v.slice(0, 14))}
             />
             <CampoTexto
               inputTestID="input-apellido"
               label="Tu apellido"
               placeholder="Ingresá tu apellido"
               value={apellido}
-              onChangeText={setApellido}
+              onChangeText={(v) => setApellido(v.slice(0, 14))}
             />
             <CampoTexto
               inputTestID="input-dni-jugador"
               label="Tu DNI"
-              placeholder="Ingresá tu DNI"
+              placeholder="Ingresá tu DNI (7-9 dígitos)"
               value={dni}
-              onChangeText={(v) => setDni(v.replace(/[^0-9]/g, ''))}
+              onChangeText={(v) => {
+                setDni(v.replace(/[^0-9]/g, '').slice(0, 9))
+                setError(null)
+              }}
               keyboardType="numeric"
             />
 
@@ -100,11 +133,15 @@ export default function PasoDatosJugador() {
               </TouchableOpacity>
             )}
 
+            {error && (
+              <Text className="text-red-500 text-sm text-center">{error}</Text>
+            )}
+
             <BotonWizard
-              texto="Continuar"
-              icono="arrow-right"
-              onPress={() => irAPaso(3)}
-              deshabilitado={!puedeAvanzar}
+              texto={loading ? 'Verificando...' : 'Continuar'}
+              icono={loading ? undefined : 'arrow-right'}
+              onPress={handleContinuar}
+              deshabilitado={!puedeAvanzar || loading}
             />
           </View>
         </ScrollView>

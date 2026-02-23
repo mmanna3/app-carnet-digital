@@ -8,7 +8,7 @@ import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
 
 export default function PasoFoto() {
-  const { fotoUri, setFotoUri, irAPaso } = useFichajeStore()
+  const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAPaso } = useFichajeStore()
 
   const elegirFoto = async () => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
@@ -16,12 +16,18 @@ export default function PasoFoto() {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
+      base64: true,
     })
-    if (!resultado.canceled) setFotoUri(resultado.assets[0].uri)
+    if (!resultado.canceled) {
+      const asset = resultado.assets[0]
+      setFotoUri(asset.uri)
+      setFotoBase64(asset.base64 ?? null)
+    }
   }
 
   const handleVolver = () => {
     setFotoUri(null)
+    setFotoBase64(null)
     irAPaso(2)
   }
 
@@ -33,7 +39,9 @@ export default function PasoFoto() {
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Foto del jugador</Text>
-          <Text className="text-gray-500 text-sm">Foto del rostro con fondo liso</Text>
+          {nombreEquipo && (
+            <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+          )}
         </View>
 
         <View className="gap-4">

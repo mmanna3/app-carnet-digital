@@ -20,7 +20,16 @@ function PreviewDni({ uri }: { uri: string | null }) {
 }
 
 export default function PasoFotosDni() {
-  const { dniFrenteUri, dniDorsoUri, setDniFrenteUri, setDniDorsoUri, irAPaso } = useFichajeStore()
+  const {
+    dniFrenteUri,
+    dniDorsoUri,
+    nombreEquipo,
+    setDniFrenteUri,
+    setDniDorsoUri,
+    setDniFrenteBase64,
+    setDniDorsoBase64,
+    irAPaso,
+  } = useFichajeStore()
 
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
@@ -28,16 +37,25 @@ export default function PasoFotosDni() {
       allowsEditing: true,
       aspect: [16, 9],
       quality: 0.8,
+      base64: true,
     })
     if (!resultado.canceled) {
-      const uri = resultado.assets[0].uri
-      lado === 'frente' ? setDniFrenteUri(uri) : setDniDorsoUri(uri)
+      const asset = resultado.assets[0]
+      if (lado === 'frente') {
+        setDniFrenteUri(asset.uri)
+        setDniFrenteBase64(asset.base64 ?? null)
+      } else {
+        setDniDorsoUri(asset.uri)
+        setDniDorsoBase64(asset.base64 ?? null)
+      }
     }
   }
 
   const handleVolver = () => {
     setDniFrenteUri(null)
     setDniDorsoUri(null)
+    setDniFrenteBase64(null)
+    setDniDorsoBase64(null)
     irAPaso(3)
   }
 
@@ -49,7 +67,9 @@ export default function PasoFotosDni() {
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Fotos del DNI</Text>
-          <Text className="text-gray-500 text-sm">Que se lean bien tus datos</Text>
+          {nombreEquipo && (
+            <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+          )}
         </View>
 
         <View className="gap-6">

@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { FicharEnOtroEquipoDTO, JugadorDTO } from '@/app/api/clients'
+import { api } from '@/app/api/api'
 
 export type FlujoFichaje = 'intro' | 'nuevo' | 'yaFichado'
 
@@ -13,6 +15,10 @@ interface FichajeState {
   fotoUri: string | null
   dniFrenteUri: string | null
   dniDorsoUri: string | null
+  fotoBase64: string | null
+  dniFrenteBase64: string | null
+  dniDorsoBase64: string | null
+  nombreEquipo: string | null
   irAIntro: () => void
   irANuevo: () => void
   irAYaFichado: () => void
@@ -25,7 +31,14 @@ interface FichajeState {
   setFotoUri: (v: string | null) => void
   setDniFrenteUri: (v: string | null) => void
   setDniDorsoUri: (v: string | null) => void
+  setFotoBase64: (v: string | null) => void
+  setDniFrenteBase64: (v: string | null) => void
+  setDniDorsoBase64: (v: string | null) => void
   resetear: () => void
+  validarCodigoEquipo: () => Promise<{ ok: boolean; error?: string }>
+  validarDniNuevo: () => Promise<{ ok: boolean; error?: string }>
+  enviarFichajeNuevo: () => Promise<{ ok: boolean; error?: string }>
+  enviarFichajeYaFichado: () => Promise<{ ok: boolean; error?: string }>
 }
 
 const inicial = {
@@ -39,9 +52,24 @@ const inicial = {
   fotoUri: null,
   dniFrenteUri: null,
   dniDorsoUri: null,
+  fotoBase64: null,
+  dniFrenteBase64: null,
+  dniDorsoBase64: null,
+  nombreEquipo: null,
 }
 
-export const useFichajeStore = create<FichajeState>()((set) => ({
+const parseError = (error: any): string => {
+  if (error?.response) {
+    try {
+      return JSON.parse(error.response).title ?? 'Hubo un error conectándose al servidor'
+    } catch {
+      return 'Hubo un error conectándose al servidor'
+    }
+  }
+  return 'Hubo un error conectándose al servidor'
+}
+
+export const useFichajeStore = create<FichajeState>()((set, get) => ({
   ...inicial,
   irAIntro: () => set({ flujo: 'intro', paso: 1 }),
   irANuevo: () => set({ flujo: 'nuevo', paso: 1 }),
@@ -55,5 +83,70 @@ export const useFichajeStore = create<FichajeState>()((set) => ({
   setFotoUri: (v) => set({ fotoUri: v }),
   setDniFrenteUri: (v) => set({ dniFrenteUri: v }),
   setDniDorsoUri: (v) => set({ dniDorsoUri: v }),
+  setFotoBase64: (v) => set({ fotoBase64: v }),
+  setDniFrenteBase64: (v) => set({ dniFrenteBase64: v }),
+  setDniDorsoBase64: (v) => set({ dniDorsoBase64: v }),
   resetear: () => set(inicial),
+
+  validarCodigoEquipo: async () => {
+    const { codigoEquipo } = get()
+    try {
+      const res = await api.obtenerNombreEquipo(codigoEquipo)
+      if (res.hayError) {
+        return { ok: false, error: res.mensajeError ?? 'Código inválido' }
+      }
+      set({ nombreEquipo: res.respuesta ?? null })
+      return { ok: true }
+    } catch (error: any) {
+      return { ok: false, error: parseError(error) }
+    }
+  },
+
+  validarDniNuevo: async () => {
+    const { dni } = get()
+    try {
+      const fichado = await api.elDniEstaFichado(dni)
+      if (fichado) {
+        return { ok: false, error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".' }
+      }
+      return { ok: true }
+    } catch (error: any) {
+      return { ok: false, error: parseError(error) }
+    }
+  },
+
+  enviarFichajeNuevo: async () => {
+    const { dni, nombre, apellido, fechaNac, codigoEquipo, fotoBase64, dniFrenteBase64, dniDorsoBase64 } = get()
+    try {
+      const dto = new JugadorDTO({
+        dni,
+        nombre,
+        apellido,
+        fechaNacimiento: fechaNac!,
+        codigoAlfanumerico: codigoEquipo,
+        fotoCarnet: fotoBase64 ? 'data:image/jpeg;base64,' + fotoBase64 : undefined,
+        fotoDNIFrente: dniFrenteBase64 ? 'data:image/jpeg;base64,' + dniFrenteBase64 : undefined,
+        fotoDNIDorso: dniDorsoBase64 ? 'data:image/jpeg;base64,' + dniDorsoBase64 : undefined,
+      })
+      await api.jugadorPOST(dto)
+      return { ok: true }
+    } catch (error: any) {
+      return { ok: false, error: parseError(error) }
+    }
+  },
+
+  enviarFichajeYaFichado: async () => {
+    const { dni, codigoEquipo } = get()
+    try {
+      const fichado = await api.elDniEstaFichado(dni)
+      if (!fichado) {
+        return { ok: false, error: 'No estás fichado en ningún equipo activo.' }
+      }
+      const dto = new FicharEnOtroEquipoDTO({ dni, codigoAlfanumerico: codigoEquipo })
+      await api.ficharEnOtroEquipo(dto)
+      return { ok: true }
+    } catch (error: any) {
+      return { ok: false, error: parseError(error) }
+    }
+  },
 }))
