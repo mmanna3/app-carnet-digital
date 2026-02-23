@@ -21,9 +21,15 @@ appId: com.blueservant.edefi
     id: "input-codigo-equipo"
 - inputText: "ABC123"
 - waitForAnimationToEnd
+- hideKeyboard
 - tapOn:
     id: "boton-validar"
-# PasoDatosJugador (paso 2 de 5)
+- waitForAnimationToEnd
+# PasoDatosJugador (paso 2 de 5) — extendedWaitUntil para emuladores lentos en CI
+- extendedWaitUntil:
+    visible:
+      id: "paso-datos-jugador"
+    timeout: 15000
 - assertVisible:
     id: "paso-datos-jugador"
 - tapOn:
