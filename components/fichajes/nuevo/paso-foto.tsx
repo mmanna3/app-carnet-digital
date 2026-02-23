@@ -1,27 +1,78 @@
-import React from 'react'
-import { View, Text, Image, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, Image, ScrollView, ActionSheetIOS, Alert, Platform } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import { Feather } from '@expo/vector-icons'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
 
+function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      { options: ['Cancelar', 'Sacar foto', 'Elegir de galería'], cancelButtonIndex: 0 },
+      (index) => {
+        if (index === 1) onCamara()
+        if (index === 2) onGaleria()
+      }
+    )
+  } else {
+    Alert.alert('Seleccionar foto', undefined, [
+      { text: 'Sacar foto', onPress: onCamara },
+      { text: 'Elegir de galería', onPress: onGaleria },
+      { text: 'Cancelar', style: 'cancel' },
+    ])
+  }
+}
+
+async function recortarCuadrado(uri: string, width: number, height: number) {
+  const lado = Math.min(width, height)
+  const originX = Math.floor((width - lado) / 2)
+  const originY = Math.floor((height - lado) / 2)
+
+  return ImageManipulator.manipulateAsync(
+    uri,
+    [{ crop: { originX, originY, width: lado, height: lado } }],
+    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+  )
+}
+
 export default function PasoFoto() {
   const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAPaso } = useFichajeStore()
+  const [errorCamara, setErrorCamara] = useState<string | null>(null)
 
-  const elegirFoto = async () => {
+  const procesarImagen = async (asset: ImagePicker.ImagePickerAsset) => {
+    const recortada = await recortarCuadrado(asset.uri, asset.width, asset.height)
+    setFotoUri(recortada.uri)
+    setFotoBase64(recortada.base64 ?? null)
+  }
+
+  const elegirDeGaleria = async () => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
-      base64: true,
+      quality: 1,
     })
-    if (!resultado.canceled) {
-      const asset = resultado.assets[0]
-      setFotoUri(asset.uri)
-      setFotoBase64(asset.base64 ?? null)
+    if (!resultado.canceled) await procesarImagen(resultado.assets[0])
+  }
+
+  const sacarSelfie = async () => {
+    setErrorCamara(null)
+    try {
+      const permiso = await ImagePicker.requestCameraPermissionsAsync()
+      if (!permiso.granted) return
+
+      const resultado = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      })
+      if (!resultado.canceled) await procesarImagen(resultado.assets[0])
+    } catch {
+      setErrorCamara('La cámara no está disponible en este dispositivo')
     }
   }
 
@@ -40,7 +91,9 @@ export default function PasoFoto() {
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Foto del jugador</Text>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+            <Text className="text-gray-500 text-sm">
+              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            </Text>
           )}
         </View>
 
@@ -58,9 +111,12 @@ export default function PasoFoto() {
           <BotonWizard
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
-            onPress={elegirFoto}
+            onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
             variante="oscuro"
           />
+          {errorCamara && (
+            <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>
+          )}
           <BotonWizard
             texto="Subir"
             icono="upload"

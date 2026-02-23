@@ -1,11 +1,29 @@
-import React from 'react'
-import { View, Text, Image, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, Image, ScrollView, ActionSheetIOS, Alert, Platform } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Feather } from '@expo/vector-icons'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
+
+function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      { options: ['Cancelar', 'Sacar foto', 'Elegir de galería'], cancelButtonIndex: 0 },
+      (index) => {
+        if (index === 1) onCamara()
+        if (index === 2) onGaleria()
+      }
+    )
+  } else {
+    Alert.alert('Seleccionar foto', undefined, [
+      { text: 'Sacar foto', onPress: onCamara },
+      { text: 'Elegir de galería', onPress: onGaleria },
+      { text: 'Cancelar', style: 'cancel' },
+    ])
+  }
+}
 
 function PreviewDni({ uri }: { uri: string | null }) {
   return (
@@ -30,6 +48,35 @@ export default function PasoFotosDni() {
     setDniDorsoBase64,
     irAPaso,
   } = useFichajeStore()
+  const [errorCamara, setErrorCamara] = useState<string | null>(null)
+
+  const sacarFoto = async (lado: 'frente' | 'dorso') => {
+    setErrorCamara(null)
+    try {
+      const permiso = await ImagePicker.requestCameraPermissionsAsync()
+      if (!permiso.granted) return
+
+      const resultado = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.back,
+        allowsEditing: true,
+        aspect: [16, 9],
+        quality: 0.8,
+        base64: true,
+      })
+      if (!resultado.canceled) {
+        const asset = resultado.assets[0]
+        if (lado === 'frente') {
+          setDniFrenteUri(asset.uri)
+          setDniFrenteBase64(asset.base64 ?? null)
+        } else {
+          setDniDorsoUri(asset.uri)
+          setDniDorsoBase64(asset.base64 ?? null)
+        }
+      }
+    } catch {
+      setErrorCamara('La cámara no está disponible en este dispositivo')
+    }
+  }
 
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
@@ -79,7 +126,7 @@ export default function PasoFotosDni() {
             <BotonWizard
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
-              onPress={() => elegirImagen('frente')}
+              onPress={() => mostrarSelectorImagen(() => sacarFoto('frente'), () => elegirImagen('frente'))}
               variante="oscuro"
             />
           </View>
@@ -90,10 +137,14 @@ export default function PasoFotosDni() {
             <BotonWizard
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
-              onPress={() => elegirImagen('dorso')}
+              onPress={() => mostrarSelectorImagen(() => sacarFoto('dorso'), () => elegirImagen('dorso'))}
               variante="oscuro"
             />
           </View>
+
+          {errorCamara && (
+            <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>
+          )}
 
           <BotonWizard
             texto="Subir"

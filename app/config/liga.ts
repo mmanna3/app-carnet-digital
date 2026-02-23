@@ -35,7 +35,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
       ? {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
-          apiUrl: __DEV__ ? 'http://localhost:5072' : liga.apiUrl,
+          apiUrl: __DEV__ ? 'http://192.168.0.66:5072' : liga.apiUrl,
           colorBase: liga.colorBase,
         }
       : null
@@ -44,7 +44,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
   return {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
-    apiUrl: __DEV__ ? 'http://localhost:5072' : (extra.apiUrl ?? ''),
+    apiUrl: __DEV__ ? 'http://192.168.0.66:5072' : (extra.apiUrl ?? ''),
     colorBase: extra.colorBase,
   }
 }
