@@ -107,7 +107,7 @@ export default function PasoDatosJugador() {
               <Text className="text-gray-700 text-sm mb-1.5">Tu fecha de nacimiento</Text>
               <TouchableOpacity
                 onPress={() => setMostrarPicker(true)}
-                className="w-full px-4 py-3 rounded-2xl bg-gray-50 border-2 border-gray-200"
+                className="w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 border-gray-200"
               >
                 <Text className={fechaNac ? 'text-gray-900' : 'text-[#9ca3af]'}>
                   {fechaNac ? formatearFecha(fechaNac) : 'Seleccioná tu fecha de nacimiento'}

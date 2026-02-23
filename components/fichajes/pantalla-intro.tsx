@@ -19,34 +19,34 @@ export default function PantallaIntro({ onVolver }: Props) {
         <TouchableOpacity
           testID="card-nuevo"
           onPress={irANuevo}
-          className="bg-blue-600 rounded-2xl p-4 shadow-md"
+          className="bg-blue-600 rounded-2xl p-7 shadow-md"
           activeOpacity={0.85}
         >
           <View className="bg-white/20 rounded-xl p-2 mb-3 self-start">
             <Feather name="user-plus" size={20} color="white" />
           </View>
-          <Text className="text-white text-lg font-semibold mb-1">
-            ¿Es la primera vez que te fichás en la liga?
+          <Text className="text-white text-xl font-semibold mb-2">
+            ¿Es la primera vez que te fichás?
           </Text>
           <Text className="text-blue-100 text-sm leading-tight">
-            Fichate con el código de equipo que te dio tu delegado
+            Fichate con el código de equipo que te dio tu delegado y completando tus datos
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           testID="card-ya-fichado"
           onPress={irAYaFichado}
-          className="bg-liga-600 rounded-2xl p-4 shadow-md"
+          className="bg-liga-600 rounded-2xl p-7 shadow-md"
           activeOpacity={0.85}
         >
           <View className="bg-white/10 rounded-xl p-2 mb-3 self-start">
             <Feather name="users" size={20} color="white" />
           </View>
-          <Text className="text-white text-lg font-semibold mb-1">
+          <Text className="text-white text-xl font-semibold mb-2">
             ¿Ya jugás en un equipo y querés ficharte en otro?
           </Text>
           <Text className="text-blue-100 text-sm leading-tight">
-            Fichate con el código de equipo y tu DNI
+            Fichate solo con el código de equipo y tu DNI
           </Text>
         </TouchableOpacity>
       </View>

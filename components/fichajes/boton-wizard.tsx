@@ -28,10 +28,10 @@ export default function BotonWizard({
       onPress={onPress}
       disabled={deshabilitado}
       activeOpacity={0.85}
-      className={`${bg} rounded-2xl py-3 px-6 shadow-md flex-row items-center justify-center gap-2`}
+      className={`${bg} rounded-2xl py-5 px-6 shadow-md flex-row items-center justify-center gap-2`}
     >
       {icono && <Feather name={icono} size={20} color={colorIcono} />}
-      <Text className={`font-semibold ${deshabilitado ? 'text-gray-500' : 'text-white'}`}>
+      <Text className={`font-semibold text-md ${deshabilitado ? 'text-gray-500' : 'text-white'}`}>
         {texto}
       </Text>
     </TouchableOpacity>

@@ -12,7 +12,7 @@ export default function CampoTexto({ label, inputTestID, ...props }: Props) {
       {label ? <Text className="text-gray-700 text-sm mb-1.5">{label}</Text> : null}
       <TextInput
         testID={inputTestID}
-        className="w-full px-4 py-3 rounded-2xl bg-gray-50 border-2 border-gray-200 text-gray-900"
+        className="w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 border-gray-200 text-gray-900"
         placeholderTextColor="#9ca3af"
         {...props}
       />
