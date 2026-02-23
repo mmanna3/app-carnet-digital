@@ -10,6 +10,14 @@ import ModalFechaNacimiento from '../modal-fecha-nacimiento'
 const formatearFecha = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
 
+/** Primera letra en mayúscula, resto en minúscula (por palabra) */
+const capitalizar = (s: string) =>
+  s
+    .slice(0, 14)
+    .split(' ')
+    .map((p) => (p ? p.charAt(0).toUpperCase() + p.slice(1).toLowerCase() : ''))
+    .join(' ')
+
 export default function PasoDatosJugador() {
   const {
     nombre,
@@ -74,14 +82,14 @@ export default function PasoDatosJugador() {
               label="Tu nombre"
               placeholder="Ingresá tu nombre"
               value={nombre}
-              onChangeText={(v) => setNombre(v.slice(0, 14))}
+              onChangeText={(v) => setNombre(capitalizar(v))}
             />
             <CampoTexto
               inputTestID="input-apellido"
               label="Tu apellido"
               placeholder="Ingresá tu apellido"
               value={apellido}
-              onChangeText={(v) => setApellido(v.slice(0, 14))}
+              onChangeText={(v) => setApellido(capitalizar(v))}
             />
             <CampoTexto
               inputTestID="input-dni-jugador"
