@@ -80,10 +80,7 @@ export default function PasoFotosDni() {
 
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [16, 9],
-      quality: 0.8,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,      
       base64: true,
     })
     if (!resultado.canceled) {
