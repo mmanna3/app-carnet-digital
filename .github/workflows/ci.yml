@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Instalar dependencias
         run: npm ci
@@ -36,6 +36,7 @@ jobs:
     name: E2E (Maestro)
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
@@ -43,12 +44,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Instalar dependencias
         run: npm ci
@@ -69,6 +70,9 @@ jobs:
 
       - name: E2E con emulador Android
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # Reduce espera antes de force-kill para evitar cuelgues de 2h
+          ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 10
         with:
           api-level: 29
           arch: x86_64

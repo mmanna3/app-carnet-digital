@@ -20,16 +20,23 @@ appId: com.blueservant.edefi
 - tapOn:
     id: "input-codigo-equipo"
 - inputText: "ABC123"
-- waitForAnimationToEnd
-- hideKeyboard
-- tapOn:
-    id: "boton-validar"
-- waitForAnimationToEnd
-# PasoDatosJugador (paso 2 de 5) — extendedWaitUntil para emuladores lentos en CI
+# En Android, hideKeyboard descarta el teclado y da tiempo al estado de actualizarse.
+# No se usa en iOS porque KAV con padding ya muestra el botón sobre el teclado y
+# hideKeyboard global causaría un tap accidental en el botón.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+# Espera explícita a que el botón esté habilitado antes de tocarlo
 - extendedWaitUntil:
     visible:
-      id: "paso-datos-jugador"
-    timeout: 15000
+      id: "boton-validar"
+      enabled: true
+    timeout: 5000
+- tapOn:
+    id: "boton-validar"
+# PasoDatosJugador (paso 2 de 5)
 - assertVisible:
     id: "paso-datos-jugador"
 - tapOn:
