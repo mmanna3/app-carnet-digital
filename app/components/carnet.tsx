@@ -8,6 +8,9 @@ interface CarnetProps {
   mostrarEstado?: boolean
   mostrarMotivo?: boolean
   onLongPress?: () => void
+  onPress?: () => void
+  seleccionado?: boolean
+  modoSeleccion?: boolean
 }
 
 export default function Carnet({
@@ -15,6 +18,9 @@ export default function Carnet({
   mostrarEstado = false,
   mostrarMotivo = false,
   onLongPress,
+  onPress,
+  seleccionado = false,
+  modoSeleccion = false,
 }: CarnetProps) {
   const estado = jugador.estado as EstadoJugador
   const debeMostrarEstado =
@@ -27,10 +33,18 @@ export default function Carnet({
 
   return (
     <Pressable
-      onLongPress={onLongPress}
+      onPress={modoSeleccion ? onPress : undefined}
+      onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}
       className="bg-white rounded-2xl m-4 overflow-hidden border-2 border-gray-200 shadow-lg elevation-5"
     >
+      {modoSeleccion && (
+        <View className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full border-2 border-liga-600 bg-white/80 items-center justify-center">
+          {seleccionado && (
+            <Text className="text-liga-600 text-base font-bold leading-none">✓</Text>
+          )}
+        </View>
+      )}
       {debeMostrarEstado && (
         <View
           style={{ backgroundColor: obtenerColorEstado(estado) }}

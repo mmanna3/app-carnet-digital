@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import useApiQuery from '../api/custom-hooks/use-api-query'
@@ -7,12 +7,16 @@ import { CarnetDigitalDTO } from '../api/clients'
 import { useEquipoStore } from '../hooks/use-equipo-store'
 import { useAuth } from '../hooks/use-auth'
 import { queryKeys } from '../api/query-keys'
+import { useSeleccionJugadores } from '../hooks/use-seleccion-jugadores'
 import Carnet from '../components/carnet'
 import ModalAccionesJugador from '../components/modal-acciones-jugador'
 import ModalEliminarJugador from '../components/modal-eliminar-jugador'
 import ModalTransferirJugador from '../components/modal-transferir-jugador'
+import ModalEliminarMasivo from '../components/modal-eliminar-masivo'
+import ModalTransferirMasivo from '../components/modal-transferir-masivo'
 
 type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
+type ModalBulk = 'eliminar' | 'transferir' | null
 
 export default function MisJugadoresScreen() {
   const { equipoSeleccionadoId } = useEquipoStore()
@@ -23,6 +27,9 @@ export default function MisJugadoresScreen() {
 
   const [jugadorSeleccionado, setJugadorSeleccionado] = useState<CarnetDigitalDTO | null>(null)
   const [modalActiva, setModalActiva] = useState<ModalActiva>(null)
+  const [modalBulk, setModalBulk] = useState<ModalBulk>(null)
+
+  const { modoSeleccion, jugadoresSeleccionados, toggle, desactivar } = useSeleccionJugadores()
 
   const {
     data: jugadores,
@@ -37,6 +44,10 @@ export default function MisJugadoresScreen() {
     transformarResultado: (resultado) => resultado,
     activado: !!equipoSeleccionadoId && isAuthenticated,
   })
+
+  useEffect(() => {
+    desactivar()
+  }, [equipoSeleccionadoId])
 
   const handleLongPress = (jugador: CarnetDigitalDTO) => {
     setJugadorSeleccionado(jugador)
@@ -55,6 +66,18 @@ export default function MisJugadoresScreen() {
 
   const handleTransferido = () => {
     cerrarModales()
+    queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+  }
+
+  const handleEliminadoMasivo = () => {
+    setModalBulk(null)
+    desactivar()
+    queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+  }
+
+  const handleTransferidoMasivo = () => {
+    setModalBulk(null)
+    desactivar()
     queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
   }
 
@@ -113,6 +136,12 @@ export default function MisJugadoresScreen() {
     }))
   }
 
+  const jugadoresParaAccionMasiva = jugadores.filter((j) =>
+    jugadoresSeleccionados.includes(j.id!)
+  )
+
+  const haySeleccionados = jugadoresSeleccionados.length > 0
+
   return (
     <View className="flex-1 bg-[#f8f8f8]">
       <View className="bg-white py-2.5 border-b border-gray-200 z-[1]">
@@ -143,13 +172,40 @@ export default function MisJugadoresScreen() {
                 <Carnet
                   key={jugador.id}
                   jugador={jugador}
-                  onLongPress={() => handleLongPress(jugador)}
+                  modoSeleccion={modoSeleccion}
+                  seleccionado={jugadoresSeleccionados.includes(jugador.id!)}
+                  onPress={modoSeleccion ? () => toggle(jugador.id!) : undefined}
+                  onLongPress={modoSeleccion ? undefined : () => handleLongPress(jugador)}
                 />
               ))}
             </View>
           ))}
         </View>
       </ScrollView>
+
+      {modoSeleccion && (
+        <View className="bg-white border-t border-gray-200 px-4 pt-3 pb-6 gap-2">
+          <View className="flex-row gap-3">
+            <TouchableOpacity
+              className={`flex-1 rounded-xl p-3.5 items-center ${haySeleccionados ? 'bg-red-600' : 'bg-red-200'}`}
+              onPress={() => setModalBulk('eliminar')}
+              disabled={!haySeleccionados}
+            >
+              <Text className="text-white font-semibold text-base">Eliminar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`flex-1 rounded-xl p-3.5 items-center ${haySeleccionados ? 'bg-liga-600' : 'bg-liga-200'}`}
+              onPress={() => setModalBulk('transferir')}
+              disabled={!haySeleccionados}
+            >
+              <Text className="text-white font-semibold text-base">Transferir</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity className="items-center py-2" onPress={desactivar}>
+            <Text className="text-gray-500 text-base">Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <ModalAccionesJugador
         jugador={modalActiva === 'acciones' ? jugadorSeleccionado : null}
@@ -168,6 +224,18 @@ export default function MisJugadoresScreen() {
         jugador={modalActiva === 'transferir' ? jugadorSeleccionado : null}
         onTransferido={handleTransferido}
         onCerrar={cerrarModales}
+      />
+
+      <ModalEliminarMasivo
+        jugadores={modalBulk === 'eliminar' ? jugadoresParaAccionMasiva : null}
+        onEliminado={handleEliminadoMasivo}
+        onCerrar={() => setModalBulk(null)}
+      />
+
+      <ModalTransferirMasivo
+        jugadores={modalBulk === 'transferir' ? jugadoresParaAccionMasiva : null}
+        onTransferido={handleTransferidoMasivo}
+        onCerrar={() => setModalBulk(null)}
       />
     </View>
   )

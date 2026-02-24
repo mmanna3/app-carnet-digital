@@ -1,18 +1,21 @@
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useRouter, usePathname } from 'expo-router'
 import Constants from 'expo-constants'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 import { useAuth } from '../hooks/use-auth'
 import { useEquipoStore } from '../hooks/use-equipo-store'
 import { useLigaStore } from '../hooks/use-liga-store'
+import { useSeleccionJugadores } from '../hooks/use-seleccion-jugadores'
 
 export default function HeaderMenu() {
   const router = useRouter()
+  const pathname = usePathname()
   const { logout } = useAuth()
   const { limpiarEquipoSeleccionado } = useEquipoStore()
   const { limpiarLiga } = useLigaStore()
+  const { modoSeleccion, activar, desactivar } = useSeleccionJugadores()
 
   const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
 
@@ -32,6 +35,19 @@ export default function HeaderMenu() {
     router.replace('/(auth)/login')
   }
 
+  const handleSeleccionarJugadores = () => {
+    if (modoSeleccion) {
+      desactivar()
+    } else {
+      if (pathname !== '/mis-jugadores') {
+        router.push('/(tabs)/mis-jugadores')
+        setTimeout(activar, 300)
+      } else {
+        activar()
+      }
+    }
+  }
+
   return (
     <View className="mr-2.5">
       <Menu>
@@ -41,6 +57,11 @@ export default function HeaderMenu() {
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
+          <MenuOption onSelect={handleSeleccionarJugadores}>
+            <Text className="text-base text-[#333] p-2.5">
+              {modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
+            </Text>
+          </MenuOption>
           {esMultiliga && (
             <MenuOption onSelect={handleCambiarLiga}>
               <Text className="text-base text-[#333] p-2.5">Cambiar liga</Text>
