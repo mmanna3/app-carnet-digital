@@ -79,7 +79,7 @@ export default function PasoFotosDni() {
 
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,      
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       base64: true,
     })
     if (!resultado.canceled) {
@@ -111,7 +111,9 @@ export default function PasoFotosDni() {
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Fotos del DNI</Text>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+            <Text className="text-gray-500 text-sm">
+              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            </Text>
           )}
         </View>
 
@@ -123,7 +125,12 @@ export default function PasoFotosDni() {
               testID="boton-seleccionar-frente"
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
-              onPress={() => mostrarSelectorImagen(() => sacarFoto('frente'), () => elegirImagen('frente'))}
+              onPress={() =>
+                mostrarSelectorImagen(
+                  () => sacarFoto('frente'),
+                  () => elegirImagen('frente')
+                )
+              }
               variante="oscuro"
             />
           </View>
@@ -135,14 +142,17 @@ export default function PasoFotosDni() {
               testID="boton-seleccionar-dorso"
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
-              onPress={() => mostrarSelectorImagen(() => sacarFoto('dorso'), () => elegirImagen('dorso'))}
+              onPress={() =>
+                mostrarSelectorImagen(
+                  () => sacarFoto('dorso'),
+                  () => elegirImagen('dorso')
+                )
+              }
               variante="oscuro"
             />
           </View>
 
-          {errorCamara && (
-            <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>
-          )}
+          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
 
           <BotonWizard
             testID="boton-subir-dni"

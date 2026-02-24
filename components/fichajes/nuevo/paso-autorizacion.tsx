@@ -34,7 +34,11 @@ export default function PasoAutorizacion() {
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Autorizar</Text>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">Fichando a <Text className="font-bold">{nombre}</Text> en <Text className="font-bold">{nombreEquipo}</Text> (DNI: <Text className="font-bold">{dni}</Text>)</Text>
+            <Text className="text-gray-500 text-sm">
+              Fichando a <Text className="font-bold">{nombre}</Text> en{' '}
+              <Text className="font-bold">{nombreEquipo}</Text> (DNI:{' '}
+              <Text className="font-bold">{dni}</Text>)
+            </Text>
           )}
         </View>
 
@@ -43,9 +47,7 @@ export default function PasoAutorizacion() {
             <Text className="text-white text-sm text-center leading-relaxed">{DECLARACION}</Text>
           </View>
 
-          {error && (
-            <Text className="text-red-500 text-sm text-center">{error}</Text>
-          )}
+          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-enviar"

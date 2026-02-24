@@ -97,9 +97,7 @@ export default function HomeScreen() {
             <Feather name="users" size={20} color="white" />
           </View>
           <Text className="text-white text-lg font-semibold mb-1">Fichaje</Text>
-          <Text className="text-blue-100 text-sm leading-snug">
-            Fichaje de nuevo jugador
-          </Text>
+          <Text className="text-blue-100 text-sm leading-snug">Fichaje de nuevo jugador</Text>
         </TouchableOpacity>
 
         {/* Delegados/DT */}
@@ -113,18 +111,13 @@ export default function HomeScreen() {
             <Feather name="clipboard" size={20} color="white" />
           </View>
           <Text className="text-white text-lg font-semibold mb-1">Delegados/DT</Text>
-          <Text className="text-gray-300 text-sm leading-snug">
-            Accedé a tu panel de gestión
-          </Text>
+          <Text className="text-gray-300 text-sm leading-snug">Accedé a tu panel de gestión</Text>
         </TouchableOpacity>
       </View>
 
       {/* Seleccionar otra liga (solo multiliga) */}
       {esMultiliga && (
-        <TouchableOpacity
-          onPress={handleSeleccionarOtraLiga}
-          className="mt-12 py-2 items-center"
-        >
+        <TouchableOpacity onPress={handleSeleccionarOtraLiga} className="mt-12 py-2 items-center">
           <Text className="text-sm text-gray-500">Seleccionar otra liga</Text>
         </TouchableOpacity>
       )}

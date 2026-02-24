@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
@@ -70,7 +77,9 @@ export default function PasoDatosJugador() {
           <View className="mb-6">
             <Text className="text-gray-900 text-lg font-semibold mb-1">Datos generales</Text>
             {nombreEquipo ? (
-              <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+              <Text className="text-gray-500 text-sm">
+                Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+              </Text>
             ) : (
               <Text className="text-gray-500 text-sm">Ingresá tus datos personales</Text>
             )}
@@ -116,9 +125,7 @@ export default function PasoDatosJugador() {
               </TouchableOpacity>
             </View>
 
-            {error && (
-              <Text className="text-red-500 text-sm text-center">{error}</Text>
-            )}
+            {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
 
             <BotonWizard
               testID="boton-continuar"

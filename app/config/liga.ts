@@ -58,7 +58,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
 
 /** Config actual (para uso en hooks que necesitan reactividad) */
 export function useConfigLiga(): ConfigLigaRuntime | null {
-  const ligaId = useLigaStore((s) => s.ligaSeleccionadaId)
+  useLigaStore((s) => s.ligaSeleccionadaId) // suscripción para reactividad
   return getConfigLigaFromStore()
 }
 

@@ -11,10 +11,16 @@ import { useFichajeStore } from '../use-fichaje-store'
 import { api } from '@/app/api/api'
 import { ObtenerNombreEquipoDTO } from '@/app/api/clients'
 
-const mockObtenerNombreEquipo = api.obtenerNombreEquipo as jest.MockedFunction<typeof api.obtenerNombreEquipo>
-const mockElDniEstaFichado = api.elDniEstaFichado as jest.MockedFunction<typeof api.elDniEstaFichado>
+const mockObtenerNombreEquipo = api.obtenerNombreEquipo as jest.MockedFunction<
+  typeof api.obtenerNombreEquipo
+>
+const mockElDniEstaFichado = api.elDniEstaFichado as jest.MockedFunction<
+  typeof api.elDniEstaFichado
+>
 const mockJugadorPOST = api.jugadorPOST as jest.MockedFunction<typeof api.jugadorPOST>
-const mockFicharEnOtroEquipo = api.ficharEnOtroEquipo as jest.MockedFunction<typeof api.ficharEnOtroEquipo>
+const mockFicharEnOtroEquipo = api.ficharEnOtroEquipo as jest.MockedFunction<
+  typeof api.ficharEnOtroEquipo
+>
 
 const ESTADO_INICIAL = {
   flujo: 'intro' as const,
@@ -45,7 +51,11 @@ describe('useFichajeStore', () => {
     it('código válido: guarda nombreEquipo y retorna ok=true', async () => {
       useFichajeStore.setState({ codigoEquipo: 'ABC1234' })
       mockObtenerNombreEquipo.mockResolvedValue(
-        new ObtenerNombreEquipoDTO({ hayError: false, respuesta: 'Equipo X', mensajeError: undefined })
+        new ObtenerNombreEquipoDTO({
+          hayError: false,
+          respuesta: 'Equipo X',
+          mensajeError: undefined,
+        })
       )
 
       const result = await useFichajeStore.getState().validarCodigoEquipo()
@@ -57,7 +67,11 @@ describe('useFichajeStore', () => {
     it('código inválido (hayError=true): retorna ok=false con mensajeError', async () => {
       useFichajeStore.setState({ codigoEquipo: 'XXX0001' })
       mockObtenerNombreEquipo.mockResolvedValue(
-        new ObtenerNombreEquipoDTO({ hayError: true, respuesta: undefined, mensajeError: 'Código incorrecto' })
+        new ObtenerNombreEquipoDTO({
+          hayError: true,
+          respuesta: undefined,
+          mensajeError: 'Código incorrecto',
+        })
       )
 
       const result = await useFichajeStore.getState().validarCodigoEquipo()
@@ -137,7 +151,9 @@ describe('useFichajeStore', () => {
     })
 
     it('backend responde con error controlado: retorna ok=false con error', async () => {
-      mockJugadorPOST.mockRejectedValue({ response: JSON.stringify({ title: 'El equipo no existe' }) })
+      mockJugadorPOST.mockRejectedValue({
+        response: JSON.stringify({ title: 'El equipo no existe' }),
+      })
 
       const result = await useFichajeStore.getState().enviarFichajeNuevo()
 
@@ -184,7 +200,9 @@ describe('useFichajeStore', () => {
 
     it('DNI fichado pero backend falla: retorna ok=false con error', async () => {
       mockElDniEstaFichado.mockResolvedValue(true)
-      mockFicharEnOtroEquipo.mockRejectedValue({ response: JSON.stringify({ title: 'El jugador ya está fichado en el equipo' }) })
+      mockFicharEnOtroEquipo.mockRejectedValue({
+        response: JSON.stringify({ title: 'El jugador ya está fichado en el equipo' }),
+      })
 
       const result = await useFichajeStore.getState().enviarFichajeYaFichado()
 

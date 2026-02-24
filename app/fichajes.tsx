@@ -10,8 +10,7 @@ import PasoFotosDni from '@/components/fichajes/nuevo/paso-fotos-dni'
 import PasoAutorizacion from '@/components/fichajes/nuevo/paso-autorizacion'
 import PasoDni from '@/components/fichajes/ya-fichado/paso-dni'
 
-const MENSAJE_CONFIRMACION =
-  'Vas a recibir la confirmación de tu fichaje por parte de tu delegado.'
+const MENSAJE_CONFIRMACION = 'Vas a recibir la confirmación de tu fichaje por parte de tu delegado.'
 
 export default function FichajesScreen() {
   const router = useRouter()
@@ -32,13 +31,19 @@ export default function FichajesScreen() {
     if (paso === 3) return <PasoFoto />
     if (paso === 4) return <PasoFotosDni />
     if (paso === 5) return <PasoAutorizacion />
-    if (paso === 6) return <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+    if (paso === 6)
+      return (
+        <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+      )
   }
 
   if (flujo === 'yaFichado') {
     if (paso === 1) return <PasoCodigoEquipo />
     if (paso === 2) return <PasoDni />
-    if (paso === 3) return <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+    if (paso === 3)
+      return (
+        <PantallaConfirmacion mensaje={MENSAJE_CONFIRMACION} onVolverInicio={handleVolverInicio} />
+      )
   }
 
   return null

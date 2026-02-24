@@ -9,7 +9,10 @@ interface Props {
 
 export default function PantallaConfirmacion({ mensaje, onVolverInicio }: Props) {
   return (
-    <View testID="pantalla-confirmacion" className="flex-1 bg-gray-50 items-center justify-center px-6">
+    <View
+      testID="pantalla-confirmacion"
+      className="flex-1 bg-gray-50 items-center justify-center px-6"
+    >
       <View className="w-full bg-white rounded-2xl p-6 shadow-md mb-6">
         <View className="items-center gap-4">
           <View className="w-16 h-16 bg-liga-600 rounded-full items-center justify-center">

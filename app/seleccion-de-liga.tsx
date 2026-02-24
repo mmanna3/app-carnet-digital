@@ -29,9 +29,7 @@ export default function SeleccionDeLigaScreen() {
   if (ligasDisponibles.length === 0) {
     return (
       <View className="flex-1 bg-[#f8f8f8] p-5 justify-center">
-        <Text className="text-xl text-center text-gray-600">
-          No hay ligas configuradas
-        </Text>
+        <Text className="text-xl text-center text-gray-600">No hay ligas configuradas</Text>
       </View>
     )
   }
@@ -39,9 +37,7 @@ export default function SeleccionDeLigaScreen() {
   return (
     <View className="flex-1 bg-[#f8f8f8] p-5">
       <Text className="text-2xl font-bold text-center mb-2.5">Seleccioná tu liga</Text>
-      <Text className="text-base text-center text-gray-500 mb-5">
-        Elegí la liga para continuar
-      </Text>
+      <Text className="text-base text-center text-gray-500 mb-5">Elegí la liga para continuar</Text>
       <FlatList
         data={ligasDisponibles}
         keyExtractor={(item) => item.leagueId}
@@ -54,11 +50,7 @@ export default function SeleccionDeLigaScreen() {
             >
               {iconSource ? (
                 <View className="w-28 h-28 bg-white rounded-lg items-center justify-center mb-3 border border-gray-200">
-                  <Image
-                    source={iconSource}
-                    className="w-full h-full"
-                    resizeMode="contain"
-                  />
+                  <Image source={iconSource} className="w-full h-full" resizeMode="contain" />
                 </View>
               ) : null}
               <Text className="text-lg font-bold">{item.leagueDisplayName}</Text>

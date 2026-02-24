@@ -2,8 +2,12 @@
  * Tests para configs-por-liga/datos.js
  */
 describe('datos.js', () => {
-  const { LIGAS, APPS_UNILIGAS, LIGAS_DE_APP_MULTILIGA, CONFIG_APP_MULTILIGA } =
-    require('../datos.js')
+  const {
+    LIGAS,
+    APPS_UNILIGAS,
+    LIGAS_DE_APP_MULTILIGA,
+    CONFIG_APP_MULTILIGA,
+  } = require('../datos.js')
 
   it('LIGAS tiene luefi y edefi', () => {
     expect(LIGAS.luefi).toBeDefined()

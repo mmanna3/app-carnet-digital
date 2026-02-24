@@ -43,7 +43,9 @@ export default function PasoDni() {
         <View className="mb-6">
           <Text className="text-gray-900 text-lg font-semibold mb-1">Datos generales</Text>
           {nombreEquipo ? (
-            <Text className="text-gray-500 text-sm">Fichándose en <Text className="font-bold">{nombreEquipo}</Text></Text>
+            <Text className="text-gray-500 text-sm">
+              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            </Text>
           ) : (
             <Text className="text-gray-500 text-sm">Ingresá tu DNI para identificarte</Text>
           )}
@@ -62,9 +64,7 @@ export default function PasoDni() {
             keyboardType="numeric"
           />
 
-          {error && (
-            <Text className="text-red-500 text-sm text-center">{error}</Text>
-          )}
+          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-continuar"

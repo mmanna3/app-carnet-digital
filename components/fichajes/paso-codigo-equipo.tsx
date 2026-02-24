@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from './cabecera'
 import Progreso from './progreso'
@@ -7,8 +7,15 @@ import CampoTexto from './campo-texto'
 import BotonWizard from './boton-wizard'
 
 export default function PasoCodigoEquipo() {
-  const { flujo, codigoEquipo, nombreEquipo, setCodigoEquipo, irAIntro, irAPaso, validarCodigoEquipo } =
-    useFichajeStore()
+  const {
+    flujo,
+    codigoEquipo,
+    nombreEquipo,
+    setCodigoEquipo,
+    irAIntro,
+    irAPaso,
+    validarCodigoEquipo,
+  } = useFichajeStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -57,12 +64,12 @@ export default function PasoCodigoEquipo() {
           />
 
           {nombreEquipo && !error && (
-            <Text className="text-green-600 text-sm font-medium text-center">Tu equipo es: <Text className="font-bold">{nombreEquipo}</Text></Text>
+            <Text className="text-green-600 text-sm font-medium text-center">
+              Tu equipo es: <Text className="font-bold">{nombreEquipo}</Text>
+            </Text>
           )}
 
-          {error && (
-            <Text className="text-red-500 text-sm text-center">{error}</Text>
-          )}
+          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-validar"

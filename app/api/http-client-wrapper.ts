@@ -4,8 +4,6 @@ import { router } from 'expo-router'
 export class HttpClientWrapper {
   private publicRoutes = ['/api/Auth/login', '/api/Publico']
 
-  constructor() {}
-
   async fetch(url: RequestInfo, init?: RequestInit): Promise<Response> {
     const token = useAuth.getState().token
     const isPublicRoute = this.isPublicRoute(url.toString())

@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 
 interface IProps<TData, TTransformed = TData> {
   fn: () => Promise<TData>
-  key: ReadonlyArray<string | number | null | undefined>
+  key: readonly (string | number | null | undefined)[]
   activado?: boolean
   transformarResultado?: (data: TData) => TTransformed
   onError?: (error: unknown) => void

@@ -100,7 +100,11 @@ export default function PasoFoto() {
           <View className="items-center">
             <View className="w-48 h-48 bg-white rounded-2xl shadow-md border-2 border-gray-200 items-center justify-center overflow-hidden">
               {fotoUri ? (
-                <Image source={{ uri: fotoUri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                <Image
+                  source={{ uri: fotoUri }}
+                  style={{ width: '100%', height: '100%' }}
+                  resizeMode="cover"
+                />
               ) : (
                 <Feather name="user" size={64} color="#d1d5db" />
               )}
@@ -114,9 +118,7 @@ export default function PasoFoto() {
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
             variante="oscuro"
           />
-          {errorCamara && (
-            <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>
-          )}
+          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
           <BotonWizard
             testID="boton-subir-foto"
             texto="Subir"

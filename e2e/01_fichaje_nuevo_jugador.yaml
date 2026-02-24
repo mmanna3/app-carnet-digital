@@ -5,84 +5,84 @@ appId: com.blueservant.edefi
 # Nota E2E: usa addMedia para foto-e2e.jpg en galería; el test interactúa con date picker y
 # selectores de imagen como lo haría un usuario real.
 - addMedia:
-    - "foto-e2e.jpg"
-    - "foto-e2e.jpg"
+    - 'foto-e2e.jpg'
+    - 'foto-e2e.jpg'
 - launchApp
 - waitForAnimationToEnd
 - tapOn:
-    id: "card-fichaje"
+    id: 'card-fichaje'
 # PantallaIntro
 - assertVisible:
-    id: "card-nuevo"
+    id: 'card-nuevo'
 - tapOn:
-    id: "card-nuevo"
+    id: 'card-nuevo'
 # PasoCodigoEquipo (paso 1 de 5)
 - assertVisible:
-    id: "paso-codigo-equipo"
+    id: 'paso-codigo-equipo'
 - tapOn:
-    id: "input-codigo-equipo"
-- inputText: "ABC1234"
+    id: 'input-codigo-equipo'
+- inputText: 'ABC1234'
 - tapOn:
-    id: "titulo-codigo-equipo"
+    id: 'titulo-codigo-equipo'
 - extendedWaitUntil:
     visible:
-      id: "boton-validar"
+      id: 'boton-validar'
       enabled: true
 - tapOn:
-    id: "boton-validar"
+    id: 'boton-validar'
 # PasoDatosJugador (paso 2 de 5) — fecha de nacimiento vía date picker
 - assertVisible:
-    id: "paso-datos-jugador"
+    id: 'paso-datos-jugador'
 - tapOn:
-    id: "input-nombre"
-- inputText: "Juan"
+    id: 'input-nombre'
+- inputText: 'Juan'
 - tapOn:
-    id: "input-apellido"
-- inputText: "Perez"
+    id: 'input-apellido'
+- inputText: 'Perez'
 - tapOn:
-    id: "input-dni-jugador"
-- inputText: "12345678"
+    id: 'input-dni-jugador'
+- inputText: '12345678'
 - tapOn:
-    id: "input-fecha-nacimiento"
+    id: 'input-fecha-nacimiento'
 # Confirmar fecha: iOS usa botón "Listo", Android usa "OK" del picker nativo
 - runFlow:
     when:
       platform: ios
     commands:
       - tapOn:
-          id: "boton-fecha-listo"
+          id: 'boton-fecha-listo'
 - runFlow:
     when:
       platform: android
     commands:
       - tapOn:
-          text: "OK"
+          text: 'OK'
           optional: true
       - tapOn:
-          text: "Aceptar"
+          text: 'Aceptar'
           optional: true
 - extendedWaitUntil:
     visible:
-      id: "boton-continuar"
+      id: 'boton-continuar'
       enabled: true
 - tapOn:
-    id: "boton-continuar"
+    id: 'boton-continuar'
 # PasoFoto (paso 3 de 5) — seleccionar foto desde galería
 - assertVisible:
-    id: "paso-foto"
+    id: 'paso-foto'
 - tapOn:
-    id: "boton-seleccionar-foto"
-- tapOn: "Elegir de galería"
+    id: 'boton-seleccionar-foto'
+- tapOn: 'Elegir de galería'
 - runFlow:
     when:
       platform: ios
     commands:
       - tapOn:
-          text: "Photo, .*"
+          text: 'Photo, .*'
           index: 0
           optional: true
       - tapOn:
-          id: "PXGGridLayout-Info"
+          id: 'PXGGridLayout-Info'
           index: 0
           optional: true
 - runFlow:
@@ -90,35 +90,35 @@ appId: com.blueservant.edefi
       platform: android
     commands:
       - tapOn:
-          id: "com.google.android.providers.media.module:id/icon_thumbnail"
+          id: 'com.google.android.providers.media.module:id/icon_thumbnail'
           optional: true
       - tapOn:
-          id: "com.google.android.documentsui:id/thumbnail"
+          id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
       - tapOn:
-          text: "CROP"
+          text: 'CROP'
 - extendedWaitUntil:
     visible:
-      id: "boton-subir-foto"
+      id: 'boton-subir-foto'
       enabled: true
 - tapOn:
-    id: "boton-subir-foto"
+    id: 'boton-subir-foto'
 # PasoFotosDni (paso 4 de 5) — frente y dorso desde galería
 - assertVisible:
-    id: "paso-fotos-dni"
+    id: 'paso-fotos-dni'
 - tapOn:
-    id: "boton-seleccionar-frente"
-- tapOn: "Elegir de galería"
+    id: 'boton-seleccionar-frente'
+- tapOn: 'Elegir de galería'
 - runFlow:
     when:
       platform: ios
     commands:
       - tapOn:
-          text: "Photo, .*"
+          text: 'Photo, .*'
           index: 0
           optional: true
       - tapOn:
-          id: "PXGGridLayout-Info"
+          id: 'PXGGridLayout-Info'
           index: 0
           optional: true
 - runFlow:
@@ -126,24 +126,24 @@ appId: com.blueservant.edefi
       platform: android
     commands:
       - tapOn:
-          id: "com.google.android.providers.media.module:id/icon_thumbnail"
+          id: 'com.google.android.providers.media.module:id/icon_thumbnail'
           optional: true
       - tapOn:
-          id: "com.google.android.documentsui:id/thumbnail"
+          id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
 - tapOn:
-    id: "boton-seleccionar-dorso"
-- tapOn: "Elegir de galería"
+    id: 'boton-seleccionar-dorso'
+- tapOn: 'Elegir de galería'
 - runFlow:
     when:
       platform: ios
     commands:
       - tapOn:
-          text: "Photo, .*"
+          text: 'Photo, .*'
           index: 0
           optional: true
       - tapOn:
-          id: "PXGGridLayout-Info"
+          id: 'PXGGridLayout-Info'
           index: 0
           optional: true
 - runFlow:
@@ -151,22 +151,22 @@ appId: com.blueservant.edefi
       platform: android
     commands:
       - tapOn:
-          id: "com.google.android.providers.media.module:id/icon_thumbnail"
+          id: 'com.google.android.providers.media.module:id/icon_thumbnail'
           optional: true
       - tapOn:
-          id: "com.google.android.documentsui:id/thumbnail"
+          id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
 - extendedWaitUntil:
     visible:
-      id: "boton-subir-dni"
+      id: 'boton-subir-dni'
       enabled: true
 - tapOn:
-    id: "boton-subir-dni"
+    id: 'boton-subir-dni'
 # PasoAutorizacion (paso 5 de 5) → POST /api/Jugador al mock server
 - assertVisible:
-    id: "paso-autorizacion"
+    id: 'paso-autorizacion'
 - tapOn:
-    id: "boton-enviar"
+    id: 'boton-enviar'
 # PantallaConfirmacion
 - assertVisible:
-    id: "pantalla-confirmacion"
+    id: 'pantalla-confirmacion'

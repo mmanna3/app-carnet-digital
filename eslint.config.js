@@ -7,7 +7,7 @@ module.exports = defineConfig([
   ...expoConfig,
   prettierConfig,
   {
-    ignores: ['dist/**', 'components/EditScreenInfo.tsx'],
+    ignores: ['dist/**', 'components/EditScreenInfo.tsx', 'FIGMA-UI-PROTOTYPE.tsx'],
   },
   {
     files: ['**/__tests__/**/*.[jt]s?(x)', '**/*.test.[jt]s?(x)'],

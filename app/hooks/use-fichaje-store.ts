@@ -107,7 +107,10 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
     try {
       const fichado = await api.elDniEstaFichado(dni)
       if (fichado) {
-        return { ok: false, error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".' }
+        return {
+          ok: false,
+          error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".',
+        }
       }
       return { ok: true }
     } catch (error: any) {
@@ -116,7 +119,16 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   },
 
   enviarFichajeNuevo: async () => {
-    const { dni, nombre, apellido, fechaNac, codigoEquipo, fotoBase64, dniFrenteBase64, dniDorsoBase64 } = get()
+    const {
+      dni,
+      nombre,
+      apellido,
+      fechaNac,
+      codigoEquipo,
+      fotoBase64,
+      dniFrenteBase64,
+      dniDorsoBase64,
+    } = get()
     try {
       const dto = new JugadorDTO({
         dni,

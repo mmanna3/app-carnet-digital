@@ -3,3 +3,5 @@ node_modules
 dist
 # Cliente NSwag auto-generado — no formatear manualmente
 app/api/clients.ts
+# Prototipo Figma — sin verificación estática
+FIGMA-UI-PROTOTYPE.tsx

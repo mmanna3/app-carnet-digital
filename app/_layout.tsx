@@ -67,6 +67,7 @@ function useProtectedRoute(loaded: boolean) {
     equipoSeleccionadoId,
     navigationState?.key,
     loaded,
+    router,
   ])
 }
 

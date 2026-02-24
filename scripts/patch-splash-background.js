@@ -24,8 +24,7 @@ if (!fs.existsSync(stylesPath)) {
 }
 
 let content = fs.readFileSync(stylesPath, 'utf8')
-const windowBgItem =
-  '<item name="android:windowBackground">@color/splashscreen_background</item>'
+const windowBgItem = '<item name="android:windowBackground">@color/splashscreen_background</item>'
 
 const hasWindowBg = content.includes(
   'name="android:windowBackground">@color/splashscreen_background'
