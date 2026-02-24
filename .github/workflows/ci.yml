@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Instalar dependencias
         run: npm ci
@@ -44,12 +44,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Instalar dependencias
         run: npm ci
@@ -78,7 +78,7 @@ jobs:
           arch: x86_64
           profile: pixel_7
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
             export PATH="$PATH:$HOME/.maestro/bin"
             # Mock server en background (10.0.2.2:3001 desde el emulador apunta a localhost:3001 del host)
@@ -98,10 +98,12 @@ jobs:
         with:
           name: maestro-e2e-report
           path: maestro-report.xml
+          if-no-files-found: ignore
 
       - name: Subir snapshots Maestro (screenshots/videos en fallo)
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: maestro-e2e-snapshots
-          path: build/maestro-results
+          path: e2e/build/maestro-results
+          if-no-files-found: ignore
