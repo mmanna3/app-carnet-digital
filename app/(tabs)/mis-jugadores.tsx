@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { useQueryClient } from '@tanstack/react-query'
 import useApiQuery from '../api/custom-hooks/use-api-query'
 import { api } from '../api/api'
 import { CarnetDigitalDTO } from '../api/clients'
@@ -7,12 +8,21 @@ import { useEquipoStore } from '../hooks/use-equipo-store'
 import { useAuth } from '../hooks/use-auth'
 import { queryKeys } from '../api/query-keys'
 import Carnet from '../components/carnet'
+import ModalAccionesJugador from '../components/modal-acciones-jugador'
+import ModalEliminarJugador from '../components/modal-eliminar-jugador'
+import ModalTransferirJugador from '../components/modal-transferir-jugador'
+
+type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
 
 export default function MisJugadoresScreen() {
   const { equipoSeleccionadoId } = useEquipoStore()
   const { isAuthenticated } = useAuth()
   const scrollViewRef = useRef<ScrollView>(null)
   const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({})
+  const queryClient = useQueryClient()
+
+  const [jugadorSeleccionado, setJugadorSeleccionado] = useState<CarnetDigitalDTO | null>(null)
+  const [modalActiva, setModalActiva] = useState<ModalActiva>(null)
 
   const {
     data: jugadores,
@@ -27,6 +37,26 @@ export default function MisJugadoresScreen() {
     transformarResultado: (resultado) => resultado,
     activado: !!equipoSeleccionadoId && isAuthenticated,
   })
+
+  const handleLongPress = (jugador: CarnetDigitalDTO) => {
+    setJugadorSeleccionado(jugador)
+    setModalActiva('acciones')
+  }
+
+  const cerrarModales = () => {
+    setModalActiva(null)
+    setJugadorSeleccionado(null)
+  }
+
+  const handleEliminado = () => {
+    cerrarModales()
+    queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+  }
+
+  const handleTransferido = () => {
+    cerrarModales()
+    queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+  }
 
   if (!isAuthenticated) {
     return null
@@ -110,12 +140,35 @@ export default function MisJugadoresScreen() {
                 <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
               </View>
               {jugadoresPorCategoria[año].map((jugador) => (
-                <Carnet key={jugador.id} jugador={jugador} />
+                <Carnet
+                  key={jugador.id}
+                  jugador={jugador}
+                  onLongPress={() => handleLongPress(jugador)}
+                />
               ))}
             </View>
           ))}
         </View>
       </ScrollView>
+
+      <ModalAccionesJugador
+        jugador={modalActiva === 'acciones' ? jugadorSeleccionado : null}
+        onEliminar={() => setModalActiva('eliminar')}
+        onTransferir={() => setModalActiva('transferir')}
+        onCerrar={cerrarModales}
+      />
+
+      <ModalEliminarJugador
+        jugador={modalActiva === 'eliminar' ? jugadorSeleccionado : null}
+        onEliminado={handleEliminado}
+        onCerrar={cerrarModales}
+      />
+
+      <ModalTransferirJugador
+        jugador={modalActiva === 'transferir' ? jugadorSeleccionado : null}
+        onTransferido={handleTransferido}
+        onCerrar={cerrarModales}
+      />
     </View>
   )
 }

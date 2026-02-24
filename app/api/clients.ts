@@ -19,7 +19,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     equiposDelDelegado(): Promise<EquiposDelDelegadoDTO> {
         let url_ = this.baseUrl + "/api/carnet-digital/equipos-del-delegado";
@@ -57,7 +57,7 @@ export class Client {
 
     /**
      * @param equipoId (optional) 
-     * @return Success
+     * @return OK
      */
     carnets(equipoId: number | undefined): Promise<CarnetDigitalDTO[]> {
         let url_ = this.baseUrl + "/api/carnet-digital/carnets?";
@@ -106,7 +106,7 @@ export class Client {
 
     /**
      * @param codigoAlfanumerico (optional) 
-     * @return Success
+     * @return OK
      */
     carnetsPorCodigoAlfanumerico(codigoAlfanumerico: string | undefined): Promise<CarnetDigitalDTO[]> {
         let url_ = this.baseUrl + "/api/carnet-digital/carnets-por-codigo-alfanumerico?";
@@ -155,7 +155,7 @@ export class Client {
 
     /**
      * @param equipoId (optional) 
-     * @return Success
+     * @return OK
      */
     jugadoresPendientes(equipoId: number | undefined): Promise<CarnetDigitalPendienteDTO[]> {
         let url_ = this.baseUrl + "/api/carnet-digital/jugadores-pendientes?";
@@ -204,7 +204,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     login(body: LoginDTO | undefined): Promise<LoginResponseDTO> {
         let url_ = this.baseUrl + "/api/Auth/login";
@@ -246,7 +246,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     cambiarPassword(body: CambiarPasswordDTO | undefined): Promise<LoginResponseDTO> {
         let url_ = this.baseUrl + "/api/Auth/cambiar-password";
@@ -287,7 +287,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     clubAll(): Promise<ClubDTO[]> {
         let url_ = this.baseUrl + "/api/Club";
@@ -332,7 +332,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     clubPOST(body: ClubDTO | undefined): Promise<ClubDTO> {
         let url_ = this.baseUrl + "/api/Club";
@@ -373,7 +373,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     clubGET(id: number): Promise<ClubDTO> {
         let url_ = this.baseUrl + "/api/Club/{id}";
@@ -414,7 +414,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     clubPUT(id: number, body: ClubDTO | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Club/{id}";
@@ -455,7 +455,7 @@ export class Client {
 
     /**
      * @param id (optional) 
-     * @return Success
+     * @return OK
      */
     blanquearClave(id: number | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/Delegado/blanquear-clave?";
@@ -497,7 +497,129 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
+     */
+    delegadoDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Delegado/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoDELETE(_response);
+        });
+    }
+
+    protected processDelegadoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    delegadoGET(id: number): Promise<DelegadoDTO> {
+        let url_ = this.baseUrl + "/api/Delegado/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoGET(_response);
+        });
+    }
+
+    protected processDelegadoGET(response: Response): Promise<DelegadoDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DelegadoDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DelegadoDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    delegadoPUT(id: number, body: DelegadoDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Delegado/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoPUT(_response);
+        });
+    }
+
+    protected processDelegadoPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
      */
     delegadoAll(): Promise<DelegadoDTO[]> {
         let url_ = this.baseUrl + "/api/Delegado";
@@ -542,7 +664,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     delegadoPOST(body: DelegadoDTO | undefined): Promise<DelegadoDTO> {
         let url_ = this.baseUrl + "/api/Delegado";
@@ -583,88 +705,7 @@ export class Client {
     }
 
     /**
-     * @return Success
-     */
-    delegadoGET(id: number): Promise<DelegadoDTO> {
-        let url_ = this.baseUrl + "/api/Delegado/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "text/plain"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDelegadoGET(_response);
-        });
-    }
-
-    protected processDelegadoGET(response: Response): Promise<DelegadoDTO> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DelegadoDTO.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<DelegadoDTO>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    delegadoPUT(id: number, body: DelegadoDTO | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Delegado/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: RequestInit = {
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDelegadoPUT(_response);
-        });
-    }
-
-    protected processDelegadoPUT(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    /**
-     * @return Success
+     * @return OK
      */
     equipoAll(): Promise<EquipoDTO[]> {
         let url_ = this.baseUrl + "/api/Equipo";
@@ -709,7 +750,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     equipoPOST(body: EquipoDTO | undefined): Promise<EquipoDTO> {
         let url_ = this.baseUrl + "/api/Equipo";
@@ -750,7 +791,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     equipoGET(id: number): Promise<EquipoDTO> {
         let url_ = this.baseUrl + "/api/Equipo/{id}";
@@ -791,7 +832,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     equipoPUT(id: number, body: EquipoDTO | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Equipo/{id}";
@@ -832,7 +873,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     jugadorPOST(body: JugadorDTO | undefined): Promise<JugadorDTO> {
         let url_ = this.baseUrl + "/api/Jugador";
@@ -873,7 +914,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     jugadorAll(): Promise<JugadorDTO[]> {
         let url_ = this.baseUrl + "/api/Jugador";
@@ -918,7 +959,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     aprobarJugador(body: AprobarJugadorDTO | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/aprobar-jugador";
@@ -961,7 +1002,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     rechazarJugador(body: RechazarJugadorDTO | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/rechazar-jugador";
@@ -1004,7 +1045,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     activarJugador(body: CambiarEstadoDelJugadorDTO[] | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/activar-jugador";
@@ -1047,7 +1088,50 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
+     */
+    efectuarPases(body: EfectuarPaseDTO[] | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Jugador/efectuar-pases";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEfectuarPases(_response);
+        });
+    }
+
+    protected processEfectuarPases(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
      */
     pagarFichajeDelJugador(body: CambiarEstadoDelJugadorDTO | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/pagar-fichaje-del-jugador";
@@ -1090,7 +1174,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     inhabilitarJugador(body: CambiarEstadoDelJugadorDTO[] | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/inhabilitar-jugador";
@@ -1133,7 +1217,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     suspenderJugador(body: CambiarEstadoDelJugadorDTO[] | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/suspender-jugador";
@@ -1176,7 +1260,7 @@ export class Client {
 
     /**
      * @param estados (optional) 
-     * @return Success
+     * @return OK
      */
     listarConFiltro(estados: EstadoJugadorEnum[] | undefined): Promise<JugadorDTO[]> {
         let url_ = this.baseUrl + "/api/Jugador/listar-con-filtro?";
@@ -1224,7 +1308,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     jugadorDELETE(id: number): Promise<number> {
         let url_ = this.baseUrl + "/api/Jugador/{id}";
@@ -1265,7 +1349,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     jugadorGET(id: number): Promise<JugadorDTO> {
         let url_ = this.baseUrl + "/api/Jugador/{id}";
@@ -1306,7 +1390,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     jugadorPUT(id: number, body: JugadorDTO | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Jugador/{id}";
@@ -1346,8 +1430,51 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    desvincularJugadorDelEquipo(body: DesvincularJugadorDelEquipoDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Jugador/desvincular-jugador-del-equipo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDesvincularJugadorDelEquipo(_response);
+        });
+    }
+
+    protected processDesvincularJugadorDelEquipo(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
      * @param dni (optional) 
-     * @return Success
+     * @return OK
      */
     elDniEstaFichado(dni: string | undefined): Promise<boolean> {
         let url_ = this.baseUrl + "/api/publico/el-dni-esta-fichado?";
@@ -1390,7 +1517,7 @@ export class Client {
 
     /**
      * @param codigoAlfanumerico (optional) 
-     * @return Success
+     * @return OK
      */
     obtenerNombreEquipo(codigoAlfanumerico: string | undefined): Promise<ObtenerNombreEquipoDTO> {
         let url_ = this.baseUrl + "/api/publico/obtener-nombre-equipo?";
@@ -1432,7 +1559,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     ficharEnOtroEquipo(body: FicharEnOtroEquipoDTO | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/publico/fichar-en-otro-equipo";
@@ -1476,7 +1603,7 @@ export class Client {
     /**
      * @param mes (optional) 
      * @param anio (optional) 
-     * @return Success
+     * @return OK
      */
     obtenerReportePagos(mes: number | undefined, anio: number | undefined): Promise<ReportePagosDTO[]> {
         let url_ = this.baseUrl + "/api/Reporte/obtener-reporte-pagos?";
@@ -1528,7 +1655,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     torneoAll(): Promise<TorneoDTO[]> {
         let url_ = this.baseUrl + "/api/Torneo";
@@ -1573,7 +1700,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     torneoPOST(body: TorneoDTO | undefined): Promise<TorneoDTO> {
         let url_ = this.baseUrl + "/api/Torneo";
@@ -1614,7 +1741,7 @@ export class Client {
     }
 
     /**
-     * @return Success
+     * @return OK
      */
     torneoGET(id: number): Promise<TorneoDTO> {
         let url_ = this.baseUrl + "/api/Torneo/{id}";
@@ -1655,7 +1782,7 @@ export class Client {
 
     /**
      * @param body (optional) 
-     * @return Success
+     * @return OK
      */
     torneoPUT(id: number, body: TorneoDTO | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Torneo/{id}";
@@ -2041,11 +2168,11 @@ export interface IClubDTO {
 
 export class DelegadoDTO implements IDelegadoDTO {
     id?: number;
-    nombre?: string | undefined;
-    apellido?: string | undefined;
+    nombre!: string | undefined;
+    apellido!: string | undefined;
     nombreUsuario?: string | undefined;
     blanqueoPendiente?: boolean;
-    clubId?: number;
+    clubId!: number;
 
     constructor(data?: IDelegadoDTO) {
         if (data) {
@@ -2088,17 +2215,101 @@ export class DelegadoDTO implements IDelegadoDTO {
 
 export interface IDelegadoDTO {
     id?: number;
-    nombre?: string | undefined;
-    apellido?: string | undefined;
+    nombre: string | undefined;
+    apellido: string | undefined;
     nombreUsuario?: string | undefined;
     blanqueoPendiente?: boolean;
-    clubId?: number;
+    clubId: number;
+}
+
+export class DesvincularJugadorDelEquipoDTO implements IDesvincularJugadorDelEquipoDTO {
+    jugadorId?: number;
+    equipoId?: number;
+
+    constructor(data?: IDesvincularJugadorDelEquipoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.jugadorId = _data["jugadorId"];
+            this.equipoId = _data["equipoId"];
+        }
+    }
+
+    static fromJS(data: any): DesvincularJugadorDelEquipoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new DesvincularJugadorDelEquipoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["jugadorId"] = this.jugadorId;
+        data["equipoId"] = this.equipoId;
+        return data;
+    }
+}
+
+export interface IDesvincularJugadorDelEquipoDTO {
+    jugadorId?: number;
+    equipoId?: number;
+}
+
+export class EfectuarPaseDTO implements IEfectuarPaseDTO {
+    jugadorId?: number;
+    equipoOrigenId?: number;
+    equipoDestinoId?: number;
+
+    constructor(data?: IEfectuarPaseDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.jugadorId = _data["jugadorId"];
+            this.equipoOrigenId = _data["equipoOrigenId"];
+            this.equipoDestinoId = _data["equipoDestinoId"];
+        }
+    }
+
+    static fromJS(data: any): EfectuarPaseDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EfectuarPaseDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["jugadorId"] = this.jugadorId;
+        data["equipoOrigenId"] = this.equipoOrigenId;
+        data["equipoDestinoId"] = this.equipoDestinoId;
+        return data;
+    }
+}
+
+export interface IEfectuarPaseDTO {
+    jugadorId?: number;
+    equipoOrigenId?: number;
+    equipoDestinoId?: number;
 }
 
 export class EquipoBaseDTO implements IEquipoBaseDTO {
-    id?: number;
-    nombre?: string | undefined;
-    torneo?: string | undefined;
+    id!: number;
+    nombre!: string | undefined;
+    torneo!: string | undefined;
 
     constructor(data?: IEquipoBaseDTO) {
         if (data) {
@@ -2134,15 +2345,15 @@ export class EquipoBaseDTO implements IEquipoBaseDTO {
 }
 
 export interface IEquipoBaseDTO {
-    id?: number;
-    nombre?: string | undefined;
-    torneo?: string | undefined;
+    id: number;
+    nombre: string | undefined;
+    torneo: string | undefined;
 }
 
 export class EquipoDTO implements IEquipoDTO {
     id?: number;
-    nombre?: string | undefined;
-    clubId?: number;
+    nombre!: string | undefined;
+    clubId!: number;
     codigoAlfanumerico?: string | undefined;
     clubNombre?: string | undefined;
     torneoId?: number | undefined;
@@ -2202,8 +2413,8 @@ export class EquipoDTO implements IEquipoDTO {
 
 export interface IEquipoDTO {
     id?: number;
-    nombre?: string | undefined;
-    clubId?: number;
+    nombre: string | undefined;
+    clubId: number;
     codigoAlfanumerico?: string | undefined;
     clubNombre?: string | undefined;
     torneoId?: number | undefined;
@@ -2215,6 +2426,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
     id?: number;
     nombre?: string | undefined;
     club?: string | undefined;
+    torneo?: string | undefined;
     estado?: EstadoJugadorEnum;
     motivo?: string | undefined;
     fechaPagoDeFichaje?: Date | undefined;
@@ -2233,6 +2445,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
             this.club = _data["club"];
+            this.torneo = _data["torneo"];
             this.estado = _data["estado"];
             this.motivo = _data["motivo"];
             this.fechaPagoDeFichaje = _data["fechaPagoDeFichaje"] ? new Date(_data["fechaPagoDeFichaje"].toString()) : <any>undefined;
@@ -2251,6 +2464,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
         data["id"] = this.id;
         data["nombre"] = this.nombre;
         data["club"] = this.club;
+        data["torneo"] = this.torneo;
         data["estado"] = this.estado;
         data["motivo"] = this.motivo;
         data["fechaPagoDeFichaje"] = this.fechaPagoDeFichaje ? this.fechaPagoDeFichaje.toISOString() : <any>undefined;
@@ -2262,13 +2476,14 @@ export interface IEquipoDelJugadorDTO {
     id?: number;
     nombre?: string | undefined;
     club?: string | undefined;
+    torneo?: string | undefined;
     estado?: EstadoJugadorEnum;
     motivo?: string | undefined;
     fechaPagoDeFichaje?: Date | undefined;
 }
 
 export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
-    club?: string | undefined;
+    club!: string | undefined;
     equipos?: EquipoBaseDTO[] | undefined;
 
     constructor(data?: IEquiposDelDelegadoDTO) {
@@ -2311,7 +2526,7 @@ export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
 }
 
 export interface IEquiposDelDelegadoDTO {
-    club?: string | undefined;
+    club: string | undefined;
     equipos?: EquipoBaseDTO[] | undefined;
 }
 

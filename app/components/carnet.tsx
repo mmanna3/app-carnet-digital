@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/app/api/clients'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
 
@@ -7,12 +7,14 @@ interface CarnetProps {
   jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO
   mostrarEstado?: boolean
   mostrarMotivo?: boolean
+  onLongPress?: () => void
 }
 
 export default function Carnet({
   jugador,
   mostrarEstado = false,
   mostrarMotivo = false,
+  onLongPress,
 }: CarnetProps) {
   const estado = jugador.estado as EstadoJugador
   const debeMostrarEstado =
@@ -24,7 +26,11 @@ export default function Carnet({
   }
 
   return (
-    <View className="bg-white rounded-2xl m-4 overflow-hidden border-2 border-gray-200 shadow-lg elevation-5">
+    <Pressable
+      onLongPress={onLongPress}
+      delayLongPress={400}
+      className="bg-white rounded-2xl m-4 overflow-hidden border-2 border-gray-200 shadow-lg elevation-5"
+    >
       {debeMostrarEstado && (
         <View
           style={{ backgroundColor: obtenerColorEstado(estado) }}
@@ -87,6 +93,6 @@ export default function Carnet({
           </View>
         )}
       </View>
-    </View>
+    </Pressable>
   )
 }
