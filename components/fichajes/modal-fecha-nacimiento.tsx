@@ -66,6 +66,7 @@ export default function ModalFechaNacimiento({ visible, value, onClose, onChange
             {...pickerProps}
           />
           <TouchableOpacity
+            testID="boton-fecha-listo"
             onPress={onClose}
             className="mt-4 py-3 rounded-2xl bg-liga-600 items-center"
           >

@@ -11,6 +11,13 @@ export interface ConfigLigaRuntime {
 const extra = Constants.expoConfig?.extra
 const esMultiliga = extra?.esMultiliga === true
 
+/**
+ * URL del mock server para tests E2E.
+ * Inlineada por Metro cuando se arranca con EXPO_PUBLIC_E2E_API_URL=...
+ * Tiene prioridad sobre __DEV__ y extra.apiUrl.
+ */
+const E2E_API_URL = process.env.EXPO_PUBLIC_E2E_API_URL || null
+
 /** Ligas disponibles en MULTILIGA (desde extra, indexadas por leagueId) */
 const ligasDisponiblesMap = (() => {
   const arr = extra?.ligasDisponibles ?? []
@@ -35,7 +42,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
       ? {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
-          apiUrl: __DEV__ ? 'http://192.168.0.66:5072' : liga.apiUrl,
+          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.66:5072' : liga.apiUrl),
           colorBase: liga.colorBase,
         }
       : null
@@ -44,7 +51,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
   return {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
-    apiUrl: __DEV__ ? 'http://192.168.0.66:5072' : (extra.apiUrl ?? ''),
+    apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.66:5072' : (extra.apiUrl ?? '')),
     colorBase: extra.colorBase,
   }
 }

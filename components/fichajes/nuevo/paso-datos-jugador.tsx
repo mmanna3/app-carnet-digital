@@ -106,6 +106,7 @@ export default function PasoDatosJugador() {
             <View>
               <Text className="text-gray-700 text-sm mb-1.5">Tu fecha de nacimiento</Text>
               <TouchableOpacity
+                testID="input-fecha-nacimiento"
                 onPress={() => setMostrarPicker(true)}
                 className="w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 border-gray-200"
               >
@@ -120,6 +121,7 @@ export default function PasoDatosJugador() {
             )}
 
             <BotonWizard
+              testID="boton-continuar"
               texto={loading ? 'Verificando...' : 'Continuar'}
               icono={loading ? undefined : 'arrow-right'}
               onPress={handleContinuar}

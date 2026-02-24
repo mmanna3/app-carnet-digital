@@ -38,7 +38,7 @@ export default function PasoCodigoEquipo() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">
+          <Text className="text-gray-900 text-lg font-semibold mb-1" testID="titulo-codigo-equipo">
             Ingresá el código de tu equipo
           </Text>
           <Text className="text-gray-500 text-sm">Pedíselo a tu delegado</Text>

@@ -23,6 +23,7 @@
     "test:e2e": "maestro test e2e/",
     "test:e2e:ios": "maestro -p ios test e2e/",
     "test:e2e:android": "maestro -p android test e2e/",
+    "test:e2e:single": "maestro test",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "format": "prettier --write .",

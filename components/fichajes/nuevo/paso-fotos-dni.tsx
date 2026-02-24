@@ -6,7 +6,6 @@ import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
-
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -104,7 +103,7 @@ export default function PasoFotosDni() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View testID="paso-fotos-dni" className="flex-1 bg-gray-50">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
       <Progreso totalPasos={5} pasoActual={4} />
 
@@ -121,6 +120,7 @@ export default function PasoFotosDni() {
             <Text className="text-gray-700 text-sm font-medium">Frente del DNI</Text>
             <PreviewDni uri={dniFrenteUri} />
             <BotonWizard
+              testID="boton-seleccionar-frente"
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() => mostrarSelectorImagen(() => sacarFoto('frente'), () => elegirImagen('frente'))}
@@ -132,6 +132,7 @@ export default function PasoFotosDni() {
             <Text className="text-gray-700 text-sm font-medium">Dorso del DNI</Text>
             <PreviewDni uri={dniDorsoUri} />
             <BotonWizard
+              testID="boton-seleccionar-dorso"
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() => mostrarSelectorImagen(() => sacarFoto('dorso'), () => elegirImagen('dorso'))}
@@ -144,6 +145,7 @@ export default function PasoFotosDni() {
           )}
 
           <BotonWizard
+            testID="boton-subir-dni"
             texto="Subir"
             icono="upload"
             onPress={() => irAPaso(5)}

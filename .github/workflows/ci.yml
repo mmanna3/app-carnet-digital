@@ -79,8 +79,10 @@ jobs:
           profile: pixel_7
           script: |
             export PATH="$PATH:$HOME/.maestro/bin"
-            # Metro en background (la app se conecta vía 10.0.2.2:8081)
-            LIGA_ID=edefi npx expo start --no-dev &
+            # Mock server en background (10.0.2.2:3001 desde el emulador apunta a localhost:3001 del host)
+            node e2e/mock-server.js &
+            # Metro con la URL del mock inlineada en el bundle JS via EXPO_PUBLIC_*
+            EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi npx expo start --no-dev &
             sleep 25
             # Build e instalar app
             LIGA_ID=edefi npx expo run:android --no-bundler

@@ -106,24 +106,46 @@ Tests de config: `configs-por-liga/__tests__/` (color-base, datos)
 
 ### Tests E2E (Maestro)
 
-`npm run start` solo levanta Metro; no compila ni instala la app. Para E2E hay que **compilar e instalar** la app en el emulador/simulador primero:
+Los tests E2E usan un **servidor mock** (`e2e/mock-server.js`) para interceptar los requests a la API. Hay que correr tres cosas en paralelo:
 
 ```bash
-# Terminal 1: Metro
-LIGA_ID=edefi npm run start
+# Terminal 1: mock server (puerto 3001)
+node e2e/mock-server.js
 
-# Terminal 2: compilar e instalar en el emulador (solo la primera vez o tras cambios nativos)
-LIGA_ID=edefi npm run android   # Android
-# o
-LIGA_ID=edefi npm run ios      # iOS
+# Terminal 2: Metro con la URL del mock inlineada en el bundle JS
+EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi npx expo start
 
-# Cuando la app esté instalada y Metro corriendo:
-npm run test:e2e:android       # Android
-npm run test:e2e:ios           # iOS
-npm run test:e2e               # usa el dispositivo conectado
+# Terminal 3: build e instalar, luego correr tests
+LIGA_ID=edefi npx expo run:android --no-bundler
+npm run test:e2e:android
 ```
 
-**Importante:** usar `LIGA_ID` en mayúsculas (no `liga_id`).
+> `EXPO_PUBLIC_E2E_API_URL` va en **Metro** (`expo start`). Expo inlinea las variables `EXPO_PUBLIC_*` en el bundle JS, por lo que `liga.ts` la lee directamente y tiene prioridad sobre el check de `__DEV__`.
+> `10.0.2.2` es la IP con la que el emulador Android accede al `localhost` de la máquina host.
+
+#### Escenarios de error
+
+El mock server soporta escenarios alternativos via `SCENARIO`:
+
+```bash
+SCENARIO=codigo_invalido node e2e/mock-server.js   # obtenerNombreEquipo devuelve error
+SCENARIO=dni_fichado     node e2e/mock-server.js   # elDniEstaFichado devuelve true
+```
+
+Los escenarios disponibles están definidos en `e2e/mock-server.js`.
+
+#### iOS
+
+Para iOS el flujo es el mismo pero usando el simulador:
+
+```bash
+node e2e/mock-server.js
+EXPO_PUBLIC_E2E_API_URL=http://localhost:3001 LIGA_ID=edefi npx expo start
+LIGA_ID=edefi npx expo run:ios --no-bundler
+npm run test:e2e:ios
+```
+
+> En iOS el simulador accede al host directamente por `localhost`, no por `10.0.2.2`.
 
 
 ## Otros comandos

@@ -7,7 +7,6 @@ import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
-
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -83,7 +82,7 @@ export default function PasoFoto() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View testID="paso-foto" className="flex-1 bg-gray-50">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
       <Progreso totalPasos={5} pasoActual={3} />
 
@@ -109,6 +108,7 @@ export default function PasoFoto() {
           </View>
 
           <BotonWizard
+            testID="boton-seleccionar-foto"
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
@@ -118,6 +118,7 @@ export default function PasoFoto() {
             <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>
           )}
           <BotonWizard
+            testID="boton-subir-foto"
             texto="Subir"
             icono="upload"
             onPress={() => irAPaso(4)}

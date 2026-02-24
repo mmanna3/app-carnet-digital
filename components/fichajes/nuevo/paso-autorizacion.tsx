@@ -26,7 +26,7 @@ export default function PasoAutorizacion() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View testID="paso-autorizacion" className="flex-1 bg-gray-50">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAPaso(4)} />
       <Progreso totalPasos={5} pasoActual={5} />
 
@@ -48,6 +48,7 @@ export default function PasoAutorizacion() {
           )}
 
           <BotonWizard
+            testID="boton-enviar"
             texto={loading ? 'Enviando...' : 'Enviar'}
             icono={loading ? undefined : 'send'}
             onPress={handleEnviar}
