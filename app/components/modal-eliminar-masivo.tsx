@@ -8,28 +8,36 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native'
-import { CarnetDigitalDTO } from '@/lib/api/clients'
+import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 
 interface Props {
   jugadores: CarnetDigitalDTO[] | null
+  equipoId: number | null | undefined
   onEliminado: () => void
   onCerrar: () => void
 }
 
-export default function ModalEliminarMasivo({ jugadores, onEliminado, onCerrar }: Props) {
+export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, onCerrar }: Props) {
   const [cargando, setCargando] = useState(false)
 
   if (!jugadores) return null
 
-  const handleEliminar = async () => {
+  const handleDesvincular = async () => {
+    if (!equipoId) return
     setCargando(true)
     try {
-      await Promise.all(jugadores.map((j) => api.jugadorDELETE(j.id!)))
+      await Promise.all(
+        jugadores.map((j) =>
+          api.desvincularJugadorDelEquipo(
+            new DesvincularJugadorDelEquipoDTO({ jugadorId: j.id!, equipoId })
+          )
+        )
+      )
       onEliminado()
     } catch (err) {
-      Alert.alert('Error al eliminar', parseApiError(err))
+      Alert.alert('Error al desvincular', parseApiError(err))
     } finally {
       setCargando(false)
     }
@@ -40,10 +48,9 @@ export default function ModalEliminarMasivo({ jugadores, onEliminado, onCerrar }
       <View className="flex-1 bg-black/50 justify-center items-center p-6">
         <View className="bg-white rounded-2xl w-full overflow-hidden max-h-[80%]">
           <View className="p-6 border-b border-gray-200">
-            <Text className="text-lg font-bold text-gray-900 mb-3">Eliminar jugadores</Text>
+            <Text className="text-lg font-bold text-gray-900 mb-3">Quitar jugadores del equipo</Text>
             <Text className="text-base text-gray-600 leading-6">
-              ¿Estás seguro que querés eliminar estos jugadores? Los datos se perderán para siempre
-              y no podrán ser recuperados.
+              ¿Estás seguro que querés eliminar estos jugadores del equipo? Los jugadores que juegan en otros equipos no se eliminarán de ellos.
             </Text>
           </View>
 
@@ -60,14 +67,14 @@ export default function ModalEliminarMasivo({ jugadores, onEliminado, onCerrar }
           <View className="px-4 pb-4 pt-3 gap-3">
             <TouchableOpacity
               className="bg-red-600 rounded-xl p-4 items-center"
-              onPress={handleEliminar}
+              onPress={handleDesvincular}
               disabled={cargando}
             >
               {cargando ? (
                 <ActivityIndicator color="white" />
               ) : (
                 <Text className="text-white font-semibold text-base">
-                  Eliminar {jugadores.length} jugadores del sistema
+                  Quitar {jugadores.length} jugadores del equipo
                 </Text>
               )}
             </TouchableOpacity>

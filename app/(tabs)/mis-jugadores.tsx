@@ -268,6 +268,7 @@ export default function MisJugadoresScreen() {
 
       <ModalEliminarJugador
         jugador={modalActiva === 'eliminar' ? jugadorSeleccionado : null}
+        equipoId={equipoSeleccionadoId}
         onEliminado={handleEliminado}
         onCerrar={cerrarModales}
       />
@@ -280,6 +281,7 @@ export default function MisJugadoresScreen() {
 
       <ModalEliminarMasivo
         jugadores={modalBulk === 'eliminar' ? jugadoresParaAccionMasiva : null}
+        equipoId={equipoSeleccionadoId}
         onEliminado={handleEliminadoMasivo}
         onCerrar={() => setModalBulk(null)}
       />
