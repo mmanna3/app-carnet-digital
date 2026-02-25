@@ -8,6 +8,7 @@ import { useAuth } from '../hooks/use-auth'
 import { useEquipoStore } from '../hooks/use-equipo-store'
 import { useLigaStore } from '../hooks/use-liga-store'
 import { useSeleccionJugadores } from '../hooks/use-seleccion-jugadores'
+import { useFichajeStore } from '../hooks/use-fichaje-store'
 
 export default function HeaderMenu() {
   const router = useRouter()
@@ -16,6 +17,7 @@ export default function HeaderMenu() {
   const { limpiarEquipoSeleccionado } = useEquipoStore()
   const { limpiarLiga } = useLigaStore()
   const { modoSeleccion, activar, desactivar } = useSeleccionJugadores()
+  const { resetear } = useFichajeStore()
 
   const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
 
@@ -32,6 +34,8 @@ export default function HeaderMenu() {
 
   const handleCerrarSesion = () => {
     logout()
+    limpiarEquipoSeleccionado()
+    resetear()
     router.replace('/(auth)/login')
   }
 
@@ -67,6 +71,9 @@ export default function HeaderMenu() {
               <Text className="text-base text-[#333] p-2.5">Cambiar liga</Text>
             </MenuOption>
           )}
+          <MenuOption onSelect={() => router.push('/fichaje-delegado' as any)}>
+            <Text className="text-base text-[#333] p-2.5">Fichar en este equipo</Text>
+          </MenuOption>
           <MenuOption onSelect={handleCambiarEquipo}>
             <Text className="text-base text-[#333] p-2.5">Cambiar equipo</Text>
           </MenuOption>

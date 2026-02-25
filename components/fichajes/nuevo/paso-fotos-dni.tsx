@@ -45,7 +45,8 @@ export default function PasoFotosDni() {
     setDniDorsoUri,
     setDniFrenteBase64,
     setDniDorsoBase64,
-    irAPaso,
+    irAlPasoSiguiente,
+    irAlPasoAnterior,
   } = useFichajeStore()
   const [errorCamara, setErrorCamara] = useState<string | null>(null)
 
@@ -99,13 +100,13 @@ export default function PasoFotosDni() {
     setDniDorsoUri(null)
     setDniFrenteBase64(null)
     setDniDorsoBase64(null)
-    irAPaso(3)
+    irAlPasoAnterior()
   }
 
   return (
     <View testID="paso-fotos-dni" className="flex-1 bg-gray-50">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
-      <Progreso totalPasos={5} pasoActual={4} />
+      <Progreso />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
@@ -158,7 +159,7 @@ export default function PasoFotosDni() {
             testID="boton-subir-dni"
             texto="Subir"
             icono="upload"
-            onPress={() => irAPaso(5)}
+            onPress={() => irAlPasoSiguiente()}
             deshabilitado={!dniFrenteUri || !dniDorsoUri}
           />
         </View>

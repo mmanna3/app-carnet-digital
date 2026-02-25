@@ -11,6 +11,7 @@ describe('useEquipoStore', () => {
     useEquipoStore.setState({
       equipoSeleccionadoId: null,
       equipoSeleccionadoNombre: null,
+      equipoSeleccionadoCodigo: null,
     })
   })
 
@@ -23,21 +24,23 @@ describe('useEquipoStore', () => {
   })
 
   describe('seleccionarEquipo', () => {
-    it('guarda id y nombre correctamente', () => {
-      useEquipoStore.getState().seleccionarEquipo(42, 'Deportivo Luefi')
+    it('guarda id, nombre y código correctamente', () => {
+      useEquipoStore.getState().seleccionarEquipo(42, 'Deportivo Luefi', 'ABC1234')
 
-      const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore.getState()
+      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore.getState()
       expect(equipoSeleccionadoId).toBe(42)
       expect(equipoSeleccionadoNombre).toBe('Deportivo Luefi')
+      expect(equipoSeleccionadoCodigo).toBe('ABC1234')
     })
 
     it('reemplaza el equipo previamente seleccionado', () => {
-      useEquipoStore.getState().seleccionarEquipo(1, 'Primero')
-      useEquipoStore.getState().seleccionarEquipo(2, 'Segundo')
+      useEquipoStore.getState().seleccionarEquipo(1, 'Primero', 'AAA0001')
+      useEquipoStore.getState().seleccionarEquipo(2, 'Segundo', 'BBB0002')
 
-      const { equipoSeleccionadoId, equipoSeleccionadoNombre } = useEquipoStore.getState()
+      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore.getState()
       expect(equipoSeleccionadoId).toBe(2)
       expect(equipoSeleccionadoNombre).toBe('Segundo')
+      expect(equipoSeleccionadoCodigo).toBe('BBB0002')
     })
   })
 

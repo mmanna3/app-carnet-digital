@@ -13,7 +13,7 @@ export default function PasoCodigoEquipo() {
     nombreEquipo,
     setCodigoEquipo,
     irAIntro,
-    irAPaso,
+    irAlPasoSiguiente,
     validarCodigoEquipo,
   } = useFichajeStore()
   const [loading, setLoading] = useState(false)
@@ -28,7 +28,7 @@ export default function PasoCodigoEquipo() {
     const result = await validarCodigoEquipo()
     setLoading(false)
     if (result.ok) {
-      irAPaso(2)
+      irAlPasoSiguiente()
     } else {
       setError(result.error ?? 'Código inválido')
     }
@@ -41,7 +41,7 @@ export default function PasoCodigoEquipo() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Cabecera titulo={titulo} onBack={irAIntro} />
-      <Progreso totalPasos={totalPasos} pasoActual={1} />
+      <Progreso />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">

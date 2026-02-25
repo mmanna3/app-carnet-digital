@@ -1,3 +1,4 @@
+import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
 import React from 'react'
 import { View, Text } from 'react-native'
 
@@ -6,7 +7,15 @@ interface Props {
   pasoActual: number
 }
 
-export default function Progreso({ totalPasos, pasoActual }: Props) {
+export default function Progreso() {
+  const {
+    paso: pasoActual,
+    calcularTotalPasos,
+  } = useFichajeStore()
+  
+
+  const totalPasos = calcularTotalPasos()
+
   return (
     <View className="px-6 pt-1 pb-6 bg-white border-b border-gray-100 flex-row items-center justify-center">
       {Array.from({ length: totalPasos }, (_, i) => i + 1).map((paso, index) => (

@@ -7,7 +7,7 @@ import CampoTexto from '../campo-texto'
 import BotonWizard from '../boton-wizard'
 
 export default function PasoDni() {
-  const { dni, nombreEquipo, setDni, irAPaso, enviarFichajeYaFichado } = useFichajeStore()
+  const { dni, nombreEquipo, setDni, irAlPasoAnterior, irAlPasoSiguiente, enviarFichajeYaFichado } = useFichajeStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -15,7 +15,7 @@ export default function PasoDni() {
 
   const handleVolver = () => {
     setDni('')
-    irAPaso(1)
+    irAlPasoAnterior()
   }
 
   const handleContinuar = async () => {
@@ -24,7 +24,7 @@ export default function PasoDni() {
     const result = await enviarFichajeYaFichado()
     setLoading(false)
     if (result.ok) {
-      irAPaso(3)
+      irAlPasoSiguiente()
     } else {
       setError(result.error ?? 'Hubo un error al fichar')
     }
@@ -37,7 +37,7 @@ export default function PasoDni() {
       {...(Platform.OS === 'ios' && { behavior: 'padding' })}
     >
       <Cabecera titulo="Fichaje" onBack={handleVolver} />
-      <Progreso totalPasos={3} pasoActual={2} />
+      <Progreso />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">

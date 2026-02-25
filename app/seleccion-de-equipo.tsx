@@ -18,7 +18,7 @@ export default function TeamSelectionScreen() {
 
   const handleTeamSelect = (team: EquipoBaseDTO) => {
     if (team.id && team.nombre) {
-      seleccionarEquipo(team.id, team.nombre)
+      seleccionarEquipo(team.id, team.nombre, team.codigoAlfanumerico ?? '')
       router.replace('/mis-jugadores')
     }
   }

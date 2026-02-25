@@ -38,7 +38,7 @@ async function recortarCuadrado(uri: string, width: number, height: number) {
 }
 
 export default function PasoFoto() {
-  const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAPaso } = useFichajeStore()
+  const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAlPasoAnterior, irAlPasoSiguiente } = useFichajeStore()
   const [errorCamara, setErrorCamara] = useState<string | null>(null)
 
   const procesarImagen = async (asset: ImagePicker.ImagePickerAsset) => {
@@ -78,17 +78,17 @@ export default function PasoFoto() {
   const handleVolver = () => {
     setFotoUri(null)
     setFotoBase64(null)
-    irAPaso(2)
+    irAlPasoAnterior()
   }
 
   return (
     <View testID="paso-foto" className="flex-1 bg-gray-50">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
-      <Progreso totalPasos={5} pasoActual={3} />
+      <Progreso />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Foto del jugador</Text>
+          <Text className="text-gray-900 text-lg font-semibold mb-1">Foto de la cara del jugador</Text>
           {nombreEquipo && (
             <Text className="text-gray-500 text-sm">
               Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
@@ -123,7 +123,7 @@ export default function PasoFoto() {
             testID="boton-subir-foto"
             texto="Subir"
             icono="upload"
-            onPress={() => irAPaso(4)}
+            onPress={() => irAlPasoSiguiente()}
             deshabilitado={!fotoUri}
           />
         </View>

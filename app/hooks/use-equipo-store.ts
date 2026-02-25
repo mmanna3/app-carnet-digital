@@ -5,7 +5,8 @@ import { zustandStorage } from '@/lib/storage/zustand-storage'
 interface EquipoState {
   equipoSeleccionadoId: number | null
   equipoSeleccionadoNombre: string | null
-  seleccionarEquipo: (id: number, nombre: string) => void
+  equipoSeleccionadoCodigo: string | null
+  seleccionarEquipo: (id: number, nombre: string, codigo: string) => void
   limpiarEquipoSeleccionado: () => void
 }
 
@@ -14,15 +15,18 @@ export const useEquipoStore = create<EquipoState>()(
     (set) => ({
       equipoSeleccionadoId: null,
       equipoSeleccionadoNombre: null,
-      seleccionarEquipo: (id: number, nombre: string) =>
+      equipoSeleccionadoCodigo: null,
+      seleccionarEquipo: (id: number, nombre: string, codigo: string) =>
         set({
           equipoSeleccionadoId: id,
           equipoSeleccionadoNombre: nombre,
+          equipoSeleccionadoCodigo: codigo,
         }),
       limpiarEquipoSeleccionado: () =>
         set({
           equipoSeleccionadoId: null,
           equipoSeleccionadoNombre: null,
+          equipoSeleccionadoCodigo: null,
         }),
     }),
     {

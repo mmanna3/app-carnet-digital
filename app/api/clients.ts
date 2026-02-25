@@ -2310,6 +2310,7 @@ export class EquipoBaseDTO implements IEquipoBaseDTO {
     id!: number;
     nombre!: string | undefined;
     torneo!: string | undefined;
+    codigoAlfanumerico?: string | undefined;
 
     constructor(data?: IEquipoBaseDTO) {
         if (data) {
@@ -2325,6 +2326,7 @@ export class EquipoBaseDTO implements IEquipoBaseDTO {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
             this.torneo = _data["torneo"];
+            this.codigoAlfanumerico = _data["codigoAlfanumerico"];
         }
     }
 
@@ -2340,6 +2342,7 @@ export class EquipoBaseDTO implements IEquipoBaseDTO {
         data["id"] = this.id;
         data["nombre"] = this.nombre;
         data["torneo"] = this.torneo;
+        data["codigoAlfanumerico"] = this.codigoAlfanumerico;
         return data;
     }
 }
@@ -2348,6 +2351,7 @@ export interface IEquipoBaseDTO {
     id: number;
     nombre: string | undefined;
     torneo: string | undefined;
+    codigoAlfanumerico?: string | undefined;
 }
 
 export class EquipoDTO implements IEquipoDTO {

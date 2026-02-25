@@ -13,6 +13,8 @@ import { useAuth } from './hooks/use-auth'
 import { useEquipoStore } from './hooks/use-equipo-store'
 import { useLigaStore } from './hooks/use-liga-store'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MenuProvider } from 'react-native-popup-menu'
+import HeaderMenu from './components/header-menu'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,7 +47,6 @@ function useProtectedRoute(loaded: boolean) {
     const inSeleccionLiga = (segments[0] as string) === 'seleccion-de-liga'
     const inHome = (segments[0] as string) === 'home'
     const inFichajes = (segments[0] as string) === 'fichajes'
-
     if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
       router.replace('/seleccion-de-liga' as any)
       return
@@ -107,11 +108,22 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
+        <MenuProvider skipInstanceCheck>
+          <Stack>
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="fichajes" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="fichaje-delegado"
+            options={{
+              title: 'Fichar en este equipo',
+              headerStyle: { backgroundColor: '#1a1a1a' },
+              headerTintColor: '#ffffff',
+              headerTitleStyle: { color: '#ffffff' },
+              headerRight: () => <HeaderMenu />,
+            }}
+          />
           <Stack.Screen
             name="seleccion-de-liga"
             options={{ headerShown: false, gestureEnabled: false }}
@@ -125,6 +137,7 @@ export default function RootLayout() {
             }}
           />
         </Stack>
+        </MenuProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

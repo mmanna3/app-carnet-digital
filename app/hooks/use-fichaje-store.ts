@@ -19,14 +19,21 @@ interface FichajeState {
   dniFrenteBase64: string | null
   dniDorsoBase64: string | null
   nombreEquipo: string | null
+  esDelegado: boolean
+  calcularTotalPasos: () => number
   irAIntro: () => void
   irANuevo: () => void
   irAYaFichado: () => void
   irAPaso: (paso: number) => void
+  irAlPasoInicial: () => void
+  irAlPasoSiguiente: () => void
+  irAlPasoAnterior: () => void
   setCodigoEquipo: (v: string) => void
+  setNombreEquipo: (v: string | null) => void
   setNombre: (v: string) => void
   setApellido: (v: string) => void
   setDni: (v: string) => void
+  setEsDelegado: (v: boolean) => void,
   setFechaNac: (v: Date | null) => void
   setFotoUri: (v: string | null) => void
   setDniFrenteUri: (v: string | null) => void
@@ -35,6 +42,7 @@ interface FichajeState {
   setDniFrenteBase64: (v: string | null) => void
   setDniDorsoBase64: (v: string | null) => void
   resetear: () => void
+  reiniciarParaOtroJugador: () => void
   validarCodigoEquipo: () => Promise<{ ok: boolean; error?: string }>
   validarDniNuevo: () => Promise<{ ok: boolean; error?: string }>
   enviarFichajeNuevo: () => Promise<{ ok: boolean; error?: string }>
@@ -45,6 +53,7 @@ const inicial = {
   flujo: 'intro' as FlujoFichaje,
   paso: 1,
   codigoEquipo: '',
+  esDelegado: false,
   nombre: '',
   apellido: '',
   dni: '',
@@ -56,6 +65,7 @@ const inicial = {
   dniFrenteBase64: null,
   dniDorsoBase64: null,
   nombreEquipo: null,
+
 }
 
 const parseError = (error: any): string => {
@@ -74,8 +84,16 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   irAIntro: () => set({ flujo: 'intro', paso: 1 }),
   irANuevo: () => set({ flujo: 'nuevo', paso: 1 }),
   irAYaFichado: () => set({ flujo: 'yaFichado', paso: 1 }),
-  irAPaso: (paso) => set({ paso }),
+  irAPaso: (paso) => {set({ paso })},
+  irAlPasoSiguiente: () => {set({ paso: get().paso + 1 })},
+  irAlPasoAnterior: () => {set({ paso: get().paso - 1 })},
+  irAlPasoInicial: () => {set({ paso: 1 })},
+  calcularTotalPasos: () => {
+    const { esDelegado, flujo } = get()
+    return esDelegado ? (flujo === 'nuevo' ? 4 : 3) : (flujo === 'nuevo' ? 5 : 2)
+  },
   setCodigoEquipo: (v) => set({ codigoEquipo: v }),
+  setNombreEquipo: (v) => set({ nombreEquipo: v }),
   setNombre: (v) => set({ nombre: v }),
   setApellido: (v) => set({ apellido: v }),
   setDni: (v) => set({ dni: v }),
@@ -86,7 +104,23 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   setFotoBase64: (v) => set({ fotoBase64: v }),
   setDniFrenteBase64: (v) => set({ dniFrenteBase64: v }),
   setDniDorsoBase64: (v) => set({ dniDorsoBase64: v }),
+  setEsDelegado: (v) => set({ esDelegado: v }),
   resetear: () => set(inicial),
+  reiniciarParaOtroJugador: () =>
+    set({
+      flujo: 'intro' as FlujoFichaje,
+      paso: 1,
+      nombre: '',
+      apellido: '',
+      dni: '',
+      fechaNac: null,
+      fotoUri: null,
+      dniFrenteUri: null,
+      dniDorsoUri: null,
+      fotoBase64: null,
+      dniFrenteBase64: null,
+      dniDorsoBase64: null,
+    }),
 
   validarCodigoEquipo: async () => {
     const { codigoEquipo } = get()
@@ -107,10 +141,7 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
     try {
       const fichado = await api.elDniEstaFichado(dni)
       if (fichado) {
-        return {
-          ok: false,
-          error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".',
-        }
+        return { ok: false, error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".' }
       }
       return { ok: true }
     } catch (error: any) {
@@ -119,16 +150,7 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   },
 
   enviarFichajeNuevo: async () => {
-    const {
-      dni,
-      nombre,
-      apellido,
-      fechaNac,
-      codigoEquipo,
-      fotoBase64,
-      dniFrenteBase64,
-      dniDorsoBase64,
-    } = get()
+    const { dni, nombre, apellido, fechaNac, codigoEquipo, fotoBase64, dniFrenteBase64, dniDorsoBase64 } = get()
     try {
       const dto = new JugadorDTO({
         dni,

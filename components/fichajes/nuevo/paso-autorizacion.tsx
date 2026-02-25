@@ -9,7 +9,7 @@ const DECLARACION =
   'Al enviar los datos, declaro ser mayor de edad o estar acompañado por un mayor de edad que autoriza a que puedan publicarse fotos y videos de mi rostro en medios donde se difunda material sobre torneos organizados por la liga.'
 
 export default function PasoAutorizacion() {
-  const { nombreEquipo, nombre, dni, irAPaso, enviarFichajeNuevo } = useFichajeStore()
+  const { nombreEquipo, nombre, dni, irAlPasoSiguiente, irAlPasoAnterior, enviarFichajeNuevo } = useFichajeStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -19,7 +19,7 @@ export default function PasoAutorizacion() {
     const result = await enviarFichajeNuevo()
     setLoading(false)
     if (result.ok) {
-      irAPaso(6)
+      irAlPasoSiguiente()
     } else {
       setError(result.error ?? 'Hubo un error al enviar el fichaje')
     }
@@ -27,8 +27,8 @@ export default function PasoAutorizacion() {
 
   return (
     <View testID="paso-autorizacion" className="flex-1 bg-gray-50">
-      <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAPaso(4)} />
-      <Progreso totalPasos={5} pasoActual={5} />
+      <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAlPasoAnterior()} />
+      <Progreso />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
