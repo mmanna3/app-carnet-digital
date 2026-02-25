@@ -1,11 +1,35 @@
 import React from 'react'
 import { TouchableOpacity, Text, ActivityIndicator } from 'react-native'
+import { Feather } from '@expo/vector-icons'
+
+type Variante = 'Principal' | 'Destructivo' | 'Secundario'
 
 interface BotonProps {
   onPress: () => void
   texto: string
   deshabilitado?: boolean
   cargando?: boolean
+  variante?: Variante
+  icono?: keyof typeof Feather.glyphMap
+  className?: string
+}
+
+const estilosPorVariante: Record<Variante, string> = {
+  Principal: 'bg-liga-600 shadow-md',
+  Destructivo: 'bg-red-600 shadow-md',
+  Secundario: 'border-2 border-gray-300 bg-transparent',
+}
+
+const estilosTextoPorVariante: Record<Variante, string> = {
+  Principal: 'text-white',
+  Destructivo: 'text-white',
+  Secundario: 'text-gray-500',
+}
+
+const colorIconoPorVariante: Record<Variante, string> = {
+  Principal: '#ffffff',
+  Destructivo: '#ffffff',
+  Secundario: '#6b7280',
 }
 
 export default function Boton({
@@ -13,18 +37,30 @@ export default function Boton({
   texto,
   deshabilitado = false,
   cargando = false,
+  variante = 'Principal',
+  icono,
+  className = '',
 }: BotonProps) {
   const isDisabled = deshabilitado || cargando
+  const base =
+    'h-[50px] rounded-xl flex-row items-center justify-center gap-2 px-4 mt-2.5'
+  const varianteStyles = estilosPorVariante[variante]
+  const textoStyles = estilosTextoPorVariante[variante]
+  const colorIcono = colorIconoPorVariante[variante]
+
   return (
     <TouchableOpacity
-      className={`bg-liga-600 h-[50px] rounded-lg justify-center items-center mt-2.5${isDisabled ? ' opacity-70' : ''}`}
+      className={`${base} ${varianteStyles} ${isDisabled ? 'opacity-70' : ''} ${className}`.trim()}
       onPress={onPress}
       disabled={isDisabled}
     >
       {cargando ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color={variante === 'Secundario' ? '#6b7280' : '#fff'} />
       ) : (
-        <Text className="text-white text-base font-semibold">{texto}</Text>
+        <>
+          {icono && <Feather name={icono} size={22} color={colorIcono} />}
+          <Text className={`text-base font-semibold ${textoStyles}`}>{texto}</Text>
+        </>
       )}
     </TouchableOpacity>
   )

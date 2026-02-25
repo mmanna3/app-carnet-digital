@@ -9,13 +9,12 @@ import { useAuth } from '../hooks/use-auth'
 import { queryKeys } from '../api/query-keys'
 import { useSeleccionJugadores } from '../hooks/use-seleccion-jugadores'
 import Carnet from '../components/carnet'
+import Boton from '@/components/boton'
 import ModalAccionesJugador from '../components/modal-acciones-jugador'
 import ModalEliminarJugador from '../components/modal-eliminar-jugador'
 import ModalTransferirJugador from '../components/modal-transferir-jugador'
 import ModalEliminarMasivo from '../components/modal-eliminar-masivo'
 import ModalTransferirMasivo from '../components/modal-transferir-masivo'
-import { getColorLiga200, getColorLiga600 } from '../config/liga'
-import { Feather } from '@expo/vector-icons'
 
 type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
 type ModalBulk = 'eliminar' | 'transferir' | null
@@ -188,26 +187,29 @@ export default function MisJugadoresScreen() {
       {modoSeleccion && (
         <View className="bg-white border-t border-gray-200 px-4 pt-3 pb-6 gap-2">
           <View className="flex-row gap-3">
-            <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 ${haySeleccionados ? 'bg-red-600' : 'bg-red-100'}`}
+            <Boton
+              variante="Destructivo"
+              icono="trash-2"
+              texto="Eliminar"
               onPress={() => setModalBulk('eliminar')}
-              disabled={!haySeleccionados}
-            >
-              <Feather name="trash-2" size={22} color={haySeleccionados ? '#ffffff' : '#fecaca'} />
-              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-white' : 'text-red-300'}`}>Eliminar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 ${haySeleccionados ? 'bg-green-600' : 'bg-green-100'}`}
+              deshabilitado={!haySeleccionados}
+              className="flex-1 mt-0"
+            />
+            <Boton
+              variante="Principal"
+              icono="external-link"
+              texto="Transferir"
               onPress={() => setModalBulk('transferir')}
-              disabled={!haySeleccionados}
-            >
-              <Feather name="external-link" size={22} color={haySeleccionados ? '#ffffff' : '#b9f8cf'} />
-              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-white' : 'text-green-300'}`}>Transferir</Text>
-            </TouchableOpacity>
+              deshabilitado={!haySeleccionados}
+              className="flex-1 mt-0"
+            />
           </View>
-          <TouchableOpacity className="items-center py-2" onPress={desactivar}>            
-            <Text className="text-gray-500 text-base">Cancelar</Text>
-          </TouchableOpacity>
+          <Boton
+            variante="Secundario"
+            texto="Cancelar"
+            onPress={desactivar}
+            className="mt-0"
+          />
         </View>
       )}
 
