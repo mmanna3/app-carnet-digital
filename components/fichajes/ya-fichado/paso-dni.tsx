@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
-import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
 import Progreso from '../progreso'
 import CampoTexto from '../campo-texto'

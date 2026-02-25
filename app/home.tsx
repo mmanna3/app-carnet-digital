@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
 import { Feather } from '@expo/vector-icons'
-import { useEquipoStore } from './hooks/use-equipo-store'
-import { useLigaStore } from './hooks/use-liga-store'
-import { useAuth } from './hooks/use-auth'
-import { useConfigLiga } from './config/liga'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
+import { useAuth } from '@/lib/hooks/use-auth'
+import { useConfigLiga } from '@/lib/config/liga'
 
 /** Logos de ligas (require estático para Metro) */
 const LOGOS_LIGAS: Record<string, number> = {

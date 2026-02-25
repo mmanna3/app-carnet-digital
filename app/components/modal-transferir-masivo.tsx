@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native'
-import { CarnetDigitalDTO, EfectuarPaseDTO, EquipoBaseDTO } from '@/app/api/clients'
-import { api } from '@/app/api/api'
-import { parseApiError } from '@/app/utils/parse-api-error'
-import useApiQuery from '@/app/api/custom-hooks/use-api-query'
-import { useEquipoStore } from '@/app/hooks/use-equipo-store'
+import { CarnetDigitalDTO, EfectuarPaseDTO, EquipoBaseDTO } from '@/lib/api/clients'
+import { api } from '@/lib/api/api'
+import { parseApiError } from '@/lib/utils/parse-api-error'
+import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 
 interface Props {
   jugadores: CarnetDigitalDTO[] | null

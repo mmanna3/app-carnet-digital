@@ -4,21 +4,17 @@ jest.mock('zustand/middleware', () => ({
   persist: (config: any) => config,
 }))
 
-jest.mock('../../api/api', () => ({
-  api: { login: jest.fn() },
-}))
-
 import { useAuth } from '../use-auth'
-import { api } from '../../api/api'
 import { LoginResponseDTO } from '../../api/clients'
 
-const mockLogin = api.login as jest.MockedFunction<typeof api.login>
+const mockLogin = jest.fn<(u: string, p: string) => Promise<LoginResponseDTO>>()
 
 const ESTADO_INICIAL = { usuario: null, token: null, isAuthenticated: false }
 
 describe('useAuth store', () => {
   beforeEach(() => {
     useAuth.setState(ESTADO_INICIAL)
+    useAuth.getState()._setLoginImpl(mockLogin)
     jest.clearAllMocks()
   })
 

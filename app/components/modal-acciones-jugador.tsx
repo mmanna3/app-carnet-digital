@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, View, Text, TouchableOpacity, Pressable } from 'react-native'
-import { CarnetDigitalDTO } from '@/app/api/clients'
+import { CarnetDigitalDTO } from '@/lib/api/clients'
 
 interface Props {
   jugador: CarnetDigitalDTO | null

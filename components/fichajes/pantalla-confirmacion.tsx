@@ -28,6 +28,7 @@ export default function PantallaConfirmacion({ mensaje, onVolverInicio, onFichar
       </View>
 
       <TouchableOpacity
+        testID="boton-volver-inicio"
         onPress={onVolverInicio}
         activeOpacity={0.85}
         className="w-full bg-liga-600 rounded-2xl py-3 px-6 shadow-md flex-row items-center justify-center gap-2"
@@ -37,6 +38,7 @@ export default function PantallaConfirmacion({ mensaje, onVolverInicio, onFichar
       </TouchableOpacity>
       {onFicharOtro && (
         <TouchableOpacity
+          testID="boton-fichar-otro"
           onPress={onFicharOtro}
           activeOpacity={0.85}
           className="w-full border-2 border-liga-600 rounded-2xl py-3 px-6 mt-3 flex-row items-center justify-center gap-2"

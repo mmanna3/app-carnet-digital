@@ -1,4 +1,4 @@
-import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import React from 'react'
 import { View, Text } from 'react-native'
 

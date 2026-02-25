@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'expo-router'
-import { useFichajeStore } from './hooks/use-fichaje-store'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import PantallaIntro from '@/components/fichajes/pantalla-intro'
 import PantallaConfirmacion from '@/components/fichajes/pantalla-confirmacion'
 import PasoCodigoEquipo from '@/components/fichajes/paso-codigo-equipo'

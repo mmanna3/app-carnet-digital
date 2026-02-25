@@ -1,4 +1,4 @@
-import { ApiException } from '@/app/api/clients'
+import { ApiException } from '@/lib/api/clients'
 
 /**
  * Extrae un mensaje legible de un error de la API.

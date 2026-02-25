@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
-import { useAuth } from '@/app/hooks/use-auth'
+import { useAuth } from '@/lib/hooks/use-auth'
 import Boton from '@/components/boton'
 import CampoTexto from '@/components/fichajes/campo-texto'
 
@@ -54,7 +54,7 @@ export default function LoginScreen() {
       <View className="w-full max-w-[300px] self-center">
         <Text className="text-3xl font-bold text-center text-black">Inicio de sesión</Text>
         <Text className="text-xl mt-5 mb-8 text-center text-black">
-          ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la administración de la liga.
+          Para DT y Delegados
         </Text>
 
         <View className="mb-3">

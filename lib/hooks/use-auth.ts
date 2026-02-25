@@ -2,7 +2,8 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { zustandStorage } from '@/lib/storage/zustand-storage'
 import { LoginDTO, LoginResponseDTO } from '../api/clients'
-import { api } from '../api/api'
+
+type LoginImpl = (usuario: string, password: string) => Promise<LoginResponseDTO>
 
 interface AuthState {
   usuario: string | null
@@ -11,7 +12,10 @@ interface AuthState {
   login: (usuario: string, password: string) => Promise<LoginResponseDTO>
   logout: () => void
   setAuthState: (token: string, usuario: string) => void
+  _setLoginImpl: (impl: LoginImpl) => void
 }
+
+let loginImpl: LoginImpl | null = null
 
 export const useAuth = create<AuthState>()(
   persist(
@@ -20,12 +24,14 @@ export const useAuth = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       login: async (usuario: string, password: string) => {
-        try {
-          const loginRequest = new LoginDTO({
-            usuario,
-            password,
+        if (!loginImpl) {
+          return new LoginResponseDTO({
+            exito: false,
+            error: 'API no inicializada',
           })
-          const response = await api.login(loginRequest)
+        }
+        try {
+          const response = await loginImpl(usuario, password)
 
           if (response.exito && response.token) {
             set({ token: response.token, usuario: usuario, isAuthenticated: true })
@@ -55,6 +61,9 @@ export const useAuth = create<AuthState>()(
           return
         }
         set({ token, usuario, isAuthenticated: true })
+      },
+      _setLoginImpl: (impl: LoginImpl) => {
+        loginImpl = impl
       },
     }),
     {

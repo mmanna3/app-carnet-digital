@@ -1,4 +1,4 @@
-jest.mock('@/app/api/api', () => ({
+jest.mock('@/lib/api/api', () => ({
   api: {
     obtenerNombreEquipo: jest.fn(),
     elDniEstaFichado: jest.fn(),
@@ -8,8 +8,8 @@ jest.mock('@/app/api/api', () => ({
 }))
 
 import { useFichajeStore } from '../use-fichaje-store'
-import { api } from '@/app/api/api'
-import { ObtenerNombreEquipoDTO } from '@/app/api/clients'
+import { api } from '@/lib/api/api'
+import { ObtenerNombreEquipoDTO } from '@/lib/api/clients'
 
 const mockObtenerNombreEquipo = api.obtenerNombreEquipo as jest.MockedFunction<
   typeof api.obtenerNombreEquipo

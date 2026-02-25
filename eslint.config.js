@@ -19,7 +19,7 @@ module.exports = defineConfig([
     },
   },
   {
-    files: ['app/api/clients.ts'],
+    files: ['lib/api/clients.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
     },

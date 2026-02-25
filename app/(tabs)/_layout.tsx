@@ -4,8 +4,8 @@ import { Tabs, ErrorBoundary } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { MenuProvider } from 'react-native-popup-menu'
 import HeaderMenu from '../components/header-menu'
-import { useEquipoStore } from '../hooks/use-equipo-store'
-import { useConfigLiga, getColorLiga600 } from '../config/liga'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useConfigLiga, getColorLiga600 } from '@/lib/config/liga'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 
 export {

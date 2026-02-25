@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Image, Pressable } from 'react-native'
-import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/app/api/clients'
-import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
+import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
+import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
 interface CarnetProps {
   jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO

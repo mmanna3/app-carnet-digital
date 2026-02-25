@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react-native'
 import Carnet from '../carnet'
-import { EstadoJugador } from '../../types/estado-jugador'
+import { EstadoJugador } from '@/lib/types/estado-jugador'
 
 // Helper: plain object cast al tipo del componente para no depender del constructor NSwag
 const crearJugador = (overrides: Record<string, any> = {}) =>

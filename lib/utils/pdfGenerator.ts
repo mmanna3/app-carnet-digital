@@ -1,7 +1,7 @@
 import * as Print from 'expo-print'
 import * as Sharing from 'expo-sharing'
 import { Alert } from 'react-native'
-import { CarnetDigitalDTO } from '@/app/api/clients'
+import { CarnetDigitalDTO } from '@/lib/api/clients'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
 
 const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {

@@ -1,8 +1,14 @@
 import { Client } from './clients'
 import { HttpClientWrapper } from './http-client-wrapper'
 import { getConfigLiga } from '../config/liga'
+import { useAuth } from '../hooks/use-auth'
 
-const httpClient = new HttpClientWrapper()
+const httpClient = new HttpClientWrapper(
+  () => useAuth.getState().token,
+  () => {
+    useAuth.getState().logout()
+  }
+)
 
 let cached: { leagueId: string; client: Client } | null = null
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
 import { router } from 'expo-router'
 import Constants from 'expo-constants'
-import { useLigaStore } from './hooks/use-liga-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
 
 interface LigaDisponible {
   leagueId: string

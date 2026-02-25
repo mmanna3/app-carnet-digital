@@ -1,11 +1,20 @@
-import { useAuth } from '../hooks/use-auth'
 import { router } from 'expo-router'
+
+type TokenGetter = () => string | null
+type OnUnauthorized = () => void
 
 export class HttpClientWrapper {
   private publicRoutes = ['/api/Auth/login', '/api/Publico']
+  private getToken: TokenGetter
+  private onUnauthorized: OnUnauthorized
+
+  constructor(getToken: TokenGetter, onUnauthorized: OnUnauthorized) {
+    this.getToken = getToken
+    this.onUnauthorized = onUnauthorized
+  }
 
   async fetch(url: RequestInfo, init?: RequestInit): Promise<Response> {
-    const token = useAuth.getState().token
+    const token = this.getToken()
     const isPublicRoute = this.isPublicRoute(url.toString())
 
     if (token && !isPublicRoute) {
@@ -31,7 +40,7 @@ export class HttpClientWrapper {
 
     // Manejar token expirado
     if (response.status === 401 && !isPublicRoute) {
-      useAuth.getState().logout()
+      this.onUnauthorized()
       router.replace('/(auth)/login')
     }
 

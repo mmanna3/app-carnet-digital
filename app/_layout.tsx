@@ -9,9 +9,11 @@ import Constants from 'expo-constants'
 import 'react-native-reanimated'
 
 import { useColorScheme } from '@/components/useColorScheme'
-import { useAuth } from './hooks/use-auth'
-import { useEquipoStore } from './hooks/use-equipo-store'
-import { useLigaStore } from './hooks/use-liga-store'
+import { useAuth } from '@/lib/hooks/use-auth'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
+import { api } from '@/lib/api/api'
+import { LoginDTO } from '@/lib/api/clients'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MenuProvider } from 'react-native-popup-menu'
 import HeaderMenu from './components/header-menu'
@@ -27,6 +29,11 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
+
+// Conectar useAuth con api para romper el ciclo de require
+useAuth.getState()._setLoginImpl(async (usuario, password) =>
+  api.login(new LoginDTO({ usuario, password }))
+)
 
 function useProtectedRoute(loaded: boolean) {
   const segments = useSegments()

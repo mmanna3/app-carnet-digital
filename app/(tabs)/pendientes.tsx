@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, ScrollView } from 'react-native'
-import useApiQuery from '../api/custom-hooks/use-api-query'
-import { api } from '../api/api'
-import { useEquipoStore } from '../hooks/use-equipo-store'
-import { queryKeys } from '../api/query-keys'
+import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
+import { api } from '@/lib/api/api'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { queryKeys } from '@/lib/api/query-keys'
 import Carnet from '../components/carnet'
-import { EstadoJugador } from '../types/estado-jugador'
+import { EstadoJugador } from '@/lib/types/estado-jugador'
 
 export default function PendientesScreen() {
   const { equipoSeleccionadoId } = useEquipoStore()

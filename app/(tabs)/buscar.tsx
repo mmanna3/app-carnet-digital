@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
 import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import { api } from '../api/api'
-import { parseApiError } from '@/app/utils/parse-api-error'
-import { CarnetDigitalDTO } from '@/app/api/clients'
+import { api } from '@/lib/api/api'
+import { parseApiError } from '@/lib/utils/parse-api-error'
+import { CarnetDigitalDTO } from '@/lib/api/clients'
 import Boton from '@/components/boton'
 import Carnet from '../components/carnet'
-import { generatePDF } from '../utils/pdfGenerator'
+import { generatePDF } from '@/lib/utils/pdfGenerator'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')

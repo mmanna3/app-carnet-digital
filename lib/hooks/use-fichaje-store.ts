@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { FicharEnOtroEquipoDTO, JugadorDTO } from '@/app/api/clients'
-import { api } from '@/app/api/api'
+import { FicharEnOtroEquipoDTO, JugadorDTO } from '@/lib/api/clients'
+import { api } from '@/lib/api/api'
 
 export type FlujoFichaje = 'intro' | 'nuevo' | 'yaFichado'
 

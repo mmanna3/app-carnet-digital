@@ -12,6 +12,7 @@ interface BotonProps {
   variante?: Variante
   icono?: keyof typeof Feather.glyphMap
   className?: string
+  testID?: string
 }
 
 const estilosPorVariante: Record<Variante, string> = {
@@ -40,6 +41,7 @@ export default function Boton({
   variante = 'Principal',
   icono,
   className = '',
+  testID,
 }: BotonProps) {
   const isDisabled = deshabilitado || cargando
   const base =
@@ -50,6 +52,7 @@ export default function Boton({
 
   return (
     <TouchableOpacity
+      testID={testID}
       className={`${base} ${varianteStyles} ${isDisabled ? 'opacity-70' : ''} ${className}`.trim()}
       onPress={onPress}
       disabled={isDisabled}

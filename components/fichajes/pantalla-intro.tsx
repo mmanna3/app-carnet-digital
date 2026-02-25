@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
-import { useFichajeStore } from '@/app/hooks/use-fichaje-store'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from './cabecera'
 
 interface Props {

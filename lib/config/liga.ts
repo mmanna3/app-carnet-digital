@@ -1,5 +1,5 @@
 import Constants from 'expo-constants'
-import { useLigaStore } from '../hooks/use-liga-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
 
 export interface ConfigLigaRuntime {
   leagueId: string
@@ -42,7 +42,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
       ? {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
-          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.66:5072' : liga.apiUrl),
+          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.69:5072' : liga.apiUrl),
           colorBase: liga.colorBase,
         }
       : null
@@ -51,7 +51,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
   return {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
-    apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.66:5072' : (extra.apiUrl ?? '')),
+    apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.69:5072' : (extra.apiUrl ?? '')),
     colorBase: extra.colorBase,
   }
 }

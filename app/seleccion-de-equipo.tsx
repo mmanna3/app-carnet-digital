@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { router } from 'expo-router'
-import useApiQuery from './api/custom-hooks/use-api-query'
-import { api } from './api/api'
-import { EquipoBaseDTO } from './api/clients'
-import { useEquipoStore } from './hooks/use-equipo-store'
-import { queryKeys } from './api/query-keys'
+import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
+import { api } from '@/lib/api/api'
+import { EquipoBaseDTO } from '@/lib/api/clients'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { queryKeys } from '@/lib/api/query-keys'
 
 export default function TeamSelectionScreen() {
   const { data, isLoading, isError } = useApiQuery({

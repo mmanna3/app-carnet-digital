@@ -5,11 +5,11 @@ import { Feather } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router'
 import Constants from 'expo-constants'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
-import { useAuth } from '../hooks/use-auth'
-import { useEquipoStore } from '../hooks/use-equipo-store'
-import { useLigaStore } from '../hooks/use-liga-store'
-import { useSeleccionJugadores } from '../hooks/use-seleccion-jugadores'
-import { useFichajeStore } from '../hooks/use-fichaje-store'
+import { useAuth } from '@/lib/hooks/use-auth'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
+import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 
 export default function HeaderMenu() {
   const router = useRouter()

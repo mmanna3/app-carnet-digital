@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { View, TextInput, Text } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
-import { api } from '@/app/api/api'
-import { CambiarPasswordDTO } from '@/app/api/clients'
-import { useAuth } from '@/app/hooks/use-auth'
+import { api } from '@/lib/api/api'
+import { CambiarPasswordDTO } from '@/lib/api/clients'
+import { useAuth } from '@/lib/hooks/use-auth'
 import Boton from '@/components/boton'
 
 export default function CambiarPasswordScreen() {
@@ -93,6 +93,7 @@ export default function CambiarPasswordScreen() {
           onPress={handleSubmit}
           deshabilitado={loading}
           cargando={loading}
+          testID="boton-cambiar-password"
         />
       </View>
     </View>

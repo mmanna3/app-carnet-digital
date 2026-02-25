@@ -1,0 +1,34 @@
+diff --git a/node_modules/react-native-popup-menu/build/rnpm.js b/node_modules/react-native-popup-menu/build/rnpm.js
+index 47bc91a..de598c8 100644
+--- a/node_modules/react-native-popup-menu/build/rnpm.js
++++ b/node_modules/react-native-popup-menu/build/rnpm.js
+@@ -4,6 +4,7 @@
+   (global = global || self, factory(global.ReactNativePopupMenu = {}, global.reactNative, global.React));
+ }(this, function (exports, reactNative, React) { 'use strict';
+ 
++  var SafeAreaView = require('react-native-safe-area-context').SafeAreaView;
+   var React__default = 'default' in React ? React['default'] : React;
+ 
+   // platform select polyfil for older RN versions
+@@ -1773,7 +1774,7 @@
+           onLayout: this._onLayout
+         }, React__default.createElement(reactNative.View, {
+           style: [styles$3.flex1, customStyles.menuContextWrapper, customStyles.menuProviderWrapper, style]
+-        }, this.props.children), React__default.createElement(reactNative.SafeAreaView, {
++        }, this.props.children), React__default.createElement(SafeAreaView, {
+           style: styles$3.safeArea,
+           pointerEvents: "box-none"
+         }, React__default.createElement(reactNative.View, {
+diff --git a/node_modules/react-native-popup-menu/src/MenuProvider.js b/node_modules/react-native-popup-menu/src/MenuProvider.js
+index f3efd35..70bbe0e 100644
+--- a/node_modules/react-native-popup-menu/src/MenuProvider.js
++++ b/node_modules/react-native-popup-menu/src/MenuProvider.js
+@@ -1,6 +1,7 @@
+ import React, { Component, createContext } from 'react';
+ import PropTypes from 'prop-types';
+-import { View, BackHandler, SafeAreaView, StyleSheet } from 'react-native';
++import { View, BackHandler, StyleSheet } from 'react-native';
++import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+ import { withContext } from './with-context';
+ import makeMenuRegistry from './menuRegistry';
