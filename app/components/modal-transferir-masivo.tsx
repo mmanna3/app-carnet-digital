@@ -70,6 +70,9 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
                 <Text className="text-lg font-bold text-gray-900 mb-3">
                   Confirmar transferencia
                 </Text>
+                <Text className="text-md text-gray-600 my-3">
+                  Al hacerlo, los jugadores pasarán al estado "Aprobado pendiente de pago".
+                </Text>
                 <Text className="text-base text-gray-600 leading-6">
                   ¿Estás seguro de transferir a los siguientes jugadores del equipo{' '}
                   <Text className="font-semibold text-gray-900">{equipoSeleccionadoNombre}</Text> a{' '}
@@ -89,7 +92,7 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
 
               <View className="px-4 pb-4 pt-3 gap-3">
                 <TouchableOpacity
-                  className="bg-liga-600 rounded-xl p-4 items-center"
+                  className="bg-liga-600 rounded-xl p-4 items-center shadow-md"
                   onPress={handleTransferir}
                   disabled={cargando}
                 >

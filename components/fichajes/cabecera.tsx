@@ -11,7 +11,7 @@ interface Props {
 export default function Cabecera({ titulo, onBack }: Props) {
   const { esDelegado } = useFichajeStore()
   
-  if (esDelegado) return <View className="h-8"></View>;
+  if (esDelegado) return null;
 
   return (
     <View className="pt-14 pb-4 px-6 bg-white shadow-sm flex-row items-center">

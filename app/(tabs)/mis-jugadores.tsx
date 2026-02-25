@@ -189,20 +189,20 @@ export default function MisJugadoresScreen() {
         <View className="bg-white border-t border-gray-200 px-4 pt-3 pb-6 gap-2">
           <View className="flex-row gap-3">
             <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 border-2 ${haySeleccionados ? 'border-red-600' : 'border-red-200'}`}
+              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 ${haySeleccionados ? 'bg-red-600' : 'bg-red-100'}`}
               onPress={() => setModalBulk('eliminar')}
               disabled={!haySeleccionados}
             >
-              <Feather name="trash-2" size={22} color={haySeleccionados ? '#dc2626' : '#fecaca'} />
-              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-red-600' : 'text-red-200'}`}>Eliminar</Text>
+              <Feather name="trash-2" size={22} color={haySeleccionados ? '#ffffff' : '#fecaca'} />
+              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-white' : 'text-red-300'}`}>Eliminar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 border-2 ${haySeleccionados ? 'border-liga-600' : 'border-liga-200'}`}
+              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 ${haySeleccionados ? 'bg-green-600' : 'bg-green-100'}`}
               onPress={() => setModalBulk('transferir')}
               disabled={!haySeleccionados}
             >
-              <Feather name="external-link" size={22} color={haySeleccionados ? getColorLiga600() : getColorLiga200()} />
-              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-liga-600' : 'text-liga-200'}`}>Transferir</Text>
+              <Feather name="external-link" size={22} color={haySeleccionados ? '#ffffff' : '#b9f8cf'} />
+              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-white' : 'text-green-300'}`}>Transferir</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity className="items-center py-2" onPress={desactivar}>            

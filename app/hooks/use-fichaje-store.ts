@@ -90,7 +90,7 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   irAlPasoInicial: () => {set({ paso: 1 })},
   calcularTotalPasos: () => {
     const { esDelegado, flujo } = get()
-    return esDelegado ? (flujo === 'nuevo' ? 4 : 3) : (flujo === 'nuevo' ? 5 : 2)
+    return esDelegado ? (flujo === 'nuevo' ? 4 : 2) : (flujo === 'nuevo' ? 5 : 3)
   },
   setCodigoEquipo: (v) => set({ codigoEquipo: v }),
   setNombreEquipo: (v) => set({ nombreEquipo: v }),

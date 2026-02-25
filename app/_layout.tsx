@@ -113,11 +113,18 @@ export default function RootLayout() {
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="fichajes" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+              title: 'Inicio', // Usado por el botón atrás al volver desde fichaje-delegado (evita "(tabs)")
+            }}
+          />
           <Stack.Screen
             name="fichaje-delegado"
             options={{
-              title: 'Fichar en este equipo',
+              title: 'Fichar jugador',
+              headerBackButtonDisplayMode: 'minimal', // Solo flecha, sin texto (RN 7+)
               headerStyle: { backgroundColor: '#ffffff' },
               headerTintColor: '#111827',
               headerTitleStyle: { color: '#111827' },

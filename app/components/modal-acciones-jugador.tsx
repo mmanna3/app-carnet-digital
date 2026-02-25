@@ -16,7 +16,7 @@ export default function ModalAccionesJugador({ jugador, onEliminar, onTransferir
     <Modal transparent animationType="fade" visible={!!jugador} onRequestClose={onCerrar}>
       <Pressable className="flex-1 bg-black/50 justify-end" onPress={onCerrar}>
         <Pressable onPress={() => {}}>
-          <View className="bg-white rounded-t-2xl overflow-hidden">
+          <View className="bg-white rounded-t-2xl overflow-hidden pb-4">
             <View className="p-4 border-b border-gray-200">
               <Text className="text-base font-semibold text-center text-gray-800">
                 {jugador.nombre} {jugador.apellido}
@@ -24,27 +24,25 @@ export default function ModalAccionesJugador({ jugador, onEliminar, onTransferir
               <Text className="text-sm text-center text-gray-500">DNI: {jugador.dni}</Text>
             </View>
 
-            <TouchableOpacity
-              className="p-4 border-b border-gray-100"
-              onPress={onEliminar}
-            >
-              <Text className="text-base text-center text-red-600 font-medium">
-                Eliminar jugador
-              </Text>
-            </TouchableOpacity>
+            <View className="px-4 pt-4 pb-4 gap-3">
+              <TouchableOpacity
+                className="bg-red-600 rounded-xl p-4 items-center"
+                onPress={onEliminar}
+              >
+                <Text className="text-white font-semibold text-base">Eliminar jugador</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="p-4 border-b border-gray-100"
-              onPress={onTransferir}
-            >
-              <Text className="text-base text-center text-gray-800 font-medium">
-                Transferir
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-liga-600 rounded-xl p-4 items-center"
+                onPress={onTransferir}
+              >
+                <Text className="text-white font-semibold text-base">Transferir</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity className="p-4" onPress={onCerrar}>
-              <Text className="text-base text-center text-gray-400">Cancelar</Text>
-            </TouchableOpacity>
+              <TouchableOpacity className="rounded-xl p-4 items-center" onPress={onCerrar}>
+                <Text className="text-base text-center text-gray-500">Cancelar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Pressable>
       </Pressable>

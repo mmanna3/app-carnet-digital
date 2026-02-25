@@ -76,6 +76,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
                   <Text className="font-semibold text-gray-900">{equipoSeleccionadoNombre}</Text> a{' '}
                   <Text className="font-semibold text-gray-900">{equipoDestino.nombre}</Text>?
                 </Text>
+                <Text className="text-gray-600 mt-4">Al hacerlo, el jugador pasará al estado "Aprobado pendiente de pago".</Text>?
               </View>
               <View className="px-4 pb-4 gap-3">
                 <TouchableOpacity
