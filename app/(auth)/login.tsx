@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { View, TextInput, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/app/hooks/use-auth'
 import Boton from '@/components/boton'
+import CampoTexto from '@/components/fichajes/campo-texto'
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('')
@@ -50,30 +51,30 @@ export default function LoginScreen() {
         <Text className="text-base text-liga-600">← Volver</Text>
       </TouchableOpacity>
       <View className="w-full max-w-[300px] self-center">
-        <Text className="text-3xl font-bold text-center text-black">Carnet digital</Text>
+        <Text className="text-3xl font-bold text-center text-black">Inicio de sesión</Text>
         <Text className="text-xl mt-5 mb-8 text-center text-black">
           ¡Bienvenido, delegado! Si no tenés usuario, comunicate con la administración de la liga.
         </Text>
 
-        <TextInput
-          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
-          placeholder="Usuario"
-          placeholderTextColor="#555"
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-          editable={!loading}
-        />
+        <View className="mb-3">
+          <CampoTexto
+            placeholder="Usuario"
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+            editable={!loading}
+          />
+        </View>
 
-        <TextInput
-          className="h-[55px] px-3 rounded border border-[#ddd] mb-3 text-base bg-[#eee]"
-          placeholder="Contraseña"
-          placeholderTextColor="#555"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          editable={!loading}
-        />
+        <View className="mb-3">
+          <CampoTexto
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            editable={!loading}
+          />
+        </View>
 
         {error ? <Text className="text-red-500 mb-2.5 text-center">{error}</Text> : null}
 

@@ -57,7 +57,7 @@ export default function HomeScreen() {
         />
 
         {/* Logo y nombre de la liga */}
-        <View className="items-center mb-8">
+        <View className="items-center mb-4 mt-4">
           {logo && (
             <Image
               source={logo}
@@ -66,11 +66,11 @@ export default function HomeScreen() {
               resizeMode="contain"
             />
           )}
-          <Text className="text-white text-4xl tracking-tight">{leagueDisplayName}</Text>
+          <Text className="text-white font-medium text-4xl tracking-tight">{leagueDisplayName}</Text>
         </View>
 
         {/* Barra de búsqueda */}
-        <View className="flex-row items-center bg-white rounded-2xl shadow-lg overflow-hidden">
+        {/* <View className="flex-row items-center bg-white rounded-2xl shadow-lg overflow-hidden">
           <View className="pl-4">
             <Feather name="search" size={20} color="#9ca3af" />
           </View>
@@ -81,7 +81,7 @@ export default function HomeScreen() {
             className="flex-1 py-3.5 px-3 text-gray-900"
             placeholderTextColor="#9ca3af"
           />
-        </View>
+        </View> */}
       </View>
 
       {/* Tarjetas de acción */}
