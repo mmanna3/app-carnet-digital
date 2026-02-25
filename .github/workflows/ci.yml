@@ -71,7 +71,6 @@ jobs:
       - name: E2E con emulador Android
         uses: reactivecircus/android-emulator-runner@v2
         env:
-          # Reduce espera antes de force-kill para evitar cuelgues de 2h
           ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 10
         with:
           api-level: 29
@@ -81,17 +80,23 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
             export PATH="$PATH:$HOME/.maestro/bin"
-            # Mock server en background (10.0.2.2:3001 desde el emulador apunta a localhost:3001 del host)
+
+            # Mock server en background
             node e2e/mock-server.js &
-            # Metro con la URL del mock inlineada en el bundle JS via EXPO_PUBLIC_*
+
+            # Metro con URL del mock
             EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi npx expo start --no-dev &
             sleep 25
+
             # Build e instalar app
             LIGA_ID=edefi npx expo run:android --no-bundler
             sleep 15
-            # Maestro (reporte JUnit + directorio de screenshots/videos para debugging)
-            # test-output-dir relativo a workspace e2e/; ../build pone salida en raíz del repo
-            maestro test e2e/ --format junit --output maestro-report.xml --test-output-dir=../build/maestro-results
+
+            # Ejecutar Maestro
+            maestro test e2e/ \
+              --format junit \
+              --output maestro-report.xml \
+              --test-output-dir=build/maestro-results
 
       - name: Subir reporte Maestro
         uses: actions/upload-artifact@v4
@@ -103,7 +108,7 @@ jobs:
 
       - name: Subir snapshots Maestro (screenshots/videos en fallo)
         uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: maestro-e2e-snapshots
           path: build/maestro-results
