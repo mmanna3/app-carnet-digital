@@ -6,7 +6,7 @@ import Progreso from '../progreso'
 import BotonWizard from '../boton-wizard'
 
 const DECLARACION =
-  'Al enviar los datos, declaro ser mayor de edad o estar acompañado por un mayor de edad que autoriza a que puedan publicarse fotos y videos de mi rostro en medios donde se difunda material sobre torneos organizados por la liga.'
+  'Al enviar los datos, declaro ser mayor de edad o estar acompañado por un mayor de edad que autoriza que puedan publicarse fotos y videos de mi rostro en medios donde se difunda material sobre torneos organizados por la liga.'
 
 export default function PasoAutorizacion() {
   const { nombreEquipo, nombre, dni, irAlPasoSiguiente, irAlPasoAnterior, enviarFichajeNuevo } = useFichajeStore()

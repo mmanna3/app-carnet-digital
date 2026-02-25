@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { Tabs, ErrorBoundary } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -17,9 +18,18 @@ export {
 SplashScreen.preventAutoHideAsync()
 
 export default function TabLayout() {
-  const { equipoSeleccionadoNombre } = useEquipoStore()
+  const { equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore()
   useConfigLiga() // suscripción para MULTILIGA al cambiar liga
   const colorLiga = getColorLiga600()
+
+  const HeaderTituloConCodigo = ({ titulo }: { titulo: string }) => (
+    <View style={{ paddingBottom: 10 }}>
+      <Text style={{ fontSize: 17, fontWeight: '600', color: '#111827' }}>{titulo}</Text>
+      <Text style={{ fontSize: 12, marginTop: 5, color: '#6b7280' }}>
+        Código: {equipoSeleccionadoCodigo ?? '-'}
+      </Text>
+    </View>
+  )
 
   return (
     <MenuProvider skipInstanceCheck>
@@ -28,7 +38,8 @@ export default function TabLayout() {
           tabBarActiveTintColor: colorLiga,
           tabBarInactiveTintColor: '#6b7280', // gray-500
           tabBarLabelStyle: { fontSize: 12 },
-          headerStyle: { backgroundColor: '#ffffff' },
+          headerStyle: { backgroundColor: '#ffffff', height: 100 },
+          headerTitleContainerStyle: { paddingVertical: 8 },
           headerTintColor: '#111827',
           headerTitleStyle: {
             color: '#111827',
@@ -52,7 +63,9 @@ export default function TabLayout() {
         <Tabs.Screen
           name="mis-jugadores"
           options={{
-            title: equipoSeleccionadoNombre || 'Mis Jugadores',
+            headerTitle: () => (
+              <HeaderTituloConCodigo titulo={equipoSeleccionadoNombre || 'Mis Jugadores'} />
+            ),
             tabBarLabel: 'Mis Jugadores',
             tabBarIcon: ({ color }) => <Feather name="users" size={22} color={color} />,
           }}
@@ -67,7 +80,9 @@ export default function TabLayout() {
         <Tabs.Screen
           name="pendientes"
           options={{
-            title: equipoSeleccionadoNombre || 'Pendientes',
+            headerTitle: () => (
+              <HeaderTituloConCodigo titulo={equipoSeleccionadoNombre || 'Pendientes'} />
+            ),
             tabBarLabel: 'Pendientes',
             tabBarIcon: ({ color }) => <Feather name="clock" size={22} color={color} />,
           }}
