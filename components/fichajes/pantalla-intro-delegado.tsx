@@ -6,13 +6,11 @@ import Cabecera from './cabecera'
 interface Props {
   onNuevo: () => void
   onYaFichado: () => void
-  onVolver: () => void
 }
 
-export default function PantallaIntroDelegado({ onNuevo, onYaFichado, onVolver }: Props) {
+export default function PantallaIntroDelegado({ onNuevo, onYaFichado}: Props) {
   return (
-    <View testID="pantalla-intro-delegado" className="flex-1 bg-blue-50">
-      <Cabecera titulo="Fichar jugadores" onBack={onVolver} />
+    <View testID="pantalla-intro-delegado" className="flex-1 bg-blue-50">      
 
       <View className="px-6 pt-6 gap-3">
         <TouchableOpacity

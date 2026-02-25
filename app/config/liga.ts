@@ -75,9 +75,22 @@ const COLOR_LIGA_600: Record<NonNullable<ConfigLigaRuntime['colorBase']>, string
   rojo: '#dc2626',
 }
 
+/** Hex del color liga (shade 200, equivalente a bg-liga-200) */
+const COLOR_LIGA_200: Record<NonNullable<ConfigLigaRuntime['colorBase']>, string> = {
+  verde: '#bbf7d0',
+  negro: '#e5e7eb',
+  azul: '#bfdbfe',
+  rojo: '#fecaca',
+}
+
 export function getColorLiga600(): string {
   const base = getConfigLiga()?.colorBase ?? 'verde'
   return COLOR_LIGA_600[base] ?? COLOR_LIGA_600.verde
+}
+
+export function getColorLiga200(): string {
+  const base = getConfigLiga()?.colorBase ?? 'verde'
+  return COLOR_LIGA_200[base] ?? COLOR_LIGA_200.verde
 }
 
 /** @deprecated Usar getConfigLiga() o useConfigLiga(). Mantener por compatibilidad. */

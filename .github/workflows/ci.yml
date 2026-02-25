@@ -96,7 +96,8 @@ jobs:
             maestro test e2e/ \
               --format junit \
               --output maestro-report.xml \
-              --test-output-dir=build/maestro-results
+              --test-output-dir build/maestro-results \
+              --flatten-debug-output
 
       - name: Subir reporte Maestro
         uses: actions/upload-artifact@v4
@@ -106,10 +107,10 @@ jobs:
           path: maestro-report.xml
           if-no-files-found: ignore
 
-      - name: Subir snapshots Maestro (screenshots/videos en fallo)
+      - name: Subir screenshots y debug de Maestro
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: maestro-e2e-snapshots
+          name: maestro-results
           path: build/maestro-results
           if-no-files-found: ignore

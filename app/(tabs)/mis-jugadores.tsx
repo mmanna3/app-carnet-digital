@@ -14,6 +14,8 @@ import ModalEliminarJugador from '../components/modal-eliminar-jugador'
 import ModalTransferirJugador from '../components/modal-transferir-jugador'
 import ModalEliminarMasivo from '../components/modal-eliminar-masivo'
 import ModalTransferirMasivo from '../components/modal-transferir-masivo'
+import { getColorLiga200, getColorLiga600 } from '../config/liga'
+import { Feather } from '@expo/vector-icons'
 
 type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
 type ModalBulk = 'eliminar' | 'transferir' | null
@@ -187,21 +189,23 @@ export default function MisJugadoresScreen() {
         <View className="bg-white border-t border-gray-200 px-4 pt-3 pb-6 gap-2">
           <View className="flex-row gap-3">
             <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 items-center ${haySeleccionados ? 'bg-red-600' : 'bg-red-200'}`}
+              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 border-2 ${haySeleccionados ? 'border-red-600' : 'border-red-200'}`}
               onPress={() => setModalBulk('eliminar')}
               disabled={!haySeleccionados}
             >
-              <Text className="text-white font-semibold text-base">Eliminar</Text>
+              <Feather name="trash-2" size={22} color={haySeleccionados ? '#dc2626' : '#fecaca'} />
+              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-red-600' : 'text-red-200'}`}>Eliminar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-1 rounded-xl p-3.5 items-center ${haySeleccionados ? 'bg-liga-600' : 'bg-liga-200'}`}
+              className={`flex-1 rounded-xl p-3.5 flex-row items-center justify-center gap-2 border-2 ${haySeleccionados ? 'border-liga-600' : 'border-liga-200'}`}
               onPress={() => setModalBulk('transferir')}
               disabled={!haySeleccionados}
             >
-              <Text className="text-white font-semibold text-base">Transferir</Text>
+              <Feather name="external-link" size={22} color={haySeleccionados ? getColorLiga600() : getColorLiga200()} />
+              <Text className={`font-semibold text-base ${haySeleccionados ? 'text-liga-600' : 'text-liga-200'}`}>Transferir</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity className="items-center py-2" onPress={desactivar}>
+          <TouchableOpacity className="items-center py-2" onPress={desactivar}>            
             <Text className="text-gray-500 text-base">Cancelar</Text>
           </TouchableOpacity>
         </View>
