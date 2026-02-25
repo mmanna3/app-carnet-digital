@@ -1,10 +1,11 @@
 import React from 'react'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { Feather } from '@expo/vector-icons'
 import { Tabs, ErrorBoundary } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { MenuProvider } from 'react-native-popup-menu'
 import HeaderMenu from '../components/header-menu'
 import { useEquipoStore } from '../hooks/use-equipo-store'
+import { useConfigLiga, getColorLiga600 } from '../config/liga'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 
 export {
@@ -17,24 +18,32 @@ SplashScreen.preventAutoHideAsync()
 
 export default function TabLayout() {
   const { equipoSeleccionadoNombre } = useEquipoStore()
+  useConfigLiga() // suscripción para MULTILIGA al cambiar liga
+  const colorLiga = getColorLiga600()
 
   return (
     <MenuProvider skipInstanceCheck>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: '#ffffff',
-          tabBarInactiveTintColor: '#cccccc',
-          headerStyle: {
-            backgroundColor: '#1a1a1a',
-          },
-          headerTintColor: '#ffffff',
+          tabBarActiveTintColor: colorLiga,
+          tabBarInactiveTintColor: '#6b7280', // gray-500
+          tabBarLabelStyle: { fontSize: 12 },
+          headerStyle: { backgroundColor: '#ffffff' },
+          headerTintColor: '#111827',
           headerTitleStyle: {
-            color: '#ffffff',
+            color: '#111827',
           },
           tabBarStyle: {
-            height: 54,
-            backgroundColor: '#1a1a1a',
-            borderTopColor: '#333333',
+            height: 75,
+            paddingTop: 5,
+            backgroundColor: '#ffffff',
+            borderTopColor: '#e5e7eb', // gray-200
+            borderTopWidth: 1,
+            elevation: 8,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
           },
           headerShown: useClientOnlyValue(false, true),
           headerRight: () => <HeaderMenu />,
@@ -45,14 +54,14 @@ export default function TabLayout() {
           options={{
             title: equipoSeleccionadoNombre || 'Mis Jugadores',
             tabBarLabel: 'Mis Jugadores',
-            tabBarIcon: ({ color }) => <FontAwesome name="users" size={18} color={color} />,
+            tabBarIcon: ({ color }) => <Feather name="users" size={22} color={color} />,
           }}
         />
         <Tabs.Screen
           name="buscar"
           options={{
             title: 'Buscar',
-            tabBarIcon: ({ color }) => <FontAwesome name="search" size={18} color={color} />,
+            tabBarIcon: ({ color }) => <Feather name="search" size={22} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -60,7 +69,7 @@ export default function TabLayout() {
           options={{
             title: equipoSeleccionadoNombre || 'Pendientes',
             tabBarLabel: 'Pendientes',
-            tabBarIcon: ({ color }) => <FontAwesome name="clock-o" size={18} color={color} />,
+            tabBarIcon: ({ color }) => <Feather name="clock" size={22} color={color} />,
           }}
         />
       </Tabs>

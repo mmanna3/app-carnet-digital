@@ -1,6 +1,7 @@
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons';
 import { useRouter, usePathname } from 'expo-router'
 import Constants from 'expo-constants'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
@@ -52,34 +53,71 @@ export default function HeaderMenu() {
     }
   }
 
+  const MenuItem = ({
+    icon,
+    label,
+    onSelect,
+    destructive,
+  }: {
+    icon: React.ComponentProps<typeof Feather>['name']
+    label: string
+    onSelect: () => void
+    destructive?: boolean
+  }) => (
+    <MenuOption onSelect={onSelect}>
+      <View className="flex-row items-center gap-3 px-6 py-3">
+        <Feather
+          name={icon}
+          size={20}
+          color={destructive ? '#dc2626' : '#111827'}
+        />
+        <Text
+          className={`text-base ${destructive ? 'text-red-600' : 'text-[#111827]'} font-medium`}
+        >
+          {label}
+        </Text>
+      </View>
+    </MenuOption>
+  )
+
   return (
     <View className="mr-2.5">
       <Menu>
         <MenuTrigger>
           <View className="p-2">
-            <Entypo name="dots-three-vertical" size={24} color="#333" />
+            <Entypo name="dots-three-vertical" size={24} color="#111827" />
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
-          <MenuOption onSelect={handleSeleccionarJugadores}>
-            <Text className="text-base text-[#333] p-2.5">
-              {modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
-            </Text>
-          </MenuOption>
+          <MenuItem
+            icon={modoSeleccion ? 'check-square' : 'list'}
+            label={modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
+            onSelect={handleSeleccionarJugadores}
+          />
           {esMultiliga && (
-            <MenuOption onSelect={handleCambiarLiga}>
-              <Text className="text-base text-[#333] p-2.5">Cambiar liga</Text>
-            </MenuOption>
+            <MenuItem
+              icon="globe"
+              label="Cambiar liga"
+              onSelect={handleCambiarLiga}
+            />
           )}
-          <MenuOption onSelect={() => router.push('/fichaje-delegado' as any)}>
-            <Text className="text-base text-[#333] p-2.5">Fichar en este equipo</Text>
-          </MenuOption>
-          <MenuOption onSelect={handleCambiarEquipo}>
-            <Text className="text-base text-[#333] p-2.5">Cambiar equipo</Text>
-          </MenuOption>
-          <MenuOption onSelect={handleCerrarSesion}>
-            <Text className="text-base text-[#333] p-2.5">Cerrar sesión</Text>
-          </MenuOption>
+          <MenuItem
+            icon="user-plus"
+            label="Fichar jugadores"
+            onSelect={() => router.push('/fichaje-delegado' as any)}
+          />
+          <View className="h-px bg-gray-200 my-2 mx-4" />
+          <MenuItem
+            icon="users"
+            label="Cambiar equipo"
+            onSelect={handleCambiarEquipo}
+          />
+          <MenuItem
+            icon="log-out"
+            label="Cerrar sesión"
+            onSelect={handleCerrarSesion}
+            destructive
+          />
         </MenuOptions>
       </Menu>
     </View>
@@ -88,19 +126,22 @@ export default function HeaderMenu() {
 
 const optionsStyles = {
   optionsContainer: {
-    backgroundColor: 'white',
-    padding: 5,
-    borderRadius: 5,
-    width: 200,
+    backgroundColor: '#ffffff',
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+    borderRadius: 12,
+    minWidth: 220,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
       },
       android: {
-        elevation: 4,
+        elevation: 8,
       },
     }),
   },

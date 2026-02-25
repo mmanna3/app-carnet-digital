@@ -67,6 +67,19 @@ export function getConfigLiga(): ConfigLigaRuntime | null {
   return getConfigLigaFromStore()
 }
 
+/** Hex del color liga (shade 600, equivalente a bg-liga-600) */
+const COLOR_LIGA_600: Record<NonNullable<ConfigLigaRuntime['colorBase']>, string> = {
+  verde: '#16a34a',
+  negro: '#4b5563',
+  azul: '#2563eb',
+  rojo: '#dc2626',
+}
+
+export function getColorLiga600(): string {
+  const base = getConfigLiga()?.colorBase ?? 'verde'
+  return COLOR_LIGA_600[base] ?? COLOR_LIGA_600.verde
+}
+
 /** @deprecated Usar getConfigLiga() o useConfigLiga(). Mantener por compatibilidad. */
 export const configLiga = {
   get leagueId() {

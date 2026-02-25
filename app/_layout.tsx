@@ -118,9 +118,9 @@ export default function RootLayout() {
             name="fichaje-delegado"
             options={{
               title: 'Fichar en este equipo',
-              headerStyle: { backgroundColor: '#1a1a1a' },
-              headerTintColor: '#ffffff',
-              headerTitleStyle: { color: '#ffffff' },
+              headerStyle: { backgroundColor: '#ffffff' },
+              headerTintColor: '#111827',
+              headerTitleStyle: { color: '#111827' },
               headerRight: () => <HeaderMenu />,
             }}
           />
