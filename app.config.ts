@@ -82,7 +82,10 @@ export default (): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: config.appId,
-    infoPlist: { ITSAppUsesNonExemptEncryption: false },
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+      CFBundleDevelopmentRegion: 'es',
+    },
   },
   android: {
     backgroundColor: splashHex,

@@ -12,7 +12,7 @@ const useApiQuery = <TData, TTransformed = TData>(props: IProps<TData, TTransfor
   return useQuery<TData, Error, TTransformed>({
     enabled: props.activado,
     queryKey: props.key,
-    throwOnError: true,
+    throwOnError: false,
     queryFn: async () => await props.fn(),
     select: props.transformarResultado,
   } as UseQueryOptions<TData, Error, TTransformed>)

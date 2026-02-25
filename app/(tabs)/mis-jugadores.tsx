@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -31,6 +31,8 @@ export default function MisJugadoresScreen() {
   const [modalBulk, setModalBulk] = useState<ModalBulk>(null)
 
   const { modoSeleccion, jugadoresSeleccionados, toggle, desactivar } = useSeleccionJugadores()
+
+  const [refreshing, setRefreshing] = useState(false)
 
   const {
     data: jugadores,
@@ -82,6 +84,19 @@ export default function MisJugadoresScreen() {
     queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
   }
 
+  const handleActualizar = async () => {
+    if (!equipoSeleccionadoId) return
+    setRefreshing(true)
+    try {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) }),
+        queryClient.refetchQueries({ queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId) }),
+      ])
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
   if (!isAuthenticated) {
     return null
   }
@@ -95,11 +110,36 @@ export default function MisJugadoresScreen() {
   }
 
   if (isLoading) {
-    return <Text className="text-base text-center p-5">Cargando jugadores...</Text>
+    return (
+      <View className="flex-1 bg-[#f8f8f8] items-center justify-center gap-3">
+        <ActivityIndicator size="large" color="#6b7280" />
+        <Text className="text-base text-gray-600">Cargando jugadores...</Text>
+      </View>
+    )
   }
 
   if (isError || !jugadores) {
-    return <Text className="text-base text-center p-5">Error al cargar los jugadores.</Text>
+    return (
+      <View className="flex-1 bg-[#f8f8f8] items-center justify-center p-5">
+        <Text className="text-base text-center text-gray-600">Error al cargar los jugadores.</Text>
+      </View>
+    )
+  }
+
+  if (jugadores.length === 0) {
+    return (
+      <ScrollView
+        className="flex-1 bg-[#f8f8f8]"
+        contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />
+        }
+      >
+        <Text className="text-base text-center text-gray-600">
+          No hay jugadores activos en este equipo.
+        </Text>
+      </ScrollView>
+    )
   }
 
   const obtenerAñoCompleto = (fechaNacimiento: Date) => {
@@ -162,7 +202,13 @@ export default function MisJugadoresScreen() {
           ))}
         </ScrollView>
       </View>
-      <ScrollView ref={scrollViewRef} className="flex-1">
+      <ScrollView
+        ref={scrollViewRef}
+        className="flex-1"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />
+        }
+      >
         <View className="p-2.5">
           {categorias.map((año) => (
             <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>

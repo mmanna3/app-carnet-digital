@@ -58,9 +58,7 @@ export default function PasoFotosDni() {
 
       const resultado = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.back,
-        allowsEditing: true,
-        aspect: [16, 9],
-        quality: 0.8,
+        allowsEditing: false,
         base64: true,
       })
       if (!resultado.canceled) {
@@ -81,6 +79,7 @@ export default function PasoFotosDni() {
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
       base64: true,
     })
     if (!resultado.canceled) {

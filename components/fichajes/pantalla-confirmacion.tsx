@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
+import { getColorLiga600 } from '@/lib/config/liga'
 
 interface Props {
   mensaje: string
@@ -43,7 +44,7 @@ export default function PantallaConfirmacion({ mensaje, onVolverInicio, onFichar
           activeOpacity={0.85}
           className="w-full border-2 border-liga-600 rounded-2xl py-3 px-6 mt-3 flex-row items-center justify-center gap-2"
         >
-          <Feather name="user-plus" size={20} />
+          <Feather name="user-plus" size={20} color={getColorLiga600()} />
           <Text className="text-liga-600 font-semibold">Fichar otro jugador</Text>
         </TouchableOpacity>
       )}

@@ -1,26 +1,36 @@
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
-import { Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons'
 import { useRouter, usePathname } from 'expo-router'
 import Constants from 'expo-constants'
+import { useQueryClient } from '@tanstack/react-query'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
 import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
+import { queryKeys } from '@/lib/api/query-keys'
 
 export default function HeaderMenu() {
   const router = useRouter()
   const pathname = usePathname()
+  const queryClient = useQueryClient()
   const { logout } = useAuth()
-  const { limpiarEquipoSeleccionado } = useEquipoStore()
+  const { equipoSeleccionadoId, limpiarEquipoSeleccionado } = useEquipoStore()
   const { limpiarLiga } = useLigaStore()
   const { modoSeleccion, activar, desactivar } = useSeleccionJugadores()
   const { resetear } = useFichajeStore()
 
   const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
+
+  const handleActualizar = () => {
+    if (equipoSeleccionadoId) {
+      queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId) })
+    }
+  }
 
   const handleCambiarEquipo = () => {
     router.push('/seleccion-de-equipo')
@@ -89,6 +99,11 @@ export default function HeaderMenu() {
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
+          <MenuItem
+            icon="refresh-cw"
+            label="Actualizar"
+            onSelect={handleActualizar}
+          />
           <MenuItem
             icon={modoSeleccion ? 'check-square' : 'list'}
             label={modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
