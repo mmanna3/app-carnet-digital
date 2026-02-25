@@ -25,7 +25,8 @@ export default function LoginScreen() {
       const respuesta = await login(username, password)
 
       if (respuesta.exito) {
-        router.push('/seleccion-de-equipo')
+        // No navegar: useProtectedRoute en _layout.tsx redirige automáticamente
+        // cuando isAuthenticated pasa a true (evita duplicar pantalla en iOS)
       } else {
         if (respuesta.error === 'El usuario debe cambiar la contraseña') {
           router.push({

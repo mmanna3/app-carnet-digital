@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, TextInput, Text } from 'react-native'
-import { useRouter, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { api } from '@/app/api/api'
 import { CambiarPasswordDTO } from '@/app/api/clients'
 import { useAuth } from '@/app/hooks/use-auth'
@@ -13,7 +13,6 @@ export default function CambiarPasswordScreen() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
   const { setAuthState } = useAuth()
 
   const handleSubmit = async () => {
@@ -39,7 +38,7 @@ export default function CambiarPasswordScreen() {
 
       if (response.exito) {
         setAuthState(response.token!, usuario)
-        router.push('/seleccion-de-equipo')
+        // No navegar: useProtectedRoute en _layout.tsx redirige automáticamente
       } else {
         setError(response.error || 'Hubo un error al cambiar la contraseña')
       }

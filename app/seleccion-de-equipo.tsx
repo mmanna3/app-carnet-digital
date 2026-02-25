@@ -42,7 +42,7 @@ export default function TeamSelectionScreen() {
   const renderItem = ({ item }: { item: EquipoBaseDTO }) => (
     <TouchableOpacity
       onPress={() => handleTeamSelect(item)}
-      className="bg-white px-5 py-8 my-2 rounded-xl shadow-lg"
+      className="bg-white px-5 py-8 my-2 rounded-xl shadow-sm"
     >
       <Text className="text-lg font-bold">{item.nombre}</Text>
       {item.torneo ?
@@ -52,8 +52,8 @@ export default function TeamSelectionScreen() {
   )
 
   return (
-    <View className="flex-1 bg-[#f8f8f8] p-5 mt-12">
-      <Text className="text-2xl font-bold text-center mb-2.5">Seleccioná tu equipo</Text>
+    <View className="flex-1 bg-[#f8f8f8] p-5">
+      <Text className="text-2xl font-bold text-center mb-2.5 mt-12">Seleccioná tu equipo</Text>
       {data && (
         <FlatList
           data={data.equipos}
