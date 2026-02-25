@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Alert,
   Modal,
   View,
   Text,
@@ -9,6 +10,7 @@ import {
 } from 'react-native'
 import { CarnetDigitalDTO, EfectuarPaseDTO, EquipoBaseDTO } from '@/app/api/clients'
 import { api } from '@/app/api/api'
+import { parseApiError } from '@/app/utils/parse-api-error'
 import useApiQuery from '@/app/api/custom-hooks/use-api-query'
 import { useEquipoStore } from '@/app/hooks/use-equipo-store'
 
@@ -47,6 +49,8 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
       )
       setEquipoDestino(null)
       onTransferido()
+    } catch (err) {
+      Alert.alert('Error al transferir', parseApiError(err))
     } finally {
       setCargando(false)
     }

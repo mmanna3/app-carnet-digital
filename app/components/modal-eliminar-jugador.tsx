@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
-import { Modal, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import {
+  Alert,
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native'
 import { CarnetDigitalDTO } from '@/app/api/clients'
 import { api } from '@/app/api/api'
+import { parseApiError } from '@/app/utils/parse-api-error'
 
 interface Props {
   jugador: CarnetDigitalDTO | null
@@ -20,6 +28,8 @@ export default function ModalEliminarJugador({ jugador, onEliminado, onCerrar }:
     try {
       await api.jugadorDELETE(jugador.id)
       onEliminado()
+    } catch (err) {
+      Alert.alert('Error al eliminar', parseApiError(err))
     } finally {
       setCargando(false)
     }

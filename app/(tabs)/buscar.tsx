@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import { api } from '../api/api'
+import { parseApiError } from '@/app/utils/parse-api-error'
 import { CarnetDigitalDTO } from '@/app/api/clients'
 import Boton from '@/components/boton'
 import Carnet from '../components/carnet'
@@ -29,8 +30,8 @@ export default function BuscarScreen() {
       if (resultado.length === 0) {
         setError('No se encontraron jugadores para este equipo')
       }
-    } catch {
-      setError('Error al buscar jugadores. Verificá el código e intentá nuevamente.')
+    } catch (err) {
+      setError(parseApiError(err))
       setJugadores([])
     } finally {
       setIsLoading(false)
