@@ -38,7 +38,7 @@ export default function TabLayout() {
           tabBarActiveTintColor: colorLiga,
           tabBarInactiveTintColor: '#6b7280', // gray-500
           tabBarLabelStyle: { fontSize: 12 },
-          headerStyle: { backgroundColor: '#ffffff', height: 100 },
+          headerStyle: { backgroundColor: '#ffffff', height: 110 },
           headerTitleContainerStyle: { paddingVertical: 8 },
           headerTintColor: '#111827',
           headerTitleStyle: {
