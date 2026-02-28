@@ -58,6 +58,8 @@ export default function TabLayout() {
           },
           headerShown: useClientOnlyValue(false, true),
           headerRight: () => <HeaderMenu />,
+          headerRightContainerStyle: { paddingRight: 4 },
+          headerLeftContainerStyle: { paddingRight: 4 },
         }}
       >
         <Tabs.Screen
