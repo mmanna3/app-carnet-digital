@@ -68,14 +68,16 @@ export default function HeaderMenu() {
     label,
     onSelect,
     destructive,
+    testID,
   }: {
     icon: React.ComponentProps<typeof Feather>['name']
     label: string
     onSelect: () => void
     destructive?: boolean
+    testID?: string
   }) => (
     <MenuOption onSelect={onSelect}>
-      <View className="flex-row items-center gap-3 px-6 py-3">
+      <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
         <Feather
           name={icon}
           size={20}
@@ -94,7 +96,7 @@ export default function HeaderMenu() {
     <View className="mr-2.5">
       <Menu>
         <MenuTrigger>
-          <View className="p-2">
+          <View testID="boton-menu-principal" className="p-2">
             <Entypo name="dots-three-vertical" size={24} color="#111827" />
           </View>
         </MenuTrigger>
@@ -119,6 +121,7 @@ export default function HeaderMenu() {
           <MenuItem
             icon="user-plus"
             label="Fichar jugadores"
+            testID="menu-item-fichar-jugadores"
             onSelect={() => router.push('/fichaje-delegado' as any)}
           />
           <View className="h-px bg-gray-200 my-2 mx-4" />

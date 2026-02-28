@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
+  type LayoutChangeEvent,
 } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
 import CabeceraDelegado from '../cabecera-delegado'
@@ -96,6 +98,29 @@ export default function PasoDatosDelegado() {
     celular: null,
   })
 
+  const scrollViewRef = useRef<ScrollView>(null)
+  const formTopRef = useRef(0)
+  const fieldOffsets = useRef<Record<string, number>>({})
+
+  const handleFieldLayout = useCallback((fieldKey: string) => (e: LayoutChangeEvent) => {
+    const { y } = e.nativeEvent.layout
+    fieldOffsets.current[fieldKey] = y
+  }, [])
+
+  const scrollToField = useCallback((fieldKey: string) => {
+    const fieldY = fieldOffsets.current[fieldKey]
+    if (fieldY === undefined) return
+    const totalY = formTopRef.current + fieldY
+    const targetY = Math.max(0, totalY - 80)
+    // Pequeño delay para que el scroll ocurra después de que el teclado empiece a aparecer
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({
+        y: targetY,
+        animated: true,
+      })
+    }, 100)
+  }, [])
+
   const actualizarError = (campo: keyof ErroresCampos, mensaje: string | null) => {
     setErrores((prev) => ({ ...prev, [campo]: mensaje }))
   }
@@ -127,9 +152,11 @@ export default function PasoDatosDelegado() {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView
+          ref={scrollViewRef}
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: 24, paddingBottom: 48 }}
           keyboardShouldPersistTaps="handled"
@@ -146,44 +173,57 @@ export default function PasoDatosDelegado() {
             )}
           </View>
 
-          <View className="gap-3">
-            <CampoTexto
-              inputTestID="input-nombre-delegado"
-              label="Nombre"
-              placeholder="Ingresá tu nombre"
-              value={nombre}
-              onChangeText={(v) => setNombre(capitalizar(v))}
-              error={errores.nombre ?? undefined}
-              onBlur={() => actualizarError('nombre', validarNombre(nombre))}
-            />
-            <CampoTexto
-              inputTestID="input-apellido-delegado"
-              label="Apellido"
-              placeholder="Ingresá tu apellido"
-              value={apellido}
-              onChangeText={(v) => setApellido(capitalizar(v))}
-              error={errores.apellido ?? undefined}
-              onBlur={() => actualizarError('apellido', validarApellido(apellido))}
-            />
-            <CampoTexto
-              inputTestID="input-dni-delegado"
-              label="DNI"
-              placeholder="Ingresá tu DNI (7-9 dígitos)"
-              value={dni}
-              onChangeText={(v) => {
-                setDni(v.replace(/[^0-9]/g, '').slice(0, 9))
-                setError(null)
-              }}
-              onBlur={() => actualizarError('dni', validarDni(dni))}
-              error={errores.dni ?? undefined}
-              keyboardType="numeric"
-            />
+          <View
+            className="gap-3"
+            onLayout={(e) => { formTopRef.current = e.nativeEvent.layout.y }}
+          >
+            <View onLayout={handleFieldLayout('nombre')}>
+              <CampoTexto
+                inputTestID="input-nombre-delegado"
+                label="Nombre"
+                placeholder="Ingresá tu nombre"
+                value={nombre}
+                onChangeText={(v) => setNombre(capitalizar(v))}
+                error={errores.nombre ?? undefined}
+                onBlur={() => actualizarError('nombre', validarNombre(nombre))}
+                onFocus={() => scrollToField('nombre')}
+              />
+            </View>
+            <View onLayout={handleFieldLayout('apellido')}>
+              <CampoTexto
+                inputTestID="input-apellido-delegado"
+                label="Apellido"
+                placeholder="Ingresá tu apellido"
+                value={apellido}
+                onChangeText={(v) => setApellido(capitalizar(v))}
+                error={errores.apellido ?? undefined}
+                onBlur={() => actualizarError('apellido', validarApellido(apellido))}
+                onFocus={() => scrollToField('apellido')}
+              />
+            </View>
+            <View onLayout={handleFieldLayout('dni')}>
+              <CampoTexto
+                inputTestID="input-dni-delegado"
+                label="DNI"
+                placeholder="Ingresá tu DNI (7-9 dígitos)"
+                value={dni}
+                onChangeText={(v) => {
+                  setDni(v.replace(/[^0-9]/g, '').slice(0, 9))
+                  setError(null)
+                }}
+                onBlur={() => actualizarError('dni', validarDni(dni))}
+                error={errores.dni ?? undefined}
+                keyboardType="numeric"
+                onFocus={() => scrollToField('dni')}
+              />
+            </View>
 
-            <View>
+            <View onLayout={handleFieldLayout('fecha')}>
               <Text className="text-gray-700 text-sm mb-1.5">Fecha de nacimiento</Text>
               <TouchableOpacity
                 testID="input-fecha-nacimiento-delegado"
                 onPress={() => {
+                  Keyboard.dismiss()
                   fechaSeleccionadaEnModal.current = fechaNac
                   setMostrarPicker(true)
                 }}
@@ -200,27 +240,33 @@ export default function PasoDatosDelegado() {
               ) : null}
             </View>
 
-            <CampoTexto
-              inputTestID="input-email-delegado"
-              label="Email"
-              placeholder="ejemplo@correo.com"
-              value={email}
-              onChangeText={(v) => setEmail(v.trim())}
-              onBlur={() => actualizarError('email', validarEmail(email))}
-              error={errores.email ?? undefined}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            <CampoTexto
-              inputTestID="input-celular-delegado"
-              label="Celular"
-              placeholder="Ingresá tu número de celular"
-              value={celular}
-              onChangeText={(v) => setCelular(v.replace(/[^0-9]/g, ''))}
-              onBlur={() => actualizarError('celular', validarCelular(celular))}
-              error={errores.celular ?? undefined}
-              keyboardType="numeric"
-            />
+            <View onLayout={handleFieldLayout('email')}>
+              <CampoTexto
+                inputTestID="input-email-delegado"
+                label="Email"
+                placeholder="ejemplo@correo.com"
+                value={email}
+                onChangeText={(v) => setEmail(v.trim())}
+                onBlur={() => actualizarError('email', validarEmail(email))}
+                error={errores.email ?? undefined}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onFocus={() => scrollToField('email')}
+              />
+            </View>
+            <View onLayout={handleFieldLayout('celular')}>
+              <CampoTexto
+                inputTestID="input-celular-delegado"
+                label="Celular"
+                placeholder="Ingresá tu número de celular"
+                value={celular}
+                onChangeText={(v) => setCelular(v.replace(/[^0-9]/g, ''))}
+                onBlur={() => actualizarError('celular', validarCelular(celular))}
+                error={errores.celular ?? undefined}
+                keyboardType="numeric"
+                onFocus={() => scrollToField('celular')}
+              />
+            </View>
 
             {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
 
@@ -239,6 +285,7 @@ export default function PasoDatosDelegado() {
         visible={mostrarPicker}
         value={fechaNac}
         onClose={() => {
+          Keyboard.dismiss()
           setMostrarPicker(false)
           const fechaActual = fechaSeleccionadaEnModal.current ?? fechaNac
           actualizarError(
