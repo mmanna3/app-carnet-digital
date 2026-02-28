@@ -85,6 +85,13 @@ export default function LoginScreen() {
           deshabilitado={loading}
           cargando={loading}
         />
+
+        <TouchableOpacity
+          onPress={() => router.push('/registro-delegado' as any)}
+          className="mt-6"
+        >
+          <Text className="text-center text-gray-500 text-sm underline">No estoy registrado</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )

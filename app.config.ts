@@ -111,6 +111,12 @@ export default (): ExpoConfig => ({
         imageWidth: 200,
       },
     ],
+    [
+      'expo-build-properties',
+      {
+        android: { usesCleartextTraffic: true },
+      },
+    ],
   ],
   experiments: { typedRoutes: true },
   extra: {

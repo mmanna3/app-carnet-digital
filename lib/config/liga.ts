@@ -42,7 +42,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
       ? {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
-          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.69:5072' : liga.apiUrl),
+          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.70:5072' : liga.apiUrl),
           colorBase: liga.colorBase,
         }
       : null
@@ -51,7 +51,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
   return {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
-    apiUrl: E2E_API_URL ?? (__DEV__ ? 'https://admin.edefi.com.ar' : (extra.apiUrl ?? '')),
+    apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.70:5072' : (extra.apiUrl ?? '')),
     colorBase: extra.colorBase,
   }
 }

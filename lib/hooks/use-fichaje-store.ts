@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { FicharEnOtroEquipoDTO, JugadorDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
+import { getConfigLiga } from '@/lib/config/liga'
 
 export type FlujoFichaje = 'intro' | 'nuevo' | 'yaFichado'
 
@@ -124,6 +125,10 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
 
   validarCodigoEquipo: async () => {
     const { codigoEquipo } = get()
+    const config = getConfigLiga()
+    const apiUrl = config?.apiUrl ?? '(sin config)'
+    const urlCompleta = `${apiUrl}/api/publico/obtener-nombre-equipo?codigoAlfanumerico=${encodeURIComponent(codigoEquipo)}`
+    console.log('[E2E debug] Validar código → apiUrl:', apiUrl, '| URL completa:', urlCompleta)
     try {
       const res = await api.obtenerNombreEquipo(codigoEquipo)
       if (res.hayError) {

@@ -54,13 +54,14 @@ function useProtectedRoute(loaded: boolean) {
     const inSeleccionLiga = (segments[0] as string) === 'seleccion-de-liga'
     const inHome = (segments[0] as string) === 'home'
     const inFichajes = (segments[0] as string) === 'fichajes'
+    const inRegistroDelegado = (segments[0] as string) === 'registro-delegado'
     if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
       router.replace('/seleccion-de-liga' as any)
       return
     }
 
-    // No autenticado: Home (UNILIGA o MULTILIGA con liga elegida), (auth) o seleccion-de-liga
-    if (!isAuthenticated && !inAuthGroup && !inSeleccionLiga && !inHome && !inFichajes) {
+    // No autenticado: Home (UNILIGA o MULTILIGA con liga elegida), (auth), seleccion-de-liga, fichajes o registro-delegado
+    if (!isAuthenticated && !inAuthGroup && !inSeleccionLiga && !inHome && !inFichajes && !inRegistroDelegado) {
       router.replace('/home' as any)
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/seleccion-de-equipo')
@@ -119,6 +120,7 @@ export default function RootLayout() {
           <Stack>
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="fichajes" options={{ headerShown: false }} />
+          <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen
             name="(tabs)"

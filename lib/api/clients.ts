@@ -454,6 +454,135 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    delegadoPOST(body: DelegadoDTO | undefined): Promise<DelegadoDTO> {
+        let url_ = this.baseUrl + "/api/Delegado";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoPOST(_response);
+        });
+    }
+
+    protected processDelegadoPOST(response: Response): Promise<DelegadoDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DelegadoDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DelegadoDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    delegadoAll(): Promise<DelegadoDTO[]> {
+        let url_ = this.baseUrl + "/api/Delegado";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoAll(_response);
+        });
+    }
+
+    protected processDelegadoAll(response: Response): Promise<DelegadoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DelegadoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DelegadoDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    aprobar(body: AprobarDelegadoDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Delegado/aprobar";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAprobar(_response);
+        });
+    }
+
+    protected processAprobar(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -494,6 +623,49 @@ export class Client {
             });
         }
         return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    ficharDelegadoSoloConDniYClub(body: FicharDelegadoSoloConDniYClubDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Delegado/fichar-delegado-solo-con-dni-y-club";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFicharDelegadoSoloConDniYClub(_response);
+        });
+    }
+
+    protected processFicharDelegadoSoloConDniYClub(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
     }
 
     /**
@@ -616,92 +788,6 @@ export class Client {
             });
         }
         return Promise.resolve<void>(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    delegadoAll(): Promise<DelegadoDTO[]> {
-        let url_ = this.baseUrl + "/api/Delegado";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "text/plain"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDelegadoAll(_response);
-        });
-    }
-
-    protected processDelegadoAll(response: Response): Promise<DelegadoDTO[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(DelegadoDTO.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<DelegadoDTO[]>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return OK
-     */
-    delegadoPOST(body: DelegadoDTO | undefined): Promise<DelegadoDTO> {
-        let url_ = this.baseUrl + "/api/Delegado";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: RequestInit = {
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDelegadoPOST(_response);
-        });
-    }
-
-    protected processDelegadoPOST(response: Response): Promise<DelegadoDTO> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DelegadoDTO.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<DelegadoDTO>(null as any);
     }
 
     /**
@@ -1558,6 +1644,138 @@ export class Client {
     }
 
     /**
+     * @param codigoAlfanumerico (optional) 
+     * @return OK
+     */
+    obtenerClub(codigoAlfanumerico: string | undefined): Promise<ObtenerClubDTO> {
+        let url_ = this.baseUrl + "/api/publico/obtener-club?";
+        if (codigoAlfanumerico === null)
+            throw new Error("The parameter 'codigoAlfanumerico' cannot be null.");
+        else if (codigoAlfanumerico !== undefined)
+            url_ += "codigoAlfanumerico=" + encodeURIComponent("" + codigoAlfanumerico) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processObtenerClub(_response);
+        });
+    }
+
+    protected processObtenerClub(response: Response): Promise<ObtenerClubDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ObtenerClubDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ObtenerClubDTO>(null as any);
+    }
+
+    /**
+     * @param nombre (optional) 
+     * @param apellido (optional) 
+     * @return OK
+     */
+    obtenerNombreUsuarioDisponible(nombre: string | undefined, apellido: string | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/publico/obtener-nombre-usuario-disponible?";
+        if (nombre === null)
+            throw new Error("The parameter 'nombre' cannot be null.");
+        else if (nombre !== undefined)
+            url_ += "nombre=" + encodeURIComponent("" + nombre) + "&";
+        if (apellido === null)
+            throw new Error("The parameter 'apellido' cannot be null.");
+        else if (apellido !== undefined)
+            url_ += "apellido=" + encodeURIComponent("" + apellido) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processObtenerNombreUsuarioDisponible(_response);
+        });
+    }
+
+    protected processObtenerNombreUsuarioDisponible(response: Response): Promise<string> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(null as any);
+    }
+
+    /**
+     * @param dni (optional) 
+     * @return OK
+     */
+    obtenerNombreUsuarioPorDni(dni: string | undefined): Promise<ObtenerNombreUsuarioPorDniDTO> {
+        let url_ = this.baseUrl + "/api/publico/obtener-nombre-usuario-por-dni?";
+        if (dni === null)
+            throw new Error("The parameter 'dni' cannot be null.");
+        else if (dni !== undefined)
+            url_ += "dni=" + encodeURIComponent("" + dni) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processObtenerNombreUsuarioPorDni(_response);
+        });
+    }
+
+    protected processObtenerNombreUsuarioPorDni(response: Response): Promise<ObtenerNombreUsuarioPorDniDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ObtenerNombreUsuarioPorDniDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ObtenerNombreUsuarioPorDniDTO>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -1820,6 +2038,42 @@ export class Client {
         }
         return Promise.resolve<void>(null as any);
     }
+}
+
+export class AprobarDelegadoDTO implements IAprobarDelegadoDTO {
+    id?: number;
+
+    constructor(data?: IAprobarDelegadoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): AprobarDelegadoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new AprobarDelegadoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface IAprobarDelegadoDTO {
+    id?: number;
 }
 
 export class AprobarJugadorDTO implements IAprobarJugadorDTO {
@@ -2168,11 +2422,22 @@ export interface IClubDTO {
 
 export class DelegadoDTO implements IDelegadoDTO {
     id?: number;
-    nombre!: string | undefined;
-    apellido!: string | undefined;
+    dni!: string;
+    nombre!: string;
+    apellido!: string;
+    fechaNacimiento!: Date;
+    telefonoCelular?: string | undefined;
+    email?: string | undefined;
     nombreUsuario?: string | undefined;
+    fotoCarnet!: string;
+    fotoDNIFrente!: string;
+    fotoDNIDorso!: string;
     blanqueoPendiente?: boolean;
     clubId!: number;
+    estadoDelegado?: EstadoDelegadoDTO;
+    clubNombre?: string | undefined;
+    equiposDelClub?: string[] | undefined;
+    jugadorId?: number | undefined;
 
     constructor(data?: IDelegadoDTO) {
         if (data) {
@@ -2186,11 +2451,26 @@ export class DelegadoDTO implements IDelegadoDTO {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.dni = _data["dni"];
             this.nombre = _data["nombre"];
             this.apellido = _data["apellido"];
+            this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
+            this.telefonoCelular = _data["telefonoCelular"];
+            this.email = _data["email"];
             this.nombreUsuario = _data["nombreUsuario"];
+            this.fotoCarnet = _data["fotoCarnet"];
+            this.fotoDNIFrente = _data["fotoDNIFrente"];
+            this.fotoDNIDorso = _data["fotoDNIDorso"];
             this.blanqueoPendiente = _data["blanqueoPendiente"];
             this.clubId = _data["clubId"];
+            this.estadoDelegado = _data["estadoDelegado"] ? EstadoDelegadoDTO.fromJS(_data["estadoDelegado"]) : <any>undefined;
+            this.clubNombre = _data["clubNombre"];
+            if (Array.isArray(_data["equiposDelClub"])) {
+                this.equiposDelClub = [] as any;
+                for (let item of _data["equiposDelClub"])
+                    this.equiposDelClub!.push(item);
+            }
+            this.jugadorId = _data["jugadorId"];
         }
     }
 
@@ -2204,22 +2484,48 @@ export class DelegadoDTO implements IDelegadoDTO {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["dni"] = this.dni;
         data["nombre"] = this.nombre;
         data["apellido"] = this.apellido;
+        data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
+        data["telefonoCelular"] = this.telefonoCelular;
+        data["email"] = this.email;
         data["nombreUsuario"] = this.nombreUsuario;
+        data["fotoCarnet"] = this.fotoCarnet;
+        data["fotoDNIFrente"] = this.fotoDNIFrente;
+        data["fotoDNIDorso"] = this.fotoDNIDorso;
         data["blanqueoPendiente"] = this.blanqueoPendiente;
         data["clubId"] = this.clubId;
+        data["estadoDelegado"] = this.estadoDelegado ? this.estadoDelegado.toJSON() : <any>undefined;
+        data["clubNombre"] = this.clubNombre;
+        if (Array.isArray(this.equiposDelClub)) {
+            data["equiposDelClub"] = [];
+            for (let item of this.equiposDelClub)
+                data["equiposDelClub"].push(item);
+        }
+        data["jugadorId"] = this.jugadorId;
         return data;
     }
 }
 
 export interface IDelegadoDTO {
     id?: number;
-    nombre: string | undefined;
-    apellido: string | undefined;
+    dni: string;
+    nombre: string;
+    apellido: string;
+    fechaNacimiento: Date;
+    telefonoCelular?: string | undefined;
+    email?: string | undefined;
     nombreUsuario?: string | undefined;
+    fotoCarnet: string;
+    fotoDNIFrente: string;
+    fotoDNIDorso: string;
     blanqueoPendiente?: boolean;
     clubId: number;
+    estadoDelegado?: EstadoDelegadoDTO;
+    clubNombre?: string | undefined;
+    equiposDelClub?: string[] | undefined;
+    jugadorId?: number | undefined;
 }
 
 export class DesvincularJugadorDelEquipoDTO implements IDesvincularJugadorDelEquipoDTO {
@@ -2534,6 +2840,46 @@ export interface IEquiposDelDelegadoDTO {
     equipos?: EquipoBaseDTO[] | undefined;
 }
 
+export class EstadoDelegadoDTO implements IEstadoDelegadoDTO {
+    id?: number;
+    estado!: string;
+
+    constructor(data?: IEstadoDelegadoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.estado = _data["estado"];
+        }
+    }
+
+    static fromJS(data: any): EstadoDelegadoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EstadoDelegadoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["estado"] = this.estado;
+        return data;
+    }
+}
+
+export interface IEstadoDelegadoDTO {
+    id?: number;
+    estado: string;
+}
+
 export enum EstadoJugadorEnum {
     _1 = 1,
     _2 = 2,
@@ -2541,6 +2887,58 @@ export enum EstadoJugadorEnum {
     _4 = 4,
     _5 = 5,
     _6 = 6,
+}
+
+export class FicharDelegadoSoloConDniYClubDTO implements IFicharDelegadoSoloConDniYClubDTO {
+    id?: number;
+    dni!: string;
+    clubId!: number;
+    email?: string | undefined;
+    telefonoCelular?: string | undefined;
+
+    constructor(data?: IFicharDelegadoSoloConDniYClubDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dni = _data["dni"];
+            this.clubId = _data["clubId"];
+            this.email = _data["email"];
+            this.telefonoCelular = _data["telefonoCelular"];
+        }
+    }
+
+    static fromJS(data: any): FicharDelegadoSoloConDniYClubDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FicharDelegadoSoloConDniYClubDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dni"] = this.dni;
+        data["clubId"] = this.clubId;
+        data["email"] = this.email;
+        data["telefonoCelular"] = this.telefonoCelular;
+        return data;
+    }
+}
+
+export interface IFicharDelegadoSoloConDniYClubDTO {
+    id?: number;
+    dni: string;
+    clubId: number;
+    email?: string | undefined;
+    telefonoCelular?: string | undefined;
 }
 
 export class FicharEnOtroEquipoDTO implements IFicharEnOtroEquipoDTO {
@@ -2595,10 +2993,11 @@ export class JugadorDTO implements IJugadorDTO {
     fechaNacimiento!: Date;
     equipoInicialId?: number;
     codigoAlfanumerico?: string | undefined;
+    delegadoId?: number | undefined;
     equipos?: EquipoDelJugadorDTO[] | undefined;
-    fotoCarnet?: string | undefined;
-    fotoDNIFrente?: string | undefined;
-    fotoDNIDorso?: string | undefined;
+    fotoCarnet!: string;
+    fotoDNIFrente!: string;
+    fotoDNIDorso!: string;
 
     constructor(data?: IJugadorDTO) {
         if (data) {
@@ -2618,6 +3017,7 @@ export class JugadorDTO implements IJugadorDTO {
             this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
             this.equipoInicialId = _data["equipoInicialId"];
             this.codigoAlfanumerico = _data["codigoAlfanumerico"];
+            this.delegadoId = _data["delegadoId"];
             if (Array.isArray(_data["equipos"])) {
                 this.equipos = [] as any;
                 for (let item of _data["equipos"])
@@ -2645,6 +3045,7 @@ export class JugadorDTO implements IJugadorDTO {
         data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
         data["equipoInicialId"] = this.equipoInicialId;
         data["codigoAlfanumerico"] = this.codigoAlfanumerico;
+        data["delegadoId"] = this.delegadoId;
         if (Array.isArray(this.equipos)) {
             data["equipos"] = [];
             for (let item of this.equipos)
@@ -2665,10 +3066,11 @@ export interface IJugadorDTO {
     fechaNacimiento: Date;
     equipoInicialId?: number;
     codigoAlfanumerico?: string | undefined;
+    delegadoId?: number | undefined;
     equipos?: EquipoDelJugadorDTO[] | undefined;
-    fotoCarnet?: string | undefined;
-    fotoDNIFrente?: string | undefined;
-    fotoDNIDorso?: string | undefined;
+    fotoCarnet: string;
+    fotoDNIFrente: string;
+    fotoDNIDorso: string;
 }
 
 export class JugadorDelEquipoDTO implements IJugadorDelEquipoDTO {
@@ -2815,6 +3217,54 @@ export interface ILoginResponseDTO {
     error?: string | undefined;
 }
 
+export class ObtenerClubDTO implements IObtenerClubDTO {
+    hayError?: boolean;
+    mensajeError?: string | undefined;
+    clubId?: number | undefined;
+    clubNombre?: string | undefined;
+
+    constructor(data?: IObtenerClubDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hayError = _data["hayError"];
+            this.mensajeError = _data["mensajeError"];
+            this.clubId = _data["clubId"];
+            this.clubNombre = _data["clubNombre"];
+        }
+    }
+
+    static fromJS(data: any): ObtenerClubDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObtenerClubDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hayError"] = this.hayError;
+        data["mensajeError"] = this.mensajeError;
+        data["clubId"] = this.clubId;
+        data["clubNombre"] = this.clubNombre;
+        return data;
+    }
+}
+
+export interface IObtenerClubDTO {
+    hayError?: boolean;
+    mensajeError?: string | undefined;
+    clubId?: number | undefined;
+    clubNombre?: string | undefined;
+}
+
 export class ObtenerNombreEquipoDTO implements IObtenerNombreEquipoDTO {
     readonly hayError?: boolean;
     readonly mensajeError?: string | undefined;
@@ -2857,6 +3307,50 @@ export interface IObtenerNombreEquipoDTO {
     hayError?: boolean;
     mensajeError?: string | undefined;
     respuesta?: string | undefined;
+}
+
+export class ObtenerNombreUsuarioPorDniDTO implements IObtenerNombreUsuarioPorDniDTO {
+    hayError?: boolean;
+    mensajeError?: string | undefined;
+    nombreUsuario?: string | undefined;
+
+    constructor(data?: IObtenerNombreUsuarioPorDniDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hayError = _data["hayError"];
+            this.mensajeError = _data["mensajeError"];
+            this.nombreUsuario = _data["nombreUsuario"];
+        }
+    }
+
+    static fromJS(data: any): ObtenerNombreUsuarioPorDniDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObtenerNombreUsuarioPorDniDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hayError"] = this.hayError;
+        data["mensajeError"] = this.mensajeError;
+        data["nombreUsuario"] = this.nombreUsuario;
+        return data;
+    }
+}
+
+export interface IObtenerNombreUsuarioPorDniDTO {
+    hayError?: boolean;
+    mensajeError?: string | undefined;
+    nombreUsuario?: string | undefined;
 }
 
 export class RechazarJugadorDTO implements IRechazarJugadorDTO {
