@@ -33,6 +33,7 @@ export default function Carnet({
 
   return (
     <Pressable
+      testID="carnet-jugador"
       onPress={modoSeleccion ? onPress : undefined}
       onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}

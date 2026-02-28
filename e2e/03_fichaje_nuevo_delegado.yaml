@@ -1,47 +1,57 @@
 appId: com.blueservant.edefi
 ---
-# Flujo completo "nuevo jugador": home → intro → código → datos → foto → fotos DNI → autorización → confirmación
+# Flujo completo "nuevo delegado" (azul): login → No estoy registrado → intro →
+# código club → datos → foto → fotos DNI → confirmación → completado
 #
-# Nota E2E: usa addMedia para foto-e2e.jpg en galería; el test interactúa con date picker y
-# selectores de imagen como lo haría un usuario real.
+# DNI 12345678: el mock devuelve false en el-dni-esta-fichado → validarDniNuevo pasa OK.
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
 - tapOn:
-    id: 'card-fichaje'
-# PantallaIntro
+    id: 'card-delegados'
+# PantallaLogin
 - assertVisible:
-    id: 'card-nuevo'
+    id: 'pantalla-login'
 - tapOn:
-    id: 'card-nuevo'
-# PasoCodigoEquipo (paso 1 de 5)
+    id: 'boton-no-registrado'
+# PantallaIntroDelegado
 - assertVisible:
-    id: 'paso-codigo-equipo'
+    id: 'pantalla-intro-delegado'
 - tapOn:
-    id: 'input-codigo-equipo'
+    id: 'card-nuevo-delegado'
+# PasoCodigoClub (paso 1 de 5)
+- assertVisible:
+    id: 'paso-codigo-club'
+- tapOn:
+    id: 'input-codigo-club'
 - inputText: 'ABC1234'
 - tapOn:
-    id: 'titulo-codigo-equipo'
+    id: 'titulo-codigo-club'
 - extendedWaitUntil:
     visible:
-      id: 'boton-validar'
+      id: 'boton-validar-club'
       enabled: true
 - tapOn:
-    id: 'boton-validar'
-# PasoDatosJugador (paso 2 de 5) — fecha de nacimiento vía date picker
+    id: 'boton-validar-club'
+# PasoDatosDelegado (paso 2 de 5)
 - assertVisible:
-    id: 'paso-datos-jugador'
+    id: 'paso-datos-delegado'
 - tapOn:
-    id: 'input-nombre'
+    id: 'input-nombre-delegado'
 - inputText: 'Juan'
 - tapOn:
-    id: 'input-apellido'
+    id: 'input-apellido-delegado'
 - inputText: 'Perez'
 - tapOn:
-    id: 'input-dni-jugador'
+    id: 'input-dni-delegado'
 - inputText: '12345678'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
 - tapOn:
-    id: 'input-fecha-nacimiento'
+    id: 'input-fecha-nacimiento-delegado'
 # Confirmar fecha: iOS usa botón "Listo", Android usa "OK" del picker nativo
 - runFlow:
     when:
@@ -59,17 +69,33 @@ appId: com.blueservant.edefi
       - tapOn:
           text: 'Aceptar'
           optional: true
+- tapOn:
+    id: 'input-email-delegado'
+- inputText: 'juan.perez@ejemplo.com'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- tapOn:
+    id: 'input-celular-delegado'
+- inputText: '1123456789'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
 - extendedWaitUntil:
     visible:
-      id: 'boton-continuar'
+      id: 'boton-continuar-datos'
       enabled: true
 - tapOn:
-    id: 'boton-continuar'
-# PasoFoto (paso 3 de 5) — seleccionar foto desde galería
+    id: 'boton-continuar-datos'
+# PasoFotoDelegado (paso 3 de 5) — seleccionar foto desde galería
 - assertVisible:
-    id: 'paso-foto'
+    id: 'paso-foto-delegado'
 - tapOn:
-    id: 'boton-seleccionar-foto'
+    id: 'boton-seleccionar-foto-delegado'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -97,15 +123,15 @@ appId: com.blueservant.edefi
           text: 'CROP'
 - extendedWaitUntil:
     visible:
-      id: 'boton-subir-foto'
+      id: 'boton-subir-foto-delegado'
       enabled: true
 - tapOn:
-    id: 'boton-subir-foto'
-# PasoFotosDni (paso 4 de 5) — frente y dorso desde galería
+    id: 'boton-subir-foto-delegado'
+# PasoFotosDniDelegado (paso 4 de 5) — frente y dorso desde galería
 - assertVisible:
-    id: 'paso-fotos-dni'
+    id: 'paso-fotos-dni-delegado'
 - tapOn:
-    id: 'boton-seleccionar-frente'
+    id: 'boton-seleccionar-frente-delegado'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -130,7 +156,7 @@ appId: com.blueservant.edefi
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
 - tapOn:
-    id: 'boton-seleccionar-dorso'
+    id: 'boton-seleccionar-dorso-delegado'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -156,15 +182,19 @@ appId: com.blueservant.edefi
           optional: true
 - extendedWaitUntil:
     visible:
-      id: 'boton-subir-dni'
+      id: 'boton-subir-dni-delegado'
       enabled: true
 - tapOn:
-    id: 'boton-subir-dni'
-# PasoAutorizacion (paso 5 de 5) → POST /api/Jugador al mock server
+    id: 'boton-subir-dni-delegado'
+# PasoConfirmacionDelegado (paso 5 de 5) → POST /api/Delegado al mock server
 - assertVisible:
-    id: 'paso-autorizacion'
+    id: 'paso-confirmacion-delegado'
+- extendedWaitUntil:
+    visible:
+      id: 'boton-enviar-delegado'
+      enabled: true
 - tapOn:
-    id: 'boton-enviar'
-# PantallaConfirmacion
+    id: 'boton-enviar-delegado'
+# PantallaCompletado
 - assertVisible:
-    id: 'pantalla-confirmacion'
+    id: 'pantalla-completado-delegado'

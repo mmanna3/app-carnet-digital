@@ -184,7 +184,7 @@ export default function MisJugadoresScreen() {
   const haySeleccionados = jugadoresSeleccionados.length > 0
 
   return (
-    <View className="flex-1 bg-[#f8f8f8]">
+    <View testID="pantalla-mis-jugadores" className="flex-1 bg-[#f8f8f8]">
       <View className="bg-white py-2.5 border-b border-gray-200 z-[1]">
         <ScrollView
           horizontal

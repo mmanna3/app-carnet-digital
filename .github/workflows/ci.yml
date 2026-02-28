@@ -36,7 +36,7 @@ jobs:
     name: E2E (Maestro)
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
@@ -70,47 +70,40 @@ jobs:
 
       - name: E2E con emulador Android
         uses: reactivecircus/android-emulator-runner@v2
-        env:
-          ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 10
         with:
-          api-level: 31
+          api-level: 30
           arch: x86_64
-          profile: pixel_7
+          profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
             export PATH="$PATH:$HOME/.maestro/bin"
 
+            # .env con URL del mock (10.0.2.2 = localhost del host desde el emulador)
+            # Expo lo lee durante export:embed para embeber la URL en el bundle de release
+            echo "EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001" > .env
+            echo "LIGA_ID=edefi" >> .env
+
             # Mock server en background
             node e2e/mock-server.js &
 
-            # Metro con URL del mock
-            EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi npx expo start --no-dev &
-            sleep 25
+            # Build APK release con la URL del mock embebida en el bundle
+            cd android
+            EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi ./gradlew assembleRelease --no-daemon
+            cd ..
 
-            # Build e instalar app
-            LIGA_ID=edefi npx expo run:android --no-bundler
-            sleep 15
+            # Instalar APK en el emulador
+            adb install -r android/app/build/outputs/apk/release/app-release.apk
 
-            # Ejecutar Maestro
-            maestro test e2e/ \
-              --format junit \
-              --output maestro-report.xml \
-              --test-output-dir build/maestro-results \
-              --flatten-debug-output
+            # Ejecutar Maestro (pretest:e2e inyecta las fotos via adb automáticamente)
+            npm run test:e2e
 
       - name: Subir reporte Maestro
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: maestro-e2e-report
-          path: maestro-report.xml
-          if-no-files-found: ignore
-
-      - name: Subir screenshots y debug de Maestro
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: maestro-results
-          path: build/maestro-results
+          path: |
+            e2e-report.html
+            e2e-debug/
           if-no-files-found: ignore

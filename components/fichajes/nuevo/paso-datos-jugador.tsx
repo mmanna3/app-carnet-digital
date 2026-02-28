@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
 } from 'react-native'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
@@ -67,7 +68,8 @@ export default function PasoDatosJugador() {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView
           style={{ flex: 1 }}
@@ -117,7 +119,10 @@ export default function PasoDatosJugador() {
               <Text className="text-gray-700 text-sm mb-1.5">Fecha de nacimiento</Text>
               <TouchableOpacity
                 testID="input-fecha-nacimiento"
-                onPress={() => setMostrarPicker(true)}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  setMostrarPicker(true)
+                }}
                 className="w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 border-gray-200"
               >
                 <Text className={fechaNac ? 'text-gray-900' : 'text-[#9ca3af]'}>
@@ -142,7 +147,10 @@ export default function PasoDatosJugador() {
       <ModalFechaNacimiento
         visible={mostrarPicker}
         value={fechaNac}
-        onClose={() => setMostrarPicker(false)}
+        onClose={() => {
+          Keyboard.dismiss()
+          setMostrarPicker(false)
+        }}
         onChange={setFechaNac}
       />
     </View>

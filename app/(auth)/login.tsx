@@ -47,7 +47,7 @@ export default function LoginScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white justify-center">
+    <View testID="pantalla-login" className="flex-1 bg-white justify-center">
       <TouchableOpacity onPress={() => router.back()} className="absolute top-12 left-5 z-10">
         <Text className="text-base text-liga-600">← Volver</Text>
       </TouchableOpacity>
@@ -59,6 +59,7 @@ export default function LoginScreen() {
 
         <View className="mb-3">
           <CampoTexto
+            inputTestID="input-usuario"
             placeholder="Usuario"
             value={username}
             onChangeText={setUsername}
@@ -69,6 +70,7 @@ export default function LoginScreen() {
 
         <View className="mb-3">
           <CampoTexto
+            inputTestID="input-password"
             placeholder="Contraseña"
             value={password}
             onChangeText={setPassword}
@@ -80,6 +82,7 @@ export default function LoginScreen() {
         {error ? <Text className="text-red-500 mb-2.5 text-center">{error}</Text> : null}
 
         <Boton
+          testID="boton-iniciar-sesion"
           texto={loading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
           onPress={handleLogin}
           deshabilitado={loading}
@@ -87,6 +90,7 @@ export default function LoginScreen() {
         />
 
         <TouchableOpacity
+          testID="boton-no-registrado"
           onPress={() => router.push('/registro-delegado' as any)}
           className="mt-6"
         >

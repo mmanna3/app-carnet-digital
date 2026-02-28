@@ -44,7 +44,7 @@ export default function PasoCodigoClub() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">
+          <Text testID="titulo-codigo-club" className="text-gray-900 text-lg font-semibold mb-1">
             Ingresá el código de cualquiera de los equipos de tu club
           </Text>
           <Text className="text-gray-500 text-sm">Si no lo tenés, pedíselo a la liga</Text>
