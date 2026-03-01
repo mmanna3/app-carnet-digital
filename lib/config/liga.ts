@@ -83,6 +83,14 @@ const COLOR_LIGA_200: Record<NonNullable<ConfigLigaRuntime['colorBase']>, string
   rojo: '#fecaca',
 }
 
+/** Hex del color liga (shade 700, equivalente a border-liga-700) */
+const COLOR_LIGA_700: Record<NonNullable<ConfigLigaRuntime['colorBase']>, string> = {
+  verde: '#15803d',
+  negro: '#374151',
+  azul: '#1d4ed8',
+  rojo: '#b91c1c',
+}
+
 export function getColorLiga600(): string {
   const base = getConfigLiga()?.colorBase ?? 'verde'
   return COLOR_LIGA_600[base] ?? COLOR_LIGA_600.verde
@@ -91,6 +99,11 @@ export function getColorLiga600(): string {
 export function getColorLiga200(): string {
   const base = getConfigLiga()?.colorBase ?? 'verde'
   return COLOR_LIGA_200[base] ?? COLOR_LIGA_200.verde
+}
+
+export function getColorLiga700(): string {
+  const base = getConfigLiga()?.colorBase ?? 'verde'
+  return COLOR_LIGA_700[base] ?? COLOR_LIGA_700.verde
 }
 
 /** @deprecated Usar getConfigLiga() o useConfigLiga(). Mantener por compatibilidad. */

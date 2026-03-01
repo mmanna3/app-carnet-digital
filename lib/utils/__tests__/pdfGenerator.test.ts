@@ -1,3 +1,8 @@
+jest.mock('../../config/liga', () => ({
+  getColorLiga600: () => '#16a34a',
+  getColorLiga700: () => '#15803d',
+}))
+
 jest.mock('expo-print', () => ({
   printToFileAsync: jest.fn().mockResolvedValue({ uri: 'file://carnets-generados.pdf' }),
 }))

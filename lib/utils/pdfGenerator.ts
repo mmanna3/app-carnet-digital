@@ -3,6 +3,7 @@ import * as Sharing from 'expo-sharing'
 import { Alert } from 'react-native'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
+import { getColorLiga600, getColorLiga700 } from '../config/liga'
 
 const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
   const estado = jugador.estado as EstadoJugador
@@ -36,7 +37,7 @@ const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
   `
 }
 
-const getPDFStyles = () => `
+const getPDFStyles = (colorLiga600: string, colorLiga700: string) => `
   * { print-color-adjust: exact !important; }
   @page {
     size: letter;
@@ -59,11 +60,11 @@ const getPDFStyles = () => `
   .header {
     text-align: center;
     padding: 24px;
-    background: linear-gradient(135deg, #1976D2, #2196F3);
+    background: linear-gradient(135deg, ${colorLiga700}, ${colorLiga600});
     color: white;
     margin-bottom: 24px;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
   .header h1 {
     margin: 0;
@@ -97,7 +98,7 @@ const getPDFStyles = () => `
     transition: transform 0.2s ease;
   }
   .carnet-header {
-    background: linear-gradient(135deg, #1976D2, #2196F3);
+    background: linear-gradient(135deg, ${colorLiga700}, ${colorLiga600});
     padding: 10px;
     text-align: center;
     color: white;
@@ -135,7 +136,7 @@ const getPDFStyles = () => `
     margin-bottom: 8px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(33, 150, 243, 0.1);
+    border: 2px solid ${colorLiga700};
   }
   .carnet-info {
     text-align: center;
@@ -151,13 +152,13 @@ const getPDFStyles = () => `
   }
   .carnet-info .dni {
     font-weight: 600;
-    color: #1976D2;
+    color: ${colorLiga600};
     margin-top: 3px;
     font-size: 12px;
     letter-spacing: 0.2px;
   }
   .carnet-info .categoria {
-    color: #2196F3;
+    color: ${colorLiga600};
     font-weight: 600;
     margin-top: 3px;
     font-size: 12px;
@@ -171,7 +172,7 @@ const getPDFStyles = () => `
     right: 0;
     bottom: 0;
     border-radius: 12px;
-    box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.1);
+    box-shadow: inset 0 0 0 1px ${colorLiga700};
     pointer-events: none;
   }
 `
@@ -204,7 +205,7 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
           <style>
-            ${getPDFStyles()}
+            ${getPDFStyles(getColorLiga600(), getColorLiga700())}
           </style>
         </head>
         <body>
@@ -234,10 +235,15 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
     })
 
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(uri, {
+      // No esperar a que el usuario cierre el diálogo de compartir: el PDF ya está listo
+      // y mostrado. Así el botón deja de cargar en cuanto se abre el share sheet.
+      Sharing.shareAsync(uri, {
         mimeType: 'application/pdf',
         dialogTitle: `Carnets ${codigoEquipo}`,
         UTI: 'com.adobe.pdf',
+      }).catch((err) => {
+        console.error('Error al compartir PDF:', err)
+        Alert.alert('Error', 'No se pudo compartir el PDF')
       })
     } else {
       Alert.alert('PDF Generado', `El PDF se ha guardado en: ${uri}`, [{ text: 'OK' }])
