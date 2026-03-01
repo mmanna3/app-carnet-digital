@@ -47,10 +47,11 @@ export default function PasoFoto() {
     setFotoBase64(recortada.base64 ?? null)
   }
 
+  const isE2E = !!process.env.EXPO_PUBLIC_E2E_API_URL
   const elegirDeGaleria = async () => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: !isE2E,
       aspect: [1, 1],
       quality: 1,
     })
@@ -65,7 +66,7 @@ export default function PasoFoto() {
 
       const resultado = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.front,
-        allowsEditing: true,
+        allowsEditing: !isE2E,
         aspect: [1, 1],
         quality: 1,
       })
