@@ -32,8 +32,20 @@ jobs:
       - name: Tests
         run: npm run test:ci
 
+  count-e2e:
+    name: Count E2E tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      count: ${{ steps.count.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: count
+        run: echo "count=$(find e2e -maxdepth 1 -name '*.yaml' -type f | wc -l | tr -d ' ')" >> $GITHUB_OUTPUT
+
   e2e:
-    name: E2E (Maestro)
+    name: E2E (Maestro) - ${{ needs.count-e2e.outputs.count }} tests
+    needs: count-e2e
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     timeout-minutes: 45
