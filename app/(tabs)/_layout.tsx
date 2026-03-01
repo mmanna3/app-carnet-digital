@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons'
 import { Tabs, ErrorBoundary } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { MenuProvider } from 'react-native-popup-menu'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import HeaderMenu from '../components/header-menu'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useConfigLiga, getColorLiga600 } from '@/lib/config/liga'
@@ -17,10 +18,16 @@ export {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
+const TAB_BAR_BASE_HEIGHT = 78
+
 export default function TabLayout() {
   const { equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore()
   useConfigLiga() // suscripción para MULTILIGA al cambiar liga
   const colorLiga = getColorLiga600()
+  const insets = useSafeAreaInsets()
+
+  // En Android con navbar nativa (3 botones) el tab bar queda corto; insets.bottom lo compensa
+  const tabBarHeight = TAB_BAR_BASE_HEIGHT + insets.bottom
 
   const HeaderTituloConCodigo = ({ titulo }: { titulo: string }) => (
     <View style={{ paddingBottom: 10 }}>
@@ -45,7 +52,7 @@ export default function TabLayout() {
             color: '#111827',
           },
           tabBarStyle: {
-            height: 78,
+            height: tabBarHeight,
             paddingTop: 5,
             backgroundColor: '#ffffff',
             borderTopColor: '#e5e7eb', // gray-200

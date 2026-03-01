@@ -16,6 +16,7 @@ import { api } from '@/lib/api/api'
 import { LoginDTO } from '@/lib/api/clients'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MenuProvider } from 'react-native-popup-menu'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import HeaderMenu from './components/header-menu'
 
 export {
@@ -116,6 +117,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <SafeAreaProvider>
         <MenuProvider skipInstanceCheck>
           <Stack>
           <Stack.Screen name="home" options={{ headerShown: false }} />
@@ -154,6 +156,7 @@ export default function RootLayout() {
           />
         </Stack>
         </MenuProvider>
+        </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

@@ -119,8 +119,13 @@ appId: com.blueservant.edefi
       - tapOn:
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
+      # Botón de crop: id (locale-independiente) o texto CROP/Recortar según idioma del emulador
       - tapOn:
-          text: 'CROP'
+          id: 'crop_image_menu_crop'
+          optional: true
+      - tapOn:
+          text: 'CROP|Recortar'
+          optional: true
 - extendedWaitUntil:
     visible:
       id: 'boton-subir-foto-delegado'
