@@ -1,7 +1,6 @@
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
-import { Entypo } from '@expo/vector-icons'
-import { Feather } from '@expo/vector-icons'
+import { Entypo , Feather } from '@expo/vector-icons'
 import { useRouter, usePathname } from 'expo-router'
 import Constants from 'expo-constants'
 import { useQueryClient } from '@tanstack/react-query'

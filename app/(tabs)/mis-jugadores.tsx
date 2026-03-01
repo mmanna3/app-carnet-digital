@@ -57,7 +57,7 @@ export default function MisJugadoresScreen() {
 
   useEffect(() => {
     desactivar()
-  }, [equipoSeleccionadoId])
+  }, [equipoSeleccionadoId, desactivar])
 
   const handleLongPress = (jugador: CarnetDigitalDTO) => {
     setJugadorSeleccionado(jugador)

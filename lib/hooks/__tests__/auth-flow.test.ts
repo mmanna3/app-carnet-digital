@@ -10,7 +10,7 @@ jest.mock('zustand/middleware', () => ({
 import { useAuth } from '../use-auth'
 import { LoginResponseDTO } from '../../api/clients'
 
-const mockLoginImpl = jest.fn<(u: string, p: string) => Promise<LoginResponseDTO>>()
+const mockLoginImpl = jest.fn()
 
 describe('flujo de autorización', () => {
   beforeEach(() => {

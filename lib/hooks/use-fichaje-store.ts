@@ -182,9 +182,9 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
         apellido,
         fechaNacimiento: fechaNac!,
         codigoAlfanumerico: codigoEquipo,
-        fotoCarnet: fotoBase64 ? 'data:image/jpeg;base64,' + fotoBase64 : undefined,
-        fotoDNIFrente: dniFrenteBase64 ? 'data:image/jpeg;base64,' + dniFrenteBase64 : undefined,
-        fotoDNIDorso: dniDorsoBase64 ? 'data:image/jpeg;base64,' + dniDorsoBase64 : undefined,
+        fotoCarnet: fotoBase64 ? 'data:image/jpeg;base64,' + fotoBase64 : '',
+        fotoDNIFrente: dniFrenteBase64 ? 'data:image/jpeg;base64,' + dniFrenteBase64 : '',
+        fotoDNIDorso: dniDorsoBase64 ? 'data:image/jpeg;base64,' + dniDorsoBase64 : '',
       })
       await api.jugadorPOST(dto)
       return { ok: true }

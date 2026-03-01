@@ -204,7 +204,7 @@ export const useFichajeDelegadoStore = create<FichajeDelegadoState>()((set, get)
         fechaNacimiento: fechaNac,
         email,
         telefonoCelular: celular,
-        clubId,
+        clubIds: clubId ? [clubId] : undefined,
         fotoCarnet: 'data:image/jpeg;base64,' + (fotoBase64 ?? ''),
         fotoDNIFrente: 'data:image/jpeg;base64,' + (dniFrenteBase64 ?? ''),
         fotoDNIDorso: 'data:image/jpeg;base64,' + (dniDorsoBase64 ?? ''),

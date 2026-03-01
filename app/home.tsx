@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import React from 'react'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
 import { Feather } from '@expo/vector-icons'
@@ -21,7 +21,6 @@ export default function HomeScreen() {
   const { limpiarLiga } = useLigaStore()
   const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
   const configLiga = useConfigLiga()
-  const [busqueda, setBusqueda] = useState('')
 
   const leagueId = configLiga?.leagueId ?? ''
   const leagueDisplayName = configLiga?.leagueDisplayName ?? ''

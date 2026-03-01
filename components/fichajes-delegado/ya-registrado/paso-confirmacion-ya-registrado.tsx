@@ -31,6 +31,7 @@ export default function PasoConfirmacionYaRegistrado() {
         })
         .finally(() => setCargandoUsuario(false))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch nombre solo al montar
   }, [])
 
   const handleEnviar = async () => {

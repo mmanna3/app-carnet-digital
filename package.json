@@ -31,6 +31,7 @@
     "test:e2e:record": "maestro record --local",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
+    "lint:fix": "expo lint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:api": "nswag run nswag.json",

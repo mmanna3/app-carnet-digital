@@ -31,7 +31,10 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
     activado: !!jugadores,
   })
 
-  const otrosEquipos = (delegadoData?.equipos ?? []).filter((e) => e.id !== equipoSeleccionadoId)
+  const todosEquipos = (delegadoData?.clubsConEquipos ?? []).flatMap((club) => club.equipos ?? [])
+  const otrosEquipos = todosEquipos.filter(
+    (e: EquipoBaseDTO) => e.id !== equipoSeleccionadoId
+  )
 
   const handleTransferir = async () => {
     if (!jugadores || !equipoSeleccionadoId || !equipoDestino?.id) return
@@ -75,7 +78,7 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
                   Confirmar transferencia
                 </Text>
                 <Text className="text-md text-gray-600 my-3">
-                  Al hacerlo, los jugadores pasarán al estado "Aprobado pendiente de pago".
+                  Al hacerlo, los jugadores pasarán al estado &quot;Aprobado pendiente de pago&quot;.
                 </Text>
                 <Text className="text-base text-gray-600 leading-6">
                   ¿Estás seguro de transferir a los siguientes jugadores del equipo{' '}
@@ -138,7 +141,7 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
                 </View>
               ) : (
                 <ScrollView>
-                  {otrosEquipos.map((equipo) => (
+                  {otrosEquipos.map((equipo: EquipoBaseDTO) => (
                     <TouchableOpacity
                       key={equipo.id}
                       className="p-4 border-b border-gray-100"

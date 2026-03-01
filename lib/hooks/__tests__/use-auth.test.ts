@@ -7,7 +7,7 @@ jest.mock('zustand/middleware', () => ({
 import { useAuth } from '../use-auth'
 import { LoginResponseDTO } from '../../api/clients'
 
-const mockLogin = jest.fn<(u: string, p: string) => Promise<LoginResponseDTO>>()
+const mockLogin = jest.fn()
 
 const ESTADO_INICIAL = { usuario: null, token: null, isAuthenticated: false }
 

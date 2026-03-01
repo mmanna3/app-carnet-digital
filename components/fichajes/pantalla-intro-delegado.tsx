@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
-import Cabecera from './cabecera'
 
 interface Props {
   onNuevo: () => void
   onYaFichado: () => void
+  onVolver?: () => void
 }
 
 export default function PantallaIntroDelegado({ onNuevo, onYaFichado }: Props) {

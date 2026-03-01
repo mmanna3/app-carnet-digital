@@ -31,7 +31,10 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
     activado: !!jugador,
   })
 
-  const otrosEquipos = (delegadoData?.equipos ?? []).filter((e) => e.id !== equipoSeleccionadoId)
+  const todosEquipos = (delegadoData?.clubsConEquipos ?? []).flatMap((club) => club.equipos ?? [])
+  const otrosEquipos = todosEquipos.filter(
+    (e: EquipoBaseDTO) => e.id !== equipoSeleccionadoId
+  )
 
   const handleTransferir = async () => {
     if (!jugador?.id || !equipoSeleccionadoId || !equipoDestino?.id) return
@@ -81,7 +84,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
                   <Text className="font-semibold text-gray-900">{equipoDestino.nombre}</Text>?
                 </Text>
                 <Text className="text-gray-600 mt-4">
-                  Al hacerlo, el jugador pasará al estado "Aprobado pendiente de pago".
+                  Al hacerlo, el jugador pasará al estado &quot;Aprobado pendiente de pago&quot;.
                 </Text>
               </View>
               <View className="px-4 pb-4 gap-3">
@@ -130,7 +133,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
                 </View>
               ) : (
                 <ScrollView>
-                  {otrosEquipos.map((equipo) => (
+                  {otrosEquipos.map((equipo: EquipoBaseDTO) => (
                     <TouchableOpacity
                       key={equipo.id}
                       className="p-4 border-b border-gray-100"

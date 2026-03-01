@@ -15,7 +15,7 @@ const mockRouterBack = jest.fn()
 describe('LoginScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(useAuth as jest.Mock).mockReturnValue({ login: mockLogin })
+    ;(useAuth as unknown as jest.Mock).mockReturnValue({ login: mockLogin })
     ;(useRouter as jest.Mock).mockReturnValue({
       push: mockRouterPush,
       back: mockRouterBack,

@@ -19,7 +19,6 @@ export default function PasoCodigoEquipo() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const totalPasos = flujo === 'nuevo' ? 5 : 3
   const titulo = flujo === 'nuevo' ? 'Fichaje de nuevo jugador' : 'Fichaje'
 
   const handleValidar = async () => {

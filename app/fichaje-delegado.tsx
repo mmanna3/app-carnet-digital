@@ -33,6 +33,7 @@ export default function FichajeDelegadoScreen() {
     setCodigoEquipo(equipoSeleccionadoCodigo ?? '')
     setNombreEquipo(equipoSeleccionadoNombre ?? null)
     setEsDelegado(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- init solo al montar; las deps del store no deben re-ejecutar
   }, [])
 
   const handleVolverInicio = () => {

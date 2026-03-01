@@ -18,7 +18,7 @@ const mockSetAuthState = jest.fn()
 describe('CambiarPasswordScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(useAuth as jest.Mock).mockReturnValue({ setAuthState: mockSetAuthState })
+    ;(useAuth as unknown as jest.Mock).mockReturnValue({ setAuthState: mockSetAuthState })
     ;(useLocalSearchParams as jest.Mock).mockReturnValue({ usuario: 'delegado1' })
   })
 
