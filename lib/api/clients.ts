@@ -2356,6 +2356,54 @@ export interface ICarnetDigitalPendienteDTO {
     motivo?: string | undefined;
 }
 
+export class ClubConEquiposDTO implements IClubConEquiposDTO {
+    nombre!: string | undefined;
+    equipos?: EquipoBaseDTO[] | undefined;
+
+    constructor(data?: IClubConEquiposDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.nombre = _data["nombre"];
+            if (Array.isArray(_data["equipos"])) {
+                this.equipos = [] as any;
+                for (let item of _data["equipos"])
+                    this.equipos!.push(EquipoBaseDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ClubConEquiposDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClubConEquiposDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nombre"] = this.nombre;
+        if (Array.isArray(this.equipos)) {
+            data["equipos"] = [];
+            for (let item of this.equipos)
+                data["equipos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IClubConEquiposDTO {
+    nombre: string | undefined;
+    equipos?: EquipoBaseDTO[] | undefined;
+}
+
 export class ClubDTO implements IClubDTO {
     id?: number;
     nombre!: string;
@@ -2433,9 +2481,9 @@ export class DelegadoDTO implements IDelegadoDTO {
     fotoDNIFrente!: string;
     fotoDNIDorso!: string;
     blanqueoPendiente?: boolean;
-    clubId!: number;
+    clubIds?: number[] | undefined;
     estadoDelegado?: EstadoDelegadoDTO;
-    clubNombre?: string | undefined;
+    clubNombres?: string[] | undefined;
     equiposDelClub?: string[] | undefined;
     jugadorId?: number | undefined;
 
@@ -2462,9 +2510,17 @@ export class DelegadoDTO implements IDelegadoDTO {
             this.fotoDNIFrente = _data["fotoDNIFrente"];
             this.fotoDNIDorso = _data["fotoDNIDorso"];
             this.blanqueoPendiente = _data["blanqueoPendiente"];
-            this.clubId = _data["clubId"];
+            if (Array.isArray(_data["clubIds"])) {
+                this.clubIds = [] as any;
+                for (let item of _data["clubIds"])
+                    this.clubIds!.push(item);
+            }
             this.estadoDelegado = _data["estadoDelegado"] ? EstadoDelegadoDTO.fromJS(_data["estadoDelegado"]) : <any>undefined;
-            this.clubNombre = _data["clubNombre"];
+            if (Array.isArray(_data["clubNombres"])) {
+                this.clubNombres = [] as any;
+                for (let item of _data["clubNombres"])
+                    this.clubNombres!.push(item);
+            }
             if (Array.isArray(_data["equiposDelClub"])) {
                 this.equiposDelClub = [] as any;
                 for (let item of _data["equiposDelClub"])
@@ -2495,9 +2551,17 @@ export class DelegadoDTO implements IDelegadoDTO {
         data["fotoDNIFrente"] = this.fotoDNIFrente;
         data["fotoDNIDorso"] = this.fotoDNIDorso;
         data["blanqueoPendiente"] = this.blanqueoPendiente;
-        data["clubId"] = this.clubId;
+        if (Array.isArray(this.clubIds)) {
+            data["clubIds"] = [];
+            for (let item of this.clubIds)
+                data["clubIds"].push(item);
+        }
         data["estadoDelegado"] = this.estadoDelegado ? this.estadoDelegado.toJSON() : <any>undefined;
-        data["clubNombre"] = this.clubNombre;
+        if (Array.isArray(this.clubNombres)) {
+            data["clubNombres"] = [];
+            for (let item of this.clubNombres)
+                data["clubNombres"].push(item);
+        }
         if (Array.isArray(this.equiposDelClub)) {
             data["equiposDelClub"] = [];
             for (let item of this.equiposDelClub)
@@ -2521,9 +2585,9 @@ export interface IDelegadoDTO {
     fotoDNIFrente: string;
     fotoDNIDorso: string;
     blanqueoPendiente?: boolean;
-    clubId: number;
+    clubIds?: number[] | undefined;
     estadoDelegado?: EstadoDelegadoDTO;
-    clubNombre?: string | undefined;
+    clubNombres?: string[] | undefined;
     equiposDelClub?: string[] | undefined;
     jugadorId?: number | undefined;
 }
@@ -2793,8 +2857,7 @@ export interface IEquipoDelJugadorDTO {
 }
 
 export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
-    club!: string | undefined;
-    equipos?: EquipoBaseDTO[] | undefined;
+    clubsConEquipos?: ClubConEquiposDTO[] | undefined;
 
     constructor(data?: IEquiposDelDelegadoDTO) {
         if (data) {
@@ -2807,11 +2870,10 @@ export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
 
     init(_data?: any) {
         if (_data) {
-            this.club = _data["club"];
-            if (Array.isArray(_data["equipos"])) {
-                this.equipos = [] as any;
-                for (let item of _data["equipos"])
-                    this.equipos!.push(EquipoBaseDTO.fromJS(item));
+            if (Array.isArray(_data["clubsConEquipos"])) {
+                this.clubsConEquipos = [] as any;
+                for (let item of _data["clubsConEquipos"])
+                    this.clubsConEquipos!.push(ClubConEquiposDTO.fromJS(item));
             }
         }
     }
@@ -2825,19 +2887,17 @@ export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["club"] = this.club;
-        if (Array.isArray(this.equipos)) {
-            data["equipos"] = [];
-            for (let item of this.equipos)
-                data["equipos"].push(item.toJSON());
+        if (Array.isArray(this.clubsConEquipos)) {
+            data["clubsConEquipos"] = [];
+            for (let item of this.clubsConEquipos)
+                data["clubsConEquipos"].push(item.toJSON());
         }
         return data;
     }
 }
 
 export interface IEquiposDelDelegadoDTO {
-    club: string | undefined;
-    equipos?: EquipoBaseDTO[] | undefined;
+    clubsConEquipos?: ClubConEquiposDTO[] | undefined;
 }
 
 export class EstadoDelegadoDTO implements IEstadoDelegadoDTO {
