@@ -73,11 +73,11 @@ jobs:
         env:
           ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 5
         with:
-          api-level: 30
+          api-level: 32
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -writable-system -memory 4096
           script: bash e2e/run-e2e-ci.sh
 
       - name: Subir reporte Maestro

@@ -99,18 +99,14 @@ describe('BuscarScreen', () => {
       fireEvent.press(screen.getByText('Ver jugadores'))
 
       await waitFor(() => {
-        expect(
-          screen.getByText('No se encontraron jugadores para este equipo')
-        ).toBeTruthy()
+        expect(screen.getByText('No se encontraron jugadores para este equipo')).toBeTruthy()
       })
     })
   })
 
   describe('error de API', () => {
     it('muestra el mensaje de error cuando la API falla', async () => {
-      ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockRejectedValue(
-        new Error('Network error')
-      )
+      ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockRejectedValue(new Error('Network error'))
 
       render(<BuscarScreen />)
       fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'ABC1234')

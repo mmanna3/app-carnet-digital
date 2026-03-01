@@ -39,9 +39,7 @@ export default function Carnet({
       onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}
       className={`m-4 overflow-hidden rounded-2xl shadow-lg elevation-5 ${
-        esDelegado
-          ? 'border-4 border-liga-700 bg-liga-100'
-          : 'border-2 border-gray-200 bg-white'
+        esDelegado ? 'border-4 border-liga-700 bg-liga-100' : 'border-2 border-gray-200 bg-white'
       }`}
     >
       {modoSeleccion && (
@@ -68,7 +66,9 @@ export default function Carnet({
           </Text>
         </View>
       )}
-      <View className={`p-4 ${esDelegado ? 'bg-white mx-2 mt-2 mb-2 rounded-xl border-2 border-dashed border-liga-300' : ''}`}>
+      <View
+        className={`p-4 ${esDelegado ? 'bg-white mx-2 mt-2 mb-2 rounded-xl border-2 border-dashed border-liga-300' : ''}`}
+      >
         <View className="items-center mb-4 border-b border-gray-200 pb-3">
           <Text className="text-2xl font-bold mb-1 text-[#1a1a1a]">{jugador.equipo}</Text>
           <Text className="text-lg text-gray-500">{jugador.torneo}</Text>
