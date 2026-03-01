@@ -32,9 +32,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
   })
 
   const todosEquipos = (delegadoData?.clubsConEquipos ?? []).flatMap((club) => club.equipos ?? [])
-  const otrosEquipos = todosEquipos.filter(
-    (e: EquipoBaseDTO) => e.id !== equipoSeleccionadoId
-  )
+  const otrosEquipos = todosEquipos.filter((e: EquipoBaseDTO) => e.id !== equipoSeleccionadoId)
 
   const handleTransferir = async () => {
     if (!jugador?.id || !equipoSeleccionadoId || !equipoDestino?.id) return
