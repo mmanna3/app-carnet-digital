@@ -70,6 +70,8 @@ jobs:
 
       - name: E2E con emulador Android
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 5
         with:
           api-level: 30
           arch: x86_64
@@ -77,7 +79,16 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
+            set -e
             export PATH="$PATH:$HOME/.maestro/bin"
+
+            cleanup() {
+              [ -n "${MOCK_PID:-}" ] && kill $MOCK_PID 2>/dev/null || true
+              # Workaround: crashpad_handler no recibe señales al cerrar el emulador y provoca
+              # "stop: Not implemented" + hang infinito. https://github.com/ReactiveCircus/android-emulator-runner/issues/385
+              killall -INT crashpad_handler 2>/dev/null || true
+            }
+            trap cleanup EXIT
 
             # .env con URL del mock (10.0.2.2 = localhost del host desde el emulador)
             # Expo lo lee durante export:embed para embeber la URL en el bundle de release
@@ -86,6 +97,7 @@ jobs:
 
             # Mock server en background
             node e2e/mock-server.js &
+            MOCK_PID=$!
 
             # Build APK release con la URL del mock embebida en el bundle
             chmod +x android/gradlew
