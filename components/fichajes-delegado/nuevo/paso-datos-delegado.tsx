@@ -102,10 +102,13 @@ export default function PasoDatosDelegado() {
   const formTopRef = useRef(0)
   const fieldOffsets = useRef<Record<string, number>>({})
 
-  const handleFieldLayout = useCallback((fieldKey: string) => (e: LayoutChangeEvent) => {
-    const { y } = e.nativeEvent.layout
-    fieldOffsets.current[fieldKey] = y
-  }, [])
+  const handleFieldLayout = useCallback(
+    (fieldKey: string) => (e: LayoutChangeEvent) => {
+      const { y } = e.nativeEvent.layout
+      fieldOffsets.current[fieldKey] = y
+    },
+    []
+  )
 
   const scrollToField = useCallback((fieldKey: string) => {
     const fieldY = fieldOffsets.current[fieldKey]
@@ -175,7 +178,9 @@ export default function PasoDatosDelegado() {
 
           <View
             className="gap-3"
-            onLayout={(e) => { formTopRef.current = e.nativeEvent.layout.y }}
+            onLayout={(e) => {
+              formTopRef.current = e.nativeEvent.layout.y
+            }}
           >
             <View onLayout={handleFieldLayout('nombre')}>
               <CampoTexto
@@ -288,10 +293,7 @@ export default function PasoDatosDelegado() {
           Keyboard.dismiss()
           setMostrarPicker(false)
           const fechaActual = fechaSeleccionadaEnModal.current ?? fechaNac
-          actualizarError(
-            'fechaNac',
-            fechaActual ? null : 'La fecha de nacimiento es obligatoria'
-          )
+          actualizarError('fechaNac', fechaActual ? null : 'La fecha de nacimiento es obligatoria')
           fechaSeleccionadaEnModal.current = null
         }}
         onChange={(f) => {

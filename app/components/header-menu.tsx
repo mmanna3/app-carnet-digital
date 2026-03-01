@@ -28,7 +28,9 @@ export default function HeaderMenu() {
   const handleActualizar = () => {
     if (equipoSeleccionadoId) {
       queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
-      queryClient.invalidateQueries({ queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId),
+      })
     }
   }
 
@@ -78,11 +80,7 @@ export default function HeaderMenu() {
   }) => (
     <MenuOption onSelect={onSelect}>
       <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
-        <Feather
-          name={icon}
-          size={20}
-          color={destructive ? '#dc2626' : '#111827'}
-        />
+        <Feather name={icon} size={20} color={destructive ? '#dc2626' : '#111827'} />
         <Text
           className={`text-base ${destructive ? 'text-red-600' : 'text-[#111827]'} font-medium`}
         >
@@ -101,22 +99,14 @@ export default function HeaderMenu() {
           </View>
         </MenuTrigger>
         <MenuOptions customStyles={optionsStyles}>
-          <MenuItem
-            icon="refresh-cw"
-            label="Actualizar"
-            onSelect={handleActualizar}
-          />
+          <MenuItem icon="refresh-cw" label="Actualizar" onSelect={handleActualizar} />
           <MenuItem
             icon={modoSeleccion ? 'check-square' : 'list'}
             label={modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
             onSelect={handleSeleccionarJugadores}
           />
           {esMultiliga && (
-            <MenuItem
-              icon="globe"
-              label="Cambiar liga"
-              onSelect={handleCambiarLiga}
-            />
+            <MenuItem icon="globe" label="Cambiar liga" onSelect={handleCambiarLiga} />
           )}
           <MenuItem
             icon="user-plus"
@@ -125,11 +115,7 @@ export default function HeaderMenu() {
             onSelect={() => router.push('/fichaje-delegado' as any)}
           />
           <View className="h-px bg-gray-200 my-2 mx-4" />
-          <MenuItem
-            icon="users"
-            label="Cambiar equipo"
-            onSelect={handleCambiarEquipo}
-          />
+          <MenuItem icon="users" label="Cambiar equipo" onSelect={handleCambiarEquipo} />
           <MenuItem
             icon="log-out"
             label="Cerrar sesión"

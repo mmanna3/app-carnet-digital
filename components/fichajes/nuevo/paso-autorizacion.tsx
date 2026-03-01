@@ -9,7 +9,8 @@ const DECLARACION =
   'Al enviar los datos, declaro ser mayor de edad o estar acompañado por un mayor de edad que autoriza que puedan publicarse fotos y videos de mi rostro en medios donde se difunda material sobre torneos organizados por la liga.'
 
 export default function PasoAutorizacion() {
-  const { nombreEquipo, nombre, dni, irAlPasoSiguiente, irAlPasoAnterior, enviarFichajeNuevo } = useFichajeStore()
+  const { nombreEquipo, nombre, dni, irAlPasoSiguiente, irAlPasoAnterior, enviarFichajeNuevo } =
+    useFichajeStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

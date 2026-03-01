@@ -48,9 +48,12 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
       <View className="flex-1 bg-black/50 justify-center items-center p-6">
         <View className="bg-white rounded-2xl w-full overflow-hidden max-h-[80%]">
           <View className="p-6 border-b border-gray-200">
-            <Text className="text-lg font-bold text-gray-900 mb-3">Quitar jugadores del equipo</Text>
+            <Text className="text-lg font-bold text-gray-900 mb-3">
+              Quitar jugadores del equipo
+            </Text>
             <Text className="text-base text-gray-600 leading-6">
-              ¿Estás seguro que querés eliminar estos jugadores del equipo? Los jugadores que juegan en otros equipos no se eliminarán de ellos.
+              ¿Estás seguro que querés eliminar estos jugadores del equipo? Los jugadores que juegan
+              en otros equipos no se eliminarán de ellos.
             </Text>
           </View>
 

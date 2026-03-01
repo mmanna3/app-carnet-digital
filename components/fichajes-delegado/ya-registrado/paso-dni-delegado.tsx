@@ -7,14 +7,8 @@ import CampoTexto from '@/components/fichajes/campo-texto'
 import BotonWizard from '@/components/fichajes/boton-wizard'
 
 export default function PasoDniDelegado() {
-  const {
-    dni,
-    nombreClub,
-    setDni,
-    irAlPasoAnterior,
-    irAlPasoSiguiente,
-    validarDniVerde,
-  } = useFichajeDelegadoStore()
+  const { dni, nombreClub, setDni, irAlPasoAnterior, irAlPasoSiguiente, validarDniVerde } =
+    useFichajeDelegadoStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

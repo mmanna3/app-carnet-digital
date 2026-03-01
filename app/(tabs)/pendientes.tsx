@@ -69,7 +69,9 @@ export default function PendientesScreen() {
     try {
       await Promise.all([
         queryClient.refetchQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) }),
-        queryClient.refetchQueries({ queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId) }),
+        queryClient.refetchQueries({
+          queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId),
+        }),
       ])
     } finally {
       setRefreshing(false)
@@ -79,9 +81,7 @@ export default function PendientesScreen() {
   return (
     <ScrollView
       className="flex-1 bg-[#f8f8f8]"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />
-      }
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
     >
       <View className="p-2.5">
         {jugadoresRechazados.length > 0 && (

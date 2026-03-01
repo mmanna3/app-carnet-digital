@@ -39,14 +39,8 @@ async function recortarCuadrado(uri: string, width: number, height: number) {
 }
 
 export default function PasoFotoDelegado() {
-  const {
-    fotoUri,
-    nombreClub,
-    setFotoUri,
-    setFotoBase64,
-    irAlPasoAnterior,
-    irAlPasoSiguiente,
-  } = useFichajeDelegadoStore()
+  const { fotoUri, nombreClub, setFotoUri, setFotoBase64, irAlPasoAnterior, irAlPasoSiguiente } =
+    useFichajeDelegadoStore()
   const [errorCamara, setErrorCamara] = useState<string | null>(null)
 
   const procesarImagen = async (asset: ImagePicker.ImagePickerAsset) => {

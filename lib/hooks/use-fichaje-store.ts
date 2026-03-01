@@ -34,7 +34,7 @@ interface FichajeState {
   setNombre: (v: string) => void
   setApellido: (v: string) => void
   setDni: (v: string) => void
-  setEsDelegado: (v: boolean) => void,
+  setEsDelegado: (v: boolean) => void
   setFechaNac: (v: Date | null) => void
   setFotoUri: (v: string | null) => void
   setDniFrenteUri: (v: string | null) => void
@@ -66,7 +66,6 @@ const inicial = {
   dniFrenteBase64: null,
   dniDorsoBase64: null,
   nombreEquipo: null,
-
 }
 
 const parseError = (error: any): string => {
@@ -85,13 +84,21 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   irAIntro: () => set({ flujo: 'intro', paso: 1 }),
   irANuevo: () => set({ flujo: 'nuevo', paso: 1 }),
   irAYaFichado: () => set({ flujo: 'yaFichado', paso: 1 }),
-  irAPaso: (paso) => {set({ paso })},
-  irAlPasoSiguiente: () => {set({ paso: get().paso + 1 })},
-  irAlPasoAnterior: () => {set({ paso: get().paso - 1 })},
-  irAlPasoInicial: () => {set({ paso: 1 })},
+  irAPaso: (paso) => {
+    set({ paso })
+  },
+  irAlPasoSiguiente: () => {
+    set({ paso: get().paso + 1 })
+  },
+  irAlPasoAnterior: () => {
+    set({ paso: get().paso - 1 })
+  },
+  irAlPasoInicial: () => {
+    set({ paso: 1 })
+  },
   calcularTotalPasos: () => {
     const { esDelegado, flujo } = get()
-    return esDelegado ? (flujo === 'nuevo' ? 4 : 2) : (flujo === 'nuevo' ? 5 : 3)
+    return esDelegado ? (flujo === 'nuevo' ? 4 : 2) : flujo === 'nuevo' ? 5 : 3
   },
   setCodigoEquipo: (v) => set({ codigoEquipo: v }),
   setNombreEquipo: (v) => set({ nombreEquipo: v }),
@@ -146,7 +153,10 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
     try {
       const fichado = await api.elDniEstaFichado(dni)
       if (fichado) {
-        return { ok: false, error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".' }
+        return {
+          ok: false,
+          error: 'Ya estás fichado en otro equipo. Usá el flujo "Ya estoy fichado".',
+        }
       }
       return { ok: true }
     } catch (error: any) {
@@ -155,7 +165,16 @@ export const useFichajeStore = create<FichajeState>()((set, get) => ({
   },
 
   enviarFichajeNuevo: async () => {
-    const { dni, nombre, apellido, fechaNac, codigoEquipo, fotoBase64, dniFrenteBase64, dniDorsoBase64 } = get()
+    const {
+      dni,
+      nombre,
+      apellido,
+      fechaNac,
+      codigoEquipo,
+      fotoBase64,
+      dniFrenteBase64,
+      dniDorsoBase64,
+    } = get()
     try {
       const dto = new JugadorDTO({
         dni,

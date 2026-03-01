@@ -28,7 +28,7 @@ const RESPONSES = {
     codigo_invalido: { hayError: true, mensajeError: 'Código inválido' },
   },
   'GET:/api/publico/el-dni-esta-fichado': {
-    happy: false,       // sobreescrito por lógica smart (ver abajo)
+    happy: false, // sobreescrito por lógica smart (ver abajo)
     dni_fichado: true,
   },
   'POST:/api/Jugador': {
@@ -62,7 +62,12 @@ const RESPONSES = {
         {
           nombre: 'Club de Prueba',
           equipos: [
-            { id: 1, nombre: 'Equipo de Prueba', codigoAlfanumerico: 'ABC1234', torneo: 'Torneo E2E' },
+            {
+              id: 1,
+              nombre: 'Equipo de Prueba',
+              codigoAlfanumerico: 'ABC1234',
+              torneo: 'Torneo E2E',
+            },
           ],
         },
         {
@@ -101,7 +106,9 @@ const server = http.createServer((req, res) => {
   // Endpoint interno: cambiar escenario en tiempo de ejecución
   if (key === 'POST:/_set-scenario') {
     let body = ''
-    req.on('data', (chunk) => { body += chunk })
+    req.on('data', (chunk) => {
+      body += chunk
+    })
     req.on('end', () => {
       try {
         const { scenario } = JSON.parse(body)

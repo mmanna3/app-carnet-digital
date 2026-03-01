@@ -9,7 +9,12 @@ interface Props {
   onCerrar: () => void
 }
 
-export default function ModalAccionesJugador({ jugador, onEliminar, onTransferir, onCerrar }: Props) {
+export default function ModalAccionesJugador({
+  jugador,
+  onEliminar,
+  onTransferir,
+  onCerrar,
+}: Props) {
   if (!jugador) return null
 
   return (

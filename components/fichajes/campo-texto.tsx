@@ -7,7 +7,14 @@ interface Props extends TextInputProps {
   error?: string
 }
 
-export default function CampoTexto({ label, inputTestID, error, onFocus, onBlur, ...props }: Props) {
+export default function CampoTexto({
+  label,
+  inputTestID,
+  error,
+  onFocus,
+  onBlur,
+  ...props
+}: Props) {
   const [focused, setFocused] = useState(false)
   const tieneError = !!error
 

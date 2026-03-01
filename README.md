@@ -155,9 +155,11 @@ Si el mock responde bien en el navegador del emulador pero la app falla al tocar
 1. **Cleartext HTTP bloqueado en Android 9+**: La app usa `expo-build-properties` con `usesCleartextTraffic: true` para permitir HTTP al mock. Si agregaste esto, **reconstruí la app nativa** (`LIGA_ID=edefi npx expo run:android --no-bundler`).
 
 2. **Caché de Metro**: La variable `EXPO_PUBLIC_E2E_API_URL` se inlinea al construir el bundle. Si Metro usó caché viejo, el bundle puede tener la URL incorrecta. Probá:
+
    ```bash
    EXPO_PUBLIC_E2E_API_URL=http://10.0.2.2:3001 LIGA_ID=edefi npx expo start --clear
    ```
+
    Luego recargá la app (shake → Reload) o reiniciala.
 
 3. **Verificar que el mock recibe requests**: En Terminal 1 (mock), al tocar "Validar" deberías ver `[mock] GET /api/publico/obtener-nombre-equipo?...`. Si no aparece, la app no está llegando al mock (URL incorrecta o cleartext bloqueado).

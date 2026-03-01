@@ -14,13 +14,14 @@ npm run e2e
 
 Abre automáticamente 3 pestañas en iTerm:
 
-| Pestaña | Qué corre |
-|---------|-----------|
-| 1 | Mock server HTTP en puerto 3001 (`node e2e/mock-server.js`) |
-| 2 | Metro bundler (`LIGA_ID=edefi npm start`) |
-| 3 | Build + instalación en el emulador → cuando termina, lanza Maestro |
+| Pestaña | Qué corre                                                          |
+| ------- | ------------------------------------------------------------------ |
+| 1       | Mock server HTTP en puerto 3001 (`node e2e/mock-server.js`)        |
+| 2       | Metro bundler (`LIGA_ID=edefi npm start`)                          |
+| 3       | Build + instalación en el emulador → cuando termina, lanza Maestro |
 
 La pestaña 3 ejecuta en secuencia:
+
 ```bash
 LIGA_ID=edefi npm run android && npm run test:e2e:android
 ```
@@ -41,6 +42,7 @@ El servidor corre en modo `happy` por defecto. El endpoint `GET /api/publico/el-
 - Cualquier otro DNI → `false` (tests de flujo nuevo)
 
 Para cambiar el escenario en runtime:
+
 ```bash
 curl -X POST http://localhost:3001/_set-scenario -d '{"scenario":"codigo_invalido"}'
 ```

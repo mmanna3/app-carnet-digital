@@ -74,9 +74,8 @@ export default function PasoConfirmacionYaRegistrado() {
           ) : nombreUsuario ? (
             <Text className="text-gray-700 text-sm leading-relaxed">
               Una vez que la administración de la liga apruebe, vas a poder iniciar sesión con el
-              nombre de usuario:{' '}
-              <Text className="font-bold text-gray-900">{nombreUsuario}</Text>. La contraseña es tu
-              DNI.
+              nombre de usuario: <Text className="font-bold text-gray-900">{nombreUsuario}</Text>.
+              La contraseña es tu DNI.
             </Text>
           ) : (
             <Text className="text-gray-700 text-sm leading-relaxed">

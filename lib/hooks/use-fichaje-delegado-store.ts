@@ -131,7 +131,10 @@ export const useFichajeDelegadoStore = create<FichajeDelegadoState>()((set, get)
     try {
       const fichado = await api.elDniEstaFichado(dni)
       if (fichado) {
-        return { ok: false, error: 'Ya estás fichado en la liga. Usá el flujo "Ya estoy registrado".' }
+        return {
+          ok: false,
+          error: 'Ya estás fichado en la liga. Usá el flujo "Ya estoy registrado".',
+        }
       }
       return { ok: true }
     } catch (error: any) {
@@ -178,7 +181,18 @@ export const useFichajeDelegadoStore = create<FichajeDelegadoState>()((set, get)
   },
 
   enviarNuevoDelegado: async () => {
-    const { dni, nombre, apellido, fechaNac, clubId, email, celular, fotoBase64, dniFrenteBase64, dniDorsoBase64 } = get()
+    const {
+      dni,
+      nombre,
+      apellido,
+      fechaNac,
+      clubId,
+      email,
+      celular,
+      fotoBase64,
+      dniFrenteBase64,
+      dniDorsoBase64,
+    } = get()
     if (!clubId || !fechaNac) {
       return { ok: false, error: 'Faltan datos del club o fecha de nacimiento' }
     }

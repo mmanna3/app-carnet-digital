@@ -31,9 +31,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
     activado: !!jugador,
   })
 
-  const otrosEquipos = (delegadoData?.equipos ?? []).filter(
-    (e) => e.id !== equipoSeleccionadoId
-  )
+  const otrosEquipos = (delegadoData?.equipos ?? []).filter((e) => e.id !== equipoSeleccionadoId)
 
   const handleTransferir = async () => {
     if (!jugador?.id || !equipoSeleccionadoId || !equipoDestino?.id) return
@@ -70,7 +68,9 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
             // Pantalla de confirmación
             <View>
               <View className="p-6">
-                <Text className="text-lg font-bold text-gray-900 mb-3">Confirmar transferencia</Text>
+                <Text className="text-lg font-bold text-gray-900 mb-3">
+                  Confirmar transferencia
+                </Text>
                 <Text className="text-base text-gray-600 leading-6">
                   ¿Estás seguro de transferir al jugador{' '}
                   <Text className="font-semibold text-gray-900">
@@ -80,7 +80,9 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
                   <Text className="font-semibold text-gray-900">{equipoSeleccionadoNombre}</Text> a{' '}
                   <Text className="font-semibold text-gray-900">{equipoDestino.nombre}</Text>?
                 </Text>
-                <Text className="text-gray-600 mt-4">Al hacerlo, el jugador pasará al estado "Aprobado pendiente de pago".</Text>
+                <Text className="text-gray-600 mt-4">
+                  Al hacerlo, el jugador pasará al estado "Aprobado pendiente de pago".
+                </Text>
               </View>
               <View className="px-4 pb-4 gap-3">
                 <TouchableOpacity

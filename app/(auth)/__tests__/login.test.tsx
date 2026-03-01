@@ -69,7 +69,10 @@ describe('LoginScreen', () => {
   describe('flujo de login exitoso', () => {
     it('llama a login con usuario y contraseña ingresados', async () => {
       mockLogin.mockImplementation(
-        () => new Promise((r) => setTimeout(() => r(new LoginResponseDTO({ exito: true, token: 'jwt-123' })), 10))
+        () =>
+          new Promise((r) =>
+            setTimeout(() => r(new LoginResponseDTO({ exito: true, token: 'jwt-123' })), 10)
+          )
       )
 
       render(<LoginScreen />)

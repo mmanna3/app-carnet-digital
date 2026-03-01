@@ -7,7 +7,8 @@ import CampoTexto from '../campo-texto'
 import BotonWizard from '../boton-wizard'
 
 export default function PasoDni() {
-  const { dni, nombreEquipo, setDni, irAlPasoAnterior, irAlPasoSiguiente, enviarFichajeYaFichado } = useFichajeStore()
+  const { dni, nombreEquipo, setDni, irAlPasoAnterior, irAlPasoSiguiente, enviarFichajeYaFichado } =
+    useFichajeStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

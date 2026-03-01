@@ -66,7 +66,9 @@ export default function HomeScreen() {
               resizeMode="contain"
             />
           )}
-          <Text className="text-white font-medium text-4xl tracking-tight">{leagueDisplayName}</Text>
+          <Text className="text-white font-medium text-4xl tracking-tight">
+            {leagueDisplayName}
+          </Text>
         </View>
 
         {/* Barra de búsqueda */}

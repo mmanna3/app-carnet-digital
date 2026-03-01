@@ -8,10 +8,9 @@ interface Props {
   onYaFichado: () => void
 }
 
-export default function PantallaIntroDelegado({ onNuevo, onYaFichado}: Props) {
+export default function PantallaIntroDelegado({ onNuevo, onYaFichado }: Props) {
   return (
-    <View testID="pantalla-intro-delegado" className="flex-1 bg-blue-50">      
-
+    <View testID="pantalla-intro-delegado" className="flex-1 bg-blue-50">
       <View className="px-6 pt-6 gap-3">
         <TouchableOpacity
           testID="card-nuevo"

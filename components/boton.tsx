@@ -44,8 +44,7 @@ export default function Boton({
   testID,
 }: BotonProps) {
   const isDisabled = deshabilitado || cargando
-  const base =
-    'h-[50px] rounded-xl flex-row items-center justify-center gap-2 px-4 mt-2.5'
+  const base = 'h-[50px] rounded-xl flex-row items-center justify-center gap-2 px-4 mt-2.5'
   const varianteStyles = estilosPorVariante[variante]
   const textoStyles = estilosTextoPorVariante[variante]
   const colorIcono = colorIconoPorVariante[variante]

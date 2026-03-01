@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Alert,
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native'
+import { Alert, Modal, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
@@ -45,7 +38,8 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
           <View className="p-6">
             <Text className="text-lg font-bold text-gray-900 mb-3">Quitar jugador del equipo</Text>
             <Text className="text-base text-gray-600 leading-6">
-              ¿Estás seguro que querés eliminar este jugador del equipo? Si el jugador juega en otros equipos, no se eliminará de ellos.
+              ¿Estás seguro que querés eliminar este jugador del equipo? Si el jugador juega en
+              otros equipos, no se eliminará de ellos.
             </Text>
           </View>
 
@@ -58,9 +52,7 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
               {cargando ? (
                 <ActivityIndicator color="white" />
               ) : (
-                <Text className="text-white font-semibold text-base">
-                  Quitar del equipo
-                </Text>
+                <Text className="text-white font-semibold text-base">Quitar del equipo</Text>
               )}
             </TouchableOpacity>
 

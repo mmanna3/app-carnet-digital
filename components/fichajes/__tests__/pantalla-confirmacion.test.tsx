@@ -11,18 +11,14 @@ describe('PantallaConfirmacion', () => {
   })
 
   it('muestra el mensaje de confirmación', () => {
-    render(
-      <PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />
-    )
+    render(<PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />)
 
     expect(screen.getByText('¡Fichaje completado!')).toBeTruthy()
     expect(screen.getByText(MENSAJE)).toBeTruthy()
   })
 
   it('llama a onVolverInicio al presionar Volver al inicio', () => {
-    render(
-      <PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />
-    )
+    render(<PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />)
 
     fireEvent.press(screen.getByTestId('boton-volver-inicio'))
 
@@ -47,9 +43,7 @@ describe('PantallaConfirmacion', () => {
   })
 
   it('no muestra el botón Fichar otro cuando onFicharOtro no está definido', () => {
-    render(
-      <PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />
-    )
+    render(<PantallaConfirmacion mensaje={MENSAJE} onVolverInicio={mockOnVolverInicio} />)
 
     expect(screen.queryByTestId('boton-fichar-otro')).toBeNull()
   })

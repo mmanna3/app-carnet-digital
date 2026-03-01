@@ -73,11 +73,16 @@ describe('CambiarPasswordScreen', () => {
       render(<CambiarPasswordScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Nueva Contraseña'), 'nuevaPass123')
-      fireEvent.changeText(screen.getByPlaceholderText('Confirmar Nueva Contraseña'), 'nuevaPass123')
+      fireEvent.changeText(
+        screen.getByPlaceholderText('Confirmar Nueva Contraseña'),
+        'nuevaPass123'
+      )
       fireEvent.press(screen.getByTestId('boton-cambiar-password'))
 
       await waitFor(() => expect(api.cambiarPassword).toHaveBeenCalled())
-      await waitFor(() => expect(mockSetAuthState).toHaveBeenCalledWith('nuevo-jwt-token', 'delegado1'))
+      await waitFor(() =>
+        expect(mockSetAuthState).toHaveBeenCalledWith('nuevo-jwt-token', 'delegado1')
+      )
 
       expect(api.cambiarPassword).toHaveBeenCalledWith(
         expect.objectContaining({

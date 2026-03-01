@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native'
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -90,7 +97,9 @@ export default function MisJugadoresScreen() {
     try {
       await Promise.all([
         queryClient.refetchQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) }),
-        queryClient.refetchQueries({ queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId) }),
+        queryClient.refetchQueries({
+          queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId),
+        }),
       ])
     } finally {
       setRefreshing(false)
@@ -130,10 +139,13 @@ export default function MisJugadoresScreen() {
     return (
       <ScrollView
         className="flex-1 bg-[#f8f8f8]"
-        contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />
-        }
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+        }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
       >
         <Text className="text-base text-center text-gray-600">
           No hay jugadores activos en este equipo.
@@ -177,9 +189,7 @@ export default function MisJugadoresScreen() {
     }))
   }
 
-  const jugadoresParaAccionMasiva = jugadores.filter((j) =>
-    jugadoresSeleccionados.includes(j.id!)
-  )
+  const jugadoresParaAccionMasiva = jugadores.filter((j) => jugadoresSeleccionados.includes(j.id!))
 
   const haySeleccionados = jugadoresSeleccionados.length > 0
 
@@ -205,9 +215,7 @@ export default function MisJugadoresScreen() {
       <ScrollView
         ref={scrollViewRef}
         className="flex-1"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
       >
         <View className="p-2.5">
           {categorias.map((año) => (
@@ -250,12 +258,7 @@ export default function MisJugadoresScreen() {
               className="flex-1 mt-0"
             />
           </View>
-          <Boton
-            variante="Secundario"
-            texto="Cancelar"
-            onPress={desactivar}
-            className="mt-0"
-          />
+          <Boton variante="Secundario" texto="Cancelar" onPress={desactivar} className="mt-0" />
         </View>
       )}
 

@@ -10,7 +10,6 @@ interface Props {
 }
 
 export default function PantallaConfirmacion({ mensaje, onVolverInicio, onFicharOtro }: Props) {
-
   return (
     <View
       testID="pantalla-confirmacion"

@@ -36,9 +36,7 @@ describe('flujo de autorización', () => {
     })
 
     it('usuario autenticado puede hacer logout y quedar desautenticado', async () => {
-      mockLoginImpl.mockResolvedValue(
-        new LoginResponseDTO({ exito: true, token: 'jwt-token' })
-      )
+      mockLoginImpl.mockResolvedValue(new LoginResponseDTO({ exito: true, token: 'jwt-token' }))
       await useAuth.getState().login('delegado1', 'password123')
 
       expect(useAuth.getState().isAuthenticated).toBe(true)
@@ -51,9 +49,7 @@ describe('flujo de autorización', () => {
     })
 
     it('flujo completo: login exitoso → logout limpia todo el estado', async () => {
-      mockLoginImpl.mockResolvedValue(
-        new LoginResponseDTO({ exito: true, token: 'jwt-abc' })
-      )
+      mockLoginImpl.mockResolvedValue(new LoginResponseDTO({ exito: true, token: 'jwt-abc' }))
 
       await useAuth.getState().login('delegado1', 'secret')
       const estadoAutenticado = useAuth.getState()

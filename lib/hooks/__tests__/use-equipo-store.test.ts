@@ -27,7 +27,8 @@ describe('useEquipoStore', () => {
     it('guarda id, nombre y código correctamente', () => {
       useEquipoStore.getState().seleccionarEquipo(42, 'Deportivo Luefi', 'ABC1234')
 
-      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore.getState()
+      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } =
+        useEquipoStore.getState()
       expect(equipoSeleccionadoId).toBe(42)
       expect(equipoSeleccionadoNombre).toBe('Deportivo Luefi')
       expect(equipoSeleccionadoCodigo).toBe('ABC1234')
@@ -37,7 +38,8 @@ describe('useEquipoStore', () => {
       useEquipoStore.getState().seleccionarEquipo(1, 'Primero', 'AAA0001')
       useEquipoStore.getState().seleccionarEquipo(2, 'Segundo', 'BBB0002')
 
-      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore.getState()
+      const { equipoSeleccionadoId, equipoSeleccionadoNombre, equipoSeleccionadoCodigo } =
+        useEquipoStore.getState()
       expect(equipoSeleccionadoId).toBe(2)
       expect(equipoSeleccionadoNombre).toBe('Segundo')
       expect(equipoSeleccionadoCodigo).toBe('BBB0002')

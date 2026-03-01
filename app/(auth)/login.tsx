@@ -53,9 +53,7 @@ export default function LoginScreen() {
       </TouchableOpacity>
       <View className="w-full max-w-[300px] self-center">
         <Text className="text-3xl font-bold text-center text-black">Inicio de sesión</Text>
-        <Text className="text-xl mt-5 mb-8 text-center text-black">
-          Para DTs y Delegados
-        </Text>
+        <Text className="text-xl mt-5 mb-8 text-center text-black">Para DTs y Delegados</Text>
 
         <View className="mb-3">
           <CampoTexto

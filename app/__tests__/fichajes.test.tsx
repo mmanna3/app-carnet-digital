@@ -71,7 +71,9 @@ describe('FichajesScreen', () => {
     render(<FichajesScreen />)
 
     expect(screen.getByText('¡Fichaje completado!')).toBeTruthy()
-    expect(screen.getByText('Vas a recibir la confirmación de tu fichaje por parte de tu delegado.')).toBeTruthy()
+    expect(
+      screen.getByText('Vas a recibir la confirmación de tu fichaje por parte de tu delegado.')
+    ).toBeTruthy()
   })
 
   it('muestra PantallaConfirmacion cuando flujo yaFichado llega a paso 3', () => {

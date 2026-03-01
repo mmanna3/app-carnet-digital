@@ -3,16 +3,14 @@ import React from 'react'
 import { View, Text } from 'react-native'
 
 export default function Progreso() {
-  const {
-    paso: pasoActual,
-    calcularTotalPasos,
-    esDelegado,
-  } = useFichajeStore()
-  
+  const { paso: pasoActual, calcularTotalPasos, esDelegado } = useFichajeStore()
+
   const totalPasos = calcularTotalPasos()
 
   return (
-    <View className={`${esDelegado && 'pt-4'} px-6 pt-1 pb-6 bg-white border-b border-gray-100 flex-row items-center justify-center`}>
+    <View
+      className={`${esDelegado && 'pt-4'} px-6 pt-1 pb-6 bg-white border-b border-gray-100 flex-row items-center justify-center`}
+    >
       {Array.from({ length: totalPasos }, (_, i) => i + 1).map((paso, index) => (
         <View key={paso} className="flex-row items-center">
           <View

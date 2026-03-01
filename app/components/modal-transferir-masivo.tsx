@@ -121,7 +121,8 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
               <View className="p-6 border-b border-gray-200">
                 <Text className="text-lg font-bold text-gray-900">Transferir jugadores</Text>
                 <Text className="text-sm text-gray-500 mt-1">
-                  Seleccioná el equipo de destino para los {jugadores.length} jugadores seleccionados
+                  Seleccioná el equipo de destino para los {jugadores.length} jugadores
+                  seleccionados
                 </Text>
               </View>
 

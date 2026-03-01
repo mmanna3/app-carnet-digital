@@ -32,9 +32,9 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync()
 
 // Conectar useAuth con api para romper el ciclo de require
-useAuth.getState()._setLoginImpl(async (usuario, password) =>
-  api.login(new LoginDTO({ usuario, password }))
-)
+useAuth
+  .getState()
+  ._setLoginImpl(async (usuario, password) => api.login(new LoginDTO({ usuario, password })))
 
 function useProtectedRoute(loaded: boolean) {
   const segments = useSegments()
@@ -62,7 +62,14 @@ function useProtectedRoute(loaded: boolean) {
     }
 
     // No autenticado: Home (UNILIGA o MULTILIGA con liga elegida), (auth), seleccion-de-liga, fichajes o registro-delegado
-    if (!isAuthenticated && !inAuthGroup && !inSeleccionLiga && !inHome && !inFichajes && !inRegistroDelegado) {
+    if (
+      !isAuthenticated &&
+      !inAuthGroup &&
+      !inSeleccionLiga &&
+      !inHome &&
+      !inFichajes &&
+      !inRegistroDelegado
+    ) {
       router.replace('/home' as any)
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/seleccion-de-equipo')
@@ -118,44 +125,44 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider>
-        <MenuProvider skipInstanceCheck>
-          <Stack>
-          <Stack.Screen name="home" options={{ headerShown: false }} />
-          <Stack.Screen name="fichajes" options={{ headerShown: false }} />
-          <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-              title: 'Inicio', // Usado por el botón atrás al volver desde fichaje-delegado (evita "(tabs)")
-            }}
-          />
-          <Stack.Screen
-            name="fichaje-delegado"
-            options={{
-              title: 'Fichar jugador',
-              headerBackButtonDisplayMode: 'minimal', // Solo flecha, sin texto (RN 7+)
-              headerStyle: { backgroundColor: '#ffffff' },
-              headerTintColor: '#111827',
-              headerTitleStyle: { color: '#111827' },
-              headerRight: () => <HeaderMenu />,
-            }}
-          />
-          <Stack.Screen
-            name="seleccion-de-liga"
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="seleccion-de-equipo"
-            options={{
-              headerShown: false,
-              presentation: 'modal',
-              gestureEnabled: false,
-            }}
-          />
-        </Stack>
-        </MenuProvider>
+          <MenuProvider skipInstanceCheck>
+            <Stack>
+              <Stack.Screen name="home" options={{ headerShown: false }} />
+              <Stack.Screen name="fichajes" options={{ headerShown: false }} />
+              <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                  title: 'Inicio', // Usado por el botón atrás al volver desde fichaje-delegado (evita "(tabs)")
+                }}
+              />
+              <Stack.Screen
+                name="fichaje-delegado"
+                options={{
+                  title: 'Fichar jugador',
+                  headerBackButtonDisplayMode: 'minimal', // Solo flecha, sin texto (RN 7+)
+                  headerStyle: { backgroundColor: '#ffffff' },
+                  headerTintColor: '#111827',
+                  headerTitleStyle: { color: '#111827' },
+                  headerRight: () => <HeaderMenu />,
+                }}
+              />
+              <Stack.Screen
+                name="seleccion-de-liga"
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+              <Stack.Screen
+                name="seleccion-de-equipo"
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                  gestureEnabled: false,
+                }}
+              />
+            </Stack>
+          </MenuProvider>
         </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>

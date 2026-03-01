@@ -38,7 +38,8 @@ async function recortarCuadrado(uri: string, width: number, height: number) {
 }
 
 export default function PasoFoto() {
-  const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAlPasoAnterior, irAlPasoSiguiente } = useFichajeStore()
+  const { fotoUri, nombreEquipo, setFotoUri, setFotoBase64, irAlPasoAnterior, irAlPasoSiguiente } =
+    useFichajeStore()
   const [errorCamara, setErrorCamara] = useState<string | null>(null)
 
   const procesarImagen = async (asset: ImagePicker.ImagePickerAsset) => {
@@ -101,7 +102,9 @@ export default function PasoFoto() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Foto de la cara del jugador</Text>
+          <Text className="text-gray-900 text-lg font-semibold mb-1">
+            Foto de la cara del jugador
+          </Text>
           {nombreEquipo && (
             <Text className="text-gray-500 text-sm">
               Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
