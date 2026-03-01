@@ -58,8 +58,20 @@ const RESPONSES = {
   },
   'GET:/api/carnet-digital/equipos-del-delegado': {
     happy: {
-      equipos: [
-        { id: 1, nombre: 'Equipo de Prueba', codigoAlfanumerico: 'ABC1234', torneo: 'Torneo E2E' },
+      clubsConEquipos: [
+        {
+          nombre: 'Club de Prueba',
+          equipos: [
+            { id: 1, nombre: 'Equipo de Prueba', codigoAlfanumerico: 'ABC1234', torneo: 'Torneo E2E' },
+          ],
+        },
+        {
+          nombre: 'Club Secundario',
+          equipos: [
+            { id: 2, nombre: 'Equipo B1', codigoAlfanumerico: 'BBBBB1', torneo: 'Torneo E2E' },
+            { id: 3, nombre: 'Equipo B2', codigoAlfanumerico: 'BBBBB2', torneo: 'Torneo E2E' },
+          ],
+        },
       ],
     },
   },
