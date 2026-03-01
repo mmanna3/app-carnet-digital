@@ -13,7 +13,11 @@ export default function NotFoundScreen() {
   const segments = useSegments()
 
   const codigoError =
-    pathname && pathname !== '/' ? pathname : segments?.length ? segments.join('/') : 'ruta-desconocida'
+    pathname && pathname !== '/'
+      ? pathname
+      : segments?.length
+        ? segments.join('/')
+        : 'ruta-desconocida'
 
   const irAlHome = () => {
     router.replace('/home' as any)

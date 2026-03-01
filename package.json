@@ -29,6 +29,7 @@
     "test:e2e:single": "maestro test",
     "test:e2e:debug": "maestro test --debug-output ./e2e-debug --format HTML --output e2e-report.html e2e/",
     "test:e2e:record": "maestro record --local",
+    "prepush": "npm run format && npm run lint:fix && npm run typecheck",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "lint:fix": "expo lint --fix",
