@@ -30,7 +30,7 @@ export default function MisJugadoresScreen() {
   const { equipoSeleccionadoId } = useEquipoStore()
   const { isAuthenticated } = useAuth()
   const scrollViewRef = useRef<ScrollView>(null)
-  const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({})
+  const [categoryPositions, setCategoryPositions] = useState<Record<number | string, number>>({})
   const queryClient = useQueryClient()
 
   const [jugadorSeleccionado, setJugadorSeleccionado] = useState<CarnetDigitalDTO | null>(null)
@@ -158,7 +158,10 @@ export default function MisJugadoresScreen() {
     return new Date(fechaNacimiento).getFullYear()
   }
 
-  const jugadoresPorCategoria = jugadores.reduce(
+  const delegados = jugadores.filter((j) => j.esDelegado === true)
+  const jugadoresNoDelegados = jugadores.filter((j) => j.esDelegado !== true)
+
+  const jugadoresPorCategoria = jugadoresNoDelegados.reduce(
     (acc, jugador) => {
       const año = obtenerAñoCompleto(jugador.fechaNacimiento)
       if (!acc[año]) {
@@ -170,22 +173,25 @@ export default function MisJugadoresScreen() {
     {} as Record<number, CarnetDigitalDTO[]>
   )
 
-  const categorias = Object.keys(jugadoresPorCategoria)
+  const categoriasAño = Object.keys(jugadoresPorCategoria)
     .map(Number)
     .sort((a, b) => a - b)
 
-  const scrollToCategory = (año: number) => {
-    const position = categoryPositions[año]
+  const hayDelegados = delegados.length > 0
+  const secciones = hayDelegados ? ['delegados' as const, ...categoriasAño] : categoriasAño
+
+  const scrollToSection = (seccion: number | string) => {
+    const position = categoryPositions[seccion]
     if (position !== undefined && scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: position, animated: true })
     }
   }
 
-  const handleCategoryLayout = (año: number, event: any) => {
+  const handleSectionLayout = (seccion: number | string, event: any) => {
     const { y } = event.nativeEvent.layout
     setCategoryPositions((prev) => ({
       ...prev,
-      [año]: y,
+      [seccion]: y,
     }))
   }
 
@@ -201,13 +207,15 @@ export default function MisJugadoresScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
         >
-          {categorias.map((año) => (
+          {secciones.map((seccion) => (
             <TouchableOpacity
-              key={`button-${año}`}
+              key={`button-${seccion}`}
               className="bg-liga-600 px-5 py-2 rounded-full mx-1.5"
-              onPress={() => scrollToCategory(año)}
+              onPress={() => scrollToSection(seccion)}
             >
-              <Text className="text-white text-base font-semibold">{año}</Text>
+              <Text className="text-white text-base font-semibold">
+                {seccion === 'delegados' ? 'DT/Delegado' : seccion}
+              </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -218,8 +226,25 @@ export default function MisJugadoresScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
       >
         <View className="p-2.5">
-          {categorias.map((año) => (
-            <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
+          {hayDelegados && (
+            <View key="delegados" onLayout={(event) => handleSectionLayout('delegados', event)}>
+              <View className="bg-liga-600 p-3 mb-4 rounded-lg shadow-md">
+                <Text className="text-white text-lg font-bold text-center">DT/Delegado</Text>
+              </View>
+              {delegados.map((jugador) => (
+                <Carnet
+                  key={jugador.id}
+                  jugador={jugador}
+                  modoSeleccion={modoSeleccion}
+                  seleccionado={jugadoresSeleccionados.includes(jugador.id!)}
+                  onPress={modoSeleccion ? () => toggle(jugador.id!) : undefined}
+                  onLongPress={modoSeleccion ? undefined : () => handleLongPress(jugador)}
+                />
+              ))}
+            </View>
+          )}
+          {categoriasAño.map((año) => (
+            <View key={año} onLayout={(event) => handleSectionLayout(año, event)}>
               <View className="bg-liga-600 p-3 mb-4 rounded-lg shadow-md">
                 <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
               </View>

@@ -95,6 +95,36 @@ const RESPONSES = {
       },
     ],
   },
+  'GET:/api/carnet-digital/carnets-por-codigo-alfanumerico': {
+    happy: [
+      {
+        id: 1,
+        dni: '12345678',
+        nombre: 'Juan',
+        apellido: 'Perez',
+        fechaNacimiento: '2010-03-15T00:00:00Z',
+        equipo: 'Equipo de Prueba',
+        torneo: 'Torneo E2E',
+        estado: 3,
+        fotoCarnet: null,
+      },
+    ],
+  },
+  'GET:/api/carnet-digital/jugadores-pendientes': {
+    happy: [
+      {
+        id: 2,
+        dni: '99887766',
+        nombre: 'Maria',
+        apellido: 'Garcia',
+        fechaNacimiento: '2008-06-20T00:00:00Z',
+        equipo: 'Equipo de Prueba',
+        torneo: 'Torneo E2E',
+        estado: 1,
+        fotoCarnet: null,
+      },
+    ],
+  },
 }
 
 const server = http.createServer((req, res) => {

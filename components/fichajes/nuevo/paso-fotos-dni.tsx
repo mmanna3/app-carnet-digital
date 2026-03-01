@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, Image, ScrollView, ActionSheetIOS, Alert, Platform } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import { Feather } from '@expo/vector-icons'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '../cabecera'
@@ -38,6 +39,16 @@ function PreviewDni({ uri }: { uri: string | null }) {
 
 const isE2E = !!process.env.EXPO_PUBLIC_E2E_API_URL
 
+async function procesarImagenDni(uri: string): Promise<{ uri: string; base64: string }> {
+  const { uri: uriProcesada, base64 } = await ImageManipulator.manipulateAsync(uri, [], {
+    compress: 0.8,
+    format: ImageManipulator.SaveFormat.JPEG,
+    base64: true,
+  })
+  if (!base64) throw new Error('No se pudo procesar la imagen')
+  return { uri: uriProcesada, base64 }
+}
+
 export default function PasoFotosDni() {
   const {
     dniFrenteUri,
@@ -61,16 +72,16 @@ export default function PasoFotosDni() {
       const resultado = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.back,
         allowsEditing: false,
-        base64: true,
       })
       if (!resultado.canceled) {
         const asset = resultado.assets[0]
+        const { uri, base64 } = await procesarImagenDni(asset.uri)
         if (lado === 'frente') {
-          setDniFrenteUri(asset.uri)
-          setDniFrenteBase64(asset.base64 ?? null)
+          setDniFrenteUri(uri)
+          setDniFrenteBase64(base64)
         } else {
-          setDniDorsoUri(asset.uri)
-          setDniDorsoBase64(asset.base64 ?? null)
+          setDniDorsoUri(uri)
+          setDniDorsoBase64(base64)
         }
       }
     } catch {
@@ -98,16 +109,16 @@ export default function PasoFotosDni() {
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
-      base64: true,
     })
     if (!resultado.canceled) {
       const asset = resultado.assets[0]
+      const { uri, base64 } = await procesarImagenDni(asset.uri)
       if (lado === 'frente') {
-        setDniFrenteUri(asset.uri)
-        setDniFrenteBase64(asset.base64 ?? null)
+        setDniFrenteUri(uri)
+        setDniFrenteBase64(base64)
       } else {
-        setDniDorsoUri(asset.uri)
-        setDniDorsoBase64(asset.base64 ?? null)
+        setDniDorsoUri(uri)
+        setDniDorsoBase64(base64)
       }
     }
   }

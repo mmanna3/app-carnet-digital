@@ -80,6 +80,7 @@ export default function PendientesScreen() {
 
   return (
     <ScrollView
+      testID="pantalla-pendientes"
       className="flex-1 bg-[#f8f8f8]"
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
     >

@@ -1,5 +1,11 @@
 appId: com.blueservant.edefi
 ---
+# ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 12345678, el mismo que el test 01
+# (fichaje anónimo nuevo jugador). Cuando se corre el suite completo, el test 01 crea
+# ese jugador como Pendiente de aprobación, y este test falla con "El DNI está pendiente
+# de aprobación". Con el mock server no hay problema porque el servidor es stateless.
+# Solución: usar un DNI distinto en este test (y actualizar el mock server si corresponde).
+#
 # Flujo: login → seleccionar equipo → menú "Fichar jugadores" →
 # card nuevo (azul) → datos → foto → fotos DNI → autorización → confirmación
 #

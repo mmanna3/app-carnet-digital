@@ -24,7 +24,7 @@ appId: com.blueservant.edefi
     id: 'paso-codigo-club'
 - tapOn:
     id: 'input-codigo-club'
-- inputText: 'ABC1234'
+- inputText: 'MTD0001'
 - tapOn:
     id: 'titulo-codigo-club'
 - extendedWaitUntil:

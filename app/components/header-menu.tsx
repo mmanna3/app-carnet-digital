@@ -114,10 +114,16 @@ export default function HeaderMenu() {
             onSelect={() => router.push('/fichaje-delegado' as any)}
           />
           <View className="h-px bg-gray-200 my-2 mx-4" />
-          <MenuItem icon="users" label="Cambiar equipo" onSelect={handleCambiarEquipo} />
+          <MenuItem
+            icon="users"
+            label="Cambiar equipo"
+            testID="menu-item-cambiar-equipo"
+            onSelect={handleCambiarEquipo}
+          />
           <MenuItem
             icon="log-out"
             label="Cerrar sesión"
+            testID="menu-item-cerrar-sesion"
             onSelect={handleCerrarSesion}
             destructive
           />

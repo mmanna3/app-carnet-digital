@@ -87,7 +87,7 @@ export default function BuscarScreen() {
   }
 
   return (
-    <View className="flex-1 bg-[#f8f8f8]">
+    <View testID="pantalla-buscar" className="flex-1 bg-[#f8f8f8]">
       {jugadores.length > 0 && (
         <View className="bg-white py-2.5 border-b border-gray-200 z-[1]">
           <ScrollView
@@ -113,6 +113,7 @@ export default function BuscarScreen() {
             Ingresá el código del equipo
           </Text>
           <TextInput
+            testID="input-codigo-buscar"
             className="bg-[#f5f5f5] rounded-lg p-3 text-base mb-4"
             placeholderTextColor="#999"
             placeholder="Ej: ABC1234"
@@ -122,6 +123,7 @@ export default function BuscarScreen() {
             maxLength={7}
           />
           <Boton
+            testID="boton-buscar"
             texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
             onPress={buscarJugadores}
             deshabilitado={isLoading}

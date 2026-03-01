@@ -23,6 +23,7 @@ export default function Carnet({
   modoSeleccion = false,
 }: CarnetProps) {
   const estado = jugador.estado as EstadoJugador
+  const esDelegado = jugador.esDelegado === true
   const debeMostrarEstado =
     mostrarEstado || estado === EstadoJugador.Inhabilitado || estado === EstadoJugador.Suspendido
 
@@ -37,7 +38,11 @@ export default function Carnet({
       onPress={modoSeleccion ? onPress : undefined}
       onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}
-      className="bg-white rounded-2xl m-4 overflow-hidden border-2 border-gray-200 shadow-lg elevation-5"
+      className={`m-4 overflow-hidden rounded-2xl shadow-lg elevation-5 ${
+        esDelegado
+          ? 'border-4 border-liga-700 bg-liga-100'
+          : 'border-2 border-gray-200 bg-white'
+      }`}
     >
       {modoSeleccion && (
         <View className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full border-2 border-liga-600 bg-white/80 items-center justify-center">
@@ -56,7 +61,14 @@ export default function Carnet({
           </Text>
         </View>
       )}
-      <View className="p-4">
+      {esDelegado && (
+        <View className="bg-liga-600 py-2 px-4 border-y-2 border-liga-700">
+          <Text className="text-white text-center font-bold text-sm uppercase tracking-wider">
+            DT/Delegado
+          </Text>
+        </View>
+      )}
+      <View className={`p-4 ${esDelegado ? 'bg-white mx-2 mt-2 mb-2 rounded-xl border-2 border-dashed border-liga-300' : ''}`}>
         <View className="items-center mb-4 border-b border-gray-200 pb-3">
           <Text className="text-2xl font-bold mb-1 text-[#1a1a1a]">{jugador.equipo}</Text>
           <Text className="text-lg text-gray-500">{jugador.torneo}</Text>

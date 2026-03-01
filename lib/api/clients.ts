@@ -543,8 +543,8 @@ export class Client {
      * @param body (optional) 
      * @return OK
      */
-    aprobar(body: AprobarDelegadoDTO | undefined): Promise<number> {
-        let url_ = this.baseUrl + "/api/Delegado/aprobar";
+    aprobarDelegadoEnElClub(body: AprobarDelegadoEnElClubDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Delegado/aprobar-delegado-en-el-club";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -559,11 +559,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processAprobar(_response);
+            return this.processAprobarDelegadoEnElClub(_response);
         });
     }
 
-    protected processAprobar(response: Response): Promise<number> {
+    protected processAprobarDelegadoEnElClub(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -623,6 +623,55 @@ export class Client {
             });
         }
         return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @param estados (optional) 
+     * @return OK
+     */
+    listarDelegadosConFiltro(estados: EstadoDelegadoEnum[] | undefined): Promise<DelegadoDTO[]> {
+        let url_ = this.baseUrl + "/api/Delegado/listar-delegados-con-filtro?";
+        if (estados === null)
+            throw new Error("The parameter 'estados' cannot be null.");
+        else if (estados !== undefined)
+            estados && estados.forEach(item => { url_ += "estados=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processListarDelegadosConFiltro(_response);
+        });
+    }
+
+    protected processListarDelegadosConFiltro(response: Response): Promise<DelegadoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DelegadoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DelegadoDTO[]>(null as any);
     }
 
     /**
@@ -2040,10 +2089,10 @@ export class Client {
     }
 }
 
-export class AprobarDelegadoDTO implements IAprobarDelegadoDTO {
-    id?: number;
+export class AprobarDelegadoEnElClubDTO implements IAprobarDelegadoEnElClubDTO {
+    delegadoClubId?: number;
 
-    constructor(data?: IAprobarDelegadoDTO) {
+    constructor(data?: IAprobarDelegadoEnElClubDTO) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2054,26 +2103,26 @@ export class AprobarDelegadoDTO implements IAprobarDelegadoDTO {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
+            this.delegadoClubId = _data["delegadoClubId"];
         }
     }
 
-    static fromJS(data: any): AprobarDelegadoDTO {
+    static fromJS(data: any): AprobarDelegadoEnElClubDTO {
         data = typeof data === 'object' ? data : {};
-        let result = new AprobarDelegadoDTO();
+        let result = new AprobarDelegadoEnElClubDTO();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
+        data["delegadoClubId"] = this.delegadoClubId;
         return data;
     }
 }
 
-export interface IAprobarDelegadoDTO {
-    id?: number;
+export interface IAprobarDelegadoEnElClubDTO {
+    delegadoClubId?: number;
 }
 
 export class AprobarJugadorDTO implements IAprobarJugadorDTO {
@@ -2226,6 +2275,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
     equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
+    esDelegado?: boolean;
 
     constructor(data?: ICarnetDigitalDTO) {
         if (data) {
@@ -2247,6 +2297,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
             this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
             this.estado = _data["estado"];
+            this.esDelegado = _data["esDelegado"];
         }
     }
 
@@ -2268,6 +2319,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
         data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
         data["estado"] = this.estado;
+        data["esDelegado"] = this.esDelegado;
         return data;
     }
 }
@@ -2282,6 +2334,7 @@ export interface ICarnetDigitalDTO {
     equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
+    esDelegado?: boolean;
 }
 
 export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
@@ -2294,6 +2347,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
     equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
+    esDelegado?: boolean;
     motivo?: string | undefined;
 
     constructor(data?: ICarnetDigitalPendienteDTO) {
@@ -2316,6 +2370,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
             this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
             this.estado = _data["estado"];
+            this.esDelegado = _data["esDelegado"];
             this.motivo = _data["motivo"];
         }
     }
@@ -2338,6 +2393,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
         data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
         data["estado"] = this.estado;
+        data["esDelegado"] = this.esDelegado;
         data["motivo"] = this.motivo;
         return data;
     }
@@ -2353,6 +2409,7 @@ export interface ICarnetDigitalPendienteDTO {
     equipo?: string | undefined;
     torneo?: string | undefined;
     estado?: number;
+    esDelegado?: boolean;
     motivo?: string | undefined;
 }
 
@@ -2468,6 +2525,70 @@ export interface IClubDTO {
     delegados?: DelegadoDTO[] | undefined;
 }
 
+export class DelegadoClubDTO implements IDelegadoClubDTO {
+    id?: number;
+    clubId?: number;
+    clubNombre?: string | undefined;
+    estadoDelegadoId?: number;
+    estadoDelegado?: EstadoDelegadoDTO;
+    equiposDelClub?: string[] | undefined;
+
+    constructor(data?: IDelegadoClubDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.clubId = _data["clubId"];
+            this.clubNombre = _data["clubNombre"];
+            this.estadoDelegadoId = _data["estadoDelegadoId"];
+            this.estadoDelegado = _data["estadoDelegado"] ? EstadoDelegadoDTO.fromJS(_data["estadoDelegado"]) : <any>undefined;
+            if (Array.isArray(_data["equiposDelClub"])) {
+                this.equiposDelClub = [] as any;
+                for (let item of _data["equiposDelClub"])
+                    this.equiposDelClub!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): DelegadoClubDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new DelegadoClubDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["clubId"] = this.clubId;
+        data["clubNombre"] = this.clubNombre;
+        data["estadoDelegadoId"] = this.estadoDelegadoId;
+        data["estadoDelegado"] = this.estadoDelegado ? this.estadoDelegado.toJSON() : <any>undefined;
+        if (Array.isArray(this.equiposDelClub)) {
+            data["equiposDelClub"] = [];
+            for (let item of this.equiposDelClub)
+                data["equiposDelClub"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IDelegadoClubDTO {
+    id?: number;
+    clubId?: number;
+    clubNombre?: string | undefined;
+    estadoDelegadoId?: number;
+    estadoDelegado?: EstadoDelegadoDTO;
+    equiposDelClub?: string[] | undefined;
+}
+
 export class DelegadoDTO implements IDelegadoDTO {
     id?: number;
     dni!: string;
@@ -2476,15 +2597,13 @@ export class DelegadoDTO implements IDelegadoDTO {
     fechaNacimiento!: Date;
     telefonoCelular?: string | undefined;
     email?: string | undefined;
-    nombreUsuario?: string | undefined;
+    usuario?: UsuarioDTO;
     fotoCarnet!: string;
     fotoDNIFrente!: string;
     fotoDNIDorso!: string;
     blanqueoPendiente?: boolean;
     clubIds?: number[] | undefined;
-    estadoDelegado?: EstadoDelegadoDTO;
-    clubNombres?: string[] | undefined;
-    equiposDelClub?: string[] | undefined;
+    delegadoClubs?: DelegadoClubDTO[] | undefined;
     jugadorId?: number | undefined;
 
     constructor(data?: IDelegadoDTO) {
@@ -2505,7 +2624,7 @@ export class DelegadoDTO implements IDelegadoDTO {
             this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
             this.telefonoCelular = _data["telefonoCelular"];
             this.email = _data["email"];
-            this.nombreUsuario = _data["nombreUsuario"];
+            this.usuario = _data["usuario"] ? UsuarioDTO.fromJS(_data["usuario"]) : <any>undefined;
             this.fotoCarnet = _data["fotoCarnet"];
             this.fotoDNIFrente = _data["fotoDNIFrente"];
             this.fotoDNIDorso = _data["fotoDNIDorso"];
@@ -2515,16 +2634,10 @@ export class DelegadoDTO implements IDelegadoDTO {
                 for (let item of _data["clubIds"])
                     this.clubIds!.push(item);
             }
-            this.estadoDelegado = _data["estadoDelegado"] ? EstadoDelegadoDTO.fromJS(_data["estadoDelegado"]) : <any>undefined;
-            if (Array.isArray(_data["clubNombres"])) {
-                this.clubNombres = [] as any;
-                for (let item of _data["clubNombres"])
-                    this.clubNombres!.push(item);
-            }
-            if (Array.isArray(_data["equiposDelClub"])) {
-                this.equiposDelClub = [] as any;
-                for (let item of _data["equiposDelClub"])
-                    this.equiposDelClub!.push(item);
+            if (Array.isArray(_data["delegadoClubs"])) {
+                this.delegadoClubs = [] as any;
+                for (let item of _data["delegadoClubs"])
+                    this.delegadoClubs!.push(DelegadoClubDTO.fromJS(item));
             }
             this.jugadorId = _data["jugadorId"];
         }
@@ -2546,7 +2659,7 @@ export class DelegadoDTO implements IDelegadoDTO {
         data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
         data["telefonoCelular"] = this.telefonoCelular;
         data["email"] = this.email;
-        data["nombreUsuario"] = this.nombreUsuario;
+        data["usuario"] = this.usuario ? this.usuario.toJSON() : <any>undefined;
         data["fotoCarnet"] = this.fotoCarnet;
         data["fotoDNIFrente"] = this.fotoDNIFrente;
         data["fotoDNIDorso"] = this.fotoDNIDorso;
@@ -2556,16 +2669,10 @@ export class DelegadoDTO implements IDelegadoDTO {
             for (let item of this.clubIds)
                 data["clubIds"].push(item);
         }
-        data["estadoDelegado"] = this.estadoDelegado ? this.estadoDelegado.toJSON() : <any>undefined;
-        if (Array.isArray(this.clubNombres)) {
-            data["clubNombres"] = [];
-            for (let item of this.clubNombres)
-                data["clubNombres"].push(item);
-        }
-        if (Array.isArray(this.equiposDelClub)) {
-            data["equiposDelClub"] = [];
-            for (let item of this.equiposDelClub)
-                data["equiposDelClub"].push(item);
+        if (Array.isArray(this.delegadoClubs)) {
+            data["delegadoClubs"] = [];
+            for (let item of this.delegadoClubs)
+                data["delegadoClubs"].push(item.toJSON());
         }
         data["jugadorId"] = this.jugadorId;
         return data;
@@ -2580,15 +2687,13 @@ export interface IDelegadoDTO {
     fechaNacimiento: Date;
     telefonoCelular?: string | undefined;
     email?: string | undefined;
-    nombreUsuario?: string | undefined;
+    usuario?: UsuarioDTO;
     fotoCarnet: string;
     fotoDNIFrente: string;
     fotoDNIDorso: string;
     blanqueoPendiente?: boolean;
     clubIds?: number[] | undefined;
-    estadoDelegado?: EstadoDelegadoDTO;
-    clubNombres?: string[] | undefined;
-    equiposDelClub?: string[] | undefined;
+    delegadoClubs?: DelegadoClubDTO[] | undefined;
     jugadorId?: number | undefined;
 }
 
@@ -2798,6 +2903,7 @@ export interface IEquipoDTO {
 
 export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
     id?: number;
+    equipoId?: number;
     nombre?: string | undefined;
     club?: string | undefined;
     torneo?: string | undefined;
@@ -2817,6 +2923,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.equipoId = _data["equipoId"];
             this.nombre = _data["nombre"];
             this.club = _data["club"];
             this.torneo = _data["torneo"];
@@ -2836,6 +2943,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["equipoId"] = this.equipoId;
         data["nombre"] = this.nombre;
         data["club"] = this.club;
         data["torneo"] = this.torneo;
@@ -2848,6 +2956,7 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
 
 export interface IEquipoDelJugadorDTO {
     id?: number;
+    equipoId?: number;
     nombre?: string | undefined;
     club?: string | undefined;
     torneo?: string | undefined;
@@ -2938,6 +3047,12 @@ export class EstadoDelegadoDTO implements IEstadoDelegadoDTO {
 export interface IEstadoDelegadoDTO {
     id?: number;
     estado: string;
+}
+
+export enum EstadoDelegadoEnum {
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
 }
 
 export enum EstadoJugadorEnum {
@@ -3575,6 +3690,50 @@ export interface ITorneoDTO {
     id?: number;
     nombre: string;
     equipos?: EquipoDTO[] | undefined;
+}
+
+export class UsuarioDTO implements IUsuarioDTO {
+    id?: number;
+    nombreUsuario?: string | undefined;
+    delegadoId?: number | undefined;
+
+    constructor(data?: IUsuarioDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombreUsuario = _data["nombreUsuario"];
+            this.delegadoId = _data["delegadoId"];
+        }
+    }
+
+    static fromJS(data: any): UsuarioDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new UsuarioDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombreUsuario"] = this.nombreUsuario;
+        data["delegadoId"] = this.delegadoId;
+        return data;
+    }
+}
+
+export interface IUsuarioDTO {
+    id?: number;
+    nombreUsuario?: string | undefined;
+    delegadoId?: number | undefined;
 }
 
 export class ApiException extends Error {

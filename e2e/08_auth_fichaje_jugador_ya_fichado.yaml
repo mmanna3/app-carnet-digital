@@ -1,5 +1,13 @@
 appId: com.blueservant.edefi
 ---
+# ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 87654321, el mismo que el test 02
+# (fichaje anónimo jugador ya fichado). Cuando se corre el suite completo, el test 02
+# ficha a ese jugador en el equipo 1 como Pendiente, y este test falla con "El jugador
+# ya está fichado en el equipo". Con el mock server no hay problema porque el servidor
+# es stateless.
+# Solución: usar un DNI distinto en este test (seeded como Activo en equipo 2 pero no
+# en equipo 1), y actualizar la lógica smart del mock server para el nuevo DNI.
+#
 # Flujo: login → seleccionar equipo → menú "Fichar jugadores" →
 # card ya fichado (verde) → DNI → confirmación
 #

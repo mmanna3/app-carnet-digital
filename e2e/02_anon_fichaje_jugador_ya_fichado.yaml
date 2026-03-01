@@ -19,7 +19,7 @@ appId: com.blueservant.edefi
     id: 'paso-codigo-equipo'
 - tapOn:
     id: 'input-codigo-equipo'
-- inputText: 'ABC1234'
+- inputText: 'MTD0001'
 - tapOn:
     id: 'titulo-codigo-equipo'
 - extendedWaitUntil:
