@@ -37,6 +37,8 @@ function PreviewDni({ uri }: { uri: string | null }) {
   )
 }
 
+const isE2E = !!process.env.EXPO_PUBLIC_E2E_API_URL
+
 export default function PasoFotosDniDelegado() {
   const {
     dniFrenteUri,
@@ -78,6 +80,22 @@ export default function PasoFotosDniDelegado() {
   }
 
   const elegirImagen = async (lado: 'frente' | 'dorso') => {
+    if (isE2E) {
+      const b64 =
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAFA3PEY8MlBGQUZaVVBfeMiCeG5uePWvuZHI' +
+        '////////////////////////////////////////////////////wAALCAAKAAoBAREA' +
+        '/8QAFQABAQAAAAAAAAAAAAAAAAAAAAT/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEB' +
+        'AAA/AIgH/9k='
+      const uri = 'data:image/jpeg;base64,' + b64
+      if (lado === 'frente') {
+        setDniFrenteUri(uri)
+        setDniFrenteBase64(b64)
+      } else {
+        setDniDorsoUri(uri)
+        setDniDorsoBase64(b64)
+      }
+      return
+    }
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,

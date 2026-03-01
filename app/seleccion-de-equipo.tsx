@@ -4,10 +4,16 @@ import { router } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { EquipoBaseDTO } from '@/lib/api/clients'
+import { useAuth } from '@/lib/hooks/use-auth'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import { queryKeys } from '@/lib/api/query-keys'
+import Boton from '@/components/boton'
 
 export default function TeamSelectionScreen() {
+  const { logout } = useAuth()
+  const { limpiarEquipoSeleccionado } = useEquipoStore()
+  const { resetear } = useFichajeStore()
   const { data, isLoading, isError } = useApiQuery({
     key: queryKeys.equipos.all,
     fn: async () => await api.equiposDelDelegado(),
@@ -23,10 +29,32 @@ export default function TeamSelectionScreen() {
     }
   }
 
+  const handleCerrarSesion = () => {
+    logout()
+    limpiarEquipoSeleccionado()
+    resetear()
+    router.replace('/(auth)/login')
+  }
+
+  const BotonCerrarSesion = () => (
+    <View className="mb-6 items-end">
+      <Boton
+        testID="boton-cerrar-sesion-seleccion-equipo"
+        texto="Cerrar sesión"
+        onPress={handleCerrarSesion}
+        variante="Secundario"
+        className="h-[40px] px-4 mt-0"
+      />
+    </View>
+  )
+
   if (isLoading) {
     return (
       <View className="flex-1 bg-[#f8f8f8] p-5">
-        <Text className="text-2xl font-bold text-center">Cargando equipos...</Text>
+        <View className="flex-1 justify-center">
+          <Text className="text-2xl font-bold text-center">Cargando equipos...</Text>
+        </View>
+        <BotonCerrarSesion />
       </View>
     )
   }
@@ -34,7 +62,10 @@ export default function TeamSelectionScreen() {
   if (isError) {
     return (
       <View className="flex-1 bg-[#f8f8f8] p-5">
-        <Text className="text-2xl font-bold text-center">Error al cargar los equipos</Text>
+        <View className="flex-1 justify-center">
+          <Text className="text-2xl font-bold text-center">Error al cargar los equipos</Text>
+        </View>
+        <BotonCerrarSesion />
       </View>
     )
   }
@@ -64,6 +95,7 @@ export default function TeamSelectionScreen() {
           </View>
         ))}
       </ScrollView>
+      <BotonCerrarSesion />
     </View>
   )
 }

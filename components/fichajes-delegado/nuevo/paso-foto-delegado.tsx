@@ -57,9 +57,19 @@ export default function PasoFotoDelegado() {
 
   const isE2E = !!process.env.EXPO_PUBLIC_E2E_API_URL
   const elegirDeGaleria = async () => {
+    if (isE2E) {
+      const b64 =
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAFA3PEY8MlBGQUZaVVBfeMiCeG5uePWvuZHI' +
+        '////////////////////////////////////////////////////wAALCAAKAAoBAREA' +
+        '/8QAFQABAQAAAAAAAAAAAAAAAAAAAAT/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEB' +
+        'AAA/AIgH/9k='
+      setFotoUri('data:image/jpeg;base64,' + b64)
+      setFotoBase64(b64)
+      return
+    }
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: !isE2E,
+      allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     })
@@ -74,7 +84,7 @@ export default function PasoFotoDelegado() {
 
       const resultado = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.front,
-        allowsEditing: !isE2E,
+        allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
       })
