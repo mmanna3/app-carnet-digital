@@ -195,9 +195,11 @@ export default function MisJugadoresScreen() {
     }))
   }
 
-  const jugadoresParaAccionMasiva = jugadores.filter((j) => jugadoresSeleccionados.includes(j.id!))
+  const jugadoresParaAccionMasiva = jugadores.filter(
+    (j) => jugadoresSeleccionados.includes(j.id!) && j.esDelegado !== true
+  )
 
-  const haySeleccionados = jugadoresSeleccionados.length > 0
+  const haySeleccionados = jugadoresParaAccionMasiva.length > 0
 
   return (
     <View testID="pantalla-mis-jugadores" className="flex-1 bg-[#f8f8f8]">
@@ -236,9 +238,9 @@ export default function MisJugadoresScreen() {
                   key={jugador.id}
                   jugador={jugador}
                   modoSeleccion={modoSeleccion}
-                  seleccionado={jugadoresSeleccionados.includes(jugador.id!)}
-                  onPress={modoSeleccion ? () => toggle(jugador.id!) : undefined}
-                  onLongPress={modoSeleccion ? undefined : () => handleLongPress(jugador)}
+                  seleccionado={false}
+                  onPress={undefined}
+                  onLongPress={undefined}
                 />
               ))}
             </View>
