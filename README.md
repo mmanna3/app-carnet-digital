@@ -25,15 +25,19 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 1. **Configuración de la liga**  
    Verificá que en `configs-por-liga/datos.js` la liga tenga `appId`, `easProjectId`, `expoSlug` y `apiUrl` correctos.
 
+   Si al hacer deploy ves "You've already submitted this version": incrementar `version` en `app.config.ts` y volver a hacer build antes de deploy.
+
 2. **Login en EAS**  
    `npx eas-cli whoami` — si no estás logueado: `npx eas-cli login`
 
 3. **Subir a Play Store**
+   - Si la app cambió credenciales o screenshots, actualizarlos en Play Console (Policy → App content → App access; Grow users → Store presence → Main store listing).
    - `LIGA_ID={nombre_liga} npm run android:build` — EAS compila en la nube (perfil `production-{nombre_liga}`). El `.aab` queda en el dashboard de EAS.
    - `LIGA_ID={nombre_liga} npm run android:deploy` — Pregunta qué build elegir.
-   - En Play Console (https://play.google.com/console/u/0/signup, cuenta blueservant.software@gmail.com): Resumen de versiones → buscar la versión subida → Promover a Producción.
+   - En Play Console (https://play.google.com/console/u/0/signup, cuenta blueservant.software@gmail.com): Probar y publicar → Crear nueva versión → seleccionar App Bundle (desde Biblioteca) → Promover a Producción.
 
 4. **Subir a App Store**
+   - Si la app cambió credenciales o screenshots, actualizarlos en App Store Connect.
    - `LIGA_ID={nombre_liga} npm run ios:build`
    - `LIGA_ID={nombre_liga} npm run ios:deploy`
    - En App Store Connect (https://appstoreconnect.apple.com/): completar metadata si hace falta y enviar a revisión.
