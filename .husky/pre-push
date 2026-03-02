@@ -1,1 +1,6 @@
+# Cursor/VS Code GUI runs git with minimal PATH; ensure node/npm are available
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 npm run format && npm run lint:fix && npm run typecheck
