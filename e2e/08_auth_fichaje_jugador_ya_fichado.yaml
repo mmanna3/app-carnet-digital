@@ -1,4 +1,4 @@
-appId: com.blueservant.edefi
+appId: com.ykn.edefidelegados
 ---
 # ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 87654321, el mismo que el test 02
 # (fichaje anónimo jugador ya fichado). Cuando se corre el suite completo, el test 02
