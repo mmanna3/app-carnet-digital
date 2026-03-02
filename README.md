@@ -22,23 +22,21 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 
 ## Deploy
 
-**Subir versión en `app.config.ts` antes de build.**
+1. **Configuración de la liga**  
+   Verificá que en `configs-por-liga/datos.js` la liga tenga `appId`, `easProjectId`, `expoSlug` y `apiUrl` correctos.
 
-### iOS
+2. **Login en EAS**  
+   `npx eas-cli whoami` — si no estás logueado: `npx eas-cli login`
 
-```bash
-# UNILIGA (una app por liga)
-LIGA_ID=edefi npm run ios:build
-LIGA_ID=edefi npm run ios:deploy
+3. **Subir a Play Store**
+   - `LIGA_ID={nombre_liga} npm run android:build` — EAS compila en la nube (perfil `production-{nombre_liga}`). El `.aab` queda en el dashboard de EAS.
+   - `LIGA_ID={nombre_liga} npm run android:deploy` — Pregunta qué build elegir.
+   - En Play Console (https://play.google.com/console/u/0/signup, cuenta blueservant.software@gmail.com): Resumen de versiones → buscar la versión subida → Promover a Producción.
 
-# MULTILIGA (una app "Carnet Digital")
-LIGA_ID=multiliga npm run ios:build
-LIGA_ID=multiliga npm run ios:deploy
-```
-
-### Android
-
-Mismo flujo con `android:build` y `android:deploy`.
+4. **Subir a App Store**
+   - `LIGA_ID={nombre_liga} npm run ios:build`
+   - `LIGA_ID={nombre_liga} npm run ios:deploy`
+   - En App Store Connect (https://appstoreconnect.apple.com/): completar metadata si hace falta y enviar a revisión.
 
 ## Arquitectura UNILIGA vs MULTILIGA
 

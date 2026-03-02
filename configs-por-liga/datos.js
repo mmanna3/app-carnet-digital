@@ -20,12 +20,12 @@ const configLuefi = {
 const configEdefi = {
   leagueId: 'edefi',
   leagueDisplayName: 'EDeFI',
-  appName: 'EDeFI - Encuentro Deportivo De Fútbol Infantil',
+  appName: 'EDeFI',
   /** Nombre corto para splash/pantalla de inicio (evita que se corte) */
   splashScreenName: 'EDeFI',
-  appId: 'com.blueservant.edefi',
-  expoSlug: 'edefi',
-  easProjectId: 'TODO',
+  appId: 'com.ykn.edefidelegados',
+  expoSlug: 'EDeFI-Delegados',
+  easProjectId: 'd296a6cd-ac06-4c7c-8238-ff2c9b5339b6',
   scheme: 'carnet-edefi',
   icon: './assets/ligas/edefi/icon.png',
   splashImage: './assets/ligas/edefi/icon.png',
