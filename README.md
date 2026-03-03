@@ -20,6 +20,16 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 
 (si no funciona, correr en liga-be `scripts/insert-datos.sql`)
 
+### Levantar la app pegándole a PROD
+
+Por defecto, en modo dev la app usa la URL local (`http://192.168.0.70:5072`). Para que use la API de producción (`liga.apiUrl`):
+
+```bash
+EXPO_PUBLIC_USE_PROD_API=true LIGA_ID=edefi npm start
+```
+
+Al iniciar, la consola muestra la URL efectiva (ej. `📡 API URL: https://admin.edefi.com.ar`).
+
 ## Deploy
 
 1. **Configuración de la liga**  

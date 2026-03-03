@@ -12,9 +12,12 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 
 ```bash
 # Desarrollo
-LIGA_ID=edefi npm start           # UNILIGA (app EDeFI)
+LIGA_ID=edefi npm start           # UNILIGA (app EDeFI). Muestra API URL en consola.
 LIGA_ID=multiliga npm start       # MULTILIGA (selección de liga)
 LIGA_ID=edefi npm run start:dev   # Con dev client
+
+# Usar API de producción en dev (liga.apiUrl en vez de local):
+EXPO_PUBLIC_USE_PROD_API=true LIGA_ID=edefi npm start
 LIGA_ID=edefi npm run ios         # Simulador iOS
 LIGA_ID=edefi npm run android     # Emulador Android
 

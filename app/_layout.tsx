@@ -1,4 +1,5 @@
 import '../global.css'
+import { LogBox } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
@@ -30,6 +31,11 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
+
+// En modo E2E, suprimir la overlay de warnings de LogBox para que Maestro no haga clic en ella accidentalmente.
+if (process.env.EXPO_PUBLIC_E2E_API_URL) {
+  LogBox.ignoreAllLogs()
+}
 
 // Conectar useAuth con api para romper el ciclo de require
 useAuth

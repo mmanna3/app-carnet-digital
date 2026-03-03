@@ -18,6 +18,13 @@ const esMultiliga = extra?.esMultiliga === true
  */
 const E2E_API_URL = process.env.EXPO_PUBLIC_E2E_API_URL || null
 
+/**
+ * Si es true, usa liga.apiUrl en vez de la URL local aunque __DEV__ sea true.
+ * Útil para probar contra producción desde el dev server.
+ * Ej: EXPO_PUBLIC_USE_PROD_API=true LIGA_ID=edefi npm run start
+ */
+const USE_PROD_API = process.env.EXPO_PUBLIC_USE_PROD_API === 'true'
+
 /** Ligas disponibles en MULTILIGA (desde extra, indexadas por leagueId) */
 const ligasDisponiblesMap = (() => {
   const arr = extra?.ligasDisponibles ?? []
@@ -42,7 +49,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
       ? {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
-          apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.70:5072' : liga.apiUrl),
+          apiUrl: E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.70:5072' : liga.apiUrl),
           colorBase: liga.colorBase,
         }
       : null
@@ -51,7 +58,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
   return {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
-    apiUrl: E2E_API_URL ?? (__DEV__ ? 'http://192.168.0.70:5072' : (extra.apiUrl ?? '')),
+    apiUrl: E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.70:5072' : (extra.apiUrl ?? '')),
     colorBase: extra.colorBase,
   }
 }
