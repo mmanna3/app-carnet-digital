@@ -1,15 +1,16 @@
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
-import Clubes from '@/app/components/zona-detalle/clubes'
-import Fixture from '@/app/components/zona-detalle/fixture'
-import Jornadas from '@/app/components/zona-detalle/jornadas'
-import Posiciones from '@/app/components/zona-detalle/posiciones'
-import { ResumenTorneo } from '@/app/components/zona-detalle/resumen-torneo'
+import Clubes from '@/app/torneos/zona-detalle/clubes'
+import Fixture from '@/app/torneos/zona-detalle/fixture'
+import Jornadas from '@/app/torneos/zona-detalle/jornadas'
+import Posiciones from '@/app/torneos/zona-detalle/posiciones'
+import { ResumenTorneo } from '@/app/torneos/zona-detalle/resumen-torneo'
+import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
 
 type IconName = ComponentProps<typeof Ionicons>['name']
 
@@ -21,8 +22,6 @@ const TABS: { titulo: string; icon: IconName; Contenido: React.ComponentType }[]
 ]
 
 export default function ZonaDetalle() {
-  const router = useRouter()
-  const navigation = useNavigation()
   const insets = useSafeAreaInsets()
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -41,28 +40,11 @@ export default function ZonaDetalle() {
     return colorAgrupador ? hexCabeceraPorColorAgrupadorApi(colorAgrupador) : getColorLiga600()
   }, [colorAgrupador])
 
-  useLayoutEffect(() => {
-    const fondo = colorAgrupador
-      ? hexCabeceraPorColorAgrupadorApi(colorAgrupador)
-      : getColorLiga600()
-    navigation.setOptions({
-      title: tituloHeader,
-      headerStyle: { backgroundColor: fondo },
-      headerTintColor: '#ffffff',
-      headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
-      headerShadowVisible: false,
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => router.replace('/home')}
-          accessibilityRole="button"
-          accessibilityLabel="Ir al inicio"
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Entypo name="home" size={24} color="#ffffff" />
-        </TouchableOpacity>
-      ),
-    })
-  }, [navigation, router, tituloHeader, colorAgrupador])
+  const backgroundColor = colorAgrupador
+    ? hexCabeceraPorColorAgrupadorApi(colorAgrupador)
+    : getColorLiga600()
+
+  useHeaderConHome({ titulo: tituloHeader, backgroundColor })
 
   const Contenido = TABS[tabIndex]?.Contenido ?? Posiciones
 

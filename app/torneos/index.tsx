@@ -1,38 +1,19 @@
-import React, { useLayoutEffect } from 'react'
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
-import { useRouter, useNavigation } from 'expo-router'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import React from 'react'
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
 import { getColorLiga600, useConfigLiga } from '@/lib/config/liga'
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
+import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
 
 export default function Torneos() {
   const router = useRouter()
-  const navigation = useNavigation()
   const configLiga = useConfigLiga()
   const leagueId = configLiga?.leagueId
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'Torneos',
-      headerStyle: { backgroundColor: getColorLiga600() },
-      headerTintColor: '#ffffff',
-      headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
-      headerShadowVisible: false,
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => router.replace('/home')}
-          accessibilityRole="button"
-          accessibilityLabel="Ir al inicio"
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Entypo name="home" size={24} color="#ffffff" />
-        </TouchableOpacity>
-      ),
-    })
-  }, [navigation, router, configLiga?.leagueId])
+  useHeaderConHome({ titulo: 'Torneos', backgroundColor: getColorLiga600() })
 
   const {
     data: agrupadores,
@@ -91,7 +72,7 @@ export default function Torneos() {
               iconName="trophy"
               onPress={() =>
                 router.push({
-                  pathname: '/torneo-detalle',
+                  pathname: '/torneos/torneo-detalle',
                   params:
                     torneo.id != null
                       ? { torneoId: String(torneo.id) }

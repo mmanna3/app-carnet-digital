@@ -46,13 +46,13 @@ type ClubCardProps = {
 
 function ClubCard({ item, uriEscudo }: ClubCardProps) {
   return (
-    <View className="rounded-xl border border-gray-200 bg-white px-4 py-4 shadow-sm">
-      <View className="flex-row items-start gap-3">
-        <View style={{ width: 44, height: 44 }} className="items-center justify-center">
+    <View className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+      <View className="flex-row items-center gap-4">
+        <View style={{ width: 50, height: 50 }} className="shrink-0 items-center justify-center">
           {uriEscudo ? (
             <Image
               source={{ uri: uriEscudo }}
-              style={{ width: 44, height: 44 }}
+              style={{ width: 50, height: 50 }}
               className="rounded-lg"
               resizeMode="contain"
             />

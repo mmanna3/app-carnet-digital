@@ -1,13 +1,13 @@
-import React, { useLayoutEffect, useMemo } from 'react'
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
-import { Entypo } from '@expo/vector-icons'
+import React, { useMemo } from 'react'
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
 import { getColorLiga600, hexCabeceraPorColorAgrupadorApi, useConfigLiga } from '@/lib/config/liga'
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
 import type { InformacionInicialAgrupadorDTO } from '@/lib/api/clients'
+import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
 
 function buscarTorneoEnAgrupadores(
   agrupadores: InformacionInicialAgrupadorDTO[],
@@ -37,7 +37,6 @@ function buscarTorneoEnAgrupadores(
 
 export default function TorneoDetalle() {
   const router = useRouter()
-  const navigation = useNavigation()
   const { torneoId, agrupadorId, torneoNombre } = useLocalSearchParams<{
     torneoId: string
     agrupadorId?: string
@@ -61,27 +60,12 @@ export default function TorneoDetalle() {
     return buscarTorneoEnAgrupadores(agrupadores, torneoId, agrupadorId, torneoNombre)
   }, [agrupadores, torneoId, agrupadorId, torneoNombre])
 
-  useLayoutEffect(() => {
-    const titulo = resuelto?.torneo?.nombre?.trim() || 'Torneo'
-    const fondo = resuelto ? hexCabeceraPorColorAgrupadorApi(resuelto.color) : getColorLiga600()
-    navigation.setOptions({
-      title: titulo,
-      headerStyle: { backgroundColor: fondo },
-      headerTintColor: '#ffffff',
-      headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
-      headerShadowVisible: false,
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => router.replace('/home')}
-          accessibilityRole="button"
-          accessibilityLabel="Ir al inicio"
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Entypo name="home" size={24} color="#ffffff" />
-        </TouchableOpacity>
-      ),
-    })
-  }, [navigation, router, resuelto])
+  const titulo = resuelto?.torneo?.nombre?.trim() || 'Torneo'
+  const backgroundColor = resuelto
+    ? hexCabeceraPorColorAgrupadorApi(resuelto.color)
+    : getColorLiga600()
+
+  useHeaderConHome({ titulo, backgroundColor })
 
   if (!leagueId) {
     return (
@@ -137,7 +121,7 @@ export default function TorneoDetalle() {
               iconName="map"
               onPress={() =>
                 router.push({
-                  pathname: '/zona-detalle',
+                  pathname: '/torneos/zona-detalle',
                   params: {
                     torneoId: String(torneo.id ?? ''),
                     zonaId: zona.id != null ? String(zona.id) : '',
