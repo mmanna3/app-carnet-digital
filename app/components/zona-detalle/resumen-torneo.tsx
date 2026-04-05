@@ -32,12 +32,12 @@ export function ResumenTorneo({ torneo, fase, zona, colorAgrupador }: ResumenTor
   const anchoMaxTitulo = Math.max(120, anchoVentana - 64)
 
   return (
-    <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2.5 shadow-sm">
+    <View className="my-3 overflow-hidden">
       <View className="w-full items-center gap-2">
         <View className="flex-row items-center gap-2 self-center" style={{ maxWidth: '100%' }}>
-          <Ionicons name="trophy-outline" size={18} color={colorIcono} />
+          <Ionicons name="trophy-outline" size={16} color={colorIcono} />
           <Text
-            className="text-left text-[15px] font-medium leading-5 text-gray-900"
+            className="text-left text-[14px] font-medium leading-5 text-gray-900"
             numberOfLines={2}
             style={{ maxWidth: anchoMaxTitulo }}
           >
@@ -45,7 +45,7 @@ export function ResumenTorneo({ torneo, fase, zona, colorAgrupador }: ResumenTor
           </Text>
         </View>
         <Text
-          className="text-center text-[13px] font-medium leading-5 text-gray-500 ml-3"
+          className="text-center text-[12px] font-medium leading-5 text-gray-500 ml-3"
           numberOfLines={3}
         >
           {lineaFaseZona(fase, zona)}

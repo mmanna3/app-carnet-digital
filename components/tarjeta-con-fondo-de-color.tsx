@@ -41,7 +41,7 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
   const accento = estiloAccentoPorColor(color)
 
   const contenido = (
-    <View className="flex-row items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <View className="flex-row items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white">
       <View className={`w-1 ${accento.franja}`} />
       <View className="min-h-[52px] flex-1 flex-row items-center py-3 pl-3 pr-3">
         <View
@@ -56,7 +56,7 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
     </View>
   )
 
-  const envoltorio = `mb-2.5`
+  const envoltorio = `mb-2.5 shadow-sm`
 
   if (onPress) {
     return (
