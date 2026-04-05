@@ -9,4 +9,7 @@ export const queryKeys = {
   jugadores: {
     pendientes: (id: number | null | undefined) => ['jugadores', 'pendientes', id] as const,
   },
+  torneos: {
+    infoInicial: (leagueId: string | undefined) => ['torneos', 'infoInicial', leagueId] as const,
+  },
 }

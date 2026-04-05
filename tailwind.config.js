@@ -14,6 +14,10 @@ module.exports = {
     extend: {
       colors: {
         liga: ligaColors,
+        // Torneos: fondos por `color` del API (Verde / Rojo / Azul)
+        verde: colors.green,
+        rojo: colors.red,
+        azul: colors.blue,
       },
     },
   },
