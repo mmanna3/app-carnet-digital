@@ -1,0 +1,84 @@
+appId: com.blueservant.edefi
+---
+# Validación: DNI con formato inválido → botón continuar deshabilitado
+#
+# El campo DNI requiere entre 7 y 9 dígitos. Con menos dígitos, el botón
+# 'Continuar' permanece deshabilitado aunque el resto de los campos estén completos.
+# Verifica además que al completar con un DNI válido el botón se habilita.
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'card-fichaje'
+# PantallaIntro
+- tapOn:
+    id: 'card-nuevo'
+# PasoCodigoEquipo — pasar con código válido
+- assertVisible:
+    id: 'paso-codigo-equipo'
+- tapOn:
+    id: 'input-codigo-equipo'
+- inputText: 'MTD0001'
+- tapOn:
+    id: 'titulo-codigo-equipo'
+- extendedWaitUntil:
+    visible:
+      id: 'boton-validar'
+      enabled: true
+- tapOn:
+    id: 'boton-validar'
+# PasoDatosJugador — completar todos los campos excepto DNI (inválido)
+- assertVisible:
+    id: 'paso-datos-jugador'
+- tapOn:
+    id: 'input-nombre'
+- inputText: 'Juan'
+- tapOn:
+    id: 'input-apellido'
+- inputText: 'Perez'
+# Ingresar solo 5 dígitos (mínimo requerido: 7)
+- tapOn:
+    id: 'input-dni-jugador'
+- inputText: '12345'
+# Cerrar teclado y abrir el date picker
+# Nota: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro
+# en iOS, por lo que se usa tap por coordenada relativa para cerrar con "Listo"
+- tapOn:
+    text: 'Datos del jugador'
+- tapOn:
+    id: 'input-fecha-nacimiento'
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      # Girar la rueda del año para disparar onChange (setFechaNac)
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
+      - tapOn:
+          point: '50%, 93%'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          text: 'OK'
+          optional: true
+      - tapOn:
+          text: 'Aceptar'
+          optional: true
+# Con DNI de 5 dígitos, el botón debe estar deshabilitado
+- assertVisible:
+    id: 'boton-continuar'
+    enabled: false
+# Completar el DNI con 2 dígitos más para llegar a 7 (válido)
+- tapOn:
+    id: 'input-dni-jugador'
+- inputText: '67'
+# Ahora el botón debe habilitarse
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true

@@ -87,6 +87,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
               </View>
               <View className="px-4 pb-4 gap-3">
                 <TouchableOpacity
+                  testID="boton-confirmar-transferencia"
                   className="bg-liga-600 rounded-xl p-4 items-center"
                   onPress={handleTransferir}
                   disabled={cargando}
@@ -134,6 +135,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
                   {otrosEquipos.map((equipo: EquipoBaseDTO) => (
                     <TouchableOpacity
                       key={equipo.id}
+                      testID={`equipo-destino-${equipo.id}`}
                       className="p-4 border-b border-gray-100"
                       onPress={() => setEquipoDestino(equipo)}
                     >

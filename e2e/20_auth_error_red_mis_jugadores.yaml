@@ -1,0 +1,49 @@
+appId: com.blueservant.edefi
+---
+# Error de red al cargar mis jugadores: el servidor devuelve 500 → pantalla de error
+#
+# Verifica que cuando GET /api/carnet-digital/carnets falla, la pantalla muestra
+# el estado de error en lugar de crashear o quedarse en loading indefinido.
+#
+# Usa evalScript para cambiar el escenario del mock server a 'error_carnets'
+# antes del test y restaurarlo al finalizar.
+- evalScript: |
+    http.post('http://localhost:3001/_set-scenario', '{"scenario":"error_carnets"}')
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'card-delegados'
+# PantallaLogin — el login sigue funcionando (solo carnets falla)
+- assertVisible:
+    id: 'pantalla-login'
+- tapOn:
+    id: 'input-usuario'
+- inputText: 'delegado-e2e'
+- tapOn:
+    id: 'input-password'
+- inputText: 'password123'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: 'boton-iniciar-sesion'
+      enabled: true
+- tapOn:
+    id: 'boton-iniciar-sesion'
+# PantallaSeleccionEquipo
+- assertVisible:
+    id: 'pantalla-seleccion-equipo'
+- tapOn:
+    id: 'item-equipo-1'
+# Tab Mis Jugadores — debe mostrar estado de error, no crash
+- assertVisible:
+    text: 'Error al cargar los jugadores.'
+- assertNotVisible:
+    id: 'carnet-jugador'
+# Restaurar escenario happy para no afectar tests siguientes
+- evalScript: |
+    http.post('http://localhost:3001/_set-scenario', '{"scenario":"happy"}')

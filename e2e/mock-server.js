@@ -7,13 +7,17 @@
  *   SCENARIO   Escenario de respuestas (default: 'happy')
  *
  * Escenarios disponibles:
- *   happy           Happy path: código válido, DNI libre
- *   codigo_invalido obtenerNombreEquipo devuelve error
- *   dni_fichado     elDniEstaFichado devuelve true
+ *   happy              Happy path completo
+ *   codigo_invalido    obtenerNombreEquipo devuelve error
+ *   dni_fichado        elDniEstaFichado devuelve true
+ *   error_carnets      GET carnets devuelve 500 (para test pantalla de error)
+ *   error_desvincular  POST desvincular devuelve 500 (para test error al eliminar)
  *
- * Nota: en escenario 'happy', el endpoint el-dni-esta-fichado es inteligente:
- *   - DNI 87654321 → true  (para tests ya-fichado / delegado-verde)
- *   - cualquier otro DNI → false
+ * Lógica smart en escenario 'happy':
+ *   - obtener-nombre-equipo: código MTD0001 → válido, cualquier otro → error
+ *   - el-dni-esta-fichado: DNI 87654321 → true, cualquier otro → false
+ *
+ * Respuestas con error HTTP: usar { _statusCode: N } como valor del escenario.
  */
 const http = require('http')
 const { URL } = require('url')
@@ -22,6 +26,7 @@ const PORT = process.env.MOCK_PORT || 3001
 let SCENARIO = process.env.SCENARIO || 'happy'
 
 // key: "MÉTODO:/ruta"  →  valor: objeto con respuestas por escenario
+// Usar { _statusCode: N } para simular errores HTTP (4xx / 5xx)
 const RESPONSES = {
   'GET:/api/publico/obtener-nombre-equipo': {
     happy: { hayError: false, respuesta: 'Equipo de Prueba' },
@@ -90,10 +95,11 @@ const RESPONSES = {
         fechaNacimiento: '2010-03-15T00:00:00Z',
         equipo: 'Equipo de Prueba',
         torneo: 'Torneo E2E',
-        estado: 1,
+        estado: 3,
         fotoCarnet: null,
       },
     ],
+    error_carnets: { _statusCode: 500 },
   },
   'GET:/api/carnet-digital/carnets-por-codigo-alfanumerico': {
     happy: [
@@ -124,6 +130,13 @@ const RESPONSES = {
         fotoCarnet: null,
       },
     ],
+  },
+  'POST:/api/Jugador/desvincular-jugador-del-equipo': {
+    happy: 1,
+    error_desvincular: { _statusCode: 500 },
+  },
+  'POST:/api/Jugador/efectuar-pases': {
+    happy: 1,
   },
 }
 
@@ -164,13 +177,29 @@ const server = http.createServer((req, res) => {
 
   let body
 
+  // Lógica smart para obtener-nombre-equipo en escenario happy:
+  // código MTD0001 → equipo válido, cualquier otro → error (para test de código inválido)
+  if (key === 'GET:/api/publico/obtener-nombre-equipo' && SCENARIO === 'happy') {
+    const codigo = parsedUrl.searchParams.get('codigoAlfanumerico')
+    body =
+      codigo === 'MTD0001'
+        ? { hayError: false, respuesta: 'Equipo de Prueba' }
+        : { hayError: true, mensajeError: 'Código inválido' }
+  }
   // Lógica smart para el-dni-esta-fichado en escenario happy:
   // DNI 87654321 → true (tests ya-fichado), cualquier otro → false
-  if (key === 'GET:/api/publico/el-dni-esta-fichado' && SCENARIO === 'happy') {
+  else if (key === 'GET:/api/publico/el-dni-esta-fichado' && SCENARIO === 'happy') {
     const dni = parsedUrl.searchParams.get('dni')
     body = dni === '87654321'
   } else {
     body = scenarioResponses[SCENARIO] ?? scenarioResponses['happy']
+  }
+
+  // Soporte para respuestas con error HTTP: { _statusCode: N }
+  if (body !== null && typeof body === 'object' && '_statusCode' in body) {
+    res.writeHead(body._statusCode, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Error del servidor' }))
+    return
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json' })

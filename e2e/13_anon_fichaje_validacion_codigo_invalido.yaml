@@ -1,0 +1,38 @@
+appId: com.blueservant.edefi
+---
+# Validación: código de equipo inválido → muestra error, no avanza al paso de datos
+#
+# El mock server devuelve error para cualquier código que no sea 'MTD0001'.
+# Verifica que el mensaje de error aparece en pantalla y que el flujo no avanza.
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'card-fichaje'
+# PantallaIntro
+- assertVisible:
+    id: 'card-nuevo'
+- tapOn:
+    id: 'card-nuevo'
+# PasoCodigoEquipo — ingresar código inválido
+- assertVisible:
+    id: 'paso-codigo-equipo'
+- tapOn:
+    id: 'input-codigo-equipo'
+- inputText: 'XXXX9999'
+- tapOn:
+    id: 'titulo-codigo-equipo'
+- extendedWaitUntil:
+    visible:
+      id: 'boton-validar'
+      enabled: true
+- tapOn:
+    id: 'boton-validar'
+# Debe aparecer el mensaje de error
+- assertVisible:
+    text: 'Código inválido'
+# Debe seguir en el mismo paso (no avanzó)
+- assertVisible:
+    id: 'paso-codigo-equipo'
+- assertNotVisible:
+    id: 'paso-datos-jugador'

@@ -45,6 +45,7 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
 
           <View className="px-4 pb-4 gap-3">
             <TouchableOpacity
+              testID="boton-quitar-del-equipo"
               className="bg-red-600 rounded-xl p-4 items-center"
               onPress={handleDesvincular}
               disabled={cargando}

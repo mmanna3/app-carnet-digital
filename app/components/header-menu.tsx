@@ -102,6 +102,7 @@ export default function HeaderMenu() {
           <MenuItem
             icon={modoSeleccion ? 'check-square' : 'list'}
             label={modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
+            testID="menu-item-seleccionar-jugadores"
             onSelect={handleSeleccionarJugadores}
           />
           {esMultiliga && (

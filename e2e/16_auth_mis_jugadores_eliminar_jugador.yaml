@@ -1,0 +1,70 @@
+appId: com.blueservant.edefi
+---
+# Eliminar jugador individual: long press → modal acciones → confirmar eliminación
+#
+# Verifica el flujo completo de desvinculación de un jugador de un equipo.
+# Al confirmar, el modal se cierra y se vuelve a la pantalla principal.
+#
+# Nota iOS: el contenido de React Native Modal no se expone al árbol de accesibilidad
+# de XCUITest/Maestro. Se usan taps por coordenada relativa como workaround.
+# En Android estos mismos elementos se pueden encontrar por texto/testID.
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'card-delegados'
+# PantallaLogin
+- assertVisible:
+    id: 'pantalla-login'
+- tapOn:
+    id: 'input-usuario'
+- inputText: 'delegado-e2e'
+- tapOn:
+    id: 'input-password'
+- inputText: 'password123'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: 'boton-iniciar-sesion'
+      enabled: true
+- tapOn:
+    id: 'boton-iniciar-sesion'
+# PantallaSeleccionEquipo
+- assertVisible:
+    id: 'pantalla-seleccion-equipo'
+- tapOn:
+    id: 'item-equipo-1'
+# Tab Mis Jugadores — long press para abrir modal acciones
+- assertVisible:
+    id: 'pantalla-mis-jugadores'
+- extendedWaitUntil:
+    visible:
+      id: 'carnet-jugador'
+- longPressOn:
+    id: 'carnet-jugador'
+- waitForAnimationToEnd
+# ModalAccionesJugador — tap por testID (Android) o coordenada relativa (iOS)
+# iOS: React Native Modal bottom sheet — usar coordenada relativa
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          id: 'boton-eliminar-jugador'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          point: '50%, 75%'
+# ModalEliminarJugador — confirmar desvinculación
+- waitForAnimationToEnd
+- tapOn:
+    id: 'boton-quitar-del-equipo'
+# Regresa a la pantalla principal con el modal cerrado
+- assertVisible:
+    id: 'pantalla-mis-jugadores'

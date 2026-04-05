@@ -1,0 +1,89 @@
+appId: com.blueservant.edefi
+---
+# Validación: campos obligatorios en paso-datos-jugador
+#
+# Todos los campos (nombre, apellido, DNI, fecha de nacimiento) son requeridos.
+# El botón 'Continuar' permanece deshabilitado hasta que los cuatro estén completos.
+# Verifica el comportamiento campo por campo para asegurar que ninguno puede omitirse.
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'card-fichaje'
+# PantallaIntro
+- tapOn:
+    id: 'card-nuevo'
+# PasoCodigoEquipo — pasar con código válido
+- assertVisible:
+    id: 'paso-codigo-equipo'
+- tapOn:
+    id: 'input-codigo-equipo'
+- inputText: 'MTD0001'
+- tapOn:
+    id: 'titulo-codigo-equipo'
+- extendedWaitUntil:
+    visible:
+      id: 'boton-validar'
+      enabled: true
+- tapOn:
+    id: 'boton-validar'
+# PasoDatosJugador — al llegar, el botón debe estar deshabilitado (todos los campos vacíos)
+- assertVisible:
+    id: 'paso-datos-jugador'
+- assertVisible:
+    id: 'boton-continuar'
+    enabled: false
+# Completar solo nombre → sigue deshabilitado
+- tapOn:
+    id: 'input-nombre'
+- inputText: 'Juan'
+- assertVisible:
+    id: 'boton-continuar'
+    enabled: false
+# Completar apellido → sigue deshabilitado (falta DNI y fecha)
+- tapOn:
+    id: 'input-apellido'
+- inputText: 'Perez'
+- assertVisible:
+    id: 'boton-continuar'
+    enabled: false
+# Completar DNI válido → sigue deshabilitado (falta fecha)
+- tapOn:
+    id: 'input-dni-jugador'
+- inputText: '12345678'
+- assertVisible:
+    id: 'boton-continuar'
+    enabled: false
+# Completar fecha de nacimiento → recién ahora el botón se habilita
+# Nota: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro
+# en iOS, por lo que se usa tap por coordenada relativa para cerrar con "Listo"
+- tapOn:
+    text: 'Datos del jugador'
+- tapOn:
+    id: 'input-fecha-nacimiento'
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      # Girar la rueda del año para disparar onChange (setFechaNac)
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
+      - tapOn:
+          point: '50%, 93%'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          text: 'OK'
+          optional: true
+      - tapOn:
+          text: 'Aceptar'
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true

@@ -69,6 +69,7 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
 
           <View className="px-4 pb-4 pt-3 gap-3">
             <TouchableOpacity
+              testID="boton-quitar-masivo"
               className="bg-red-600 rounded-xl p-4 items-center"
               onPress={handleDesvincular}
               disabled={cargando}

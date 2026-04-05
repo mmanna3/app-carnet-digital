@@ -269,6 +269,7 @@ export default function MisJugadoresScreen() {
         <View className="bg-white border-t border-gray-200 px-4 pt-3 pb-6 gap-2">
           <View className="flex-row gap-3">
             <Boton
+              testID="boton-bulk-eliminar"
               variante="Destructivo"
               icono="trash-2"
               texto="Eliminar"

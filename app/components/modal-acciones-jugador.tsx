@@ -31,6 +31,7 @@ export default function ModalAccionesJugador({
 
             <View className="px-4 pt-4 pb-4 gap-3">
               <TouchableOpacity
+                testID="boton-eliminar-jugador"
                 className="bg-red-600 rounded-xl p-4 items-center"
                 onPress={onEliminar}
               >
@@ -38,6 +39,7 @@ export default function ModalAccionesJugador({
               </TouchableOpacity>
 
               <TouchableOpacity
+                testID="boton-transferir-jugador"
                 className="bg-liga-600 rounded-xl p-4 items-center"
                 onPress={onTransferir}
               >
