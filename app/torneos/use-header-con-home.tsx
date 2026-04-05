@@ -20,6 +20,8 @@ export function useHeaderConHome({
       headerTintColor: '#ffffff',
       headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
       headerShadowVisible: false,
+      headerBackButtonDisplayMode: 'minimal',
+      headerBackTitle: '',
       headerRight: () => (
         <TouchableOpacity
           onPress={() => router.replace('/home')}

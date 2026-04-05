@@ -145,6 +145,7 @@ export default function RootLayout() {
                 options={{
                   title: 'Torneos',
                   headerBackButtonDisplayMode: 'minimal',
+                  headerBackTitle: '',
                 }}
               />
               <Stack.Screen
@@ -152,6 +153,7 @@ export default function RootLayout() {
                 options={{
                   title: 'Torneo',
                   headerBackButtonDisplayMode: 'minimal',
+                  headerBackTitle: '',
                 }}
               />
               <Stack.Screen
@@ -159,6 +161,7 @@ export default function RootLayout() {
                 options={{
                   title: 'Zona',
                   headerBackButtonDisplayMode: 'minimal',
+                  headerBackTitle: '',
                 }}
               />
               <Stack.Screen name="fichajes" options={{ headerShown: false }} />
