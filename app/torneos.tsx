@@ -59,7 +59,7 @@ export default function Torneos() {
       {agrupadores.map((a) => (
         <View key={a.id ?? a.nombre} className="mb-6">
           {a.nombre ? (
-            <Text className="text-lg font-semibold text-gray-900 mb-3">{a.nombre}</Text>
+            <Text className="mb-3 text-lg font-medium text-gray-700">{a.nombre}</Text>
           ) : null}
           {(a.torneos ?? []).map((torneo) => (
             <TarjetaConFondoDeColor

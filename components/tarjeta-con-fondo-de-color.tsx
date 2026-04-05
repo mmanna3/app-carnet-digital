@@ -2,13 +2,30 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
-/** Mapea `color` del API (Verde, Rojo, Azul) a clases Tailwind. */
-export function colorFondoAgrupador(color: string | undefined): string {
+type EstiloAccento = {
+  franja: string
+  iconoFondo: string
+  iconoColor: string
+}
+
+/** Verde / Rojo / Azul del API → acento sutil (franja + icono), no bloques enteros de color. */
+function estiloAccentoPorColor(color: string | undefined): EstiloAccento {
   const c = (color ?? '').trim().toLowerCase()
-  if (c === 'verde') return 'bg-verde-600'
-  if (c === 'rojo') return 'bg-rojo-600'
-  if (c === 'azul') return 'bg-azul-600'
-  return 'bg-gray-600'
+  if (c === 'verde') {
+    return { franja: 'bg-verde-600', iconoFondo: 'bg-verde-50', iconoColor: '#15803d' }
+  }
+  if (c === 'rojo') {
+    return { franja: 'bg-rojo-600', iconoFondo: 'bg-rojo-50', iconoColor: '#b91c1c' }
+  }
+  if (c === 'azul') {
+    return { franja: 'bg-azul-600', iconoFondo: 'bg-azul-50', iconoColor: '#1d4ed8' }
+  }
+  return { franja: 'bg-gray-400', iconoFondo: 'bg-gray-100', iconoColor: '#374151' }
+}
+
+/** @deprecated Preferir estiloAccentoPorColor; se mantiene compat. con código que esperaba clase bg-*-600. */
+export function colorFondoAgrupador(color: string | undefined): string {
+  return estiloAccentoPorColor(color).franja
 }
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
@@ -21,26 +38,41 @@ type Props = {
 }
 
 export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Props) {
-  const bgClass = colorFondoAgrupador(color)
+  const accento = estiloAccentoPorColor(color)
 
-  const inner = (
-    <>
-      <View className="flex-row items-center px-4 py-4">
-        <Ionicons name={iconName} size={22} color="#ffffff" style={{ marginRight: 10 }} />
-        <Text className="flex-1 text-base font-semibold text-white leading-6">{nombre}</Text>
+  const contenido = (
+    <View className="flex-row items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <View className={`w-1 ${accento.franja}`} />
+      <View className="min-h-[52px] flex-1 flex-row items-center py-3 pl-3 pr-3">
+        <View
+          className={`mr-3 h-10 w-10 items-center justify-center rounded-lg ${accento.iconoFondo}`}
+        >
+          <Ionicons name={iconName} size={20} color={accento.iconoColor} />
+        </View>
+        <Text
+          className="flex-1 text-[15px] font-medium leading-5 text-gray-900"
+          numberOfLines={3}
+        >
+          {nombre}
+        </Text>
       </View>
-    </>
+    </View>
   )
 
-  const className = `mb-3 overflow-hidden rounded-2xl ${bgClass}`
+  const envoltorio = `mb-2.5`
 
   if (onPress) {
     return (
-      <TouchableOpacity className={className} onPress={onPress} activeOpacity={0.85} accessibilityRole="button">
-        {inner}
+      <TouchableOpacity
+        className={envoltorio}
+        onPress={onPress}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+      >
+        {contenido}
       </TouchableOpacity>
     )
   }
 
-  return <View className={className}>{inner}</View>
+  return <View className={envoltorio}>{contenido}</View>
 }

@@ -108,7 +108,7 @@ export default function TorneoDetalle() {
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">
           {fase.nombre ? (
-            <Text className="text-lg font-semibold text-gray-900 mb-3">{fase.nombre}</Text>
+            <Text className="mb-3 text-lg font-medium text-gray-700">{fase.nombre}</Text>
           ) : null}
           {(fase.zonas ?? []).map((zona) => (
             <TarjetaConFondoDeColor
