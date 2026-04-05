@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useNavigation } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
-import { useConfigLiga } from '@/lib/config/liga'
+import { getColorLiga600, useConfigLiga } from '@/lib/config/liga'
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
 
 export default function Torneos() {
   const router = useRouter()
+  const navigation = useNavigation()
   const configLiga = useConfigLiga()
   const leagueId = configLiga?.leagueId
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Torneos',
+      headerStyle: { backgroundColor: getColorLiga600() },
+      headerTintColor: '#ffffff',
+      headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
+      headerShadowVisible: false,
+    })
+  }, [navigation, configLiga?.leagueId])
 
   const {
     data: agrupadores,

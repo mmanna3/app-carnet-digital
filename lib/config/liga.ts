@@ -114,6 +114,18 @@ export function getColorLiga700(): string {
   return COLOR_LIGA_700[base] ?? COLOR_LIGA_700.verde
 }
 
+/**
+ * Fondo de cabecera según `color` del API en agrupadores (Verde / Rojo / Azul).
+ * Shade 600, alineado con `verde`/`rojo`/`azul` en Tailwind y tarjetas de torneos.
+ */
+export function hexCabeceraPorColorAgrupadorApi(color: string | undefined): string {
+  const c = (color ?? '').trim().toLowerCase()
+  if (c === 'verde') return COLOR_LIGA_600.verde
+  if (c === 'rojo') return COLOR_LIGA_600.rojo
+  if (c === 'azul') return COLOR_LIGA_600.azul
+  return '#6b7280'
+}
+
 /** @deprecated Usar getConfigLiga() o useConfigLiga(). Mantener por compatibilidad. */
 export const configLiga = {
   get leagueId() {

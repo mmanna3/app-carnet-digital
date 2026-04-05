@@ -4,7 +4,7 @@ import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
-import { useConfigLiga } from '@/lib/config/liga'
+import { getColorLiga600, hexCabeceraPorColorAgrupadorApi, useConfigLiga } from '@/lib/config/liga'
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
 import type { InformacionInicialAgrupadorDTO } from '@/lib/api/clients'
 
@@ -61,8 +61,17 @@ export default function TorneoDetalle() {
 
   useLayoutEffect(() => {
     const titulo = resuelto?.torneo?.nombre?.trim() || 'Torneo'
-    navigation.setOptions({ title: titulo })
-  }, [navigation, resuelto?.torneo?.nombre])
+    const fondo = resuelto
+      ? hexCabeceraPorColorAgrupadorApi(resuelto.color)
+      : getColorLiga600()
+    navigation.setOptions({
+      title: titulo,
+      headerStyle: { backgroundColor: fondo },
+      headerTintColor: '#ffffff',
+      headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
+      headerShadowVisible: false,
+    })
+  }, [navigation, resuelto])
 
   if (!leagueId) {
     return (

@@ -143,9 +143,6 @@ export default function RootLayout() {
                 options={{
                   title: 'Torneos',
                   headerBackButtonDisplayMode: 'minimal',
-                  headerStyle: { backgroundColor: '#ffffff' },
-                  headerTintColor: '#111827',
-                  headerTitleStyle: { color: '#111827' },
                 }}
               />
               <Stack.Screen
@@ -153,9 +150,6 @@ export default function RootLayout() {
                 options={{
                   title: 'Torneo',
                   headerBackButtonDisplayMode: 'minimal',
-                  headerStyle: { backgroundColor: '#ffffff' },
-                  headerTintColor: '#111827',
-                  headerTitleStyle: { color: '#111827' },
                 }}
               />
               <Stack.Screen name="fichajes" options={{ headerShown: false }} />
