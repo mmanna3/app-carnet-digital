@@ -62,9 +62,7 @@ export default function TorneoDetalle() {
 
   useLayoutEffect(() => {
     const titulo = resuelto?.torneo?.nombre?.trim() || 'Torneo'
-    const fondo = resuelto
-      ? hexCabeceraPorColorAgrupadorApi(resuelto.color)
-      : getColorLiga600()
+    const fondo = resuelto ? hexCabeceraPorColorAgrupadorApi(resuelto.color) : getColorLiga600()
     navigation.setOptions({
       title: titulo,
       headerStyle: { backgroundColor: fondo },

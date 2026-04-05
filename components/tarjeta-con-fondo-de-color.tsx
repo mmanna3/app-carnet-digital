@@ -49,10 +49,7 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
         >
           <Ionicons name={iconName} size={20} color={accento.iconoColor} />
         </View>
-        <Text
-          className="flex-1 text-[15px] font-medium leading-5 text-gray-900"
-          numberOfLines={3}
-        >
+        <Text className="flex-1 text-[15px] font-medium leading-5 text-gray-900" numberOfLines={3}>
           {nombre}
         </Text>
       </View>
