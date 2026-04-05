@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
-import type { EquipoConDatosDelClubDTO } from '@/lib/api/clients'
+import type { ClubesDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
 
@@ -40,7 +40,7 @@ function textoTechado(esTechado: string | undefined) {
 }
 
 type ClubCardProps = {
-  item: EquipoConDatosDelClubDTO
+  item: ClubesDTO
   uriEscudo: string | null
 }
 
@@ -94,12 +94,12 @@ export default function Clubes() {
 
   const filas = data ?? []
 
-  const keyExtractor = useCallback((item: EquipoConDatosDelClubDTO, index: number) => {
+  const keyExtractor = useCallback((item: ClubesDTO, index: number) => {
     return `${item.equipo ?? 'eq'}-${index}`
   }, [])
 
   const renderItem = useCallback(
-    ({ item }: { item: EquipoConDatosDelClubDTO }) => (
+    ({ item }: { item: ClubesDTO }) => (
       <ClubCard item={item} uriEscudo={uriRecursoPublicoApi(configLiga?.apiUrl, item.escudo)} />
     ),
     [configLiga?.apiUrl]

@@ -250,7 +250,7 @@ export class Client {
      * @param zonaId (optional) 
      * @return OK
      */
-    clubes(zonaId: number | undefined): Promise<EquipoConDatosDelClubDTO[]> {
+    clubes(zonaId: number | undefined): Promise<ClubesDTO[]> {
         let url_ = this.baseUrl + "/api/carnet-digital/clubes?";
         if (zonaId === null)
             throw new Error("The parameter 'zonaId' cannot be null.");
@@ -270,7 +270,7 @@ export class Client {
         });
     }
 
-    protected processClubes(response: Response): Promise<EquipoConDatosDelClubDTO[]> {
+    protected processClubes(response: Response): Promise<ClubesDTO[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -280,7 +280,7 @@ export class Client {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EquipoConDatosDelClubDTO.fromJS(item));
+                    result200!.push(ClubesDTO.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -292,7 +292,7 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<EquipoConDatosDelClubDTO[]>(null as any);
+        return Promise.resolve<ClubesDTO[]>(null as any);
     }
 
     /**
@@ -5690,6 +5690,58 @@ export interface IClubDTO {
     delegados?: DelegadoDTO[] | undefined;
 }
 
+export class ClubesDTO implements IClubesDTO {
+    equipo?: string | undefined;
+    escudo?: string | undefined;
+    localidad?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: string | undefined;
+
+    constructor(data?: IClubesDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.equipo = _data["equipo"];
+            this.escudo = _data["escudo"];
+            this.localidad = _data["localidad"];
+            this.direccion = _data["direccion"];
+            this.esTechado = _data["esTechado"];
+        }
+    }
+
+    static fromJS(data: any): ClubesDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClubesDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["equipo"] = this.equipo;
+        data["escudo"] = this.escudo;
+        data["localidad"] = this.localidad;
+        data["direccion"] = this.direccion;
+        data["esTechado"] = this.esTechado;
+        return data;
+    }
+}
+
+export interface IClubesDTO {
+    equipo?: string | undefined;
+    escudo?: string | undefined;
+    localidad?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: string | undefined;
+}
+
 export class CrearTorneoDTO implements ICrearTorneoDTO {
     id?: number;
     nombre!: string;
@@ -6080,58 +6132,6 @@ export interface IEquipoBaseDTO {
     nombre: string | undefined;
     torneo: string | undefined;
     codigoAlfanumerico?: string | undefined;
-}
-
-export class EquipoConDatosDelClubDTO implements IEquipoConDatosDelClubDTO {
-    equipo?: string | undefined;
-    escudo?: string | undefined;
-    localidad?: string | undefined;
-    direccion?: string | undefined;
-    esTechado?: string | undefined;
-
-    constructor(data?: IEquipoConDatosDelClubDTO) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.equipo = _data["equipo"];
-            this.escudo = _data["escudo"];
-            this.localidad = _data["localidad"];
-            this.direccion = _data["direccion"];
-            this.esTechado = _data["esTechado"];
-        }
-    }
-
-    static fromJS(data: any): EquipoConDatosDelClubDTO {
-        data = typeof data === 'object' ? data : {};
-        let result = new EquipoConDatosDelClubDTO();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["equipo"] = this.equipo;
-        data["escudo"] = this.escudo;
-        data["localidad"] = this.localidad;
-        data["direccion"] = this.direccion;
-        data["esTechado"] = this.esTechado;
-        return data;
-    }
-}
-
-export interface IEquipoConDatosDelClubDTO {
-    equipo?: string | undefined;
-    escudo?: string | undefined;
-    localidad?: string | undefined;
-    direccion?: string | undefined;
-    esTechado?: string | undefined;
 }
 
 export class EquipoDTO implements IEquipoDTO {
