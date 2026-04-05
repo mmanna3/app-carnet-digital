@@ -62,6 +62,7 @@ function useProtectedRoute(loaded: boolean) {
     const inHome = (segments[0] as string) === 'home'
     const inFichajes = (segments[0] as string) === 'fichajes'
     const inRegistroDelegado = (segments[0] as string) === 'registro-delegado'
+    const inTorneos = (segments[0] as string) === 'torneos'
     if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
       router.replace('/seleccion-de-liga' as any)
       return
@@ -74,7 +75,8 @@ function useProtectedRoute(loaded: boolean) {
       !inSeleccionLiga &&
       !inHome &&
       !inFichajes &&
-      !inRegistroDelegado
+      !inRegistroDelegado &&
+      !inTorneos
     ) {
       router.replace('/home' as any)
     } else if (isAuthenticated && inAuthGroup) {
@@ -134,6 +136,16 @@ export default function RootLayout() {
           <MenuProvider skipInstanceCheck>
             <Stack>
               <Stack.Screen name="home" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="torneos"
+                options={{
+                  title: 'Torneos',
+                  headerBackButtonDisplayMode: 'minimal',
+                  headerStyle: { backgroundColor: '#ffffff' },
+                  headerTintColor: '#111827',
+                  headerTitleStyle: { color: '#111827' },
+                }}
+              />
               <Stack.Screen name="fichajes" options={{ headerShown: false }} />
               <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />

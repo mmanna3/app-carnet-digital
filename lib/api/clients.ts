@@ -203,6 +203,50 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    infoInicialDeTorneos(): Promise<InformacionInicialAgrupadorDTO[]> {
+        let url_ = this.baseUrl + "/api/carnet-digital/info-inicial-de-torneos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processInfoInicialDeTorneos(_response);
+        });
+    }
+
+    protected processInfoInicialDeTorneos(response: Response): Promise<InformacionInicialAgrupadorDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(InformacionInicialAgrupadorDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<InformacionInicialAgrupadorDTO[]>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -284,6 +328,464 @@ export class Client {
             });
         }
         return Promise.resolve<LoginResponseDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    generarBackupBaseDeDatos(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/generar-backup-base-de-datos";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGenerarBackupBaseDeDatos(_response);
+        });
+    }
+
+    protected processGenerarBackupBaseDeDatos(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    generarBackupImagenes(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/generar-backup-imagenes";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGenerarBackupImagenes(_response);
+        });
+    }
+
+    protected processGenerarBackupImagenes(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    guardarBackupBdEnDisco(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/guardar-backup-bd-en-disco";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGuardarBackupBdEnDisco(_response);
+        });
+    }
+
+    protected processGuardarBackupBdEnDisco(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    guardarBackupImagenesEnDisco(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/guardar-backup-imagenes-en-disco";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGuardarBackupImagenesEnDisco(_response);
+        });
+    }
+
+    protected processGuardarBackupImagenesEnDisco(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    validarArchivosLocales(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/validar-archivos-locales";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processValidarArchivosLocales(_response);
+        });
+    }
+
+    protected processValidarArchivosLocales(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    rotarBackupsEnDrive(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/rotar-backups-en-drive";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRotarBackupsEnDrive(_response);
+        });
+    }
+
+    protected processRotarBackupsEnDrive(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    subirBackupBdADrive(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/subir-backup-bd-a-drive";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSubirBackupBdADrive(_response);
+        });
+    }
+
+    protected processSubirBackupBdADrive(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    subirBackupImagenesADrive(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/subir-backup-imagenes-a-drive";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSubirBackupImagenesADrive(_response);
+        });
+    }
+
+    protected processSubirBackupImagenesADrive(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    limpiarBackupsLocales(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/limpiar-backups-locales";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLimpiarBackupsLocales(_response);
+        });
+    }
+
+    protected processLimpiarBackupsLocales(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    restaurarBdDesdeBackup(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/restaurar-bd-desde-backup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRestaurarBdDesdeBackup(_response);
+        });
+    }
+
+    protected processRestaurarBdDesdeBackup(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    restaurarImagenesDesdeBackup(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Backup/restaurar-imagenes-desde-backup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRestaurarImagenesDesdeBackup(_response);
+        });
+    }
+
+    protected processRestaurarImagenesDesdeBackup(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    clubsPorIds(ids: number[] | undefined): Promise<ClubDTO[]> {
+        let url_ = this.baseUrl + "/api/Club/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processClubsPorIds(_response);
+        });
+    }
+
+    protected processClubsPorIds(response: Response): Promise<ClubDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ClubDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ClubDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    cambiarEscudo(id: number, body: CambiarEscudoDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Club/{id}/cambiar-escudo";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCambiarEscudo(_response);
+        });
+    }
+
+    protected processCambiarEscudo(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
     }
 
     /**
@@ -451,6 +953,96 @@ export class Client {
             });
         }
         return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    clubDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Club/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processClubDELETE(_response);
+        });
+    }
+
+    protected processClubDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    delegadosPorIds(ids: number[] | undefined): Promise<DelegadoDTO[]> {
+        let url_ = this.baseUrl + "/api/Delegado/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadosPorIds(_response);
+        });
+    }
+
+    protected processDelegadosPorIds(response: Response): Promise<DelegadoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DelegadoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DelegadoDTO[]>(null as any);
     }
 
     /**
@@ -720,47 +1312,6 @@ export class Client {
     /**
      * @return OK
      */
-    delegadoDELETE(id: number): Promise<number> {
-        let url_ = this.baseUrl + "/api/Delegado/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-                "Accept": "text/plain"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDelegadoDELETE(_response);
-        });
-    }
-
-    protected processDelegadoDELETE(response: Response): Promise<number> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<number>(null as any);
-    }
-
-    /**
-     * @return OK
-     */
     delegadoGET(id: number): Promise<DelegadoDTO> {
         let url_ = this.baseUrl + "/api/Delegado/{id}";
         if (id === undefined || id === null)
@@ -837,6 +1388,319 @@ export class Client {
             });
         }
         return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    delegadoDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Delegado/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDelegadoDELETE(_response);
+        });
+    }
+
+    protected processDelegadoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    seed(): Promise<void> {
+        let url_ = this.baseUrl + "/api/e2e/seed";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSeed(_response);
+        });
+    }
+
+    protected processSeed(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    cleanup(): Promise<void> {
+        let url_ = this.baseUrl + "/api/e2e/cleanup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCleanup(_response);
+        });
+    }
+
+    protected processCleanup(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    seed2(): Promise<void> {
+        let url_ = this.baseUrl + "/api/e2e-fe/seed";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSeed2(_response);
+        });
+    }
+
+    protected processSeed2(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    cleanup2(): Promise<void> {
+        let url_ = this.baseUrl + "/api/e2e-fe/cleanup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCleanup2(_response);
+        });
+    }
+
+    protected processCleanup2(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    equiposPorIds(ids: number[] | undefined): Promise<EquipoDTO[]> {
+        let url_ = this.baseUrl + "/api/Equipo/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEquiposPorIds(_response);
+        });
+    }
+
+    protected processEquiposPorIds(response: Response): Promise<EquipoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(EquipoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EquipoDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    jugadoresQueSoloJueganEnEsteEquipo(id: number): Promise<JugadorBaseDTO[]> {
+        let url_ = this.baseUrl + "/api/Equipo/{id}/jugadores-que-solo-juegan-en-este-equipo";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processJugadoresQueSoloJueganEnEsteEquipo(_response);
+        });
+    }
+
+    protected processJugadoresQueSoloJueganEnEsteEquipo(response: Response): Promise<JugadorBaseDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(JugadorBaseDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<JugadorBaseDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    equiposParaZonas(): Promise<EquipoParaZonasDTO[]> {
+        let url_ = this.baseUrl + "/api/Equipo/equipos-para-zonas";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEquiposParaZonas(_response);
+        });
+    }
+
+    protected processEquiposParaZonas(response: Response): Promise<EquipoParaZonasDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(EquipoParaZonasDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EquipoParaZonasDTO[]>(null as any);
     }
 
     /**
@@ -1004,6 +1868,1105 @@ export class Client {
             });
         }
         return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    equipoDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Equipo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEquipoDELETE(_response);
+        });
+    }
+
+    protected processEquipoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fasesPOST(padreId: number, body: FaseDTO | undefined): Promise<FaseDTO> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesPOST(_response);
+        });
+    }
+
+    protected processFasesPOST(response: Response): Promise<FaseDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FaseDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FaseDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fasesAll(padreId: number): Promise<FaseDTO[]> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesAll(_response);
+        });
+    }
+
+    protected processFasesAll(response: Response): Promise<FaseDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FaseDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FaseDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fasesCambiarVisibilidadEnApp(padreId: number, id: number, body: CambiarVisibilidadEnAppDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases/{id}/visibilidad-en-app";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesCambiarVisibilidadEnApp(_response);
+        });
+    }
+
+    protected processFasesCambiarVisibilidadEnApp(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fasesGET(padreId: number, id: number): Promise<FaseDTO> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesGET(_response);
+        });
+    }
+
+    protected processFasesGET(response: Response): Promise<FaseDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FaseDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FaseDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fasesPUT(padreId: number, id: number, body: FaseDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesPUT(_response);
+        });
+    }
+
+    protected processFasesPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fasesDELETE(padreId: number, id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/fases/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFasesDELETE(_response);
+        });
+    }
+
+    protected processFasesDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    crearFechasTodoscontratodosMasivamente(padreId: number, body: FechaTodosContraTodosDTO[] | undefined): Promise<FechaTodosContraTodosDTO[]> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/crear-fechas-todoscontratodos-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCrearFechasTodoscontratodosMasivamente(_response);
+        });
+    }
+
+    protected processCrearFechasTodoscontratodosMasivamente(response: Response): Promise<FechaTodosContraTodosDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FechaTodosContraTodosDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FechaTodosContraTodosDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    crearFechasEliminaciondirectaMasivamente(padreId: number, body: FechaEliminacionDirectaDTO | undefined): Promise<FechaEliminacionDirectaDTO> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/crear-fechas-eliminaciondirecta-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCrearFechasEliminaciondirectaMasivamente(_response);
+        });
+    }
+
+    protected processCrearFechasEliminaciondirectaMasivamente(response: Response): Promise<FechaEliminacionDirectaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FechaEliminacionDirectaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FechaEliminacionDirectaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    borrarFechasEliminaciondirectaMasivamente(padreId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/borrar-fechas-eliminaciondirecta-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processBorrarFechasEliminaciondirectaMasivamente(_response);
+        });
+    }
+
+    protected processBorrarFechasEliminaciondirectaMasivamente(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    modificarFechasMasivamente(padreId: number, body: FechaDTO[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/modificar-fechas-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processModificarFechasMasivamente(_response);
+        });
+    }
+
+    protected processModificarFechasMasivamente(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    cargarResultados(padreId: number, jornadaId: number, body: CargarResultadosDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/cargar-resultados/{jornadaId}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (jornadaId === undefined || jornadaId === null)
+            throw new Error("The parameter 'jornadaId' must be defined.");
+        url_ = url_.replace("{jornadaId}", encodeURIComponent("" + jornadaId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCargarResultados(_response);
+        });
+    }
+
+    protected processCargarResultados(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fechasCambiarVisibilidadEnApp(padreId: number, id: number, body: CambiarVisibilidadEnAppDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/{id}/visibilidad-en-app";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasCambiarVisibilidadEnApp(_response);
+        });
+    }
+
+    protected processFechasCambiarVisibilidadEnApp(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fechasAll(padreId: number): Promise<FechaDTO[]> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasAll(_response);
+        });
+    }
+
+    protected processFechasAll(response: Response): Promise<FechaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FechaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FechaDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fechasPOST(padreId: number, body: FechaDTO | undefined): Promise<FechaDTO> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasPOST(_response);
+        });
+    }
+
+    protected processFechasPOST(response: Response): Promise<FechaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FechaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FechaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fechasGET(padreId: number, id: number): Promise<FechaDTO> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasGET(_response);
+        });
+    }
+
+    protected processFechasGET(response: Response): Promise<FechaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FechaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FechaDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fechasPUT(padreId: number, id: number, body: FechaDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasPUT(_response);
+        });
+    }
+
+    protected processFechasPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fechasDELETE(padreId: number, id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Zona/{padreId}/fechas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFechasDELETE(_response);
+        });
+    }
+
+    protected processFechasDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fixtureAlgoritmoPOST(body: FixtureAlgoritmoDTO | undefined): Promise<FixtureAlgoritmoDTO> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmoPOST(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmoPOST(response: Response): Promise<FixtureAlgoritmoDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FixtureAlgoritmoDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FixtureAlgoritmoDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fixtureAlgoritmoAll(): Promise<FixtureAlgoritmoDTO[]> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmoAll(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmoAll(response: Response): Promise<FixtureAlgoritmoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FixtureAlgoritmoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FixtureAlgoritmoDTO[]>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    fixtureAlgoritmosPorIds(ids: number[] | undefined): Promise<FixtureAlgoritmoDTO[]> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmosPorIds(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmosPorIds(response: Response): Promise<FixtureAlgoritmoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FixtureAlgoritmoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FixtureAlgoritmoDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fixtureAlgoritmoGET(id: number): Promise<FixtureAlgoritmoDTO> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmoGET(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmoGET(response: Response): Promise<FixtureAlgoritmoDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FixtureAlgoritmoDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FixtureAlgoritmoDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    fixtureAlgoritmoPUT(id: number, body: FixtureAlgoritmoDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmoPUT(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmoPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    fixtureAlgoritmoDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/FixtureAlgoritmo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureAlgoritmoDELETE(_response);
+        });
+    }
+
+    protected processFixtureAlgoritmoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    jugadoresPorIds(ids: number[] | undefined): Promise<JugadorDTO[]> {
+        let url_ = this.baseUrl + "/api/Jugador/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processJugadoresPorIds(_response);
+        });
+    }
+
+    protected processJugadoresPorIds(response: Response): Promise<JugadorDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(JugadorDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<JugadorDTO[]>(null as any);
     }
 
     /**
@@ -1443,28 +3406,30 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
      * @return OK
      */
-    jugadorDELETE(id: number): Promise<number> {
-        let url_ = this.baseUrl + "/api/Jugador/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    desvincularJugadorDelEquipo(body: DesvincularJugadorDelEquipoDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Jugador/desvincular-jugador-del-equipo";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_: RequestInit = {
-            method: "DELETE",
+            body: content_,
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processJugadorDELETE(_response);
+            return this.processDesvincularJugadorDelEquipo(_response);
         });
     }
 
-    protected processJugadorDELETE(response: Response): Promise<number> {
+    protected processDesvincularJugadorDelEquipo(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1565,30 +3530,28 @@ export class Client {
     }
 
     /**
-     * @param body (optional) 
      * @return OK
      */
-    desvincularJugadorDelEquipo(body: DesvincularJugadorDelEquipoDTO | undefined): Promise<number> {
-        let url_ = this.baseUrl + "/api/Jugador/desvincular-jugador-del-equipo";
+    jugadorDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Jugador/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_: RequestInit = {
-            body: content_,
-            method: "POST",
+            method: "DELETE",
             headers: {
-                "Content-Type": "application/json",
                 "Accept": "text/plain"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDesvincularJugadorDelEquipo(_response);
+            return this.processJugadorDELETE(_response);
         });
     }
 
-    protected processDesvincularJugadorDelEquipo(response: Response): Promise<number> {
+    protected processJugadorDELETE(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -1922,6 +3885,150 @@ export class Client {
     }
 
     /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    torneosPorIds(ids: number[] | undefined): Promise<TorneoDTO[]> {
+        let url_ = this.baseUrl + "/api/Torneo/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneosPorIds(_response);
+        });
+    }
+
+    protected processTorneosPorIds(response: Response): Promise<TorneoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TorneoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoDTO[]>(null as any);
+    }
+
+    /**
+     * @param anio (optional) 
+     * @param agrupador (optional) 
+     * @return OK
+     */
+    torneosFiltrar(anio: number | undefined, agrupador: number | undefined): Promise<TorneoDTO[]> {
+        let url_ = this.baseUrl + "/api/Torneo/filtrar?";
+        if (anio === null)
+            throw new Error("The parameter 'anio' cannot be null.");
+        else if (anio !== undefined)
+            url_ += "anio=" + encodeURIComponent("" + anio) + "&";
+        if (agrupador === null)
+            throw new Error("The parameter 'agrupador' cannot be null.");
+        else if (agrupador !== undefined)
+            url_ += "agrupador=" + encodeURIComponent("" + agrupador) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneosFiltrar(_response);
+        });
+    }
+
+    protected processTorneosFiltrar(response: Response): Promise<TorneoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TorneoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    torneoCambiarVisibilidadEnApp(id: number, body: CambiarVisibilidadEnAppDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Torneo/{id}/visibilidad-en-app";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoCambiarVisibilidadEnApp(_response);
+        });
+    }
+
+    protected processTorneoCambiarVisibilidadEnApp(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @return OK
      */
     torneoAll(): Promise<TorneoDTO[]> {
@@ -1969,7 +4076,7 @@ export class Client {
      * @param body (optional) 
      * @return OK
      */
-    torneoPOST(body: TorneoDTO | undefined): Promise<TorneoDTO> {
+    torneoPOST(body: CrearTorneoDTO | undefined): Promise<TorneoDTO> {
         let url_ = this.baseUrl + "/api/Torneo";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2087,9 +4194,853 @@ export class Client {
         }
         return Promise.resolve<void>(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    torneoDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Torneo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoDELETE(_response);
+        });
+    }
+
+    protected processTorneoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    torneoAgrupadorPOST(body: TorneoAgrupadorDTO | undefined): Promise<TorneoAgrupadorDTO> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadorPOST(_response);
+        });
+    }
+
+    protected processTorneoAgrupadorPOST(response: Response): Promise<TorneoAgrupadorDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TorneoAgrupadorDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoAgrupadorDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    torneoAgrupadorAll(): Promise<TorneoAgrupadorDTO[]> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadorAll(_response);
+        });
+    }
+
+    protected processTorneoAgrupadorAll(response: Response): Promise<TorneoAgrupadorDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TorneoAgrupadorDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoAgrupadorDTO[]>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    torneoAgrupadoresPorIds(ids: number[] | undefined): Promise<TorneoAgrupadorDTO[]> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadoresPorIds(_response);
+        });
+    }
+
+    protected processTorneoAgrupadoresPorIds(response: Response): Promise<TorneoAgrupadorDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TorneoAgrupadorDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoAgrupadorDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    torneoAgrupadorGET(id: number): Promise<TorneoAgrupadorDTO> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadorGET(_response);
+        });
+    }
+
+    protected processTorneoAgrupadorGET(response: Response): Promise<TorneoAgrupadorDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TorneoAgrupadorDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoAgrupadorDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    torneoAgrupadorPUT(id: number, body: TorneoAgrupadorDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadorPUT(_response);
+        });
+    }
+
+    protected processTorneoAgrupadorPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    torneoAgrupadorDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/TorneoAgrupador/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoAgrupadorDELETE(_response);
+        });
+    }
+
+    protected processTorneoAgrupadorDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    categoriasAll(padreId: number): Promise<TorneoCategoriaDTO[]> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/categorias";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCategoriasAll(_response);
+        });
+    }
+
+    protected processCategoriasAll(response: Response): Promise<TorneoCategoriaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TorneoCategoriaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoCategoriaDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    categoriasPOST(padreId: number, body: TorneoCategoriaDTO | undefined): Promise<TorneoCategoriaDTO> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/categorias";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCategoriasPOST(_response);
+        });
+    }
+
+    protected processCategoriasPOST(response: Response): Promise<TorneoCategoriaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TorneoCategoriaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoCategoriaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    categoriasGET(padreId: number, id: number): Promise<TorneoCategoriaDTO> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/categorias/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCategoriasGET(_response);
+        });
+    }
+
+    protected processCategoriasGET(response: Response): Promise<TorneoCategoriaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TorneoCategoriaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TorneoCategoriaDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    categoriasPUT(padreId: number, id: number, body: TorneoCategoriaDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/categorias/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCategoriasPUT(_response);
+        });
+    }
+
+    protected processCategoriasPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    categoriasDELETE(padreId: number, id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Torneo/{padreId}/categorias/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCategoriasDELETE(_response);
+        });
+    }
+
+    protected processCategoriasDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    crearZonasMasivamente(padreId: number, body: ZonaDTO[] | undefined): Promise<ZonaDTO[]> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas/crear-zonas-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCrearZonasMasivamente(_response);
+        });
+    }
+
+    protected processCrearZonasMasivamente(response: Response): Promise<ZonaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ZonaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ZonaDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    modificarZonasMasivamente(padreId: number, body: ZonaDTO[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas/modificar-zonas-masivamente";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processModificarZonasMasivamente(_response);
+        });
+    }
+
+    protected processModificarZonasMasivamente(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    zonasAll(padreId: number): Promise<ZonaDTO[]> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processZonasAll(_response);
+        });
+    }
+
+    protected processZonasAll(response: Response): Promise<ZonaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ZonaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ZonaDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    zonasPOST(padreId: number, body: ZonaDTO | undefined): Promise<ZonaDTO> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processZonasPOST(_response);
+        });
+    }
+
+    protected processZonasPOST(response: Response): Promise<ZonaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ZonaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ZonaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    zonasGET(padreId: number, id: number): Promise<ZonaDTO> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processZonasGET(_response);
+        });
+    }
+
+    protected processZonasGET(response: Response): Promise<ZonaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ZonaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ZonaDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    zonasPUT(padreId: number, id: number, body: ZonaDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processZonasPUT(_response);
+        });
+    }
+
+    protected processZonasPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    zonasDELETE(padreId: number, id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Fase/{padreId}/zonas/{id}";
+        if (padreId === undefined || padreId === null)
+            throw new Error("The parameter 'padreId' must be defined.");
+        url_ = url_.replace("{padreId}", encodeURIComponent("" + padreId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processZonasDELETE(_response);
+        });
+    }
+
+    protected processZonasDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
 }
 
 export class AprobarDelegadoEnElClubDTO implements IAprobarDelegadoEnElClubDTO {
+    id?: number;
+    dni!: string;
+    nombre!: string;
+    apellido!: string;
+    fechaNacimiento!: Date;
+    telefonoCelular?: string | undefined;
+    email?: string | undefined;
     delegadoClubId?: number;
 
     constructor(data?: IAprobarDelegadoEnElClubDTO) {
@@ -2103,6 +5054,13 @@ export class AprobarDelegadoEnElClubDTO implements IAprobarDelegadoEnElClubDTO {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
+            this.dni = _data["dni"];
+            this.nombre = _data["nombre"];
+            this.apellido = _data["apellido"];
+            this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
+            this.telefonoCelular = _data["telefonoCelular"];
+            this.email = _data["email"];
             this.delegadoClubId = _data["delegadoClubId"];
         }
     }
@@ -2116,12 +5074,26 @@ export class AprobarDelegadoEnElClubDTO implements IAprobarDelegadoEnElClubDTO {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dni"] = this.dni;
+        data["nombre"] = this.nombre;
+        data["apellido"] = this.apellido;
+        data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
+        data["telefonoCelular"] = this.telefonoCelular;
+        data["email"] = this.email;
         data["delegadoClubId"] = this.delegadoClubId;
         return data;
     }
 }
 
 export interface IAprobarDelegadoEnElClubDTO {
+    id?: number;
+    dni: string;
+    nombre: string;
+    apellido: string;
+    fechaNacimiento: Date;
+    telefonoCelular?: string | undefined;
+    email?: string | undefined;
     delegadoClubId?: number;
 }
 
@@ -2179,6 +5151,42 @@ export interface IAprobarJugadorDTO {
     apellido: string;
     fechaNacimiento: Date;
     jugadorEquipoId?: number;
+}
+
+export class CambiarEscudoDTO implements ICambiarEscudoDTO {
+    imagenBase64!: string;
+
+    constructor(data?: ICambiarEscudoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.imagenBase64 = _data["imagenBase64"];
+        }
+    }
+
+    static fromJS(data: any): CambiarEscudoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CambiarEscudoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["imagenBase64"] = this.imagenBase64;
+        return data;
+    }
+}
+
+export interface ICambiarEscudoDTO {
+    imagenBase64: string;
 }
 
 export class CambiarEstadoDelJugadorDTO implements ICambiarEstadoDelJugadorDTO {
@@ -2263,6 +5271,98 @@ export class CambiarPasswordDTO implements ICambiarPasswordDTO {
 export interface ICambiarPasswordDTO {
     usuario: string;
     passwordNuevo: string;
+}
+
+export class CambiarVisibilidadEnAppDTO implements ICambiarVisibilidadEnAppDTO {
+    esVisibleEnApp?: boolean;
+
+    constructor(data?: ICambiarVisibilidadEnAppDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+        }
+    }
+
+    static fromJS(data: any): CambiarVisibilidadEnAppDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CambiarVisibilidadEnAppDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        return data;
+    }
+}
+
+export interface ICambiarVisibilidadEnAppDTO {
+    esVisibleEnApp?: boolean;
+}
+
+export class CargarResultadosDTO implements ICargarResultadosDTO {
+    id?: number;
+    jornadaId!: number;
+    partidos?: PartidoDTO[] | undefined;
+    resultadosVerificados!: boolean;
+
+    constructor(data?: ICargarResultadosDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.jornadaId = _data["jornadaId"];
+            if (Array.isArray(_data["partidos"])) {
+                this.partidos = [] as any;
+                for (let item of _data["partidos"])
+                    this.partidos!.push(PartidoDTO.fromJS(item));
+            }
+            this.resultadosVerificados = _data["resultadosVerificados"];
+        }
+    }
+
+    static fromJS(data: any): CargarResultadosDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CargarResultadosDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["jornadaId"] = this.jornadaId;
+        if (Array.isArray(this.partidos)) {
+            data["partidos"] = [];
+            for (let item of this.partidos)
+                data["partidos"].push(item.toJSON());
+        }
+        data["resultadosVerificados"] = this.resultadosVerificados;
+        return data;
+    }
+}
+
+export interface ICargarResultadosDTO {
+    id?: number;
+    jornadaId: number;
+    partidos?: PartidoDTO[] | undefined;
+    resultadosVerificados: boolean;
 }
 
 export class CarnetDigitalDTO implements ICarnetDigitalDTO {
@@ -2464,6 +5564,10 @@ export interface IClubConEquiposDTO {
 export class ClubDTO implements IClubDTO {
     id?: number;
     nombre!: string;
+    escudo?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: boolean | undefined;
+    localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
 
@@ -2480,6 +5584,10 @@ export class ClubDTO implements IClubDTO {
         if (_data) {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
+            this.escudo = _data["escudo"];
+            this.direccion = _data["direccion"];
+            this.esTechado = _data["esTechado"];
+            this.localidad = _data["localidad"];
             if (Array.isArray(_data["equipos"])) {
                 this.equipos = [] as any;
                 for (let item of _data["equipos"])
@@ -2504,6 +5612,10 @@ export class ClubDTO implements IClubDTO {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["nombre"] = this.nombre;
+        data["escudo"] = this.escudo;
+        data["direccion"] = this.direccion;
+        data["esTechado"] = this.esTechado;
+        data["localidad"] = this.localidad;
         if (Array.isArray(this.equipos)) {
             data["equipos"] = [];
             for (let item of this.equipos)
@@ -2521,8 +5633,100 @@ export class ClubDTO implements IClubDTO {
 export interface IClubDTO {
     id?: number;
     nombre: string;
+    escudo?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: boolean | undefined;
+    localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
+}
+
+export class CrearTorneoDTO implements ICrearTorneoDTO {
+    id?: number;
+    nombre!: string;
+    anio!: number;
+    esVisibleEnApp!: boolean;
+    torneoAgrupadorId?: number;
+    torneoAgrupadorNombre?: string | undefined;
+    sePuedeEditar?: boolean;
+    fases?: FaseDTO[] | undefined;
+    primeraFase?: FaseDTO;
+    categorias?: TorneoCategoriaDTO[] | undefined;
+
+    constructor(data?: ICrearTorneoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.anio = _data["anio"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.torneoAgrupadorId = _data["torneoAgrupadorId"];
+            this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
+            this.sePuedeEditar = _data["sePuedeEditar"];
+            if (Array.isArray(_data["fases"])) {
+                this.fases = [] as any;
+                for (let item of _data["fases"])
+                    this.fases!.push(FaseDTO.fromJS(item));
+            }
+            this.primeraFase = _data["primeraFase"] ? FaseDTO.fromJS(_data["primeraFase"]) : <any>undefined;
+            if (Array.isArray(_data["categorias"])) {
+                this.categorias = [] as any;
+                for (let item of _data["categorias"])
+                    this.categorias!.push(TorneoCategoriaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CrearTorneoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CrearTorneoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["anio"] = this.anio;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["torneoAgrupadorId"] = this.torneoAgrupadorId;
+        data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
+        data["sePuedeEditar"] = this.sePuedeEditar;
+        if (Array.isArray(this.fases)) {
+            data["fases"] = [];
+            for (let item of this.fases)
+                data["fases"].push(item.toJSON());
+        }
+        data["primeraFase"] = this.primeraFase ? this.primeraFase.toJSON() : <any>undefined;
+        if (Array.isArray(this.categorias)) {
+            data["categorias"] = [];
+            for (let item of this.categorias)
+                data["categorias"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICrearTorneoDTO {
+    id?: number;
+    nombre: string;
+    anio: number;
+    esVisibleEnApp: boolean;
+    torneoAgrupadorId?: number;
+    torneoAgrupadorNombre?: string | undefined;
+    sePuedeEditar?: boolean;
+    fases?: FaseDTO[] | undefined;
+    primeraFase?: FaseDTO;
+    categorias?: TorneoCategoriaDTO[] | undefined;
 }
 
 export class DelegadoClubDTO implements IDelegadoClubDTO {
@@ -2835,8 +6039,7 @@ export class EquipoDTO implements IEquipoDTO {
     clubId!: number;
     codigoAlfanumerico?: string | undefined;
     clubNombre?: string | undefined;
-    torneoId?: number | undefined;
-    torneoNombre?: string | undefined;
+    zonas?: ZonaResumenDTO[] | undefined;
     jugadores?: JugadorDelEquipoDTO[] | undefined;
 
     constructor(data?: IEquipoDTO) {
@@ -2855,8 +6058,11 @@ export class EquipoDTO implements IEquipoDTO {
             this.clubId = _data["clubId"];
             this.codigoAlfanumerico = _data["codigoAlfanumerico"];
             this.clubNombre = _data["clubNombre"];
-            this.torneoId = _data["torneoId"];
-            this.torneoNombre = _data["torneoNombre"];
+            if (Array.isArray(_data["zonas"])) {
+                this.zonas = [] as any;
+                for (let item of _data["zonas"])
+                    this.zonas!.push(ZonaResumenDTO.fromJS(item));
+            }
             if (Array.isArray(_data["jugadores"])) {
                 this.jugadores = [] as any;
                 for (let item of _data["jugadores"])
@@ -2879,8 +6085,11 @@ export class EquipoDTO implements IEquipoDTO {
         data["clubId"] = this.clubId;
         data["codigoAlfanumerico"] = this.codigoAlfanumerico;
         data["clubNombre"] = this.clubNombre;
-        data["torneoId"] = this.torneoId;
-        data["torneoNombre"] = this.torneoNombre;
+        if (Array.isArray(this.zonas)) {
+            data["zonas"] = [];
+            for (let item of this.zonas)
+                data["zonas"].push(item.toJSON());
+        }
         if (Array.isArray(this.jugadores)) {
             data["jugadores"] = [];
             for (let item of this.jugadores)
@@ -2896,9 +6105,56 @@ export interface IEquipoDTO {
     clubId: number;
     codigoAlfanumerico?: string | undefined;
     clubNombre?: string | undefined;
-    torneoId?: number | undefined;
-    torneoNombre?: string | undefined;
+    zonas?: ZonaResumenDTO[] | undefined;
     jugadores?: JugadorDelEquipoDTO[] | undefined;
+}
+
+export class EquipoDeLaZonaDTO implements IEquipoDeLaZonaDTO {
+    nombre?: string | undefined;
+    club?: string | undefined;
+    id?: string | undefined;
+    codigo?: string | undefined;
+
+    constructor(data?: IEquipoDeLaZonaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.nombre = _data["nombre"];
+            this.club = _data["club"];
+            this.id = _data["id"];
+            this.codigo = _data["codigo"];
+        }
+    }
+
+    static fromJS(data: any): EquipoDeLaZonaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EquipoDeLaZonaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nombre"] = this.nombre;
+        data["club"] = this.club;
+        data["id"] = this.id;
+        data["codigo"] = this.codigo;
+        return data;
+    }
+}
+
+export interface IEquipoDeLaZonaDTO {
+    nombre?: string | undefined;
+    club?: string | undefined;
+    id?: string | undefined;
+    codigo?: string | undefined;
 }
 
 export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
@@ -2963,6 +6219,66 @@ export interface IEquipoDelJugadorDTO {
     estado?: EstadoJugadorEnum;
     motivo?: string | undefined;
     fechaPagoDeFichaje?: Date | undefined;
+}
+
+export class EquipoParaZonasDTO implements IEquipoParaZonasDTO {
+    id?: number;
+    nombre?: string | undefined;
+    club?: string | undefined;
+    codigoAlfanumerico?: string | undefined;
+    zonas?: ZonaResumenDTO[] | undefined;
+
+    constructor(data?: IEquipoParaZonasDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.club = _data["club"];
+            this.codigoAlfanumerico = _data["codigoAlfanumerico"];
+            if (Array.isArray(_data["zonas"])) {
+                this.zonas = [] as any;
+                for (let item of _data["zonas"])
+                    this.zonas!.push(ZonaResumenDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EquipoParaZonasDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EquipoParaZonasDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["club"] = this.club;
+        data["codigoAlfanumerico"] = this.codigoAlfanumerico;
+        if (Array.isArray(this.zonas)) {
+            data["zonas"] = [];
+            for (let item of this.zonas)
+                data["zonas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IEquipoParaZonasDTO {
+    id?: number;
+    nombre?: string | undefined;
+    club?: string | undefined;
+    codigoAlfanumerico?: string | undefined;
+    zonas?: ZonaResumenDTO[] | undefined;
 }
 
 export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
@@ -3064,6 +6380,282 @@ export enum EstadoJugadorEnum {
     _6 = 6,
 }
 
+export class FaseDTO implements IFaseDTO {
+    id?: number;
+    nombre!: string;
+    numero!: number;
+    torneoId?: number;
+    tipoDeFase!: TipoDeFaseEnum;
+    tipoDeFaseNombre?: string | undefined;
+    estadoFaseId?: number;
+    estadoFaseNombre?: string | undefined;
+    esVisibleEnApp!: boolean;
+    sePuedeEditar?: boolean;
+    zonas?: ZonaDeFaseDTO[] | undefined;
+
+    constructor(data?: IFaseDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.numero = _data["numero"];
+            this.torneoId = _data["torneoId"];
+            this.tipoDeFase = _data["tipoDeFase"];
+            this.tipoDeFaseNombre = _data["tipoDeFaseNombre"];
+            this.estadoFaseId = _data["estadoFaseId"];
+            this.estadoFaseNombre = _data["estadoFaseNombre"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.sePuedeEditar = _data["sePuedeEditar"];
+            if (Array.isArray(_data["zonas"])) {
+                this.zonas = [] as any;
+                for (let item of _data["zonas"])
+                    this.zonas!.push(ZonaDeFaseDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FaseDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FaseDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["numero"] = this.numero;
+        data["torneoId"] = this.torneoId;
+        data["tipoDeFase"] = this.tipoDeFase;
+        data["tipoDeFaseNombre"] = this.tipoDeFaseNombre;
+        data["estadoFaseId"] = this.estadoFaseId;
+        data["estadoFaseNombre"] = this.estadoFaseNombre;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["sePuedeEditar"] = this.sePuedeEditar;
+        if (Array.isArray(this.zonas)) {
+            data["zonas"] = [];
+            for (let item of this.zonas)
+                data["zonas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFaseDTO {
+    id?: number;
+    nombre: string;
+    numero: number;
+    torneoId?: number;
+    tipoDeFase: TipoDeFaseEnum;
+    tipoDeFaseNombre?: string | undefined;
+    estadoFaseId?: number;
+    estadoFaseNombre?: string | undefined;
+    esVisibleEnApp: boolean;
+    sePuedeEditar?: boolean;
+    zonas?: ZonaDeFaseDTO[] | undefined;
+}
+
+export class FechaDTO implements IFechaDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp!: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+
+    constructor(data?: IFechaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dia = _data["dia"] ? new Date(_data["dia"].toString()) : <any>undefined;
+            this.zonaId = _data["zonaId"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            if (Array.isArray(_data["jornadas"])) {
+                this.jornadas = [] as any;
+                for (let item of _data["jornadas"])
+                    this.jornadas!.push(JornadaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FechaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FechaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dia"] = this.dia ? formatDate(this.dia) : <any>undefined;
+        data["zonaId"] = this.zonaId;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        if (Array.isArray(this.jornadas)) {
+            data["jornadas"] = [];
+            for (let item of this.jornadas)
+                data["jornadas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFechaDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+}
+
+export class FechaEliminacionDirectaDTO implements IFechaEliminacionDirectaDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp!: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+    instanciaId!: number;
+    instanciaNombre?: string | undefined;
+
+    constructor(data?: IFechaEliminacionDirectaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dia = _data["dia"] ? new Date(_data["dia"].toString()) : <any>undefined;
+            this.zonaId = _data["zonaId"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            if (Array.isArray(_data["jornadas"])) {
+                this.jornadas = [] as any;
+                for (let item of _data["jornadas"])
+                    this.jornadas!.push(JornadaDTO.fromJS(item));
+            }
+            this.instanciaId = _data["instanciaId"];
+            this.instanciaNombre = _data["instanciaNombre"];
+        }
+    }
+
+    static fromJS(data: any): FechaEliminacionDirectaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FechaEliminacionDirectaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dia"] = this.dia ? formatDate(this.dia) : <any>undefined;
+        data["zonaId"] = this.zonaId;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        if (Array.isArray(this.jornadas)) {
+            data["jornadas"] = [];
+            for (let item of this.jornadas)
+                data["jornadas"].push(item.toJSON());
+        }
+        data["instanciaId"] = this.instanciaId;
+        data["instanciaNombre"] = this.instanciaNombre;
+        return data;
+    }
+}
+
+export interface IFechaEliminacionDirectaDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+    instanciaId: number;
+    instanciaNombre?: string | undefined;
+}
+
+export class FechaTodosContraTodosDTO implements IFechaTodosContraTodosDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp!: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+    numero!: number;
+
+    constructor(data?: IFechaTodosContraTodosDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dia = _data["dia"] ? new Date(_data["dia"].toString()) : <any>undefined;
+            this.zonaId = _data["zonaId"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            if (Array.isArray(_data["jornadas"])) {
+                this.jornadas = [] as any;
+                for (let item of _data["jornadas"])
+                    this.jornadas!.push(JornadaDTO.fromJS(item));
+            }
+            this.numero = _data["numero"];
+        }
+    }
+
+    static fromJS(data: any): FechaTodosContraTodosDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FechaTodosContraTodosDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dia"] = this.dia ? formatDate(this.dia) : <any>undefined;
+        data["zonaId"] = this.zonaId;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        if (Array.isArray(this.jornadas)) {
+            data["jornadas"] = [];
+            for (let item of this.jornadas)
+                data["jornadas"].push(item.toJSON());
+        }
+        data["numero"] = this.numero;
+        return data;
+    }
+}
+
+export interface IFechaTodosContraTodosDTO {
+    id?: number;
+    dia?: Date | undefined;
+    zonaId?: number;
+    esVisibleEnApp: boolean;
+    jornadas?: JornadaDTO[] | undefined;
+    numero: number;
+}
+
 export class FicharDelegadoSoloConDniYClubDTO implements IFicharDelegadoSoloConDniYClubDTO {
     id?: number;
     dni!: string;
@@ -3158,6 +6750,462 @@ export interface IFicharEnOtroEquipoDTO {
     id?: number;
     dni: string;
     codigoAlfanumerico: string;
+}
+
+export class FixtureAlgoritmoDTO implements IFixtureAlgoritmoDTO {
+    id?: number;
+    fixtureAlgoritmoId!: number;
+    cantidadDeEquipos!: number;
+    nombre!: string | undefined;
+    fechas?: FixtureAlgoritmoFechaDTO[] | undefined;
+
+    constructor(data?: IFixtureAlgoritmoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fixtureAlgoritmoId = _data["fixtureAlgoritmoId"];
+            this.cantidadDeEquipos = _data["cantidadDeEquipos"];
+            this.nombre = _data["nombre"];
+            if (Array.isArray(_data["fechas"])) {
+                this.fechas = [] as any;
+                for (let item of _data["fechas"])
+                    this.fechas!.push(FixtureAlgoritmoFechaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FixtureAlgoritmoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FixtureAlgoritmoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fixtureAlgoritmoId"] = this.fixtureAlgoritmoId;
+        data["cantidadDeEquipos"] = this.cantidadDeEquipos;
+        data["nombre"] = this.nombre;
+        if (Array.isArray(this.fechas)) {
+            data["fechas"] = [];
+            for (let item of this.fechas)
+                data["fechas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFixtureAlgoritmoDTO {
+    id?: number;
+    fixtureAlgoritmoId: number;
+    cantidadDeEquipos: number;
+    nombre: string | undefined;
+    fechas?: FixtureAlgoritmoFechaDTO[] | undefined;
+}
+
+export class FixtureAlgoritmoFechaDTO implements IFixtureAlgoritmoFechaDTO {
+    id?: number;
+    fecha!: number;
+    equipoLocal!: number;
+    equipoVisitante!: number;
+
+    constructor(data?: IFixtureAlgoritmoFechaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fecha = _data["fecha"];
+            this.equipoLocal = _data["equipoLocal"];
+            this.equipoVisitante = _data["equipoVisitante"];
+        }
+    }
+
+    static fromJS(data: any): FixtureAlgoritmoFechaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FixtureAlgoritmoFechaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fecha"] = this.fecha;
+        data["equipoLocal"] = this.equipoLocal;
+        data["equipoVisitante"] = this.equipoVisitante;
+        return data;
+    }
+}
+
+export interface IFixtureAlgoritmoFechaDTO {
+    id?: number;
+    fecha: number;
+    equipoLocal: number;
+    equipoVisitante: number;
+}
+
+export class InformacionInicialAgrupadorDTO implements IInformacionInicialAgrupadorDTO {
+    id?: number;
+    nombre?: string | undefined;
+    color?: string | undefined;
+    torneos?: InformacionInicialTorneoDTO[] | undefined;
+
+    constructor(data?: IInformacionInicialAgrupadorDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.color = _data["color"];
+            if (Array.isArray(_data["torneos"])) {
+                this.torneos = [] as any;
+                for (let item of _data["torneos"])
+                    this.torneos!.push(InformacionInicialTorneoDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InformacionInicialAgrupadorDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new InformacionInicialAgrupadorDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["color"] = this.color;
+        if (Array.isArray(this.torneos)) {
+            data["torneos"] = [];
+            for (let item of this.torneos)
+                data["torneos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IInformacionInicialAgrupadorDTO {
+    id?: number;
+    nombre?: string | undefined;
+    color?: string | undefined;
+    torneos?: InformacionInicialTorneoDTO[] | undefined;
+}
+
+export class InformacionInicialFaseDTO implements IInformacionInicialFaseDTO {
+    id?: number;
+    nombre?: string | undefined;
+    zonas?: InformacionInicialZonaDTO[] | undefined;
+
+    constructor(data?: IInformacionInicialFaseDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            if (Array.isArray(_data["zonas"])) {
+                this.zonas = [] as any;
+                for (let item of _data["zonas"])
+                    this.zonas!.push(InformacionInicialZonaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InformacionInicialFaseDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new InformacionInicialFaseDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        if (Array.isArray(this.zonas)) {
+            data["zonas"] = [];
+            for (let item of this.zonas)
+                data["zonas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IInformacionInicialFaseDTO {
+    id?: number;
+    nombre?: string | undefined;
+    zonas?: InformacionInicialZonaDTO[] | undefined;
+}
+
+export class InformacionInicialTorneoDTO implements IInformacionInicialTorneoDTO {
+    id?: number;
+    nombre?: string | undefined;
+    fases?: InformacionInicialFaseDTO[] | undefined;
+
+    constructor(data?: IInformacionInicialTorneoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            if (Array.isArray(_data["fases"])) {
+                this.fases = [] as any;
+                for (let item of _data["fases"])
+                    this.fases!.push(InformacionInicialFaseDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InformacionInicialTorneoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new InformacionInicialTorneoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        if (Array.isArray(this.fases)) {
+            data["fases"] = [];
+            for (let item of this.fases)
+                data["fases"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IInformacionInicialTorneoDTO {
+    id?: number;
+    nombre?: string | undefined;
+    fases?: InformacionInicialFaseDTO[] | undefined;
+}
+
+export class InformacionInicialZonaDTO implements IInformacionInicialZonaDTO {
+    id?: number;
+    nombre?: string | undefined;
+
+    constructor(data?: IInformacionInicialZonaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+        }
+    }
+
+    static fromJS(data: any): InformacionInicialZonaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new InformacionInicialZonaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        return data;
+    }
+}
+
+export interface IInformacionInicialZonaDTO {
+    id?: number;
+    nombre?: string | undefined;
+}
+
+export class JornadaDTO implements IJornadaDTO {
+    id?: number;
+    tipo!: string | undefined;
+    resultadosVerificados!: boolean;
+    fechaId?: number;
+    localId?: number | undefined;
+    visitanteId?: number | undefined;
+    local?: string | undefined;
+    visitante?: string | undefined;
+    equipoLocalId?: number | undefined;
+    equipoLocal?: string | undefined;
+    equipoId?: number | undefined;
+    equipo?: string | undefined;
+    localOVisitante?: LocalVisitanteEnum;
+    partidos?: PartidoDTO[] | undefined;
+
+    constructor(data?: IJornadaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tipo = _data["tipo"];
+            this.resultadosVerificados = _data["resultadosVerificados"];
+            this.fechaId = _data["fechaId"];
+            this.localId = _data["localId"];
+            this.visitanteId = _data["visitanteId"];
+            this.local = _data["local"];
+            this.visitante = _data["visitante"];
+            this.equipoLocalId = _data["equipoLocalId"];
+            this.equipoLocal = _data["equipoLocal"];
+            this.equipoId = _data["equipoId"];
+            this.equipo = _data["equipo"];
+            this.localOVisitante = _data["localOVisitante"];
+            if (Array.isArray(_data["partidos"])) {
+                this.partidos = [] as any;
+                for (let item of _data["partidos"])
+                    this.partidos!.push(PartidoDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JornadaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JornadaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tipo"] = this.tipo;
+        data["resultadosVerificados"] = this.resultadosVerificados;
+        data["fechaId"] = this.fechaId;
+        data["localId"] = this.localId;
+        data["visitanteId"] = this.visitanteId;
+        data["local"] = this.local;
+        data["visitante"] = this.visitante;
+        data["equipoLocalId"] = this.equipoLocalId;
+        data["equipoLocal"] = this.equipoLocal;
+        data["equipoId"] = this.equipoId;
+        data["equipo"] = this.equipo;
+        data["localOVisitante"] = this.localOVisitante;
+        if (Array.isArray(this.partidos)) {
+            data["partidos"] = [];
+            for (let item of this.partidos)
+                data["partidos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IJornadaDTO {
+    id?: number;
+    tipo: string | undefined;
+    resultadosVerificados: boolean;
+    fechaId?: number;
+    localId?: number | undefined;
+    visitanteId?: number | undefined;
+    local?: string | undefined;
+    visitante?: string | undefined;
+    equipoLocalId?: number | undefined;
+    equipoLocal?: string | undefined;
+    equipoId?: number | undefined;
+    equipo?: string | undefined;
+    localOVisitante?: LocalVisitanteEnum;
+    partidos?: PartidoDTO[] | undefined;
+}
+
+export class JugadorBaseDTO implements IJugadorBaseDTO {
+    id?: number;
+    dni!: string;
+    nombre!: string;
+    apellido!: string;
+    fechaNacimiento!: Date;
+
+    constructor(data?: IJugadorBaseDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.dni = _data["dni"];
+            this.nombre = _data["nombre"];
+            this.apellido = _data["apellido"];
+            this.fechaNacimiento = _data["fechaNacimiento"] ? new Date(_data["fechaNacimiento"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): JugadorBaseDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JugadorBaseDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["dni"] = this.dni;
+        data["nombre"] = this.nombre;
+        data["apellido"] = this.apellido;
+        data["fechaNacimiento"] = this.fechaNacimiento ? this.fechaNacimiento.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IJugadorBaseDTO {
+    id?: number;
+    dni: string;
+    nombre: string;
+    apellido: string;
+    fechaNacimiento: Date;
 }
 
 export class JugadorDTO implements IJugadorDTO {
@@ -3306,6 +7354,11 @@ export interface IJugadorDelEquipoDTO {
     estado?: EstadoJugadorEnum;
     jugadorEquipoId?: number;
     motivo?: string | undefined;
+}
+
+export enum LocalVisitanteEnum {
+    _1 = 1,
+    _2 = 2,
 }
 
 export class LoginDTO implements ILoginDTO {
@@ -3528,6 +7581,66 @@ export interface IObtenerNombreUsuarioPorDniDTO {
     nombreUsuario?: string | undefined;
 }
 
+export class PartidoDTO implements IPartidoDTO {
+    id?: number;
+    categoria?: string | undefined;
+    categoriaId!: number;
+    resultadoLocal!: string | undefined;
+    resultadoVisitante!: string | undefined;
+    penalesLocal?: string | undefined;
+    penalesVisitante?: string | undefined;
+
+    constructor(data?: IPartidoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.categoria = _data["categoria"];
+            this.categoriaId = _data["categoriaId"];
+            this.resultadoLocal = _data["resultadoLocal"];
+            this.resultadoVisitante = _data["resultadoVisitante"];
+            this.penalesLocal = _data["penalesLocal"];
+            this.penalesVisitante = _data["penalesVisitante"];
+        }
+    }
+
+    static fromJS(data: any): PartidoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new PartidoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["categoria"] = this.categoria;
+        data["categoriaId"] = this.categoriaId;
+        data["resultadoLocal"] = this.resultadoLocal;
+        data["resultadoVisitante"] = this.resultadoVisitante;
+        data["penalesLocal"] = this.penalesLocal;
+        data["penalesVisitante"] = this.penalesVisitante;
+        return data;
+    }
+}
+
+export interface IPartidoDTO {
+    id?: number;
+    categoria?: string | undefined;
+    categoriaId: number;
+    resultadoLocal: string | undefined;
+    resultadoVisitante: string | undefined;
+    penalesLocal?: string | undefined;
+    penalesVisitante?: string | undefined;
+}
+
 export class RechazarJugadorDTO implements IRechazarJugadorDTO {
     id?: number;
     dni!: string;
@@ -3640,10 +7753,137 @@ export interface IReportePagosDTO {
     cantidadJugadoresPagados?: number;
 }
 
+export enum TipoDeFaseEnum {
+    _1 = 1,
+    _2 = 2,
+}
+
+export class TorneoAgrupadorDTO implements ITorneoAgrupadorDTO {
+    id?: number;
+    nombre!: string;
+    color!: string | undefined;
+    esVisibleEnApp!: boolean;
+    cantidadDeTorneos?: number;
+    torneos?: TorneoDTO[] | undefined;
+
+    constructor(data?: ITorneoAgrupadorDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.color = _data["color"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.cantidadDeTorneos = _data["cantidadDeTorneos"];
+            if (Array.isArray(_data["torneos"])) {
+                this.torneos = [] as any;
+                for (let item of _data["torneos"])
+                    this.torneos!.push(TorneoDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): TorneoAgrupadorDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new TorneoAgrupadorDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["color"] = this.color;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["cantidadDeTorneos"] = this.cantidadDeTorneos;
+        if (Array.isArray(this.torneos)) {
+            data["torneos"] = [];
+            for (let item of this.torneos)
+                data["torneos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ITorneoAgrupadorDTO {
+    id?: number;
+    nombre: string;
+    color: string | undefined;
+    esVisibleEnApp: boolean;
+    cantidadDeTorneos?: number;
+    torneos?: TorneoDTO[] | undefined;
+}
+
+export class TorneoCategoriaDTO implements ITorneoCategoriaDTO {
+    id?: number;
+    nombre!: string;
+    anioDesde!: number;
+    anioHasta!: number;
+    torneoId?: number;
+
+    constructor(data?: ITorneoCategoriaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.anioDesde = _data["anioDesde"];
+            this.anioHasta = _data["anioHasta"];
+            this.torneoId = _data["torneoId"];
+        }
+    }
+
+    static fromJS(data: any): TorneoCategoriaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new TorneoCategoriaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["anioDesde"] = this.anioDesde;
+        data["anioHasta"] = this.anioHasta;
+        data["torneoId"] = this.torneoId;
+        return data;
+    }
+}
+
+export interface ITorneoCategoriaDTO {
+    id?: number;
+    nombre: string;
+    anioDesde: number;
+    anioHasta: number;
+    torneoId?: number;
+}
+
 export class TorneoDTO implements ITorneoDTO {
     id?: number;
     nombre!: string;
-    equipos?: EquipoDTO[] | undefined;
+    anio!: number;
+    esVisibleEnApp!: boolean;
+    torneoAgrupadorId?: number;
+    torneoAgrupadorNombre?: string | undefined;
+    sePuedeEditar?: boolean;
+    fases?: FaseDTO[] | undefined;
+    categorias?: TorneoCategoriaDTO[] | undefined;
 
     constructor(data?: ITorneoDTO) {
         if (data) {
@@ -3658,10 +7898,20 @@ export class TorneoDTO implements ITorneoDTO {
         if (_data) {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
-            if (Array.isArray(_data["equipos"])) {
-                this.equipos = [] as any;
-                for (let item of _data["equipos"])
-                    this.equipos!.push(EquipoDTO.fromJS(item));
+            this.anio = _data["anio"];
+            this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.torneoAgrupadorId = _data["torneoAgrupadorId"];
+            this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
+            this.sePuedeEditar = _data["sePuedeEditar"];
+            if (Array.isArray(_data["fases"])) {
+                this.fases = [] as any;
+                for (let item of _data["fases"])
+                    this.fases!.push(FaseDTO.fromJS(item));
+            }
+            if (Array.isArray(_data["categorias"])) {
+                this.categorias = [] as any;
+                for (let item of _data["categorias"])
+                    this.categorias!.push(TorneoCategoriaDTO.fromJS(item));
             }
         }
     }
@@ -3677,10 +7927,20 @@ export class TorneoDTO implements ITorneoDTO {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["nombre"] = this.nombre;
-        if (Array.isArray(this.equipos)) {
-            data["equipos"] = [];
-            for (let item of this.equipos)
-                data["equipos"].push(item.toJSON());
+        data["anio"] = this.anio;
+        data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["torneoAgrupadorId"] = this.torneoAgrupadorId;
+        data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
+        data["sePuedeEditar"] = this.sePuedeEditar;
+        if (Array.isArray(this.fases)) {
+            data["fases"] = [];
+            for (let item of this.fases)
+                data["fases"].push(item.toJSON());
+        }
+        if (Array.isArray(this.categorias)) {
+            data["categorias"] = [];
+            for (let item of this.categorias)
+                data["categorias"].push(item.toJSON());
         }
         return data;
     }
@@ -3689,7 +7949,13 @@ export class TorneoDTO implements ITorneoDTO {
 export interface ITorneoDTO {
     id?: number;
     nombre: string;
-    equipos?: EquipoDTO[] | undefined;
+    anio: number;
+    esVisibleEnApp: boolean;
+    torneoAgrupadorId?: number;
+    torneoAgrupadorNombre?: string | undefined;
+    sePuedeEditar?: boolean;
+    fases?: FaseDTO[] | undefined;
+    categorias?: TorneoCategoriaDTO[] | undefined;
 }
 
 export class UsuarioDTO implements IUsuarioDTO {
@@ -3734,6 +8000,192 @@ export interface IUsuarioDTO {
     id?: number;
     nombreUsuario?: string | undefined;
     delegadoId?: number | undefined;
+}
+
+export class ZonaDTO implements IZonaDTO {
+    id?: number;
+    nombre!: string;
+    faseId?: number;
+    categoriaId?: number | undefined;
+    categoriaNombre?: string | undefined;
+    equipos?: EquipoDeLaZonaDTO[] | undefined;
+
+    constructor(data?: IZonaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.faseId = _data["faseId"];
+            this.categoriaId = _data["categoriaId"];
+            this.categoriaNombre = _data["categoriaNombre"];
+            if (Array.isArray(_data["equipos"])) {
+                this.equipos = [] as any;
+                for (let item of _data["equipos"])
+                    this.equipos!.push(EquipoDeLaZonaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ZonaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ZonaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["faseId"] = this.faseId;
+        data["categoriaId"] = this.categoriaId;
+        data["categoriaNombre"] = this.categoriaNombre;
+        if (Array.isArray(this.equipos)) {
+            data["equipos"] = [];
+            for (let item of this.equipos)
+                data["equipos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IZonaDTO {
+    id?: number;
+    nombre: string;
+    faseId?: number;
+    categoriaId?: number | undefined;
+    categoriaNombre?: string | undefined;
+    equipos?: EquipoDeLaZonaDTO[] | undefined;
+}
+
+export class ZonaDeFaseDTO implements IZonaDeFaseDTO {
+    id?: number;
+    nombre?: string | undefined;
+    cantidadDeEquipos?: number;
+    categoriaId?: number | undefined;
+    categoriaNombre?: string | undefined;
+
+    constructor(data?: IZonaDeFaseDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.cantidadDeEquipos = _data["cantidadDeEquipos"];
+            this.categoriaId = _data["categoriaId"];
+            this.categoriaNombre = _data["categoriaNombre"];
+        }
+    }
+
+    static fromJS(data: any): ZonaDeFaseDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ZonaDeFaseDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["cantidadDeEquipos"] = this.cantidadDeEquipos;
+        data["categoriaId"] = this.categoriaId;
+        data["categoriaNombre"] = this.categoriaNombre;
+        return data;
+    }
+}
+
+export interface IZonaDeFaseDTO {
+    id?: number;
+    nombre?: string | undefined;
+    cantidadDeEquipos?: number;
+    categoriaId?: number | undefined;
+    categoriaNombre?: string | undefined;
+}
+
+export class ZonaResumenDTO implements IZonaResumenDTO {
+    id?: number | undefined;
+    nombre?: string | undefined;
+    torneoId?: number | undefined;
+    torneo?: string | undefined;
+    agrupador?: string | undefined;
+    agrupadorId?: number | undefined;
+    fase?: string | undefined;
+    faseId?: number | undefined;
+
+    constructor(data?: IZonaResumenDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.torneoId = _data["torneoId"];
+            this.torneo = _data["torneo"];
+            this.agrupador = _data["agrupador"];
+            this.agrupadorId = _data["agrupadorId"];
+            this.fase = _data["fase"];
+            this.faseId = _data["faseId"];
+        }
+    }
+
+    static fromJS(data: any): ZonaResumenDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ZonaResumenDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["torneoId"] = this.torneoId;
+        data["torneo"] = this.torneo;
+        data["agrupador"] = this.agrupador;
+        data["agrupadorId"] = this.agrupadorId;
+        data["fase"] = this.fase;
+        data["faseId"] = this.faseId;
+        return data;
+    }
+}
+
+export interface IZonaResumenDTO {
+    id?: number | undefined;
+    nombre?: string | undefined;
+    torneoId?: number | undefined;
+    torneo?: string | undefined;
+    agrupador?: string | undefined;
+    agrupadorId?: number | undefined;
+    fase?: string | undefined;
+    faseId?: number | undefined;
+}
+
+function formatDate(d: Date) {
+    return d.getFullYear() + '-' + 
+        (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
+        (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
 }
 
 export class ApiException extends Error {

@@ -34,6 +34,10 @@ export default function HomeScreen() {
     router.push('/fichajes')
   }
 
+  const handleBuscarEquipo = () => {
+    router.push('/torneos')
+  }
+
   const handleSeleccionarOtraLiga = () => {
     logout()
     limpiarEquipoSeleccionado()
@@ -70,19 +74,16 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Barra de búsqueda */}
-        {/* <View className="flex-row items-center bg-white rounded-2xl shadow-lg overflow-hidden">
-          <View className="pl-4">
-            <Feather name="search" size={20} color="#9ca3af" />
-          </View>
-          <TextInput
-            placeholder="Buscar equipo..."
-            value={busqueda}
-            onChangeText={setBusqueda}
-            className="flex-1 py-3.5 px-3 text-gray-900"
-            placeholderTextColor="#9ca3af"
-          />
-        </View> */}
+        <TouchableOpacity
+          onPress={handleBuscarEquipo}
+          activeOpacity={0.85}
+          className="flex-row items-center bg-white rounded-2xl px-4 py-3.5 mx-0"
+          accessibilityRole="button"
+          accessibilityLabel="Buscar equipo"
+        >
+          <Feather name="search" size={20} color="#9ca3af" />
+          <Text className="text-gray-400 text-base ml-2">Buscar equipo...</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Tarjetas de acción */}
