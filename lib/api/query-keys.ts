@@ -12,4 +12,7 @@ export const queryKeys = {
   torneos: {
     infoInicial: (leagueId: string | undefined) => ['torneos', 'infoInicial', leagueId] as const,
   },
+  zonas: {
+    clubes: (zonaId: number | null | undefined) => ['zonas', 'clubes', zonaId] as const,
+  },
 }

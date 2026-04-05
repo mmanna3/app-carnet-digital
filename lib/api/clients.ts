@@ -247,6 +247,55 @@ export class Client {
     }
 
     /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
+    clubes(zonaId: number | undefined): Promise<EquipoConDatosDelClubDTO[]> {
+        let url_ = this.baseUrl + "/api/carnet-digital/clubes?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processClubes(_response);
+        });
+    }
+
+    protected processClubes(response: Response): Promise<EquipoConDatosDelClubDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(EquipoConDatosDelClubDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EquipoConDatosDelClubDTO[]>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -6031,6 +6080,58 @@ export interface IEquipoBaseDTO {
     nombre: string | undefined;
     torneo: string | undefined;
     codigoAlfanumerico?: string | undefined;
+}
+
+export class EquipoConDatosDelClubDTO implements IEquipoConDatosDelClubDTO {
+    equipo?: string | undefined;
+    escudo?: string | undefined;
+    localidad?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: string | undefined;
+
+    constructor(data?: IEquipoConDatosDelClubDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.equipo = _data["equipo"];
+            this.escudo = _data["escudo"];
+            this.localidad = _data["localidad"];
+            this.direccion = _data["direccion"];
+            this.esTechado = _data["esTechado"];
+        }
+    }
+
+    static fromJS(data: any): EquipoConDatosDelClubDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EquipoConDatosDelClubDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["equipo"] = this.equipo;
+        data["escudo"] = this.escudo;
+        data["localidad"] = this.localidad;
+        data["direccion"] = this.direccion;
+        data["esTechado"] = this.esTechado;
+        return data;
+    }
+}
+
+export interface IEquipoConDatosDelClubDTO {
+    equipo?: string | undefined;
+    escudo?: string | undefined;
+    localidad?: string | undefined;
+    direccion?: string | undefined;
+    esTechado?: string | undefined;
 }
 
 export class EquipoDTO implements IEquipoDTO {
