@@ -134,6 +134,8 @@ export default function TorneoDetalle() {
                     zonaId: zona.id != null ? String(zona.id) : '',
                     zonaNombre: zona.nombre ?? '',
                     color: color ?? '',
+                    torneoNombre: torneo.nombre ?? '',
+                    faseNombre: fase.nombre ?? '',
                   },
                 })
               }

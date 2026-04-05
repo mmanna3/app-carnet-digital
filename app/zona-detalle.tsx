@@ -5,14 +5,19 @@ import type { ComponentProps } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
+import Clubes from '@/app/components/zona-detalle/clubes'
+import Fixture from '@/app/components/zona-detalle/fixture'
+import Jornadas from '@/app/components/zona-detalle/jornadas'
+import Posiciones from '@/app/components/zona-detalle/posiciones'
+import { ResumenTorneo } from '@/app/components/zona-detalle/resumen-torneo'
 
 type IconName = ComponentProps<typeof Ionicons>['name']
 
-const TABS: { titulo: string; icon: IconName }[] = [
-  { titulo: 'Posiciones', icon: 'trophy-outline' },
-  { titulo: 'Fixture', icon: 'calendar-outline' },
-  { titulo: 'Jornadas', icon: 'football-outline' },
-  { titulo: 'Clubes', icon: 'shield-half-outline' },
+const TABS: { titulo: string; icon: IconName; Contenido: React.ComponentType }[] = [
+  { titulo: 'Posiciones', icon: 'trophy-outline', Contenido: Posiciones },
+  { titulo: 'Fixture', icon: 'calendar-outline', Contenido: Fixture },
+  { titulo: 'Jornadas', icon: 'football-outline', Contenido: Jornadas },
+  { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
 ]
 
 export default function ZonaDetalle() {
@@ -20,9 +25,11 @@ export default function ZonaDetalle() {
   const insets = useSafeAreaInsets()
   const [tabIndex, setTabIndex] = useState(0)
 
-  const { color } = useLocalSearchParams<{
+  const { color, torneoNombre, faseNombre, zonaNombre } = useLocalSearchParams<{
     zonaNombre?: string
     color?: string
+    torneoNombre?: string
+    faseNombre?: string
   }>()
 
   const colorAgrupador = color != null && String(color).length > 0 ? String(color) : undefined
@@ -46,9 +53,25 @@ export default function ZonaDetalle() {
     })
   }, [navigation, tituloHeader, colorAgrupador])
 
+  const Contenido = TABS[tabIndex]?.Contenido ?? Posiciones
+
+  const textoTorneo = torneoNombre != null ? String(torneoNombre) : ''
+  const textoFase = faseNombre != null ? String(faseNombre) : ''
+  const textoZona = zonaNombre != null ? String(zonaNombre) : ''
+
   return (
     <View className="flex-1 bg-gray-50">
-      <View className="flex-1" />
+      <View className="flex-1 px-4 pt-4">
+        <ResumenTorneo
+          torneo={textoTorneo}
+          fase={textoFase}
+          zona={textoZona}
+          colorAgrupador={colorAgrupador}
+        />
+        <View className="flex-1">
+          <Contenido />
+        </View>
+      </View>
 
       <View
         className="flex-row border-t border-gray-200 bg-white"

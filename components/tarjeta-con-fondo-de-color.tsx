@@ -9,7 +9,7 @@ type EstiloAccento = {
 }
 
 /** Verde / Rojo / Azul del API → acento sutil (franja + icono), no bloques enteros de color. */
-function estiloAccentoPorColor(color: string | undefined): EstiloAccento {
+export function estiloAccentoPorColor(color: string | undefined): EstiloAccento {
   const c = (color ?? '').trim().toLowerCase()
   if (c === 'verde') {
     return { franja: 'bg-verde-600', iconoFondo: 'bg-verde-50', iconoColor: '#15803d' }
