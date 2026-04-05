@@ -63,6 +63,7 @@ function useProtectedRoute(loaded: boolean) {
     const inFichajes = (segments[0] as string) === 'fichajes'
     const inRegistroDelegado = (segments[0] as string) === 'registro-delegado'
     const inTorneos = (segments[0] as string) === 'torneos'
+    const inTorneoDetalle = (segments[0] as string) === 'torneo-detalle'
     if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
       router.replace('/seleccion-de-liga' as any)
       return
@@ -76,7 +77,8 @@ function useProtectedRoute(loaded: boolean) {
       !inHome &&
       !inFichajes &&
       !inRegistroDelegado &&
-      !inTorneos
+      !inTorneos &&
+      !inTorneoDetalle
     ) {
       router.replace('/home' as any)
     } else if (isAuthenticated && inAuthGroup) {
@@ -140,6 +142,16 @@ export default function RootLayout() {
                 name="torneos"
                 options={{
                   title: 'Torneos',
+                  headerBackButtonDisplayMode: 'minimal',
+                  headerStyle: { backgroundColor: '#ffffff' },
+                  headerTintColor: '#111827',
+                  headerTitleStyle: { color: '#111827' },
+                }}
+              />
+              <Stack.Screen
+                name="torneo-detalle"
+                options={{
+                  title: 'Torneo',
                   headerBackButtonDisplayMode: 'minimal',
                   headerStyle: { backgroundColor: '#ffffff' },
                   headerTintColor: '#111827',
