@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useMemo } from 'react'
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
@@ -35,6 +35,7 @@ function buscarTorneoEnAgrupadores(
 }
 
 export default function TorneoDetalle() {
+  const router = useRouter()
   const navigation = useNavigation()
   const { torneoId, agrupadorId, torneoNombre } = useLocalSearchParams<{
     torneoId: string
@@ -125,6 +126,17 @@ export default function TorneoDetalle() {
               nombre={zona.nombre?.trim() || 'Sin nombre'}
               color={color}
               iconName="map"
+              onPress={() =>
+                router.push({
+                  pathname: '/zona-detalle',
+                  params: {
+                    torneoId: String(torneo.id ?? ''),
+                    zonaId: zona.id != null ? String(zona.id) : '',
+                    zonaNombre: zona.nombre ?? '',
+                    color: color ?? '',
+                  },
+                })
+              }
             />
           ))}
         </View>
