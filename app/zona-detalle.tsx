@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
 import type { ComponentProps } from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import { Entypo, Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
 import Clubes from '@/app/components/zona-detalle/clubes'
@@ -21,6 +21,7 @@ const TABS: { titulo: string; icon: IconName; Contenido: React.ComponentType }[]
 ]
 
 export default function ZonaDetalle() {
+  const router = useRouter()
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
   const [tabIndex, setTabIndex] = useState(0)
@@ -50,8 +51,18 @@ export default function ZonaDetalle() {
       headerTintColor: '#ffffff',
       headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
       headerShadowVisible: false,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => router.replace('/home')}
+          accessibilityRole="button"
+          accessibilityLabel="Ir al inicio"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Entypo name="home" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      ),
     })
-  }, [navigation, tituloHeader, colorAgrupador])
+  }, [navigation, router, tituloHeader, colorAgrupador])
 
   const Contenido = TABS[tabIndex]?.Contenido ?? Posiciones
 
@@ -61,7 +72,7 @@ export default function ZonaDetalle() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <View className="flex-1 px-4 pt-4">
+      <View className="flex-1 px-4 pt-6">
         <ResumenTorneo
           torneo={textoTorneo}
           fase={textoFase}

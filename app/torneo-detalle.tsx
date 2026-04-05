@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useMemo } from 'react'
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import { Entypo } from '@expo/vector-icons'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
@@ -69,8 +70,18 @@ export default function TorneoDetalle() {
       headerTintColor: '#ffffff',
       headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
       headerShadowVisible: false,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => router.replace('/home')}
+          accessibilityRole="button"
+          accessibilityLabel="Ir al inicio"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Entypo name="home" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      ),
     })
-  }, [navigation, resuelto])
+  }, [navigation, router, resuelto])
 
   if (!leagueId) {
     return (
@@ -111,7 +122,7 @@ export default function TorneoDetalle() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 16, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32 }}
     >
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">

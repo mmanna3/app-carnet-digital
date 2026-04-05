@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from 'react'
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useRouter, useNavigation } from 'expo-router'
+import { Entypo, Ionicons } from '@expo/vector-icons'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
@@ -20,8 +21,18 @@ export default function Torneos() {
       headerTintColor: '#ffffff',
       headerTitleStyle: { color: '#ffffff', fontWeight: '600', fontSize: 17 },
       headerShadowVisible: false,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => router.replace('/home')}
+          accessibilityRole="button"
+          accessibilityLabel="Ir al inicio"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Entypo name="home" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      ),
     })
-  }, [navigation, configLiga?.leagueId])
+  }, [navigation, router, configLiga?.leagueId])
 
   const {
     data: agrupadores,
@@ -65,7 +76,7 @@ export default function Torneos() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 16, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32 }}
     >
       {agrupadores.map((a) => (
         <View key={a.id ?? a.nombre} className="mb-6">
