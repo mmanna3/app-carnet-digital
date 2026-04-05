@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, useWindowDimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { estiloAccentoPorColor } from '@/components/tarjeta-con-fondo-de-color'
 
@@ -25,31 +25,31 @@ export type ResumenTorneoProps = {
 }
 
 export function ResumenTorneo({ torneo, fase, zona, colorAgrupador }: ResumenTorneoProps) {
+  const { width: anchoVentana } = useWindowDimensions()
   const accento = estiloAccentoPorColor(colorAgrupador)
   const colorIcono = accento.iconoColor
+  /** Ancho máximo del título: el bloque copa+título queda junto y centrado (sin flex-1 que separa ícono y texto). */
+  const anchoMaxTitulo = Math.max(120, anchoVentana - 64)
 
   return (
-    <View className="mb-3 flex-row overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      <View className={`w-1 ${accento.franja}`} />
-      <View className="flex-1 gap-2 py-2.5 pl-2.5 pr-3">
-        <View className="flex-row items-center gap-2">
+    <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2.5 shadow-sm">
+      <View className="w-full items-center gap-2">
+        <View className="flex-row items-center gap-2 self-center" style={{ maxWidth: '100%' }}>
           <Ionicons name="trophy-outline" size={18} color={colorIcono} />
           <Text
-            className="flex-1 text-[15px] font-medium leading-5 text-gray-900"
+            className="text-left text-[15px] font-medium leading-5 text-gray-900"
             numberOfLines={2}
+            style={{ maxWidth: anchoMaxTitulo }}
           >
             {textoOGuion(torneo)}
           </Text>
         </View>
-        <View className="flex-row items-center gap-2">
-          {/* <Ionicons name="map-outline" size={18} color={colorIcono} /> */}
-          <Text
-            className="flex-1 ml-7 text-[13px] font-medium leading-5 text-gray-500"
-            numberOfLines={3}
-          >
-            {lineaFaseZona(fase, zona)}
-          </Text>
-        </View>
+        <Text
+          className="text-center text-[13px] font-medium leading-5 text-gray-500 ml-3"
+          numberOfLines={3}
+        >
+          {lineaFaseZona(fase, zona)}
+        </Text>
       </View>
     </View>
   )
