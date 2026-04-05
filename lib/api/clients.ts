@@ -296,6 +296,48 @@ export class Client {
     }
 
     /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
+    fixtureTodosContraTodos(zonaId: number | undefined): Promise<FixtureDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/fixture-todos-contra-todos?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFixtureTodosContraTodos(_response);
+        });
+    }
+
+    protected processFixtureTodosContraTodos(response: Response): Promise<FixtureDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FixtureDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FixtureDTO>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -6959,6 +7001,150 @@ export interface IFixtureAlgoritmoFechaDTO {
     fecha: number;
     equipoLocal: number;
     equipoVisitante: number;
+}
+
+export class FixtureDTO implements IFixtureDTO {
+    fechas?: FixtureFechaDTO[] | undefined;
+
+    constructor(data?: IFixtureDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["fechas"])) {
+                this.fechas = [] as any;
+                for (let item of _data["fechas"])
+                    this.fechas!.push(FixtureFechaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FixtureDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FixtureDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.fechas)) {
+            data["fechas"] = [];
+            for (let item of this.fechas)
+                data["fechas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFixtureDTO {
+    fechas?: FixtureFechaDTO[] | undefined;
+}
+
+export class FixtureFechaDTO implements IFixtureFechaDTO {
+    partidos?: FixturePartidoDTO[] | undefined;
+    titulo?: string | undefined;
+    dia?: string | undefined;
+
+    constructor(data?: IFixtureFechaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["partidos"])) {
+                this.partidos = [] as any;
+                for (let item of _data["partidos"])
+                    this.partidos!.push(FixturePartidoDTO.fromJS(item));
+            }
+            this.titulo = _data["titulo"];
+            this.dia = _data["dia"];
+        }
+    }
+
+    static fromJS(data: any): FixtureFechaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FixtureFechaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.partidos)) {
+            data["partidos"] = [];
+            for (let item of this.partidos)
+                data["partidos"].push(item.toJSON());
+        }
+        data["titulo"] = this.titulo;
+        data["dia"] = this.dia;
+        return data;
+    }
+}
+
+export interface IFixtureFechaDTO {
+    partidos?: FixturePartidoDTO[] | undefined;
+    titulo?: string | undefined;
+    dia?: string | undefined;
+}
+
+export class FixturePartidoDTO implements IFixturePartidoDTO {
+    localEscudo?: string | undefined;
+    visitanteEscudo?: string | undefined;
+    local?: string | undefined;
+    visitante?: string | undefined;
+
+    constructor(data?: IFixturePartidoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.localEscudo = _data["localEscudo"];
+            this.visitanteEscudo = _data["visitanteEscudo"];
+            this.local = _data["local"];
+            this.visitante = _data["visitante"];
+        }
+    }
+
+    static fromJS(data: any): FixturePartidoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FixturePartidoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["localEscudo"] = this.localEscudo;
+        data["visitanteEscudo"] = this.visitanteEscudo;
+        data["local"] = this.local;
+        data["visitante"] = this.visitante;
+        return data;
+    }
+}
+
+export interface IFixturePartidoDTO {
+    localEscudo?: string | undefined;
+    visitanteEscudo?: string | undefined;
+    local?: string | undefined;
+    visitante?: string | undefined;
 }
 
 export class InformacionInicialAgrupadorDTO implements IInformacionInicialAgrupadorDTO {
