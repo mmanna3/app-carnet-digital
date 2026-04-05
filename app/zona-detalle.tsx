@@ -9,10 +9,10 @@ import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/l
 type IconName = ComponentProps<typeof Ionicons>['name']
 
 const TABS: { titulo: string; icon: IconName }[] = [
-  { titulo: 'Posiciones', icon: 'podium-outline' },
+  { titulo: 'Posiciones', icon: 'trophy-outline' },
   { titulo: 'Fixture', icon: 'calendar-outline' },
-  { titulo: 'Jornadas', icon: 'layers-outline' },
-  { titulo: 'Clubes', icon: 'business-outline' },
+  { titulo: 'Jornadas', icon: 'football-outline' },
+  { titulo: 'Clubes', icon: 'shield-half-outline' },
 ]
 
 export default function ZonaDetalle() {
@@ -65,11 +65,7 @@ export default function ZonaDetalle() {
               accessibilityLabel={t.titulo}
               accessibilityState={{ selected: activo }}
             >
-              <Ionicons
-                name={t.icon}
-                size={26}
-                color={activo ? colorIconoActivo : '#9ca3af'}
-              />
+              <Ionicons name={t.icon} size={26} color={activo ? colorIconoActivo : '#9ca3af'} />
             </TouchableOpacity>
           )
         })}
