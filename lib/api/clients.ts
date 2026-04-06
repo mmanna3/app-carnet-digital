@@ -338,6 +338,48 @@ export class Client {
     }
 
     /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
+    jornadasTodosContraTodos(zonaId: number | undefined): Promise<JornadasDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/jornadas-todos-contra-todos?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processJornadasTodosContraTodos(_response);
+        });
+    }
+
+    protected processJornadasTodosContraTodos(response: Response): Promise<JornadasDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = JornadasDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<JornadasDTO>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -6799,6 +6841,58 @@ export interface IFechaTodosContraTodosDTO {
     numero: number;
 }
 
+export class FechasParaJornadasDTO implements IFechasParaJornadasDTO {
+    titulo?: string | undefined;
+    dia?: string | undefined;
+    jornadas?: JornadasPorFechaDTO[] | undefined;
+
+    constructor(data?: IFechasParaJornadasDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.titulo = _data["titulo"];
+            this.dia = _data["dia"];
+            if (Array.isArray(_data["jornadas"])) {
+                this.jornadas = [] as any;
+                for (let item of _data["jornadas"])
+                    this.jornadas!.push(JornadasPorFechaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FechasParaJornadasDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new FechasParaJornadasDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["titulo"] = this.titulo;
+        data["dia"] = this.dia;
+        if (Array.isArray(this.jornadas)) {
+            data["jornadas"] = [];
+            for (let item of this.jornadas)
+                data["jornadas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFechasParaJornadasDTO {
+    titulo?: string | undefined;
+    dia?: string | undefined;
+    jornadas?: JornadasPorFechaDTO[] | undefined;
+}
+
 export class FicharDelegadoSoloConDniYClubDTO implements IFicharDelegadoSoloConDniYClubDTO {
     id?: number;
     dni!: string;
@@ -7443,6 +7537,142 @@ export interface IJornadaDTO {
     partidos?: PartidoDTO[] | undefined;
 }
 
+export class JornadaPorEquipoDTO implements IJornadaPorEquipoDTO {
+    escudo?: string | undefined;
+    equipo?: string | undefined;
+    categorias?: ResultadoCategoriaDTO[] | undefined;
+
+    constructor(data?: IJornadaPorEquipoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.escudo = _data["escudo"];
+            this.equipo = _data["equipo"];
+            if (Array.isArray(_data["categorias"])) {
+                this.categorias = [] as any;
+                for (let item of _data["categorias"])
+                    this.categorias!.push(ResultadoCategoriaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JornadaPorEquipoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JornadaPorEquipoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["escudo"] = this.escudo;
+        data["equipo"] = this.equipo;
+        if (Array.isArray(this.categorias)) {
+            data["categorias"] = [];
+            for (let item of this.categorias)
+                data["categorias"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IJornadaPorEquipoDTO {
+    escudo?: string | undefined;
+    equipo?: string | undefined;
+    categorias?: ResultadoCategoriaDTO[] | undefined;
+}
+
+export class JornadasDTO implements IJornadasDTO {
+    fechas?: FechasParaJornadasDTO[] | undefined;
+
+    constructor(data?: IJornadasDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["fechas"])) {
+                this.fechas = [] as any;
+                for (let item of _data["fechas"])
+                    this.fechas!.push(FechasParaJornadasDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JornadasDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JornadasDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.fechas)) {
+            data["fechas"] = [];
+            for (let item of this.fechas)
+                data["fechas"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IJornadasDTO {
+    fechas?: FechasParaJornadasDTO[] | undefined;
+}
+
+export class JornadasPorFechaDTO implements IJornadasPorFechaDTO {
+    local?: JornadaPorEquipoDTO;
+    visitante?: JornadaPorEquipoDTO;
+
+    constructor(data?: IJornadasPorFechaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.local = _data["local"] ? JornadaPorEquipoDTO.fromJS(_data["local"]) : <any>undefined;
+            this.visitante = _data["visitante"] ? JornadaPorEquipoDTO.fromJS(_data["visitante"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): JornadasPorFechaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JornadasPorFechaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["local"] = this.local ? this.local.toJSON() : <any>undefined;
+        data["visitante"] = this.visitante ? this.visitante.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IJornadasPorFechaDTO {
+    local?: JornadaPorEquipoDTO;
+    visitante?: JornadaPorEquipoDTO;
+}
+
 export class JugadorBaseDTO implements IJugadorBaseDTO {
     id?: number;
     dni!: string;
@@ -8038,6 +8268,46 @@ export interface IReportePagosDTO {
     mes?: number;
     anio?: number;
     cantidadJugadoresPagados?: number;
+}
+
+export class ResultadoCategoriaDTO implements IResultadoCategoriaDTO {
+    categoria?: string | undefined;
+    resultado?: string | undefined;
+
+    constructor(data?: IResultadoCategoriaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoria = _data["categoria"];
+            this.resultado = _data["resultado"];
+        }
+    }
+
+    static fromJS(data: any): ResultadoCategoriaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResultadoCategoriaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoria"] = this.categoria;
+        data["resultado"] = this.resultado;
+        return data;
+    }
+}
+
+export interface IResultadoCategoriaDTO {
+    categoria?: string | undefined;
+    resultado?: string | undefined;
 }
 
 export enum TipoDeFaseEnum {
