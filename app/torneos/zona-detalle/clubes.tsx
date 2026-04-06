@@ -46,7 +46,7 @@ type ClubCardProps = {
 
 function ClubCard({ item, uriEscudo }: ClubCardProps) {
   return (
-    <View className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+    <View className="rounded-xl border border-gray-200 bg-white px-5 py-4">
       <View className="flex-row items-center gap-4">
         <View style={{ width: 50, height: 50 }} className="shrink-0 items-center justify-center">
           {uriEscudo ? (
