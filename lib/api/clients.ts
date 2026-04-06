@@ -380,6 +380,48 @@ export class Client {
     }
 
     /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
+    posicionesTodosContraTodos(zonaId: number | undefined): Promise<PosicionesDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/posiciones-todos-contra-todos?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPosicionesTodosContraTodos(_response);
+        });
+    }
+
+    protected processPosicionesTodosContraTodos(response: Response): Promise<PosicionesDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PosicionesDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PosicionesDTO>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -5646,6 +5688,54 @@ export interface ICarnetDigitalPendienteDTO {
     motivo?: string | undefined;
 }
 
+export class CategoriasConPosicionesDTO implements ICategoriasConPosicionesDTO {
+    categoria?: string | undefined;
+    renglones?: PosicionDelEquipoDTO[] | undefined;
+
+    constructor(data?: ICategoriasConPosicionesDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoria = _data["categoria"];
+            if (Array.isArray(_data["renglones"])) {
+                this.renglones = [] as any;
+                for (let item of _data["renglones"])
+                    this.renglones!.push(PosicionDelEquipoDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CategoriasConPosicionesDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoriasConPosicionesDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoria"] = this.categoria;
+        if (Array.isArray(this.renglones)) {
+            data["renglones"] = [];
+            for (let item of this.renglones)
+                data["renglones"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICategoriasConPosicionesDTO {
+    categoria?: string | undefined;
+    renglones?: PosicionDelEquipoDTO[] | undefined;
+}
+
 export class ClubConEquiposDTO implements IClubConEquiposDTO {
     nombre!: string | undefined;
     equipos?: EquipoBaseDTO[] | undefined;
@@ -8156,6 +8246,138 @@ export interface IPartidoDTO {
     resultadoVisitante: string | undefined;
     penalesLocal?: string | undefined;
     penalesVisitante?: string | undefined;
+}
+
+export class PosicionDelEquipoDTO implements IPosicionDelEquipoDTO {
+    posicion?: string | undefined;
+    escudo?: string | undefined;
+    equipo?: string | undefined;
+    partidosJugados?: string | undefined;
+    partidosGanados?: string | undefined;
+    partidosEmpatados?: string | undefined;
+    partidosPerdidos?: string | undefined;
+    golesAFavor?: string | undefined;
+    golesEnContra?: string | undefined;
+    golesDiferencia?: string | undefined;
+    puntos?: string | undefined;
+    partidosNoPresento?: string | undefined;
+    partidosGanoPuntos?: string | undefined;
+    partidosPerdioPuntos?: string | undefined;
+
+    constructor(data?: IPosicionDelEquipoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.posicion = _data["posicion"];
+            this.escudo = _data["escudo"];
+            this.equipo = _data["equipo"];
+            this.partidosJugados = _data["partidosJugados"];
+            this.partidosGanados = _data["partidosGanados"];
+            this.partidosEmpatados = _data["partidosEmpatados"];
+            this.partidosPerdidos = _data["partidosPerdidos"];
+            this.golesAFavor = _data["golesAFavor"];
+            this.golesEnContra = _data["golesEnContra"];
+            this.golesDiferencia = _data["golesDiferencia"];
+            this.puntos = _data["puntos"];
+            this.partidosNoPresento = _data["partidosNoPresento"];
+            this.partidosGanoPuntos = _data["partidosGanoPuntos"];
+            this.partidosPerdioPuntos = _data["partidosPerdioPuntos"];
+        }
+    }
+
+    static fromJS(data: any): PosicionDelEquipoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new PosicionDelEquipoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["posicion"] = this.posicion;
+        data["escudo"] = this.escudo;
+        data["equipo"] = this.equipo;
+        data["partidosJugados"] = this.partidosJugados;
+        data["partidosGanados"] = this.partidosGanados;
+        data["partidosEmpatados"] = this.partidosEmpatados;
+        data["partidosPerdidos"] = this.partidosPerdidos;
+        data["golesAFavor"] = this.golesAFavor;
+        data["golesEnContra"] = this.golesEnContra;
+        data["golesDiferencia"] = this.golesDiferencia;
+        data["puntos"] = this.puntos;
+        data["partidosNoPresento"] = this.partidosNoPresento;
+        data["partidosGanoPuntos"] = this.partidosGanoPuntos;
+        data["partidosPerdioPuntos"] = this.partidosPerdioPuntos;
+        return data;
+    }
+}
+
+export interface IPosicionDelEquipoDTO {
+    posicion?: string | undefined;
+    escudo?: string | undefined;
+    equipo?: string | undefined;
+    partidosJugados?: string | undefined;
+    partidosGanados?: string | undefined;
+    partidosEmpatados?: string | undefined;
+    partidosPerdidos?: string | undefined;
+    golesAFavor?: string | undefined;
+    golesEnContra?: string | undefined;
+    golesDiferencia?: string | undefined;
+    puntos?: string | undefined;
+    partidosNoPresento?: string | undefined;
+    partidosGanoPuntos?: string | undefined;
+    partidosPerdioPuntos?: string | undefined;
+}
+
+export class PosicionesDTO implements IPosicionesDTO {
+    posiciones?: CategoriasConPosicionesDTO[] | undefined;
+
+    constructor(data?: IPosicionesDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["posiciones"])) {
+                this.posiciones = [] as any;
+                for (let item of _data["posiciones"])
+                    this.posiciones!.push(CategoriasConPosicionesDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PosicionesDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new PosicionesDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.posiciones)) {
+            data["posiciones"] = [];
+            for (let item of this.posiciones)
+                data["posiciones"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPosicionesDTO {
+    posiciones?: CategoriasConPosicionesDTO[] | undefined;
 }
 
 export class RechazarJugadorDTO implements IRechazarJugadorDTO {
