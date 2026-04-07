@@ -79,10 +79,11 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
         borderWidth: 1,
         borderColor: hovered ? acento + '55' : acento + '30',
         overflow: 'hidden',
-        // @ts-ignore — web-only
+        // @ts-ignore — web-only properties
         boxShadow: hovered ? '0 8px 28px rgba(0,0,0,0.13)' : '0 2px 8px rgba(0,0,0,0.06)',
-        transform: [{ translateY: hovered ? -3 : 0 }],
+        // @ts-ignore — web-only properties
         transition: 'box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease',
+        transform: [{ translateY: hovered ? -3 : 0 }],
       }}
     >
       {/* Colored top accent bar */}
