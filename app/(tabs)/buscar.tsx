@@ -15,9 +15,7 @@ import { CarnetDigitalDTO } from '@/lib/api/clients'
 import Carnet from '../components/carnet'
 import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
-import { getColorLiga600, getColorLiga700 } from '@/lib/config/liga'
-
-const COLOR_ICONO_SECUNDARIO = '#6b7280'
+import { getColorLiga600 } from '@/lib/config/liga'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
