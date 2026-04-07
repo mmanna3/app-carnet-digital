@@ -122,21 +122,11 @@ export default function TorneoDetalle() {
           {fase.nombre ? (
             <Text className="mb-3 text-lg font-medium text-gray-700">{fase.nombre}</Text>
           ) : null}
-          <View
-            style={
-              grande
-                ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }
-                : undefined
-            }
-          >
+          <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
             {(fase.zonas ?? []).map((zona) => (
               <View
                 key={zona.id ?? zona.nombre}
-                style={
-                  grande
-                    ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' }
-                    : undefined
-                }
+                style={grande ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' } : undefined}
               >
                 <TarjetaConFondoDeColor
                   nombre={zona.nombre?.trim() || 'Sin nombre'}

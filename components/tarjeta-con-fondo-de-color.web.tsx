@@ -79,10 +79,15 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
       <View className="flex-row items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white">
         <View className={`w-1 ${accento.franja}`} />
         <View className="min-h-[52px] flex-1 flex-row items-center py-3 pl-3 pr-3">
-          <View className={`mr-3 h-10 w-10 items-center justify-center rounded-lg ${accento.iconoFondo}`}>
+          <View
+            className={`mr-3 h-10 w-10 items-center justify-center rounded-lg ${accento.iconoFondo}`}
+          >
             <Ionicons name={iconName} size={20} color={accento.iconoColor} />
           </View>
-          <Text className="flex-1 text-[15px] font-medium leading-5 text-gray-900" numberOfLines={3}>
+          <Text
+            className="flex-1 text-[15px] font-medium leading-5 text-gray-900"
+            numberOfLines={3}
+          >
             {nombre}
           </Text>
         </View>
@@ -90,7 +95,12 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
     )
     if (onPress) {
       return (
-        <TouchableOpacity className="mb-2.5 shadow-sm" onPress={onPress} activeOpacity={0.7} accessibilityRole="button">
+        <TouchableOpacity
+          className="mb-2.5 shadow-sm"
+          onPress={onPress}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+        >
           {contenido}
         </TouchableOpacity>
       )
@@ -132,7 +142,13 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
           <Ionicons name={iconName} size={36} color={iconoColor} />
         </View>
         <Text
-          style={{ fontSize: 16, fontWeight: '600', color: iconoColor, textAlign: 'center', lineHeight: 22 }}
+          style={{
+            fontSize: 16,
+            fontWeight: '600',
+            color: iconoColor,
+            textAlign: 'center',
+            lineHeight: 22,
+          }}
           numberOfLines={3}
         >
           {nombre}
