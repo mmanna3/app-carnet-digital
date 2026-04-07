@@ -154,6 +154,48 @@ export class Client {
     }
 
     /**
+     * @param codigoAlfanumerico (optional) 
+     * @return OK
+     */
+    planillasDeJuego(codigoAlfanumerico: string | undefined): Promise<PlanillaDeJuegoDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/planillas-de-juego?";
+        if (codigoAlfanumerico === null)
+            throw new Error("The parameter 'codigoAlfanumerico' cannot be null.");
+        else if (codigoAlfanumerico !== undefined)
+            url_ += "codigoAlfanumerico=" + encodeURIComponent("" + codigoAlfanumerico) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPlanillasDeJuego(_response);
+        });
+    }
+
+    protected processPlanillasDeJuego(response: Response): Promise<PlanillaDeJuegoDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PlanillaDeJuegoDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PlanillaDeJuegoDTO>(null as any);
+    }
+
+    /**
      * @param equipoId (optional) 
      * @return OK
      */
@@ -419,6 +461,48 @@ export class Client {
             });
         }
         return Promise.resolve<PosicionesDTO>(null as any);
+    }
+
+    /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
+    eliminacionDirecta(zonaId: number | undefined): Promise<EliminacionDirectaDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/eliminacion-directa?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEliminacionDirecta(_response);
+        });
+    }
+
+    protected processEliminacionDirecta(response: Response): Promise<EliminacionDirectaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EliminacionDirectaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EliminacionDirectaDTO>(null as any);
     }
 
     /**
@@ -6264,6 +6348,50 @@ export interface IEfectuarPaseDTO {
     equipoDestinoId?: number;
 }
 
+export class EliminacionDirectaDTO implements IEliminacionDirectaDTO {
+    instancias?: InstanciasDTO[] | undefined;
+
+    constructor(data?: IEliminacionDirectaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["instancias"])) {
+                this.instancias = [] as any;
+                for (let item of _data["instancias"])
+                    this.instancias!.push(InstanciasDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): EliminacionDirectaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EliminacionDirectaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.instancias)) {
+            data["instancias"] = [];
+            for (let item of this.instancias)
+                data["instancias"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IEliminacionDirectaDTO {
+    instancias?: InstanciasDTO[] | undefined;
+}
+
 export class EquipoBaseDTO implements IEquipoBaseDTO {
     id!: number;
     nombre!: string | undefined;
@@ -7535,6 +7663,58 @@ export interface IInformacionInicialZonaDTO {
     nombre?: string | undefined;
 }
 
+export class InstanciasDTO implements IInstanciasDTO {
+    titulo?: string | undefined;
+    dia?: string | undefined;
+    partidos?: PartidoEliminacionDirectaDTO[] | undefined;
+
+    constructor(data?: IInstanciasDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.titulo = _data["titulo"];
+            this.dia = _data["dia"];
+            if (Array.isArray(_data["partidos"])) {
+                this.partidos = [] as any;
+                for (let item of _data["partidos"])
+                    this.partidos!.push(PartidoEliminacionDirectaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InstanciasDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new InstanciasDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["titulo"] = this.titulo;
+        data["dia"] = this.dia;
+        if (Array.isArray(this.partidos)) {
+            data["partidos"] = [];
+            for (let item of this.partidos)
+                data["partidos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IInstanciasDTO {
+    titulo?: string | undefined;
+    dia?: string | undefined;
+    partidos?: PartidoEliminacionDirectaDTO[] | undefined;
+}
+
 export class JornadaDTO implements IJornadaDTO {
     id?: number;
     tipo!: string | undefined;
@@ -7907,6 +8087,50 @@ export interface IJugadorDTO {
     fotoDNIDorso: string;
 }
 
+export class JugadorDatosPlanillaDTO implements IJugadorDatosPlanillaDTO {
+    dni!: string | undefined;
+    nombre!: string | undefined;
+    estado!: string | undefined;
+
+    constructor(data?: IJugadorDatosPlanillaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.dni = _data["dni"];
+            this.nombre = _data["nombre"];
+            this.estado = _data["estado"];
+        }
+    }
+
+    static fromJS(data: any): JugadorDatosPlanillaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JugadorDatosPlanillaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["dni"] = this.dni;
+        data["nombre"] = this.nombre;
+        data["estado"] = this.estado;
+        return data;
+    }
+}
+
+export interface IJugadorDatosPlanillaDTO {
+    dni: string | undefined;
+    nombre: string | undefined;
+    estado: string | undefined;
+}
+
 export class JugadorDelEquipoDTO implements IJugadorDelEquipoDTO {
     id?: number;
     dni?: string | undefined;
@@ -7965,6 +8189,54 @@ export interface IJugadorDelEquipoDTO {
     estado?: EstadoJugadorEnum;
     jugadorEquipoId?: number;
     motivo?: string | undefined;
+}
+
+export class JugadoresPorCategoriaDTO implements IJugadoresPorCategoriaDTO {
+    categoria!: string | undefined;
+    jugadores!: JugadorDatosPlanillaDTO[] | undefined;
+
+    constructor(data?: IJugadoresPorCategoriaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoria = _data["categoria"];
+            if (Array.isArray(_data["jugadores"])) {
+                this.jugadores = [] as any;
+                for (let item of _data["jugadores"])
+                    this.jugadores!.push(JugadorDatosPlanillaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): JugadoresPorCategoriaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new JugadoresPorCategoriaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoria"] = this.categoria;
+        if (Array.isArray(this.jugadores)) {
+            data["jugadores"] = [];
+            for (let item of this.jugadores)
+                data["jugadores"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IJugadoresPorCategoriaDTO {
+    categoria: string | undefined;
+    jugadores: JugadorDatosPlanillaDTO[] | undefined;
 }
 
 export enum LocalVisitanteEnum {
@@ -8250,6 +8522,122 @@ export interface IPartidoDTO {
     resultadoVisitante: string | undefined;
     penalesLocal?: string | undefined;
     penalesVisitante?: string | undefined;
+}
+
+export class PartidoEliminacionDirectaDTO implements IPartidoEliminacionDirectaDTO {
+    escudoLocal?: string | undefined;
+    local?: string | undefined;
+    resultadoLocal?: string | undefined;
+    penalesLocal?: string | undefined;
+    escudoVisitante?: string | undefined;
+    visitante?: string | undefined;
+    resultadoVisitante?: string | undefined;
+    penalesVisitante?: string | undefined;
+
+    constructor(data?: IPartidoEliminacionDirectaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.escudoLocal = _data["escudoLocal"];
+            this.local = _data["local"];
+            this.resultadoLocal = _data["resultadoLocal"];
+            this.penalesLocal = _data["penalesLocal"];
+            this.escudoVisitante = _data["escudoVisitante"];
+            this.visitante = _data["visitante"];
+            this.resultadoVisitante = _data["resultadoVisitante"];
+            this.penalesVisitante = _data["penalesVisitante"];
+        }
+    }
+
+    static fromJS(data: any): PartidoEliminacionDirectaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new PartidoEliminacionDirectaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["escudoLocal"] = this.escudoLocal;
+        data["local"] = this.local;
+        data["resultadoLocal"] = this.resultadoLocal;
+        data["penalesLocal"] = this.penalesLocal;
+        data["escudoVisitante"] = this.escudoVisitante;
+        data["visitante"] = this.visitante;
+        data["resultadoVisitante"] = this.resultadoVisitante;
+        data["penalesVisitante"] = this.penalesVisitante;
+        return data;
+    }
+}
+
+export interface IPartidoEliminacionDirectaDTO {
+    escudoLocal?: string | undefined;
+    local?: string | undefined;
+    resultadoLocal?: string | undefined;
+    penalesLocal?: string | undefined;
+    escudoVisitante?: string | undefined;
+    visitante?: string | undefined;
+    resultadoVisitante?: string | undefined;
+    penalesVisitante?: string | undefined;
+}
+
+export class PlanillaDeJuegoDTO implements IPlanillaDeJuegoDTO {
+    planillas!: JugadoresPorCategoriaDTO[] | undefined;
+    torneo!: string | undefined;
+    equipo!: string | undefined;
+
+    constructor(data?: IPlanillaDeJuegoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["planillas"])) {
+                this.planillas = [] as any;
+                for (let item of _data["planillas"])
+                    this.planillas!.push(JugadoresPorCategoriaDTO.fromJS(item));
+            }
+            this.torneo = _data["torneo"];
+            this.equipo = _data["equipo"];
+        }
+    }
+
+    static fromJS(data: any): PlanillaDeJuegoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new PlanillaDeJuegoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.planillas)) {
+            data["planillas"] = [];
+            for (let item of this.planillas)
+                data["planillas"].push(item.toJSON());
+        }
+        data["torneo"] = this.torneo;
+        data["equipo"] = this.equipo;
+        return data;
+    }
+}
+
+export interface IPlanillaDeJuegoDTO {
+    planillas: JugadoresPorCategoriaDTO[] | undefined;
+    torneo: string | undefined;
+    equipo: string | undefined;
 }
 
 export class PosicionDelEquipoDTO implements IPosicionDelEquipoDTO {

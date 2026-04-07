@@ -23,8 +23,10 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
       await api.desvincularJugadorDelEquipo(
         new DesvincularJugadorDelEquipoDTO({ jugadorId: jugador.id, equipoId })
       )
+
       onEliminado()
     } catch (err) {
+      console.error(err)
       Alert.alert('Error al desvincular', parseApiError(err))
     } finally {
       setCargando(false)

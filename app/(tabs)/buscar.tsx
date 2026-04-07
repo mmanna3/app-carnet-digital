@@ -1,17 +1,19 @@
 import React, { useState, useRef } from 'react'
-import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
 import Boton from '@/components/boton'
 import Carnet from '../components/carnet'
 import { generatePDF } from '@/lib/utils/pdfGenerator'
+import { generatePlanillas } from '@/lib/utils/planillas-generador'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
   const [jugadores, setJugadores] = useState<CarnetDigitalDTO[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
+  const [isGeneratingPlanillas, setIsGeneratingPlanillas] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
   const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({})
@@ -73,6 +75,28 @@ export default function BuscarScreen() {
     }))
   }
 
+  const handleGeneratePlanillas = async () => {
+    if (jugadores.length === 0) return
+
+    setIsGeneratingPlanillas(true)
+    try {
+      const resultado = await api.planillasDeJuego(codigoEquipo.trim())
+      await generatePlanillas(resultado, codigoEquipo)
+    } catch (error: any) {
+      const mensajeError = (() => {
+        try {
+          const parsed = JSON.parse(error?.response)
+          return parsed?.title ?? 'No se pudo generar las planillas'
+        } catch {
+          return 'No se pudo generar las planillas'
+        }
+      })()
+      Alert.alert('Error', mensajeError)
+    } finally {
+      setIsGeneratingPlanillas(false)
+    }
+  }
+
   const handleGeneratePDF = async () => {
     if (jugadores.length === 0) return
 
@@ -131,14 +155,24 @@ export default function BuscarScreen() {
           />
           {error && <Text className="text-[#e53935] mt-3 text-center">{error}</Text>}
           {jugadores.length > 0 && (
-            <View className="mt-2.5">
-              <Boton
-                texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
-                onPress={handleGeneratePDF}
-                deshabilitado={isGeneratingPDF}
-                cargando={isGeneratingPDF}
-              />
-            </View>
+            <>
+              <View className="mt-2.5">
+                <Boton
+                  texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
+                  onPress={handleGeneratePDF}
+                  deshabilitado={isGeneratingPDF}
+                  cargando={isGeneratingPDF}
+                />
+              </View>
+              <View className="mt-2.5">
+                <Boton
+                  texto={isGeneratingPlanillas ? 'Generando planillas...' : 'Generar planillas'}
+                  onPress={handleGeneratePlanillas}
+                  deshabilitado={isGeneratingPlanillas}
+                  cargando={isGeneratingPlanillas}
+                />
+              </View>
+            </>
           )}
         </View>
 
