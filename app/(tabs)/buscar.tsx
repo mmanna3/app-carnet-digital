@@ -1,12 +1,23 @@
 import React, { useState, useRef } from 'react'
-import { View, Text, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { Feather } from '@expo/vector-icons'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
-import Boton from '@/components/boton'
 import Carnet from '../components/carnet'
 import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
+import { getColorLiga600, getColorLiga700 } from '@/lib/config/liga'
+
+const COLOR_ICONO_SECUNDARIO = '#6b7280'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -133,46 +144,91 @@ export default function BuscarScreen() {
       )}
       <ScrollView ref={scrollViewRef} className="flex-1">
         <View className="p-5 bg-white rounded-xl m-2.5 shadow elevation-3">
-          <Text className="text-xl font-bold mb-4 text-center text-[#333]">
+          <Text className="text-md font-bold mb-4 text-center text-[#333]">
             Ingresá el código del equipo
           </Text>
-          <TextInput
-            testID="input-codigo-buscar"
-            className="bg-[#f5f5f5] rounded-lg p-3 text-base mb-4"
-            placeholderTextColor="#999"
-            placeholder="Ej: ABC1234"
-            value={codigoEquipo}
-            onChangeText={setCodigoEquipo}
-            autoCapitalize="characters"
-            maxLength={7}
-          />
-          <Boton
+          <View className="mb-4 w-full items-center">
+            <TextInput
+              testID="input-codigo-buscar"
+              className="w-44 rounded-lg bg-[#f5f5f5] px-3 py-2 pb-4 text-center text-base font-semibold tracking-wide"
+              placeholderTextColor="#999"
+              placeholder="Ej: ABC1234"
+              value={codigoEquipo}
+              onChangeText={setCodigoEquipo}
+              autoCapitalize="characters"
+              maxLength={7}
+            />
+          </View>
+          <TouchableOpacity
             testID="boton-buscar"
-            texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
+            className={`h-[50px] flex-row items-center justify-center gap-2 rounded-xl bg-liga-600 px-4 shadow-md ${
+              isLoading ? 'opacity-70' : ''
+            }`}
             onPress={buscarJugadores}
-            deshabilitado={isLoading}
-            cargando={isLoading}
-          />
+            disabled={isLoading}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Ver jugadores"
+          >
+            <Text className="text-base font-semibold text-white" numberOfLines={1}>
+              {isLoading ? 'Buscando...' : 'Ver jugadores'}
+            </Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#ffffff" />
+            ) : (
+              <Feather name="search" size={22} color="#ffffff" />
+            )}
+          </TouchableOpacity>
           {error && <Text className="text-[#e53935] mt-3 text-center">{error}</Text>}
           {jugadores.length > 0 && (
-            <>
-              <View className="mt-2.5">
-                <Boton
-                  texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
-                  onPress={handleGeneratePDF}
-                  deshabilitado={isGeneratingPDF}
-                  cargando={isGeneratingPDF}
-                />
-              </View>
-              <View className="mt-2.5">
-                <Boton
-                  texto={isGeneratingPlanillas ? 'Generando planillas...' : 'Generar planillas'}
-                  onPress={handleGeneratePlanillas}
-                  deshabilitado={isGeneratingPlanillas}
-                  cargando={isGeneratingPlanillas}
-                />
-              </View>
-            </>
+            <View className="mt-2.5 flex-row gap-3">
+              <TouchableOpacity
+                testID="boton-generar-pdf"
+                className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-liga-600 border-2 bg-transparent px-2 py-3.5 ${
+                  isGeneratingPDF || isGeneratingPlanillas ? 'opacity-70' : ''
+                }`}
+                onPress={handleGeneratePDF}
+                disabled={isGeneratingPDF || isGeneratingPlanillas}
+                activeOpacity={0.85}
+                accessibilityRole="button"
+                accessibilityLabel="Generar PDF"
+              >
+                <Text
+                  className="shrink text-center text-base font-semibold text-liga-600"
+                  numberOfLines={2}
+                >
+                  {isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
+                </Text>
+                {isGeneratingPDF ? (
+                  <ActivityIndicator size="small" color={getColorLiga600()} />
+                ) : (
+                  <Feather name="file-text" size={22} color={getColorLiga600()} />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="boton-generar-planillas"
+                className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border-2 border-liga-600 bg-transparent px-2 py-3.5 ${
+                  isGeneratingPDF || isGeneratingPlanillas ? 'opacity-70' : ''
+                }`}
+                onPress={handleGeneratePlanillas}
+                disabled={isGeneratingPDF || isGeneratingPlanillas}
+                activeOpacity={0.85}
+                accessibilityRole="button"
+                accessibilityLabel="Generar planillas"
+              >
+                <Text
+                  className="shrink text-center text-base font-semibold text-liga-600"
+                  numberOfLines={2}
+                >
+                  {isGeneratingPlanillas ? 'Generando planillas...' : 'Planillas'}
+                </Text>
+                {isGeneratingPlanillas ? (
+                  <ActivityIndicator size="small" color={getColorLiga600()} />
+                ) : (
+                  <Feather name="clipboard" size={22} color={getColorLiga600()} />
+                )}
+              </TouchableOpacity>
+            </View>
           )}
         </View>
 
