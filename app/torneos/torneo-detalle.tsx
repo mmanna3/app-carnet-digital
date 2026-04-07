@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Platform, View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -8,6 +8,7 @@ import { getColorLiga600, hexCabeceraPorColorAgrupadorApi, useConfigLiga } from 
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
 import type { InformacionInicialAgrupadorDTO } from '@/lib/api/clients'
 import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
+import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 function buscarTorneoEnAgrupadores(
   agrupadores: InformacionInicialAgrupadorDTO[],
@@ -37,6 +38,7 @@ function buscarTorneoEnAgrupadores(
 
 export default function TorneoDetalle() {
   const router = useRouter()
+  const grande = usePantallaGrande()
   const { torneoId, agrupadorId, torneoNombre } = useLocalSearchParams<{
     torneoId: string
     agrupadorId?: string
@@ -122,7 +124,7 @@ export default function TorneoDetalle() {
           ) : null}
           <View
             style={
-              Platform.OS === 'web'
+              grande
                 ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }
                 : undefined
             }
@@ -131,7 +133,7 @@ export default function TorneoDetalle() {
               <View
                 key={zona.id ?? zona.nombre}
                 style={
-                  Platform.OS === 'web'
+                  grande
                     ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' }
                     : undefined
                 }

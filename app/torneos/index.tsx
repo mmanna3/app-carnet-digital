@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform, View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -7,11 +7,13 @@ import { queryKeys } from '@/lib/api/query-keys'
 import { getColorLiga600, useConfigLiga } from '@/lib/config/liga'
 import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
 import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
+import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 export default function Torneos() {
   const router = useRouter()
   const configLiga = useConfigLiga()
   const leagueId = configLiga?.leagueId
+  const grande = usePantallaGrande()
 
   useHeaderConHome({ titulo: 'Torneos', backgroundColor: getColorLiga600() })
 
@@ -71,21 +73,11 @@ export default function Torneos() {
           {a.nombre ? (
             <Text className="mb-3 text-lg font-medium text-gray-700">{a.nombre}</Text>
           ) : null}
-          <View
-            style={
-              Platform.OS === 'web'
-                ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }
-                : undefined
-            }
-          >
+          <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
             {(a.torneos ?? []).map((torneo) => (
               <View
                 key={torneo.id ?? torneo.nombre}
-                style={
-                  Platform.OS === 'web'
-                    ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' }
-                    : undefined
-                }
+                style={grande ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' } : undefined}
               >
                 <TarjetaConFondoDeColor
                   nombre={torneo.nombre?.trim() || 'Sin nombre'}

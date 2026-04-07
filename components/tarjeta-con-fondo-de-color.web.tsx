@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, TouchableOpacity, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 type EstiloAccento = {
   franja: string
@@ -68,7 +69,36 @@ type Props = {
 }
 
 export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Props) {
+  const grande = usePantallaGrande()
   const [hovered, setHovered] = useState(false)
+
+  // Pantalla chica: misma tarjeta que mobile
+  if (!grande) {
+    const accento = estiloAccentoPorColor(color)
+    const contenido = (
+      <View className="flex-row items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <View className={`w-1 ${accento.franja}`} />
+        <View className="min-h-[52px] flex-1 flex-row items-center py-3 pl-3 pr-3">
+          <View className={`mr-3 h-10 w-10 items-center justify-center rounded-lg ${accento.iconoFondo}`}>
+            <Ionicons name={iconName} size={20} color={accento.iconoColor} />
+          </View>
+          <Text className="flex-1 text-[15px] font-medium leading-5 text-gray-900" numberOfLines={3}>
+            {nombre}
+          </Text>
+        </View>
+      </View>
+    )
+    if (onPress) {
+      return (
+        <TouchableOpacity className="mb-2.5 shadow-sm" onPress={onPress} activeOpacity={0.7} accessibilityRole="button">
+          {contenido}
+        </TouchableOpacity>
+      )
+    }
+    return <View className="mb-2.5 shadow-sm">{contenido}</View>
+  }
+
+  // Pantalla grande: tarjeta web elegante
   const { acento, cardBg, iconoBg, iconoColor } = hexesPorColor(color)
 
   const card = (
@@ -86,12 +116,8 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
         transform: [{ translateY: hovered ? -3 : 0 }],
       }}
     >
-      {/* Colored top accent bar */}
       <View style={{ height: 6, backgroundColor: acento }} />
-
-      {/* Card body */}
       <View style={{ alignItems: 'center', paddingVertical: 28, paddingHorizontal: 20 }}>
-        {/* Icon container */}
         <View
           style={{
             width: 72,
@@ -105,16 +131,8 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
         >
           <Ionicons name={iconName} size={36} color={iconoColor} />
         </View>
-
-        {/* Name */}
         <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '600',
-            color: iconoColor,
-            textAlign: 'center',
-            lineHeight: 22,
-          }}
+          style={{ fontSize: 16, fontWeight: '600', color: iconoColor, textAlign: 'center', lineHeight: 22 }}
           numberOfLines={3}
         >
           {nombre}
@@ -123,20 +141,16 @@ export function TarjetaConFondoDeColor({ nombre, color, iconName, onPress }: Pro
     </View>
   )
 
-  if (onPress) {
-    return (
-      <Pressable
-        style={{ marginBottom: 10, cursor: 'pointer' } as object}
-        onPress={onPress}
-        // @ts-ignore — web-only mouse events
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        accessibilityRole="button"
-      >
-        {card}
-      </Pressable>
-    )
-  }
-
-  return <View style={{ marginBottom: 10 }}>{card}</View>
+  return (
+    <Pressable
+      style={{ marginBottom: 10, cursor: 'pointer' } as object}
+      onPress={onPress}
+      // @ts-ignore — web-only mouse events
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      accessibilityRole={onPress ? 'button' : undefined}
+    >
+      {card}
+    </Pressable>
+  )
 }

@@ -79,10 +79,10 @@ export default function HomeMobile() {
           activeOpacity={0.85}
           className="flex-row items-center bg-white rounded-2xl px-4 py-3.5 mx-0"
           accessibilityRole="button"
-          accessibilityLabel="Buscar equipo"
+          accessibilityLabel="Buscar torneos"
         >
           <Feather name="search" size={20} color="#9ca3af" />
-          <Text className="text-gray-400 text-base ml-2">Torneos</Text>
+          <Text className="text-gray-400 text-base ml-2">Buscar torneos...</Text>
         </TouchableOpacity>
       </View>
 

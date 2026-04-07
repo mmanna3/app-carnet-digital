@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react'
-import { ActivityIndicator, Image, Platform, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import type { CategoriasConPosicionesDTO, PosicionDelEquipoDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
+import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -229,6 +230,7 @@ function TablaCategoria({
 
 export default function Posiciones() {
   const configLiga = useConfigLiga()
+  const grande = usePantallaGrande()
   const { zonaId: zonaIdParam } = useLocalSearchParams<{ zonaId?: string }>()
 
   const zonaId = useMemo(() => {
@@ -287,7 +289,7 @@ export default function Posiciones() {
       className="flex-1 bg-gray-50"
       contentContainerStyle={{
         paddingBottom: 24,
-        alignItems: Platform.OS === 'web' ? 'center' : 'stretch',
+        alignItems: grande ? 'center' : 'stretch',
       }}
       showsVerticalScrollIndicator
     >

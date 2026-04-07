@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Platform, View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
 import { Ionicons } from '@expo/vector-icons'
@@ -11,6 +11,7 @@ import Jornadas from '@/app/torneos/zona-detalle/jornadas'
 import Posiciones from '@/app/torneos/zona-detalle/posiciones'
 import { ResumenTorneo } from '@/app/torneos/zona-detalle/resumen-torneo'
 import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
+import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 type IconName = ComponentProps<typeof Ionicons>['name']
 
@@ -23,6 +24,7 @@ const TABS: { titulo: string; icon: IconName; Contenido: React.ComponentType }[]
 
 export default function ZonaDetalle() {
   const insets = useSafeAreaInsets()
+  const grande = usePantallaGrande()
   const [tabIndex, setTabIndex] = useState(0)
 
   const { color, torneoNombre, faseNombre, zonaNombre } = useLocalSearchParams<{
@@ -64,7 +66,7 @@ export default function ZonaDetalle() {
           zona={textoZona}
           colorAgrupador={colorAgrupador}
         />
-        <View className={`flex-1${Platform.OS === 'web' ? ' px-24' : ''}`}>
+        <View className={`flex-1${grande ? ' px-24' : ''}`}>
           <Contenido />
         </View>
       </View>
