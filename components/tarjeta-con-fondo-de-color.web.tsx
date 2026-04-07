@@ -30,12 +30,32 @@ export function colorFondoAgrupador(color: string | undefined): string {
 function hexesPorColor(color: string | undefined) {
   const c = (color ?? '').trim().toLowerCase()
   if (c === 'verde')
-    return { acento: '#16a34a', cardBg: '#f0fdf4', iconoBg: 'rgba(21,128,61,0.12)', iconoColor: '#15803d' }
+    return {
+      acento: '#16a34a',
+      cardBg: '#f0fdf4',
+      iconoBg: 'rgba(21,128,61,0.12)',
+      iconoColor: '#15803d',
+    }
   if (c === 'rojo')
-    return { acento: '#dc2626', cardBg: '#fef2f2', iconoBg: 'rgba(185,28,28,0.12)', iconoColor: '#b91c1c' }
+    return {
+      acento: '#dc2626',
+      cardBg: '#fef2f2',
+      iconoBg: 'rgba(185,28,28,0.12)',
+      iconoColor: '#b91c1c',
+    }
   if (c === 'azul')
-    return { acento: '#2563eb', cardBg: '#eff6ff', iconoBg: 'rgba(29,78,216,0.12)', iconoColor: '#1d4ed8' }
-  return { acento: '#9ca3af', cardBg: '#f9fafb', iconoBg: 'rgba(156,163,175,0.15)', iconoColor: '#374151' }
+    return {
+      acento: '#2563eb',
+      cardBg: '#eff6ff',
+      iconoBg: 'rgba(29,78,216,0.12)',
+      iconoColor: '#1d4ed8',
+    }
+  return {
+    acento: '#9ca3af',
+    cardBg: '#f9fafb',
+    iconoBg: 'rgba(156,163,175,0.15)',
+    iconoColor: '#374151',
+  }
 }
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
