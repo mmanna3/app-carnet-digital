@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { Platform, View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -106,34 +106,57 @@ export default function TorneoDetalle() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32, maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}
+      contentContainerStyle={{
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 32,
+        maxWidth: 1280,
+        marginHorizontal: 'auto',
+        width: '100%',
+      }}
     >
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">
           {fase.nombre ? (
             <Text className="mb-3 text-lg font-medium text-gray-700">{fase.nombre}</Text>
           ) : null}
-          {(fase.zonas ?? []).map((zona) => (
-            <TarjetaConFondoDeColor
-              key={zona.id ?? zona.nombre}
-              nombre={zona.nombre?.trim() || 'Sin nombre'}
-              color={color}
-              iconName="map"
-              onPress={() =>
-                router.push({
-                  pathname: '/torneos/zona-detalle',
-                  params: {
-                    torneoId: String(torneo.id ?? ''),
-                    zonaId: zona.id != null ? String(zona.id) : '',
-                    zonaNombre: zona.nombre ?? '',
-                    color: color ?? '',
-                    torneoNombre: torneo.nombre ?? '',
-                    faseNombre: fase.nombre ?? '',
-                  },
-                })
-              }
-            />
-          ))}
+          <View
+            style={
+              Platform.OS === 'web'
+                ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }
+                : undefined
+            }
+          >
+            {(fase.zonas ?? []).map((zona) => (
+              <View
+                key={zona.id ?? zona.nombre}
+                style={
+                  Platform.OS === 'web'
+                    ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' }
+                    : undefined
+                }
+              >
+                <TarjetaConFondoDeColor
+                  nombre={zona.nombre?.trim() || 'Sin nombre'}
+                  color={color}
+                  iconName="map"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/torneos/zona-detalle',
+                      params: {
+                        torneoId: String(torneo.id ?? ''),
+                        zonaId: zona.id != null ? String(zona.id) : '',
+                        zonaNombre: zona.nombre ?? '',
+                        color: color ?? '',
+                        torneoNombre: torneo.nombre ?? '',
+                        faseNombre: fase.nombre ?? '',
+                      },
+                    })
+                  }
+                />
+              </View>
+            ))}
+          </View>
         </View>
       ))}
     </ScrollView>

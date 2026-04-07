@@ -54,7 +54,10 @@ export default function ZonaDetalle() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <View className="flex-1 px-4 pt-6" style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}>
+      <View
+        className="flex-1 px-4 pt-6"
+        style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}
+      >
         <ResumenTorneo
           torneo={textoTorneo}
           fase={textoFase}
@@ -70,22 +73,24 @@ export default function ZonaDetalle() {
         className="flex-row border-t border-gray-200 bg-white"
         style={{ paddingBottom: Math.max(insets.bottom, 8) }}
       >
-        <View style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%', flexDirection: 'row' }}>
-        {TABS.map((t, i) => {
-          const activo = i === tabIndex
-          return (
-            <TouchableOpacity
-              key={t.titulo}
-              className="flex-1 items-center justify-center py-3"
-              onPress={() => setTabIndex(i)}
-              accessibilityRole="tab"
-              accessibilityLabel={t.titulo}
-              accessibilityState={{ selected: activo }}
-            >
-              <Ionicons name={t.icon} size={26} color={activo ? colorIconoActivo : '#9ca3af'} />
-            </TouchableOpacity>
-          )
-        })}
+        <View
+          style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%', flexDirection: 'row' }}
+        >
+          {TABS.map((t, i) => {
+            const activo = i === tabIndex
+            return (
+              <TouchableOpacity
+                key={t.titulo}
+                className="flex-1 items-center justify-center py-3"
+                onPress={() => setTabIndex(i)}
+                accessibilityRole="tab"
+                accessibilityLabel={t.titulo}
+                accessibilityState={{ selected: activo }}
+              >
+                <Ionicons name={t.icon} size={26} color={activo ? colorIconoActivo : '#9ca3af'} />
+              </TouchableOpacity>
+            )
+          })}
         </View>
       </View>
     </View>

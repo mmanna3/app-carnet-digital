@@ -3,13 +3,7 @@ import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation, useRouter } from 'expo-router'
 import { Entypo } from '@expo/vector-icons'
 
-function WebHeader({
-  titulo,
-  backgroundColor,
-}: {
-  titulo: string
-  backgroundColor: string
-}) {
+function WebHeader({ titulo, backgroundColor }: { titulo: string; backgroundColor: string }) {
   const router = useRouter()
   const navigation = useNavigation()
   const canGoBack = navigation.canGoBack()
@@ -38,9 +32,7 @@ function WebHeader({
             <Entypo name="chevron-left" size={28} color="#ffffff" />
           </TouchableOpacity>
         ) : null}
-        <Text style={{ flex: 1, color: '#ffffff', fontWeight: '600', fontSize: 17 }}>
-          {titulo}
-        </Text>
+        <Text style={{ flex: 1, color: '#ffffff', fontWeight: '600', fontSize: 17 }}>{titulo}</Text>
         <TouchableOpacity
           onPress={() => router.replace('/home')}
           accessibilityRole="button"

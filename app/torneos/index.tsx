@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { Platform, View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -57,34 +57,57 @@ export default function Torneos() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32, maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}
+      contentContainerStyle={{
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 32,
+        maxWidth: 1280,
+        marginHorizontal: 'auto',
+        width: '100%',
+      }}
     >
       {agrupadores.map((a) => (
         <View key={a.id ?? a.nombre} className="mb-6">
           {a.nombre ? (
             <Text className="mb-3 text-lg font-medium text-gray-700">{a.nombre}</Text>
           ) : null}
-          {(a.torneos ?? []).map((torneo) => (
-            <TarjetaConFondoDeColor
-              key={torneo.id ?? torneo.nombre}
-              nombre={torneo.nombre?.trim() || 'Sin nombre'}
-              color={a.color}
-              iconName="trophy"
-              onPress={() =>
-                router.push({
-                  pathname: '/torneos/torneo-detalle',
-                  params:
-                    torneo.id != null
-                      ? { torneoId: String(torneo.id) }
-                      : {
-                          torneoId: '',
-                          agrupadorId: a.id != null ? String(a.id) : '',
-                          torneoNombre: torneo.nombre ?? '',
-                        },
-                })
-              }
-            />
-          ))}
+          <View
+            style={
+              Platform.OS === 'web'
+                ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }
+                : undefined
+            }
+          >
+            {(a.torneos ?? []).map((torneo) => (
+              <View
+                key={torneo.id ?? torneo.nombre}
+                style={
+                  Platform.OS === 'web'
+                    ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' }
+                    : undefined
+                }
+              >
+                <TarjetaConFondoDeColor
+                  nombre={torneo.nombre?.trim() || 'Sin nombre'}
+                  color={a.color}
+                  iconName="trophy"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/torneos/torneo-detalle',
+                      params:
+                        torneo.id != null
+                          ? { torneoId: String(torneo.id) }
+                          : {
+                              torneoId: '',
+                              agrupadorId: a.id != null ? String(a.id) : '',
+                              torneoNombre: torneo.nombre ?? '',
+                            },
+                    })
+                  }
+                />
+              </View>
+            ))}
+          </View>
         </View>
       ))}
     </ScrollView>

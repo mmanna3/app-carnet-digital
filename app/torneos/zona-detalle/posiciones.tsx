@@ -285,7 +285,10 @@ export default function Posiciones() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingBottom: 24, alignItems: Platform.OS === 'web' ? 'center' : 'stretch' }}
+      contentContainerStyle={{
+        paddingBottom: 24,
+        alignItems: Platform.OS === 'web' ? 'center' : 'stretch',
+      }}
       showsVerticalScrollIndicator
     >
       {categorias.map((bloque, idx) => (
