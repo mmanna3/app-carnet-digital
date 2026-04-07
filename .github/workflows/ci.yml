@@ -60,6 +60,11 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # Por defecto la acción excluye **/node_modules/**; el export web de Expo
+          # deja las fuentes de íconos en dist/assets/node_modules/... y no se subían.
+          exclude: |
+            **/.git*
+            **/.git*/**
 
   count-e2e:
     name: Count E2E tests
