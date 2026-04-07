@@ -9,11 +9,15 @@ appId: com.blueservant.edefi
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -41,7 +45,7 @@ appId: com.blueservant.edefi
     id: 'pantalla-mis-jugadores'
 - extendedWaitUntil:
     visible:
-      id: 'carnet-jugador'
+      id: 'carnet-jugador-1'
 - tapOn:
     id: 'boton-menu-principal'
 - tapOn:
@@ -51,7 +55,7 @@ appId: com.blueservant.edefi
     id: 'boton-bulk-eliminar'
 # Seleccionar el jugador (tap en modo selección activa el toggle)
 - tapOn:
-    id: 'carnet-jugador'
+    id: 'carnet-jugador-1'
 # Tap en botón "Eliminar" de la barra de acciones bulk
 - tapOn:
     id: 'boton-bulk-eliminar'

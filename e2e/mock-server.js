@@ -16,6 +16,8 @@
  * Lógica smart en escenario 'happy':
  *   - obtener-nombre-equipo: código MTD0001 → válido, cualquier otro → error
  *   - el-dni-esta-fichado: DNI 87654321 → true, cualquier otro → false
+ *   - carnets: equipoId=3 (Equipo B2) → devuelve 500 (para test 20)
+ *   - desvincular: equipoId=2 (Equipo B1) → devuelve 500 (para test 19)
  *
  * Respuestas con error HTTP: usar { _statusCode: N } como valor del escenario.
  */
@@ -191,6 +193,39 @@ const server = http.createServer((req, res) => {
   else if (key === 'GET:/api/publico/el-dni-esta-fichado' && SCENARIO === 'happy') {
     const dni = parsedUrl.searchParams.get('dni')
     body = dni === '87654321'
+  }
+  // Lógica smart para carnets: equipoId=3 (Equipo B2) → 500 (test 20 error de red)
+  else if (key === 'GET:/api/carnet-digital/carnets' && SCENARIO === 'happy') {
+    const equipoId = parsedUrl.searchParams.get('equipoId')
+    if (equipoId === '3') {
+      res.writeHead(500, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: 'Error del servidor' }))
+      return
+    }
+    body = scenarioResponses[SCENARIO]
+  }
+  // Lógica smart para desvincular: equipoId=2 (Equipo B1) → 500 (test 19 error al eliminar)
+  else if (key === 'POST:/api/Jugador/desvincular-jugador-del-equipo' && SCENARIO === 'happy') {
+    let rawBody = ''
+    req.on('data', (chunk) => {
+      rawBody += chunk
+    })
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(rawBody)
+        if (parsed.equipoId === 2) {
+          res.writeHead(500, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Error del servidor' }))
+        } else {
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify(scenarioResponses[SCENARIO] ?? scenarioResponses['happy']))
+        }
+      } catch {
+        res.writeHead(400)
+        res.end()
+      }
+    })
+    return
   } else {
     body = scenarioResponses[SCENARIO] ?? scenarioResponses['happy']
   }

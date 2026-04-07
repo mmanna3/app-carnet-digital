@@ -7,11 +7,15 @@ appId: com.blueservant.edefi
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-fichaje'
 - tapOn:
     id: 'card-fichaje'
-# PantallaIntro
-- assertVisible:
-    id: 'card-nuevo'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'card-nuevo'
 - tapOn:
     id: 'card-nuevo'
 # PasoCodigoEquipo — ingresar código inválido

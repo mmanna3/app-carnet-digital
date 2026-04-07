@@ -149,7 +149,10 @@ function FilaJornada({
                     {textoOGuion(row.categoria)}
                   </Text>
                   {!mar.ok && mar.texto !== '—' ? (
-                    <Text className="mt-0.5 text-center text-[11px] leading-4 text-gray-800" numberOfLines={3}>
+                    <Text
+                      className="mt-0.5 text-center text-[11px] leading-4 text-gray-800"
+                      numberOfLines={3}
+                    >
                       {mar.texto}
                     </Text>
                   ) : null}
@@ -312,10 +315,7 @@ function JornadasConSelectorFecha({
 
   const indiceActivo = indiceElegido ?? indiceDefault
 
-  const indiceSeguro = Math.min(
-    Math.max(0, indiceActivo),
-    Math.max(0, fechas.length - 1)
-  )
+  const indiceSeguro = Math.min(Math.max(0, indiceActivo), Math.max(0, fechas.length - 1))
 
   const fechaMostrada = fechas[indiceSeguro]
 

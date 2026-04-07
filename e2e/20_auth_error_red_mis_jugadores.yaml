@@ -5,18 +5,20 @@ appId: com.blueservant.edefi
 # Verifica que cuando GET /api/carnet-digital/carnets falla, la pantalla muestra
 # el estado de error en lugar de crashear o quedarse en loading indefinido.
 #
-# Usa evalScript para cambiar el escenario del mock server a 'error_carnets'
-# antes del test y restaurarlo al finalizar.
-- evalScript: |
-    http.post('http://localhost:3001/_set-scenario', '{"scenario":"error_carnets"}')
+# El mock server usa lógica determinista: equipoId=3 (Equipo B2) → devuelve 500.
+# No necesita cambio de escenario — seleccionar Equipo B2 dispara el error.
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin — el login sigue funcionando (solo carnets falla)
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -34,16 +36,13 @@ appId: com.blueservant.edefi
       enabled: true
 - tapOn:
     id: 'boton-iniciar-sesion'
-# PantallaSeleccionEquipo
+# PantallaSeleccionEquipo — elegir Equipo B2 (id=3) que dispara el error
 - assertVisible:
     id: 'pantalla-seleccion-equipo'
 - tapOn:
-    id: 'item-equipo-1'
+    id: 'item-equipo-3'
 # Tab Mis Jugadores — debe mostrar estado de error, no crash
 - assertVisible:
     text: 'Error al cargar los jugadores.'
 - assertNotVisible:
-    id: 'carnet-jugador'
-# Restaurar escenario happy para no afectar tests siguientes
-- evalScript: |
-    http.post('http://localhost:3001/_set-scenario', '{"scenario":"happy"}')
+    id: 'carnet-jugador-1'

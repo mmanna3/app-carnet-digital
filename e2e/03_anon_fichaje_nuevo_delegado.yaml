@@ -1,4 +1,4 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo completo "nuevo delegado" (azul): login → No estoy registrado → intro →
 # código club → datos → foto → fotos DNI → confirmación → completado
@@ -7,11 +7,15 @@ appId: com.ykn.edefidelegados
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'boton-no-registrado'
 # PantallaIntroDelegado
@@ -51,14 +55,20 @@ appId: com.ykn.edefidelegados
     commands:
       - hideKeyboard
 - tapOn:
+    text: 'Datos del delegado'
+- tapOn:
     id: 'input-fecha-nacimiento-delegado'
-# Confirmar fecha: iOS usa botón "Listo", Android usa "OK" del picker nativo
+- waitForAnimationToEnd
 - runFlow:
     when:
       platform: ios
     commands:
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
       - tapOn:
-          id: 'boton-fecha-listo'
+          point: '50%, 93%'
 - runFlow:
     when:
       platform: android
@@ -153,6 +163,8 @@ appId: com.ykn.edefidelegados
       - tapOn:
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
+- waitForAnimationToEnd
+- scroll
 - tapOn:
     id: 'boton-seleccionar-dorso-delegado'
 - tapOn: 'Elegir de galería'

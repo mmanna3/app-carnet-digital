@@ -1,4 +1,4 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 87654321, el mismo que el test 02
 # (fichaje anónimo jugador ya fichado). Cuando se corre el suite completo, el test 02
@@ -16,11 +16,15 @@ appId: com.ykn.edefidelegados
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'

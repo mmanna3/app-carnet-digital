@@ -1,4 +1,4 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 12345678, el mismo que el test 01
 # (fichaje anónimo nuevo jugador). Cuando se corre el suite completo, el test 01 crea
@@ -14,11 +14,15 @@ appId: com.ykn.edefidelegados
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -66,13 +70,20 @@ appId: com.ykn.edefidelegados
     id: 'input-dni-jugador'
 - inputText: '12345678'
 - tapOn:
+    text: 'Datos del jugador'
+- tapOn:
     id: 'input-fecha-nacimiento'
+- waitForAnimationToEnd
 - runFlow:
     when:
       platform: ios
     commands:
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
       - tapOn:
-          id: 'boton-fecha-listo'
+          point: '50%, 93%'
 - runFlow:
     when:
       platform: android
@@ -151,6 +162,8 @@ appId: com.ykn.edefidelegados
       - tapOn:
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
+- waitForAnimationToEnd
+- scroll
 - tapOn:
     id: 'boton-seleccionar-dorso'
 - tapOn: 'Elegir de galería'

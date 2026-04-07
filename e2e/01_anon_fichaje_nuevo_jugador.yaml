@@ -1,4 +1,4 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo completo "nuevo jugador": home → intro → código → datos → foto → fotos DNI → autorización → confirmación
 #
@@ -7,11 +7,15 @@ appId: com.ykn.edefidelegados
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-fichaje'
 - tapOn:
     id: 'card-fichaje'
-# PantallaIntro
-- assertVisible:
-    id: 'card-nuevo'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'card-nuevo'
 - tapOn:
     id: 'card-nuevo'
 # PasoCodigoEquipo (paso 1 de 5)
@@ -40,15 +44,24 @@ appId: com.ykn.edefidelegados
 - tapOn:
     id: 'input-dni-jugador'
 - inputText: '12345678'
+# Cerrar teclado antes de abrir el picker (necesario en iOS)
+- tapOn:
+    text: 'Datos del jugador'
 - tapOn:
     id: 'input-fecha-nacimiento'
-# Confirmar fecha: iOS usa botón "Listo", Android usa "OK" del picker nativo
+- waitForAnimationToEnd
+# iOS: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro;
+# se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical)
 - runFlow:
     when:
       platform: ios
     commands:
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
       - tapOn:
-          id: 'boton-fecha-listo'
+          point: '50%, 93%'
 - runFlow:
     when:
       platform: android
@@ -127,6 +140,8 @@ appId: com.ykn.edefidelegados
       - tapOn:
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
+- waitForAnimationToEnd
+- scroll
 - tapOn:
     id: 'boton-seleccionar-dorso'
 - tapOn: 'Elegir de galería'
@@ -152,6 +167,7 @@ appId: com.ykn.edefidelegados
       - tapOn:
           id: 'com.google.android.documentsui:id/thumbnail'
           optional: true
+- waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
       id: 'boton-subir-dni'

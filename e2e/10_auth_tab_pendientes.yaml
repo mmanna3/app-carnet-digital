@@ -1,14 +1,18 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo: login → seleccionar equipo → tab Pendientes → ver jugador pendiente de aprobación
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -34,8 +38,9 @@ appId: com.ykn.edefidelegados
 # Tab Pendientes
 - assertVisible:
     id: 'pantalla-mis-jugadores'
-- tapOn: 'Pendientes'
+- tapOn:
+    id: 'tab-pendientes'
 - assertVisible:
     id: 'pantalla-pendientes'
 - assertVisible:
-    id: 'carnet-jugador'
+    id: 'carnet-jugador-2'

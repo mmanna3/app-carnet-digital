@@ -77,6 +77,7 @@ export default function TabLayout() {
             ),
             tabBarLabel: 'Mis Jugadores',
             tabBarIcon: ({ color }) => <Feather name="users" size={22} color={color} />,
+            tabBarButtonTestID: 'tab-mis-jugadores',
           }}
         />
         <Tabs.Screen
@@ -84,6 +85,7 @@ export default function TabLayout() {
           options={{
             title: 'Buscar',
             tabBarIcon: ({ color }) => <Feather name="search" size={22} color={color} />,
+            tabBarButtonTestID: 'tab-buscar',
           }}
         />
         <Tabs.Screen
@@ -94,6 +96,7 @@ export default function TabLayout() {
             ),
             tabBarLabel: 'Pendientes',
             tabBarIcon: ({ color }) => <Feather name="clock" size={22} color={color} />,
+            tabBarButtonTestID: 'tab-pendientes',
           }}
         />
       </Tabs>

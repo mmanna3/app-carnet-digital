@@ -8,6 +8,9 @@ appId: com.blueservant.edefi
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-fichaje'
 - tapOn:
     id: 'card-fichaje'
 # PantallaIntro

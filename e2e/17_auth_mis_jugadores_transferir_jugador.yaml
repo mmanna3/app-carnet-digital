@@ -11,11 +11,15 @@ appId: com.blueservant.edefi
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -43,9 +47,9 @@ appId: com.blueservant.edefi
     id: 'pantalla-mis-jugadores'
 - extendedWaitUntil:
     visible:
-      id: 'carnet-jugador'
+      id: 'carnet-jugador-1'
 - longPressOn:
-    id: 'carnet-jugador'
+    id: 'carnet-jugador-1'
 - waitForAnimationToEnd
 # ModalAccionesJugador — tap por testID (Android) o coordenada relativa (iOS bottom sheet)
 # "Transferir" es el segundo botón: ~83% vertical en iPhone SE

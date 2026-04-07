@@ -1,14 +1,18 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo: login → seleccionar equipo → menú → "Cerrar sesión" → vuelve a pantalla login
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'

@@ -1,14 +1,18 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo: login → seleccionar equipo → tab Buscar → buscar por código → ver carnet
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -34,7 +38,8 @@ appId: com.ykn.edefidelegados
 # Tab Buscar
 - assertVisible:
     id: 'pantalla-mis-jugadores'
-- tapOn: 'Buscar'
+- tapOn:
+    id: 'tab-buscar'
 - assertVisible:
     id: 'pantalla-buscar'
 - tapOn:
@@ -48,4 +53,4 @@ appId: com.ykn.edefidelegados
 - tapOn:
     id: 'boton-buscar'
 - assertVisible:
-    id: 'carnet-jugador'
+    id: 'carnet-jugador-1'

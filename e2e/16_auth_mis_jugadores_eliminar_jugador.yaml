@@ -11,11 +11,15 @@ appId: com.blueservant.edefi
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-delegados'
 - tapOn:
     id: 'card-delegados'
-# PantallaLogin
-- assertVisible:
-    id: 'pantalla-login'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-login'
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -43,9 +47,9 @@ appId: com.blueservant.edefi
     id: 'pantalla-mis-jugadores'
 - extendedWaitUntil:
     visible:
-      id: 'carnet-jugador'
+      id: 'carnet-jugador-1'
 - longPressOn:
-    id: 'carnet-jugador'
+    id: 'carnet-jugador-1'
 - waitForAnimationToEnd
 # ModalAccionesJugador — tap por testID (Android) o coordenada relativa (iOS)
 # iOS: React Native Modal bottom sheet — usar coordenada relativa
@@ -66,5 +70,6 @@ appId: com.blueservant.edefi
 - tapOn:
     id: 'boton-quitar-del-equipo'
 # Regresa a la pantalla principal con el modal cerrado
-- assertVisible:
-    id: 'pantalla-mis-jugadores'
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-mis-jugadores'

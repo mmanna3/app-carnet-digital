@@ -1,4 +1,4 @@
-appId: com.ykn.edefidelegados
+appId: com.blueservant.edefi
 ---
 # Flujo "jugador ya fichado": home → intro → código equipo → DNI → confirmación
 #
@@ -7,11 +7,15 @@ appId: com.ykn.edefidelegados
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-fichaje'
 - tapOn:
     id: 'card-fichaje'
-# PantallaIntro
-- assertVisible:
-    id: 'card-ya-fichado'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'card-ya-fichado'
 - tapOn:
     id: 'card-ya-fichado'
 # PasoCodigoEquipo (paso 1 de 3)

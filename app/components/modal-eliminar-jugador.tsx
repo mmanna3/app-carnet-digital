@@ -58,6 +58,7 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
             </TouchableOpacity>
 
             <TouchableOpacity
+              testID="boton-cancelar-eliminar"
               className="rounded-xl p-4 items-center"
               onPress={onCerrar}
               disabled={cargando}

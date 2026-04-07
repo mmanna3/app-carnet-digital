@@ -50,12 +50,7 @@ const ANCHO = {
 
 /** Suma exacta de columnas: evita hueco vacío a la derecha al hacer scroll horizontal. */
 const ANCHO_TABLA_TOTAL =
-  ANCHO.pos +
-  ANCHO.esc +
-  ANCHO.equipo +
-  ANCHO.num * 7 +
-  ANCHO.goles * 3 +
-  ANCHO.pts
+  ANCHO.pos + ANCHO.esc + ANCHO.equipo + ANCHO.num * 7 + ANCHO.goles * 3 + ANCHO.pts
 
 function Celda({
   children,
@@ -101,13 +96,7 @@ function FilaEncabezado() {
                     ? ANCHO.pts
                     : ANCHO.num
         return (
-          <Celda
-            key={h}
-            ancho={ancho}
-            alinear={i <= 2 ? 'left' : 'center'}
-            negrita
-            tabular={i > 2}
-          >
+          <Celda key={h} ancho={ancho} alinear={i <= 2 ? 'left' : 'center'} negrita tabular={i > 2}>
             {h}
           </Celda>
         )
@@ -116,13 +105,7 @@ function FilaEncabezado() {
   )
 }
 
-function FilaEquipo({
-  r,
-  apiUrl,
-}: {
-  r: PosicionDelEquipoDTO
-  apiUrl: string | undefined
-}) {
+function FilaEquipo({ r, apiUrl }: { r: PosicionDelEquipoDTO; apiUrl: string | undefined }) {
   const uri = uriRecursoPublicoApi(apiUrl, r.escudo)
   const celdas: { texto: string; ancho: number; alinear: 'left' | 'center' | 'right' }[] = [
     { texto: textoOGuion(r.posicion), ancho: ANCHO.pos, alinear: 'center' },
@@ -187,14 +170,20 @@ function TablaCategoria({
       <Text className="mb-2 px-0.5 text-base font-semibold text-gray-900" numberOfLines={2}>
         {textoOGuion(bloque.categoria)}
       </Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
-        <View style={{ width: ANCHO_TABLA_TOTAL, alignSelf: 'flex-start' }}>
-          <FilaEncabezado />
-          {renglones.map((r, i) => (
-            <FilaEquipo key={`${r.equipo ?? 'eq'}-${i}`} r={r} apiUrl={apiUrl} />
-          ))}
-        </View>
-      </ScrollView>
+      {renglones.length === 0 ? (
+        <Text className="px-0.5 text-sm leading-5 text-gray-600">
+          Aún no hay partidos en esta categoría
+        </Text>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
+          <View style={{ width: ANCHO_TABLA_TOTAL, alignSelf: 'flex-start' }}>
+            <FilaEncabezado />
+            {renglones.map((r, i) => (
+              <FilaEquipo key={`${r.equipo ?? 'eq'}-${i}`} r={r} apiUrl={apiUrl} />
+            ))}
+          </View>
+        </ScrollView>
+      )}
     </View>
   )
 }
@@ -260,7 +249,11 @@ export default function Posiciones() {
       showsVerticalScrollIndicator
     >
       {categorias.map((bloque, idx) => (
-        <TablaCategoria key={`${bloque.categoria ?? 'cat'}-${idx}`} bloque={bloque} apiUrl={apiUrl} />
+        <TablaCategoria
+          key={`${bloque.categoria ?? 'cat'}-${idx}`}
+          bloque={bloque}
+          apiUrl={apiUrl}
+        />
       ))}
     </ScrollView>
   )
