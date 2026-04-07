@@ -57,8 +57,12 @@ appId: com.blueservant.edefi
       platform: android
     commands:
       - hideKeyboard
-- tapOn:
-    text: 'Datos del delegado'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          text: 'Datos del delegado'
 - tapOn:
     id: 'input-fecha-nacimiento-delegado'
 - waitForAnimationToEnd
