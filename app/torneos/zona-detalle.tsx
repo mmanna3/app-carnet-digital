@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { Platform, View, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
 import { Ionicons } from '@expo/vector-icons'
@@ -54,14 +54,14 @@ export default function ZonaDetalle() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <View className="flex-1 px-4 pt-6">
+      <View className="flex-1 px-4 pt-6" style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}>
         <ResumenTorneo
           torneo={textoTorneo}
           fase={textoFase}
           zona={textoZona}
           colorAgrupador={colorAgrupador}
         />
-        <View className="flex-1">
+        <View className={`flex-1${Platform.OS === 'web' ? ' px-24' : ''}`}>
           <Contenido />
         </View>
       </View>
@@ -70,6 +70,7 @@ export default function ZonaDetalle() {
         className="flex-row border-t border-gray-200 bg-white"
         style={{ paddingBottom: Math.max(insets.bottom, 8) }}
       >
+        <View style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%', flexDirection: 'row' }}>
         {TABS.map((t, i) => {
           const activo = i === tabIndex
           return (
@@ -85,6 +86,7 @@ export default function ZonaDetalle() {
             </TouchableOpacity>
           )
         })}
+        </View>
       </View>
     </View>
   )

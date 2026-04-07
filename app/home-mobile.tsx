@@ -82,7 +82,7 @@ export default function HomeMobile() {
           accessibilityLabel="Buscar equipo"
         >
           <Feather name="search" size={20} color="#9ca3af" />
-          <Text className="text-gray-400 text-base ml-2">Buscar equipo...</Text>
+          <Text className="text-gray-400 text-base ml-2">Torneos</Text>
         </TouchableOpacity>
       </View>
 

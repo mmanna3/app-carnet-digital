@@ -106,7 +106,7 @@ export default function TorneoDetalle() {
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
-      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32 }}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 32, maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}
     >
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">
