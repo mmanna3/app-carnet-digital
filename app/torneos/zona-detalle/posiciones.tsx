@@ -21,23 +21,6 @@ function textoOGuion(s: string | undefined) {
   return t.length > 0 ? t : '—'
 }
 
-const ENCABEZADOS = [
-  'Pos',
-  'Esc',
-  'Equipo',
-  'J',
-  'G',
-  'E',
-  'P',
-  'Np',
-  'Gp',
-  'Pp',
-  'Gf',
-  'Gc',
-  'Df',
-  'Pts',
-] as const
-
 /** Anchos mínimos por columna (sin líneas verticales entre columnas). */
 const ANCHO = {
   pos: 38,
@@ -48,9 +31,67 @@ const ANCHO = {
   pts: 40,
 } as const
 
+function titulosTabla(mostrarGoles: boolean): string[] {
+  const t = ['Pos', 'Esc', 'Equipo', 'J', 'G', 'E', 'P', 'Np', 'Gp', 'Pp']
+  if (mostrarGoles) t.push('Gf', 'Gc', 'Df')
+  t.push('Pts')
+  return t
+}
+
+function anchoColumna(i: number, mostrarGoles: boolean, numColumnas: number): number {
+  if (i === 0) return ANCHO.pos
+  if (i === 1) return ANCHO.esc
+  if (i === 2) return ANCHO.equipo
+  const iPts = numColumnas - 1
+  if (i === iPts) return ANCHO.pts
+  if (mostrarGoles && i >= numColumnas - 4 && i <= numColumnas - 2) return ANCHO.goles
+  return ANCHO.num
+}
+
 /** Suma exacta de columnas: evita hueco vacío a la derecha al hacer scroll horizontal. */
-const ANCHO_TABLA_TOTAL =
-  ANCHO.pos + ANCHO.esc + ANCHO.equipo + ANCHO.num * 7 + ANCHO.goles * 3 + ANCHO.pts
+function anchoTablaTotal(mostrarGoles: boolean): number {
+  return (
+    ANCHO.pos +
+    ANCHO.esc +
+    ANCHO.equipo +
+    ANCHO.num * 7 +
+    (mostrarGoles ? ANCHO.goles * 3 : 0) +
+    ANCHO.pts
+  )
+}
+
+function valorCeldaPosicion(label: string, r: PosicionDelEquipoDTO): string {
+  switch (label) {
+    case 'Pos':
+      return textoOGuion(r.posicion)
+    case 'Equipo':
+      return textoOGuion(r.equipo)
+    case 'J':
+      return textoOGuion(r.partidosJugados)
+    case 'G':
+      return textoOGuion(r.partidosGanados)
+    case 'E':
+      return textoOGuion(r.partidosEmpatados)
+    case 'P':
+      return textoOGuion(r.partidosPerdidos)
+    case 'Np':
+      return textoOGuion(r.partidosNoPresento)
+    case 'Gp':
+      return textoOGuion(r.partidosGanoPuntos)
+    case 'Pp':
+      return textoOGuion(r.partidosPerdioPuntos)
+    case 'Gf':
+      return textoOGuion(r.golesAFavor)
+    case 'Gc':
+      return textoOGuion(r.golesEnContra)
+    case 'Df':
+      return textoOGuion(r.golesDiferencia)
+    case 'Pts':
+      return textoOGuion(r.puntos)
+    default:
+      return '—'
+  }
+}
 
 function Celda({
   children,
@@ -79,59 +120,48 @@ function Celda({
   )
 }
 
-function FilaEncabezado() {
+function FilaEncabezado({ mostrarGoles }: { mostrarGoles: boolean }) {
+  const titulos = titulosTabla(mostrarGoles)
+  const n = titulos.length
   return (
     <View className="flex-row border-b border-gray-300 bg-gray-100">
-      {ENCABEZADOS.map((h, i) => {
-        const ancho =
-          i === 0
-            ? ANCHO.pos
-            : i === 1
-              ? ANCHO.esc
-              : i === 2
-                ? ANCHO.equipo
-                : i >= 10 && i <= 12
-                  ? ANCHO.goles
-                  : i === 13
-                    ? ANCHO.pts
-                    : ANCHO.num
-        return (
-          <Celda key={h} ancho={ancho} alinear={i <= 2 ? 'left' : 'center'} negrita tabular={i > 2}>
-            {h}
-          </Celda>
-        )
-      })}
+      {titulos.map((h, i) => (
+        <Celda
+          key={h}
+          ancho={anchoColumna(i, mostrarGoles, n)}
+          alinear={i <= 2 ? 'left' : 'center'}
+          negrita
+          tabular={i > 2}
+        >
+          {h}
+        </Celda>
+      ))}
     </View>
   )
 }
 
-function FilaEquipo({ r, apiUrl }: { r: PosicionDelEquipoDTO; apiUrl: string | undefined }) {
+function FilaEquipo({
+  r,
+  apiUrl,
+  mostrarGoles,
+}: {
+  r: PosicionDelEquipoDTO
+  apiUrl: string | undefined
+  mostrarGoles: boolean
+}) {
   const uri = uriRecursoPublicoApi(apiUrl, r.escudo)
-  const celdas: { texto: string; ancho: number; alinear: 'left' | 'center' | 'right' }[] = [
-    { texto: textoOGuion(r.posicion), ancho: ANCHO.pos, alinear: 'center' },
-    { texto: '', ancho: ANCHO.esc, alinear: 'center' },
-    { texto: textoOGuion(r.equipo), ancho: ANCHO.equipo, alinear: 'left' },
-    { texto: textoOGuion(r.partidosJugados), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosGanados), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosEmpatados), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosPerdidos), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosNoPresento), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosGanoPuntos), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.partidosPerdioPuntos), ancho: ANCHO.num, alinear: 'center' },
-    { texto: textoOGuion(r.golesAFavor), ancho: ANCHO.goles, alinear: 'center' },
-    { texto: textoOGuion(r.golesEnContra), ancho: ANCHO.goles, alinear: 'center' },
-    { texto: textoOGuion(r.golesDiferencia), ancho: ANCHO.goles, alinear: 'center' },
-    { texto: textoOGuion(r.puntos), ancho: ANCHO.pts, alinear: 'center' },
-  ]
+  const titulos = titulosTabla(mostrarGoles)
+  const n = titulos.length
 
   return (
     <View className="flex-row border-b border-gray-100">
-      {celdas.map((c, i) => {
-        if (i === 1) {
+      {titulos.map((label, i) => {
+        const ancho = anchoColumna(i, mostrarGoles, n)
+        if (label === 'Esc') {
           return (
             <View
               key="esc"
-              style={{ width: ANCHO.esc, minWidth: ANCHO.esc }}
+              style={{ width: ancho, minWidth: ancho }}
               className="shrink-0 items-center justify-center px-1 py-1.5"
             >
               {uri ? (
@@ -147,9 +177,15 @@ function FilaEquipo({ r, apiUrl }: { r: PosicionDelEquipoDTO; apiUrl: string | u
             </View>
           )
         }
+        const alinear: 'left' | 'center' = label === 'Equipo' ? 'left' : 'center'
         return (
-          <Celda key={`c-${i}`} ancho={c.ancho} alinear={c.alinear} tabular={i !== 2}>
-            {c.texto}
+          <Celda
+            key={label}
+            ancho={ancho}
+            alinear={alinear}
+            tabular={label !== 'Equipo'}
+          >
+            {valorCeldaPosicion(label, r)}
           </Celda>
         )
       })}
@@ -160,11 +196,14 @@ function FilaEquipo({ r, apiUrl }: { r: PosicionDelEquipoDTO; apiUrl: string | u
 function TablaCategoria({
   bloque,
   apiUrl,
+  mostrarGoles,
 }: {
   bloque: CategoriasConPosicionesDTO
   apiUrl: string | undefined
+  mostrarGoles: boolean
 }) {
   const renglones = bloque.renglones ?? []
+  const anchoTotal = anchoTablaTotal(mostrarGoles)
   return (
     <View className="mb-5">
       <Text className="mb-2 px-0.5 text-base font-semibold text-gray-900" numberOfLines={2}>
@@ -176,10 +215,15 @@ function TablaCategoria({
         </Text>
       ) : (
         <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
-          <View style={{ width: ANCHO_TABLA_TOTAL, alignSelf: 'flex-start' }}>
-            <FilaEncabezado />
+          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
+            <FilaEncabezado mostrarGoles={mostrarGoles} />
             {renglones.map((r, i) => (
-              <FilaEquipo key={`${r.equipo ?? 'eq'}-${i}`} r={r} apiUrl={apiUrl} />
+              <FilaEquipo
+                key={`${r.equipo ?? 'eq'}-${i}`}
+                r={r}
+                apiUrl={apiUrl}
+                mostrarGoles={mostrarGoles}
+              />
             ))}
           </View>
         </ScrollView>
@@ -233,6 +277,7 @@ export default function Posiciones() {
   }
 
   const categorias = data?.posiciones ?? []
+  const mostrarGoles = data?.verGoles !== false
 
   if (categorias.length === 0) {
     return (
@@ -253,6 +298,7 @@ export default function Posiciones() {
           key={`${bloque.categoria ?? 'cat'}-${idx}`}
           bloque={bloque}
           apiUrl={apiUrl}
+          mostrarGoles={mostrarGoles}
         />
       ))}
     </ScrollView>

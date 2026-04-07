@@ -5921,6 +5921,7 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
     nombre!: string;
     anio!: number;
     esVisibleEnApp!: boolean;
+    seVenLosGolesEnTablaDePosiciones!: boolean;
     torneoAgrupadorId?: number;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
@@ -5943,6 +5944,7 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
             this.nombre = _data["nombre"];
             this.anio = _data["anio"];
             this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.seVenLosGolesEnTablaDePosiciones = _data["seVenLosGolesEnTablaDePosiciones"];
             this.torneoAgrupadorId = _data["torneoAgrupadorId"];
             this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
             this.sePuedeEditar = _data["sePuedeEditar"];
@@ -5973,6 +5975,7 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
         data["nombre"] = this.nombre;
         data["anio"] = this.anio;
         data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["seVenLosGolesEnTablaDePosiciones"] = this.seVenLosGolesEnTablaDePosiciones;
         data["torneoAgrupadorId"] = this.torneoAgrupadorId;
         data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
         data["sePuedeEditar"] = this.sePuedeEditar;
@@ -5996,6 +5999,7 @@ export interface ICrearTorneoDTO {
     nombre: string;
     anio: number;
     esVisibleEnApp: boolean;
+    seVenLosGolesEnTablaDePosiciones: boolean;
     torneoAgrupadorId?: number;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
@@ -8338,6 +8342,7 @@ export interface IPosicionDelEquipoDTO {
 
 export class PosicionesDTO implements IPosicionesDTO {
     posiciones?: CategoriasConPosicionesDTO[] | undefined;
+    verGoles?: boolean;
 
     constructor(data?: IPosicionesDTO) {
         if (data) {
@@ -8355,6 +8360,7 @@ export class PosicionesDTO implements IPosicionesDTO {
                 for (let item of _data["posiciones"])
                     this.posiciones!.push(CategoriasConPosicionesDTO.fromJS(item));
             }
+            this.verGoles = _data["verGoles"];
         }
     }
 
@@ -8372,12 +8378,14 @@ export class PosicionesDTO implements IPosicionesDTO {
             for (let item of this.posiciones)
                 data["posiciones"].push(item.toJSON());
         }
+        data["verGoles"] = this.verGoles;
         return data;
     }
 }
 
 export interface IPosicionesDTO {
     posiciones?: CategoriasConPosicionesDTO[] | undefined;
+    verGoles?: boolean;
 }
 
 export class RechazarJugadorDTO implements IRechazarJugadorDTO {
@@ -8658,6 +8666,7 @@ export class TorneoDTO implements ITorneoDTO {
     nombre!: string;
     anio!: number;
     esVisibleEnApp!: boolean;
+    seVenLosGolesEnTablaDePosiciones!: boolean;
     torneoAgrupadorId?: number;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
@@ -8679,6 +8688,7 @@ export class TorneoDTO implements ITorneoDTO {
             this.nombre = _data["nombre"];
             this.anio = _data["anio"];
             this.esVisibleEnApp = _data["esVisibleEnApp"];
+            this.seVenLosGolesEnTablaDePosiciones = _data["seVenLosGolesEnTablaDePosiciones"];
             this.torneoAgrupadorId = _data["torneoAgrupadorId"];
             this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
             this.sePuedeEditar = _data["sePuedeEditar"];
@@ -8708,6 +8718,7 @@ export class TorneoDTO implements ITorneoDTO {
         data["nombre"] = this.nombre;
         data["anio"] = this.anio;
         data["esVisibleEnApp"] = this.esVisibleEnApp;
+        data["seVenLosGolesEnTablaDePosiciones"] = this.seVenLosGolesEnTablaDePosiciones;
         data["torneoAgrupadorId"] = this.torneoAgrupadorId;
         data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
         data["sePuedeEditar"] = this.sePuedeEditar;
@@ -8730,6 +8741,7 @@ export interface ITorneoDTO {
     nombre: string;
     anio: number;
     esVisibleEnApp: boolean;
+    seVenLosGolesEnTablaDePosiciones: boolean;
     torneoAgrupadorId?: number;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
@@ -8901,6 +8913,7 @@ export class ZonaResumenDTO implements IZonaResumenDTO {
     id?: number | undefined;
     nombre?: string | undefined;
     torneoId?: number | undefined;
+    anio?: number | undefined;
     torneo?: string | undefined;
     agrupador?: string | undefined;
     agrupadorId?: number | undefined;
@@ -8921,6 +8934,7 @@ export class ZonaResumenDTO implements IZonaResumenDTO {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
             this.torneoId = _data["torneoId"];
+            this.anio = _data["anio"];
             this.torneo = _data["torneo"];
             this.agrupador = _data["agrupador"];
             this.agrupadorId = _data["agrupadorId"];
@@ -8941,6 +8955,7 @@ export class ZonaResumenDTO implements IZonaResumenDTO {
         data["id"] = this.id;
         data["nombre"] = this.nombre;
         data["torneoId"] = this.torneoId;
+        data["anio"] = this.anio;
         data["torneo"] = this.torneo;
         data["agrupador"] = this.agrupador;
         data["agrupadorId"] = this.agrupadorId;
@@ -8954,6 +8969,7 @@ export interface IZonaResumenDTO {
     id?: number | undefined;
     nombre?: string | undefined;
     torneoId?: number | undefined;
+    anio?: number | undefined;
     torneo?: string | undefined;
     agrupador?: string | undefined;
     agrupadorId?: number | undefined;
