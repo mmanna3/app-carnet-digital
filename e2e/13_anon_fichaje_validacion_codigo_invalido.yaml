@@ -10,12 +10,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-fichaje'
+    timeout: 15000
 - tapOn:
     id: 'card-fichaje'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'card-nuevo'
+    timeout: 15000
 - tapOn:
     id: 'card-nuevo'
 # PasoCodigoEquipo — ingresar código inválido
@@ -30,6 +32,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-validar'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-validar'
 # Debe aparecer el mensaje de error

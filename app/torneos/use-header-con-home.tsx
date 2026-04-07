@@ -15,6 +15,7 @@ export function useHeaderConHome({
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: true,
       title: titulo,
       headerStyle: { backgroundColor },
       headerTintColor: '#ffffff',

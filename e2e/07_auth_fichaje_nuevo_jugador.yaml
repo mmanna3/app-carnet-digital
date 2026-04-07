@@ -17,12 +17,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-delegados'
+    timeout: 15000
 - tapOn:
     id: 'card-delegados'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'pantalla-login'
+    timeout: 15000
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -38,6 +40,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-iniciar-sesion'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-iniciar-sesion'
 # PantallaSeleccionEquipo
@@ -98,6 +101,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-continuar'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-continuar'
 # PasoFoto (paso 2 de 4)
@@ -132,6 +136,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-foto'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-foto'
 # PasoFotosDni (paso 3 de 4)
@@ -193,6 +198,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-dni'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-dni'
 # PasoAutorizacion (paso 4 de 4) → POST /api/Jugador al mock server

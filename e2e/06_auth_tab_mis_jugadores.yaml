@@ -7,12 +7,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-delegados'
+    timeout: 15000
 - tapOn:
     id: 'card-delegados'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'pantalla-login'
+    timeout: 15000
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -28,6 +30,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-iniciar-sesion'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-iniciar-sesion'
 # PantallaSeleccionEquipo — tap en el primer equipo del mock

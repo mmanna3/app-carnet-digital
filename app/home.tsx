@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { Platform, View, Text, TouchableOpacity, Image } from 'react-native'
+import Torneos from '@/app/torneos/index'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
 import { Feather } from '@expo/vector-icons'
@@ -15,6 +16,8 @@ const LOGOS_LIGAS: Record<string, number> = {
 }
 
 export default function HomeScreen() {
+  if (Platform.OS === 'web') return <Torneos />
+
   const router = useRouter()
   const { logout } = useAuth()
   const { limpiarEquipoSeleccionado } = useEquipoStore()

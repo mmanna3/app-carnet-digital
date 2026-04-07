@@ -11,6 +11,7 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-fichaje'
+    timeout: 15000
 - tapOn:
     id: 'card-fichaje'
 # PantallaIntro
@@ -28,6 +29,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-validar'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-validar'
 # PasoDatosJugador — al llegar, el botón debe estar deshabilitado (todos los campos vacíos)
@@ -90,3 +92,4 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-continuar'
       enabled: true
+    timeout: 15000

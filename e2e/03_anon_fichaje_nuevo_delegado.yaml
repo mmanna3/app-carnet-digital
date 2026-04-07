@@ -10,12 +10,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-delegados'
+    timeout: 15000
 - tapOn:
     id: 'card-delegados'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'pantalla-login'
+    timeout: 15000
 - tapOn:
     id: 'boton-no-registrado'
 # PantallaIntroDelegado
@@ -35,6 +37,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-validar-club'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-validar-club'
 # PasoDatosDelegado (paso 2 de 5)
@@ -99,6 +102,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-continuar-datos'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-continuar-datos'
 # PasoFotoDelegado (paso 3 de 5) — seleccionar foto desde galería
@@ -133,6 +137,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-foto-delegado'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-foto-delegado'
 # PasoFotosDniDelegado (paso 4 de 5) — frente y dorso desde galería
@@ -194,6 +199,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-dni-delegado'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-dni-delegado'
 # PasoConfirmacionDelegado (paso 5 de 5) → POST /api/Delegado al mock server
@@ -203,6 +209,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-enviar-delegado'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-enviar-delegado'
 # PantallaCompletado

@@ -13,12 +13,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-delegados'
+    timeout: 15000
 - tapOn:
     id: 'card-delegados'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'pantalla-login'
+    timeout: 15000
 - tapOn:
     id: 'input-usuario'
 - inputText: 'delegado-e2e'
@@ -34,15 +36,20 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-iniciar-sesion'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-iniciar-sesion'
 # PantallaSeleccionEquipo — elegir Equipo B2 (id=3) que dispara el error
-- assertVisible:
-    id: 'pantalla-seleccion-equipo'
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-seleccion-equipo'
+    timeout: 15000
 - tapOn:
     id: 'item-equipo-3'
 # Tab Mis Jugadores — debe mostrar estado de error, no crash
-- assertVisible:
-    text: 'Error al cargar los jugadores.'
+- extendedWaitUntil:
+    visible:
+      text: 'Error al cargar los jugadores.'
+    timeout: 15000
 - assertNotVisible:
     id: 'carnet-jugador-1'

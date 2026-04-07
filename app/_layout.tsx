@@ -130,7 +130,12 @@ export default function RootLayout() {
 
   if (!loaded) {
     // Slot es un navegador válido; evita el error de "navigate before mounting"
-    return <Slot />
+    // QueryClientProvider necesario para rutas que se renderizan durante la carga (ej: redirect en web)
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Slot />
+      </QueryClientProvider>
+    )
   }
 
   return (
@@ -139,30 +144,11 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <MenuProvider skipInstanceCheck>
             <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
               <Stack.Screen name="home" options={{ headerShown: false }} />
               <Stack.Screen
                 name="torneos"
-                options={{
-                  title: 'Torneos',
-                  headerBackButtonDisplayMode: 'minimal',
-                  headerBackTitle: '',
-                }}
-              />
-              <Stack.Screen
-                name="torneo-detalle"
-                options={{
-                  title: 'Torneo',
-                  headerBackButtonDisplayMode: 'minimal',
-                  headerBackTitle: '',
-                }}
-              />
-              <Stack.Screen
-                name="zona-detalle"
-                options={{
-                  title: 'Zona',
-                  headerBackButtonDisplayMode: 'minimal',
-                  headerBackTitle: '',
-                }}
+                options={{ headerShown: false }}
               />
               <Stack.Screen name="fichajes" options={{ headerShown: false }} />
               <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />

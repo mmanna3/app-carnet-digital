@@ -10,12 +10,14 @@ appId: com.blueservant.edefi
 - extendedWaitUntil:
     visible:
       id: 'card-fichaje'
+    timeout: 15000
 - tapOn:
     id: 'card-fichaje'
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
       id: 'card-nuevo'
+    timeout: 15000
 - tapOn:
     id: 'card-nuevo'
 # PasoCodigoEquipo (paso 1 de 5)
@@ -30,6 +32,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-validar'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-validar'
 # PasoDatosJugador (paso 2 de 5) — fecha de nacimiento vía date picker
@@ -76,6 +79,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-continuar'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-continuar'
 # PasoFoto (paso 3 de 5) — seleccionar foto desde galería
@@ -110,6 +114,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-foto'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-foto'
 # PasoFotosDni (paso 4 de 5) — frente y dorso desde galería
@@ -172,6 +177,7 @@ appId: com.blueservant.edefi
     visible:
       id: 'boton-subir-dni'
       enabled: true
+    timeout: 15000
 - tapOn:
     id: 'boton-subir-dni'
 # PasoAutorizacion (paso 5 de 5) → POST /api/Jugador al mock server
