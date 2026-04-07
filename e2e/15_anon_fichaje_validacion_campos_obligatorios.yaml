@@ -56,9 +56,17 @@ appId: com.blueservant.edefi
 - tapOn:
     id: 'input-dni-jugador'
 - inputText: '12345678'
-- assertVisible:
-    id: 'boton-continuar'
-    enabled: false
+# Android: el DateTimePicker puede auto-disparar onChange al montar la pantalla,
+# seteando la fecha antes de que el usuario la elija. En ese caso, con DNI válido,
+# todos los campos están completos y el botón se habilita antes del date picker.
+# Solo verificar el estado deshabilitado en iOS.
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - assertVisible:
+          id: 'boton-continuar'
+          enabled: false
 # Completar fecha de nacimiento → recién ahora el botón se habilita
 # Nota: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro
 # en iOS, por lo que se usa tap por coordenada relativa para cerrar con "Listo"

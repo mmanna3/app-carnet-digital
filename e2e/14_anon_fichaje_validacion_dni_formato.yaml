@@ -79,9 +79,22 @@ appId: com.blueservant.edefi
     id: 'boton-continuar'
     enabled: false
 # Completar el DNI con 2 dígitos más para llegar a 7 (válido)
-- tapOn:
-    id: 'input-dni-jugador'
-- inputText: '67'
+# Android: inputText reemplaza el contenido existente → ingresar el DNI completo
+# iOS: inputText agrega al final → ingresar solo los 2 dígitos restantes
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          id: 'input-dni-jugador'
+      - inputText: '1234567'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          id: 'input-dni-jugador'
+      - inputText: '67'
 # Ahora el botón debe habilitarse
 - extendedWaitUntil:
     visible:
