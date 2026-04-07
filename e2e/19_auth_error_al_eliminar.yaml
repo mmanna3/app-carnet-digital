@@ -69,6 +69,10 @@ appId: com.blueservant.edefi
           point: '50%, 75%'
 - waitForAnimationToEnd
 # ModalEliminarJugador — confirmar (modal centrado, testID accesible en iOS)
+- extendedWaitUntil:
+    visible:
+      id: 'boton-quitar-del-equipo'
+    timeout: 10000
 - tapOn:
     id: 'boton-quitar-del-equipo'
 # El servidor devuelve 500 → aparece Alert nativo con el título del error

@@ -23,7 +23,7 @@ const configEdefi = {
   appName: 'EDeFI',
   /** Nombre corto para splash/pantalla de inicio (evita que se corte) */
   splashScreenName: 'EDeFI',
-  appId: 'com.ykn.edefidelegados',
+  appId: 'com.blueservant.edefi',
   expoSlug: 'EDeFI-Delegados',
   easProjectId: 'd296a6cd-ac06-4c7c-8238-ff2c9b5339b6',
   scheme: 'carnet-edefi',

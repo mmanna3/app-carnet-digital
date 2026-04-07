@@ -70,7 +70,10 @@ appId: com.blueservant.edefi
       - tapOn:
           point: '50%, 75%'
 # ModalEliminarJugador — confirmar desvinculación
-- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'boton-quitar-del-equipo'
+    timeout: 10000
 - tapOn:
     id: 'boton-quitar-del-equipo'
 # Regresa a la pantalla principal con el modal cerrado

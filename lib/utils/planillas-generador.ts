@@ -360,7 +360,10 @@ const generarPaginaHtml = (
 }
 
 const generarPlanillaHtml = (
-  planilla: { categoria?: string; jugadores?: { nombre?: string; dni?: string; estado?: string }[] },
+  planilla: {
+    categoria?: string
+    jugadores?: { nombre?: string; dni?: string; estado?: string }[]
+  },
   torneo: string,
   equipo: string
 ): string => {
@@ -368,10 +371,7 @@ const generarPlanillaHtml = (
   const categoria = planilla.categoria ?? ''
   const esTorneoFutsal = torneo.toLowerCase().includes('futsal')
 
-  const jugadoresConBlancos = [
-    ...jugadores,
-    ...Array(6).fill({ nombre: '', dni: '', estado: '' }),
-  ]
+  const jugadoresConBlancos = [...jugadores, ...Array(6).fill({ nombre: '', dni: '', estado: '' })]
 
   const jugadoresPorPagina = esTorneoFutsal ? 25 : 30
   const totalPaginas = Math.ceil(jugadoresConBlancos.length / jugadoresPorPagina)
