@@ -179,12 +179,7 @@ function FilaEquipo({
         }
         const alinear: 'left' | 'center' = label === 'Equipo' ? 'left' : 'center'
         return (
-          <Celda
-            key={label}
-            ancho={ancho}
-            alinear={alinear}
-            tabular={label !== 'Equipo'}
-          >
+          <Celda key={label} ancho={ancho} alinear={alinear} tabular={label !== 'Equipo'}>
             {valorCeldaPosicion(label, r)}
           </Celda>
         )

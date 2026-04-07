@@ -146,10 +146,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="index" options={{ headerShown: false }} />
               <Stack.Screen name="home" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="torneos"
-                options={{ headerShown: false }}
-              />
+              <Stack.Screen name="torneos" options={{ headerShown: false }} />
               <Stack.Screen name="fichajes" options={{ headerShown: false }} />
               <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
