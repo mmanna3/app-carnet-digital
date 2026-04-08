@@ -33,7 +33,7 @@ const ANCHO = {
 } as const
 
 function titulosTabla(mostrarGoles: boolean): string[] {
-  const t = ['Pos', 'Esc', 'Equipo', 'J', 'G', 'E', 'P', 'Np', 'Gp', 'Pp']
+  const t = ['Pos', 'Esc', 'Equipo', 'J', 'G', 'E', 'P', 'Np']
   if (mostrarGoles) t.push('Gf', 'Gc', 'Df')
   t.push('Pts')
   return t
@@ -55,7 +55,7 @@ function anchoTablaTotal(mostrarGoles: boolean): number {
     ANCHO.pos +
     ANCHO.esc +
     ANCHO.equipo +
-    ANCHO.num * 7 +
+    ANCHO.num * 5 +
     (mostrarGoles ? ANCHO.goles * 3 : 0) +
     ANCHO.pts
   )
@@ -77,10 +77,6 @@ function valorCeldaPosicion(label: string, r: PosicionDelEquipoDTO): string {
       return textoOGuion(r.partidosPerdidos)
     case 'Np':
       return textoOGuion(r.partidosNoPresento)
-    case 'Gp':
-      return textoOGuion(r.partidosGanoPuntos)
-    case 'Pp':
-      return textoOGuion(r.partidosPerdioPuntos)
     case 'Gf':
       return textoOGuion(r.golesAFavor)
     case 'Gc':
