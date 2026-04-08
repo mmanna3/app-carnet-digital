@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
@@ -7,6 +7,7 @@ import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useConfigLiga } from '@/lib/config/liga'
+import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
 
 /** Logos de ligas (require estático para Metro) */
 const LOGOS_LIGAS: Record<string, number> = {
@@ -25,12 +26,28 @@ export default function HomeMobile() {
   const leagueId = configLiga?.leagueId ?? ''
   const leagueDisplayName = configLiga?.leagueDisplayName ?? ''
   const logo = leagueId ? LOGOS_LIGAS[leagueId] : undefined
+  const cargarFichajeEstaHabilitado = useConfiguracionFichajeStore((s) => s.cargarFichajeEstaHabilitado)
+  const ligaPrevParaConfigFichaje = useRef<string>('')
+
+  useEffect(() => {
+    if (!leagueId) {
+      useConfiguracionFichajeStore.setState({ fichajeEstaHabilitado: null })
+      ligaPrevParaConfigFichaje.current = ''
+      return
+    }
+    if (ligaPrevParaConfigFichaje.current !== leagueId) {
+      useConfiguracionFichajeStore.setState({ fichajeEstaHabilitado: null })
+      ligaPrevParaConfigFichaje.current = leagueId
+    }
+  }, [leagueId])
 
   const handleDelegadosDT = () => {
+    void cargarFichajeEstaHabilitado()
     router.push('/(auth)/login')
   }
 
   const handleFichajes = () => {
+    void cargarFichajeEstaHabilitado()
     router.push('/fichajes')
   }
 

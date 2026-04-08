@@ -467,6 +467,48 @@ export class Client {
      * @param zonaId (optional) 
      * @return OK
      */
+    posicionesAnual(zonaId: number | undefined): Promise<PosicionesDTO> {
+        let url_ = this.baseUrl + "/api/carnet-digital/posiciones-anual?";
+        if (zonaId === null)
+            throw new Error("The parameter 'zonaId' cannot be null.");
+        else if (zonaId !== undefined)
+            url_ += "zonaId=" + encodeURIComponent("" + zonaId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPosicionesAnual(_response);
+        });
+    }
+
+    protected processPosicionesAnual(response: Response): Promise<PosicionesDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PosicionesDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PosicionesDTO>(null as any);
+    }
+
+    /**
+     * @param zonaId (optional) 
+     * @return OK
+     */
     eliminacionDirecta(zonaId: number | undefined): Promise<EliminacionDirectaDTO> {
         let url_ = this.baseUrl + "/api/carnet-digital/eliminacion-directa?";
         if (zonaId === null)
@@ -1256,6 +1298,301 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    fichajeEstaHabilitado(): Promise<boolean> {
+        let url_ = this.baseUrl + "/api/Configuracion/fichaje-esta-habilitado";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processFichajeEstaHabilitado(_response);
+        });
+    }
+
+    protected processFichajeEstaHabilitado(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    configuracionesPorIds(ids: number[] | undefined): Promise<ConfiguracionDTO[]> {
+        let url_ = this.baseUrl + "/api/Configuracion/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionesPorIds(_response);
+        });
+    }
+
+    protected processConfiguracionesPorIds(response: Response): Promise<ConfiguracionDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ConfiguracionDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ConfiguracionDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    configuracionAll(): Promise<ConfiguracionDTO[]> {
+        let url_ = this.baseUrl + "/api/Configuracion";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionAll(_response);
+        });
+    }
+
+    protected processConfiguracionAll(response: Response): Promise<ConfiguracionDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ConfiguracionDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ConfiguracionDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    configuracionPOST(body: ConfiguracionDTO | undefined): Promise<ConfiguracionDTO> {
+        let url_ = this.baseUrl + "/api/Configuracion";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionPOST(_response);
+        });
+    }
+
+    protected processConfiguracionPOST(response: Response): Promise<ConfiguracionDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConfiguracionDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ConfiguracionDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    configuracionGET(id: number): Promise<ConfiguracionDTO> {
+        let url_ = this.baseUrl + "/api/Configuracion/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionGET(_response);
+        });
+    }
+
+    protected processConfiguracionGET(response: Response): Promise<ConfiguracionDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConfiguracionDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ConfiguracionDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    configuracionPUT(id: number, body: ConfiguracionDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Configuracion/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionPUT(_response);
+        });
+    }
+
+    protected processConfiguracionPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    configuracionDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/Configuracion/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfiguracionDELETE(_response);
+        });
+    }
+
+    protected processConfiguracionDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
      * @param ids (optional) 
      * @return OK
      */
@@ -1672,6 +2009,263 @@ export class Client {
     }
 
     protected processDelegadoDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return OK
+     */
+    dnisExpulsadosDeLaLigaPorIds(ids: number[] | undefined): Promise<DniExpulsadoDeLaLigaDTO[]> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga/por-ids?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDnisExpulsadosDeLaLigaPorIds(_response);
+        });
+    }
+
+    protected processDnisExpulsadosDeLaLigaPorIds(response: Response): Promise<DniExpulsadoDeLaLigaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DniExpulsadoDeLaLigaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DniExpulsadoDeLaLigaDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    dniExpulsadoDeLaLigaAll(): Promise<DniExpulsadoDeLaLigaDTO[]> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDniExpulsadoDeLaLigaAll(_response);
+        });
+    }
+
+    protected processDniExpulsadoDeLaLigaAll(response: Response): Promise<DniExpulsadoDeLaLigaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DniExpulsadoDeLaLigaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DniExpulsadoDeLaLigaDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    dniExpulsadoDeLaLigaPOST(body: DniExpulsadoDeLaLigaDTO | undefined): Promise<DniExpulsadoDeLaLigaDTO> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDniExpulsadoDeLaLigaPOST(_response);
+        });
+    }
+
+    protected processDniExpulsadoDeLaLigaPOST(response: Response): Promise<DniExpulsadoDeLaLigaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DniExpulsadoDeLaLigaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DniExpulsadoDeLaLigaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    dniExpulsadoDeLaLigaGET(id: number): Promise<DniExpulsadoDeLaLigaDTO> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDniExpulsadoDeLaLigaGET(_response);
+        });
+    }
+
+    protected processDniExpulsadoDeLaLigaGET(response: Response): Promise<DniExpulsadoDeLaLigaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DniExpulsadoDeLaLigaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DniExpulsadoDeLaLigaDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    dniExpulsadoDeLaLigaPUT(id: number, body: DniExpulsadoDeLaLigaDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDniExpulsadoDeLaLigaPUT(_response);
+        });
+    }
+
+    protected processDniExpulsadoDeLaLigaPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    dniExpulsadoDeLaLigaDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/DniExpulsadoDeLaLiga/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDniExpulsadoDeLaLigaDELETE(_response);
+        });
+    }
+
+    protected processDniExpulsadoDeLaLigaDELETE(response: Response): Promise<number> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -4331,6 +4925,47 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    torneoEditarFasesParaTablaAnual(id: number, body: EditarFasesParaTablaAnualDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Torneo/{id}/fases-para-tabla-anual";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processTorneoEditarFasesParaTablaAnual(_response);
+        });
+    }
+
+    protected processTorneoEditarFasesParaTablaAnual(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @return OK
      */
     torneoAll(): Promise<TorneoDTO[]> {
@@ -6330,6 +6965,46 @@ export interface IClubesDTO {
     esTechado?: string | undefined;
 }
 
+export class ConfiguracionDTO implements IConfiguracionDTO {
+    id?: number;
+    fichajeEstaHabilitado?: boolean;
+
+    constructor(data?: IConfiguracionDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fichajeEstaHabilitado = _data["fichajeEstaHabilitado"];
+        }
+    }
+
+    static fromJS(data: any): ConfiguracionDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConfiguracionDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fichajeEstaHabilitado"] = this.fichajeEstaHabilitado;
+        return data;
+    }
+}
+
+export interface IConfiguracionDTO {
+    id?: number;
+    fichajeEstaHabilitado?: boolean;
+}
+
 export class CrearTorneoDTO implements ICrearTorneoDTO {
     id?: number;
     nombre!: string;
@@ -6337,6 +7012,10 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
     esVisibleEnApp!: boolean;
     seVenLosGolesEnTablaDePosiciones!: boolean;
     torneoAgrupadorId?: number;
+    faseAperturaId?: number | undefined;
+    faseAperturaNombre?: string | undefined;
+    faseClausuraId?: number | undefined;
+    faseClausuraNombre?: string | undefined;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
     fases?: FaseDTO[] | undefined;
@@ -6360,6 +7039,10 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
             this.esVisibleEnApp = _data["esVisibleEnApp"];
             this.seVenLosGolesEnTablaDePosiciones = _data["seVenLosGolesEnTablaDePosiciones"];
             this.torneoAgrupadorId = _data["torneoAgrupadorId"];
+            this.faseAperturaId = _data["faseAperturaId"];
+            this.faseAperturaNombre = _data["faseAperturaNombre"];
+            this.faseClausuraId = _data["faseClausuraId"];
+            this.faseClausuraNombre = _data["faseClausuraNombre"];
             this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
             this.sePuedeEditar = _data["sePuedeEditar"];
             if (Array.isArray(_data["fases"])) {
@@ -6391,6 +7074,10 @@ export class CrearTorneoDTO implements ICrearTorneoDTO {
         data["esVisibleEnApp"] = this.esVisibleEnApp;
         data["seVenLosGolesEnTablaDePosiciones"] = this.seVenLosGolesEnTablaDePosiciones;
         data["torneoAgrupadorId"] = this.torneoAgrupadorId;
+        data["faseAperturaId"] = this.faseAperturaId;
+        data["faseAperturaNombre"] = this.faseAperturaNombre;
+        data["faseClausuraId"] = this.faseClausuraId;
+        data["faseClausuraNombre"] = this.faseClausuraNombre;
         data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
         data["sePuedeEditar"] = this.sePuedeEditar;
         if (Array.isArray(this.fases)) {
@@ -6415,6 +7102,10 @@ export interface ICrearTorneoDTO {
     esVisibleEnApp: boolean;
     seVenLosGolesEnTablaDePosiciones: boolean;
     torneoAgrupadorId?: number;
+    faseAperturaId?: number | undefined;
+    faseAperturaNombre?: string | undefined;
+    faseClausuraId?: number | undefined;
+    faseClausuraNombre?: string | undefined;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
     fases?: FaseDTO[] | undefined;
@@ -6632,6 +7323,90 @@ export class DesvincularJugadorDelEquipoDTO implements IDesvincularJugadorDelEqu
 export interface IDesvincularJugadorDelEquipoDTO {
     jugadorId?: number;
     equipoId?: number;
+}
+
+export class DniExpulsadoDeLaLigaDTO implements IDniExpulsadoDeLaLigaDTO {
+    id?: number;
+    explicacion!: string;
+    dni?: number;
+
+    constructor(data?: IDniExpulsadoDeLaLigaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.explicacion = _data["explicacion"];
+            this.dni = _data["dni"];
+        }
+    }
+
+    static fromJS(data: any): DniExpulsadoDeLaLigaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new DniExpulsadoDeLaLigaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["explicacion"] = this.explicacion;
+        data["dni"] = this.dni;
+        return data;
+    }
+}
+
+export interface IDniExpulsadoDeLaLigaDTO {
+    id?: number;
+    explicacion: string;
+    dni?: number;
+}
+
+export class EditarFasesParaTablaAnualDTO implements IEditarFasesParaTablaAnualDTO {
+    faseAperturaId?: number | undefined;
+    faseClausuraId?: number | undefined;
+
+    constructor(data?: IEditarFasesParaTablaAnualDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.faseAperturaId = _data["faseAperturaId"];
+            this.faseClausuraId = _data["faseClausuraId"];
+        }
+    }
+
+    static fromJS(data: any): EditarFasesParaTablaAnualDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditarFasesParaTablaAnualDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["faseAperturaId"] = this.faseAperturaId;
+        data["faseClausuraId"] = this.faseClausuraId;
+        return data;
+    }
+}
+
+export interface IEditarFasesParaTablaAnualDTO {
+    faseAperturaId?: number | undefined;
+    faseClausuraId?: number | undefined;
 }
 
 export class EfectuarPaseDTO implements IEfectuarPaseDTO {
@@ -8595,9 +9370,12 @@ export interface IJugadoresPorCategoriaDTO {
 
 export class LeyendaTablaPosicionesDTO implements ILeyendaTablaPosicionesDTO {
     id?: number;
-    leyenda!: string;
+    leyenda?: string | undefined;
     categoriaId?: number | undefined;
     zonaId?: number;
+    equipoId?: number | undefined;
+    equipo?: string | undefined;
+    quitaDePuntos?: number;
 
     constructor(data?: ILeyendaTablaPosicionesDTO) {
         if (data) {
@@ -8614,6 +9392,9 @@ export class LeyendaTablaPosicionesDTO implements ILeyendaTablaPosicionesDTO {
             this.leyenda = _data["leyenda"];
             this.categoriaId = _data["categoriaId"];
             this.zonaId = _data["zonaId"];
+            this.equipoId = _data["equipoId"];
+            this.equipo = _data["equipo"];
+            this.quitaDePuntos = _data["quitaDePuntos"];
         }
     }
 
@@ -8630,15 +9411,21 @@ export class LeyendaTablaPosicionesDTO implements ILeyendaTablaPosicionesDTO {
         data["leyenda"] = this.leyenda;
         data["categoriaId"] = this.categoriaId;
         data["zonaId"] = this.zonaId;
+        data["equipoId"] = this.equipoId;
+        data["equipo"] = this.equipo;
+        data["quitaDePuntos"] = this.quitaDePuntos;
         return data;
     }
 }
 
 export interface ILeyendaTablaPosicionesDTO {
     id?: number;
-    leyenda: string;
+    leyenda?: string | undefined;
     categoriaId?: number | undefined;
     zonaId?: number;
+    equipoId?: number | undefined;
+    equipo?: string | undefined;
+    quitaDePuntos?: number;
 }
 
 export enum LocalVisitanteEnum {
@@ -9124,7 +9911,6 @@ export interface IPosicionDelEquipoDTO {
 
 export class PosicionesDTO implements IPosicionesDTO {
     posiciones?: CategoriasConPosicionesDTO[] | undefined;
-    leyendaGeneral?: string | undefined;
     verGoles?: boolean;
 
     constructor(data?: IPosicionesDTO) {
@@ -9143,7 +9929,6 @@ export class PosicionesDTO implements IPosicionesDTO {
                 for (let item of _data["posiciones"])
                     this.posiciones!.push(CategoriasConPosicionesDTO.fromJS(item));
             }
-            this.leyendaGeneral = _data["leyendaGeneral"];
             this.verGoles = _data["verGoles"];
         }
     }
@@ -9162,7 +9947,6 @@ export class PosicionesDTO implements IPosicionesDTO {
             for (let item of this.posiciones)
                 data["posiciones"].push(item.toJSON());
         }
-        data["leyendaGeneral"] = this.leyendaGeneral;
         data["verGoles"] = this.verGoles;
         return data;
     }
@@ -9170,7 +9954,6 @@ export class PosicionesDTO implements IPosicionesDTO {
 
 export interface IPosicionesDTO {
     posiciones?: CategoriasConPosicionesDTO[] | undefined;
-    leyendaGeneral?: string | undefined;
     verGoles?: boolean;
 }
 
@@ -9454,6 +10237,10 @@ export class TorneoDTO implements ITorneoDTO {
     esVisibleEnApp!: boolean;
     seVenLosGolesEnTablaDePosiciones!: boolean;
     torneoAgrupadorId?: number;
+    faseAperturaId?: number | undefined;
+    faseAperturaNombre?: string | undefined;
+    faseClausuraId?: number | undefined;
+    faseClausuraNombre?: string | undefined;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
     fases?: FaseDTO[] | undefined;
@@ -9476,6 +10263,10 @@ export class TorneoDTO implements ITorneoDTO {
             this.esVisibleEnApp = _data["esVisibleEnApp"];
             this.seVenLosGolesEnTablaDePosiciones = _data["seVenLosGolesEnTablaDePosiciones"];
             this.torneoAgrupadorId = _data["torneoAgrupadorId"];
+            this.faseAperturaId = _data["faseAperturaId"];
+            this.faseAperturaNombre = _data["faseAperturaNombre"];
+            this.faseClausuraId = _data["faseClausuraId"];
+            this.faseClausuraNombre = _data["faseClausuraNombre"];
             this.torneoAgrupadorNombre = _data["torneoAgrupadorNombre"];
             this.sePuedeEditar = _data["sePuedeEditar"];
             if (Array.isArray(_data["fases"])) {
@@ -9506,6 +10297,10 @@ export class TorneoDTO implements ITorneoDTO {
         data["esVisibleEnApp"] = this.esVisibleEnApp;
         data["seVenLosGolesEnTablaDePosiciones"] = this.seVenLosGolesEnTablaDePosiciones;
         data["torneoAgrupadorId"] = this.torneoAgrupadorId;
+        data["faseAperturaId"] = this.faseAperturaId;
+        data["faseAperturaNombre"] = this.faseAperturaNombre;
+        data["faseClausuraId"] = this.faseClausuraId;
+        data["faseClausuraNombre"] = this.faseClausuraNombre;
         data["torneoAgrupadorNombre"] = this.torneoAgrupadorNombre;
         data["sePuedeEditar"] = this.sePuedeEditar;
         if (Array.isArray(this.fases)) {
@@ -9529,6 +10324,10 @@ export interface ITorneoDTO {
     esVisibleEnApp: boolean;
     seVenLosGolesEnTablaDePosiciones: boolean;
     torneoAgrupadorId?: number;
+    faseAperturaId?: number | undefined;
+    faseAperturaNombre?: string | undefined;
+    faseClausuraId?: number | undefined;
+    faseClausuraNombre?: string | undefined;
     torneoAgrupadorNombre?: string | undefined;
     sePuedeEditar?: boolean;
     fases?: FaseDTO[] | undefined;

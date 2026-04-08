@@ -2,9 +2,11 @@ import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react-native'
 import FichajesScreen from '../fichajes'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
+import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
 import { useRouter } from 'expo-router'
 
 jest.mock('@/lib/hooks/use-fichaje-store')
+jest.mock('@/lib/hooks/use-configuracion-fichaje-store')
 jest.mock('expo-router')
 
 const mockResetear = jest.fn()
@@ -13,6 +15,13 @@ const mockRouterReplace = jest.fn()
 describe('FichajesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    ;(useConfiguracionFichajeStore as unknown as jest.Mock).mockImplementation((selector: (s: unknown) => unknown) =>
+      selector({
+        fichajeEstaHabilitado: true,
+        cargando: false,
+        cargarFichajeEstaHabilitado: jest.fn(),
+      })
+    )
     ;(useFichajeStore as unknown as jest.Mock).mockReturnValue({
       flujo: 'intro',
       paso: 1,

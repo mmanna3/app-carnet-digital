@@ -19,5 +19,7 @@ export const queryKeys = {
       ['zonas', 'fixture', 'eliminacionDirecta', zonaId] as const,
     jornadas: (zonaId: number | null | undefined) => ['zonas', 'jornadas', zonaId] as const,
     posiciones: (zonaId: number | null | undefined) => ['zonas', 'posiciones', zonaId] as const,
+    posicionesAnual: (zonaId: number | null | undefined) =>
+      ['zonas', 'posiciones', 'anual', zonaId] as const,
   },
 }

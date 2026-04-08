@@ -1,6 +1,9 @@
 import React from 'react'
+import { ActivityIndicator, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
+import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
+import PantallaFichajeDeshabilitado from '@/components/fichajes/pantalla-fichaje-deshabilitado'
 import PantallaIntro from '@/components/fichajes/pantalla-intro'
 import PantallaConfirmacion from '@/components/fichajes/pantalla-confirmacion'
 import PasoCodigoEquipo from '@/components/fichajes/paso-codigo-equipo'
@@ -15,10 +18,24 @@ const MENSAJE_CONFIRMACION = 'Vas a recibir la confirmación de tu fichaje por p
 export default function FichajesScreen() {
   const router = useRouter()
   const { flujo, paso, resetear } = useFichajeStore()
+  const fichajeEstaHabilitado = useConfiguracionFichajeStore((s) => s.fichajeEstaHabilitado)
+  const cargando = useConfiguracionFichajeStore((s) => s.cargando)
 
   const handleVolverInicio = () => {
     resetear()
     router.replace('/home' as any)
+  }
+
+  if (fichajeEstaHabilitado === null || cargando) {
+    return (
+      <View className="flex-1 bg-blue-50 justify-center items-center">
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+
+  if (fichajeEstaHabilitado === false) {
+    return <PantallaFichajeDeshabilitado tituloCabecera="Fichaje" onVolver={handleVolverInicio} />
   }
 
   if (flujo === 'intro') {

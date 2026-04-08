@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
+import { ActivityIndicator, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
+import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
+import PantallaFichajeDeshabilitado from '@/components/fichajes/pantalla-fichaje-deshabilitado'
 import PantallaIntroDelegado from '@/components/fichajes/pantalla-intro-delegado'
 import PantallaConfirmacion from '@/components/fichajes/pantalla-confirmacion'
 import PasoDatosJugador from '@/components/fichajes/nuevo/paso-datos-jugador'
@@ -27,6 +30,8 @@ export default function FichajeDelegadoScreen() {
     setNombreEquipo,
     setEsDelegado,
   } = useFichajeStore()
+  const fichajeEstaHabilitado = useConfiguracionFichajeStore((s) => s.fichajeEstaHabilitado)
+  const cargando = useConfiguracionFichajeStore((s) => s.cargando)
 
   useEffect(() => {
     resetear()
@@ -43,6 +48,18 @@ export default function FichajeDelegadoScreen() {
 
   const handleFicharOtro = () => {
     reiniciarParaOtroJugador()
+  }
+
+  if (fichajeEstaHabilitado === null || cargando) {
+    return (
+      <View className="flex-1 bg-blue-50 justify-center items-center">
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+
+  if (fichajeEstaHabilitado === false) {
+    return <PantallaFichajeDeshabilitado tituloCabecera="Fichar jugador" onVolver={handleVolverInicio} />
   }
 
   if (flujo === 'intro') {

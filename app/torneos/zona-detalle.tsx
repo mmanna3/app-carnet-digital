@@ -41,6 +41,7 @@ export default function ZonaDetalle() {
 
   const tipoDeFase = tipoDeFaseParam != null ? String(tipoDeFaseParam) : ''
   const esEliminacionDirecta = tipoDeFase === 'EliminacionDirecta'
+  const esAnual = tipoDeFase === 'Anual'
 
   useEffect(() => {
     setTabIndex(0)
@@ -53,13 +54,16 @@ export default function ZonaDetalle() {
         { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
       ]
     }
+    if (esAnual) {
+      return [{ titulo: 'Posiciones', icon: 'trophy-outline', Contenido: Posiciones }]
+    }
     return [
       { titulo: 'Posiciones', icon: 'trophy-outline', Contenido: Posiciones },
       { titulo: 'Fixture', icon: 'calendar-outline', Contenido: FixtureTodosContraTodos },
       { titulo: 'Jornadas', icon: 'football-outline', Contenido: Jornadas },
       { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
     ]
-  }, [esEliminacionDirecta])
+  }, [esEliminacionDirecta, esAnual])
 
   const colorAgrupador = color != null && String(color).length > 0 ? String(color) : undefined
 

@@ -119,6 +119,16 @@ describe('HttpClientWrapper', () => {
       expect(mockRouterReplace).not.toHaveBeenCalled()
     })
 
+    it('respuesta 401 en ruta privada sin sesión NO ejecuta logout', async () => {
+      mockGetToken.mockReturnValue(null)
+      mockFetch.mockResolvedValue({ status: 401 } as Response)
+
+      await wrapper.fetch('https://api.example.com/api/privado/recurso')
+
+      expect(mockLogout).not.toHaveBeenCalled()
+      expect(mockRouterReplace).not.toHaveBeenCalled()
+    })
+
     it('respuesta 200 no ejecuta logout', async () => {
       mockGetToken.mockReturnValue('valid-token')
       mockFetch.mockResolvedValue({ status: 200 } as Response)

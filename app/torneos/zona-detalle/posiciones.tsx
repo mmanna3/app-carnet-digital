@@ -248,7 +248,11 @@ function TablaCategoria({
 export default function Posiciones() {
   const configLiga = useConfigLiga()
   const grande = usePantallaGrande()
-  const { zonaId: zonaIdParam } = useLocalSearchParams<{ zonaId?: string }>()
+  const { zonaId: zonaIdParam, tipoDeFase: tipoDeFaseParam } = useLocalSearchParams<{
+    zonaId?: string
+    tipoDeFase?: string
+  }>()
+  const esAnual = (tipoDeFaseParam != null ? String(tipoDeFaseParam) : '') === 'Anual'
 
   const zonaId = useMemo(() => {
     if (zonaIdParam == null || zonaIdParam === '') return undefined
@@ -257,9 +261,10 @@ export default function Posiciones() {
   }, [zonaIdParam])
 
   const { data, isLoading, isError, error } = useApiQuery({
-    key: queryKeys.zonas.posiciones(zonaId),
+    key: esAnual ? queryKeys.zonas.posicionesAnual(zonaId) : queryKeys.zonas.posiciones(zonaId),
     activado: zonaId != null,
-    fn: () => api.posicionesTodosContraTodos(zonaId),
+    fn: () =>
+      esAnual ? api.posicionesAnual(zonaId) : api.posicionesTodosContraTodos(zonaId),
   })
 
   const apiUrl = configLiga?.apiUrl
