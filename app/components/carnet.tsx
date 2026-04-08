@@ -3,6 +3,30 @@ import { View, Text, Image, Pressable } from 'react-native'
 import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
+function MiniTarjetaDisciplina({
+  cantidad,
+  variante,
+}: {
+  cantidad: number
+  variante: 'amarilla' | 'roja'
+}) {
+  const esAmarilla = variante === 'amarilla'
+  return (
+    <View
+      className={`h-9 min-w-[26px] items-center justify-center rounded px-1 ${
+        esAmarilla ? 'border border-amber-600 bg-yellow-400' : 'border border-red-900 bg-red-600'
+      }`}
+      accessibilityLabel={esAmarilla ? 'Tarjetas amarillas' : 'Tarjetas rojas'}
+    >
+      <Text
+        className={`text-sm font-bold tabular-nums ${esAmarilla ? 'text-gray-900' : 'text-white'}`}
+      >
+        {cantidad}
+      </Text>
+    </View>
+  )
+}
+
 interface CarnetProps {
   jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO
   mostrarEstado?: boolean
@@ -31,6 +55,11 @@ export default function Carnet({
     const año = new Date(fechaNacimiento).getFullYear().toString()
     return año.slice(-2)
   }
+
+  const ta = jugador.tarjetasAmarillas
+  const tr = jugador.tarjetasRojas
+  const muestraTarjetasAmarillas = typeof ta === 'number' && ta > 0
+  const muestraTarjetasRojas = typeof tr === 'number' && tr > 0
 
   return (
     <Pressable
@@ -75,16 +104,31 @@ export default function Carnet({
           <Text className="text-lg text-gray-500">{jugador.torneo}</Text>
         </View>
 
-        <View className="items-center mb-4">
-          {jugador.fotoCarnet && (
-            <View className="w-40 h-40 rounded-lg overflow-hidden border-2 border-gray-200">
-              <Image
-                source={{ uri: jugador.fotoCarnet }}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
+        <View className="mb-4 items-center">
+          {jugador.fotoCarnet || muestraTarjetasAmarillas || muestraTarjetasRojas ? (
+            <View className="relative h-40 w-40">
+              {jugador.fotoCarnet ? (
+                <View className="h-40 w-40 overflow-hidden rounded-lg border-2 border-gray-200">
+                  <Image
+                    source={{ uri: jugador.fotoCarnet }}
+                    className="h-full w-full"
+                    resizeMode="cover"
+                  />
+                </View>
+              ) : null}
+              {/* Posiciones fijas a la derecha: amarilla centrada en altura (h-9=36px → top 62px); roja más abajo (62+36+8) */}
+              {muestraTarjetasAmarillas ? (
+                <View className="absolute left-full ml-3 top-[62px]">
+                  <MiniTarjetaDisciplina cantidad={ta} variante="amarilla" />
+                </View>
+              ) : null}
+              {muestraTarjetasRojas ? (
+                <View className="absolute left-full ml-3 top-[106px]">
+                  <MiniTarjetaDisciplina cantidad={tr} variante="roja" />
+                </View>
+              ) : null}
             </View>
-          )}
+          ) : null}
         </View>
 
         <View className="bg-gray-50 rounded-lg p-3">
