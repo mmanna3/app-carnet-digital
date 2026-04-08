@@ -210,7 +210,7 @@ export const luefiConfig: LeagueConfig = {
   leagueDisplayName: 'Liga Uruguaya de Fútbol Infantil',
 
   // App stores — cada liga necesita IDs únicos
-  appId: 'com.blueservant.carnetdigital.luefi',
+  appId: 'com.ykn.carnetdigital.luefi',
   expoSlug: 'carnet-digital-luefi',
   easProjectId: '72d45eb4-...', // cada liga necesita su propio proyecto EAS
 

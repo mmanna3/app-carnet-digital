@@ -1,4 +1,4 @@
-appId: com.blueservant.edefi
+appId: com.ykn.edefidelegados
 ---
 # Validación: código de equipo inválido → muestra error, no avanza al paso de datos
 #

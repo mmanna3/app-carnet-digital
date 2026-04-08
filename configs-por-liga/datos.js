@@ -23,7 +23,7 @@ const configEdefi = {
   appName: 'EDeFI',
   /** Nombre corto para splash/pantalla de inicio (evita que se corte) */
   splashScreenName: 'EDeFI',
-  appId: 'com.blueservant.edefi',
+  appId: 'com.ykn.edefidelegados',
   expoSlug: 'EDeFI-Delegados',
   easProjectId: 'd296a6cd-ac06-4c7c-8238-ff2c9b5339b6',
   scheme: 'carnet-edefi',
@@ -51,7 +51,7 @@ const LIGAS_DE_APP_MULTILIGA = ['luefi']
 /** Config de la app MULTILIGA (shell; no es una liga) */
 const CONFIG_APP_MULTILIGA = {
   appName: 'Ligas y Torneos',
-  appId: 'com.blueservant.ligasytorneos',
+  appId: 'com.ykn.ligasytorneos',
   expoSlug: 'ligas-y-torneos',
   easProjectId: 'TODO',
   scheme: 'ligas-y-torneos',
