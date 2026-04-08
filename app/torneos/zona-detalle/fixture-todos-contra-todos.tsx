@@ -84,7 +84,7 @@ function CardFecha({ fecha, apiUrl }: { fecha: FixtureFechaDTO; apiUrl: string |
   )
 }
 
-export default function Fixture() {
+export default function FixtureTodosContraTodos() {
   const configLiga = useConfigLiga()
   const { zonaId: zonaIdParam } = useLocalSearchParams<{ zonaId?: string }>()
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
 import Clubes from '@/app/torneos/zona-detalle/clubes'
-import Fixture from '@/app/torneos/zona-detalle/fixture'
+import FixtureEliminacionDirecta from '@/app/torneos/zona-detalle/fixture-eliminacion-directa'
+import FixtureTodosContraTodos from '@/app/torneos/zona-detalle/fixture-todos-contra-todos'
 import Jornadas from '@/app/torneos/zona-detalle/jornadas'
 import Posiciones from '@/app/torneos/zona-detalle/posiciones'
 import { ResumenTorneo } from '@/app/torneos/zona-detalle/resumen-torneo'
@@ -15,24 +16,50 @@ import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 type IconName = ComponentProps<typeof Ionicons>['name']
 
-const TABS: { titulo: string; icon: IconName; Contenido: React.ComponentType }[] = [
-  { titulo: 'Posiciones', icon: 'trophy-outline', Contenido: Posiciones },
-  { titulo: 'Fixture', icon: 'calendar-outline', Contenido: Fixture },
-  { titulo: 'Jornadas', icon: 'football-outline', Contenido: Jornadas },
-  { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
-]
+type TabDef = { titulo: string; icon: IconName; Contenido: React.ComponentType }
 
 export default function ZonaDetalle() {
   const insets = useSafeAreaInsets()
   const grande = usePantallaGrande()
   const [tabIndex, setTabIndex] = useState(0)
 
-  const { color, torneoNombre, faseNombre, zonaNombre } = useLocalSearchParams<{
+  const {
+    color,
+    torneoNombre,
+    faseNombre,
+    zonaNombre,
+    zonaId: zonaIdParam,
+    tipoDeFase: tipoDeFaseParam,
+  } = useLocalSearchParams<{
     zonaNombre?: string
     color?: string
     torneoNombre?: string
     faseNombre?: string
+    zonaId?: string
+    tipoDeFase?: string
   }>()
+
+  const tipoDeFase = tipoDeFaseParam != null ? String(tipoDeFaseParam) : ''
+  const esEliminacionDirecta = tipoDeFase === 'EliminacionDirecta'
+
+  useEffect(() => {
+    setTabIndex(0)
+  }, [zonaIdParam, tipoDeFase])
+
+  const TABS: TabDef[] = useMemo(() => {
+    if (esEliminacionDirecta) {
+      return [
+        { titulo: 'Fixture', icon: 'calendar-outline', Contenido: FixtureEliminacionDirecta },
+        { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
+      ]
+    }
+    return [
+      { titulo: 'Posiciones', icon: 'trophy-outline', Contenido: Posiciones },
+      { titulo: 'Fixture', icon: 'calendar-outline', Contenido: FixtureTodosContraTodos },
+      { titulo: 'Jornadas', icon: 'football-outline', Contenido: Jornadas },
+      { titulo: 'Clubes', icon: 'shield-half-outline', Contenido: Clubes },
+    ]
+  }, [esEliminacionDirecta])
 
   const colorAgrupador = color != null && String(color).length > 0 ? String(color) : undefined
 

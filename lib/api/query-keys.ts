@@ -15,6 +15,8 @@ export const queryKeys = {
   zonas: {
     clubes: (zonaId: number | null | undefined) => ['zonas', 'clubes', zonaId] as const,
     fixture: (zonaId: number | null | undefined) => ['zonas', 'fixture', zonaId] as const,
+    fixtureEliminacionDirecta: (zonaId: number | null | undefined) =>
+      ['zonas', 'fixture', 'eliminacionDirecta', zonaId] as const,
     jornadas: (zonaId: number | null | undefined) => ['zonas', 'jornadas', zonaId] as const,
     posiciones: (zonaId: number | null | undefined) => ['zonas', 'posiciones', zonaId] as const,
   },

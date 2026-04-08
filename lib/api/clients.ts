@@ -7522,6 +7522,7 @@ export interface IInformacionInicialAgrupadorDTO {
 export class InformacionInicialFaseDTO implements IInformacionInicialFaseDTO {
     id?: number;
     nombre?: string | undefined;
+    tipoDeFase?: string | undefined;
     zonas?: InformacionInicialZonaDTO[] | undefined;
 
     constructor(data?: IInformacionInicialFaseDTO) {
@@ -7537,6 +7538,7 @@ export class InformacionInicialFaseDTO implements IInformacionInicialFaseDTO {
         if (_data) {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
+            this.tipoDeFase = _data["tipoDeFase"];
             if (Array.isArray(_data["zonas"])) {
                 this.zonas = [] as any;
                 for (let item of _data["zonas"])
@@ -7556,6 +7558,7 @@ export class InformacionInicialFaseDTO implements IInformacionInicialFaseDTO {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["nombre"] = this.nombre;
+        data["tipoDeFase"] = this.tipoDeFase;
         if (Array.isArray(this.zonas)) {
             data["zonas"] = [];
             for (let item of this.zonas)
@@ -7568,6 +7571,7 @@ export class InformacionInicialFaseDTO implements IInformacionInicialFaseDTO {
 export interface IInformacionInicialFaseDTO {
     id?: number;
     nombre?: string | undefined;
+    tipoDeFase?: string | undefined;
     zonas?: InformacionInicialZonaDTO[] | undefined;
 }
 
@@ -8653,8 +8657,6 @@ export class PosicionDelEquipoDTO implements IPosicionDelEquipoDTO {
     golesDiferencia?: string | undefined;
     puntos?: string | undefined;
     partidosNoPresento?: string | undefined;
-    partidosGanoPuntos?: string | undefined;
-    partidosPerdioPuntos?: string | undefined;
 
     constructor(data?: IPosicionDelEquipoDTO) {
         if (data) {
@@ -8679,8 +8681,6 @@ export class PosicionDelEquipoDTO implements IPosicionDelEquipoDTO {
             this.golesDiferencia = _data["golesDiferencia"];
             this.puntos = _data["puntos"];
             this.partidosNoPresento = _data["partidosNoPresento"];
-            this.partidosGanoPuntos = _data["partidosGanoPuntos"];
-            this.partidosPerdioPuntos = _data["partidosPerdioPuntos"];
         }
     }
 
@@ -8705,8 +8705,6 @@ export class PosicionDelEquipoDTO implements IPosicionDelEquipoDTO {
         data["golesDiferencia"] = this.golesDiferencia;
         data["puntos"] = this.puntos;
         data["partidosNoPresento"] = this.partidosNoPresento;
-        data["partidosGanoPuntos"] = this.partidosGanoPuntos;
-        data["partidosPerdioPuntos"] = this.partidosPerdioPuntos;
         return data;
     }
 }
@@ -8724,8 +8722,6 @@ export interface IPosicionDelEquipoDTO {
     golesDiferencia?: string | undefined;
     puntos?: string | undefined;
     partidosNoPresento?: string | undefined;
-    partidosGanoPuntos?: string | undefined;
-    partidosPerdioPuntos?: string | undefined;
 }
 
 export class PosicionesDTO implements IPosicionesDTO {

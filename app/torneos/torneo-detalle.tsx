@@ -142,6 +142,7 @@ export default function TorneoDetalle() {
                         color: color ?? '',
                         torneoNombre: torneo.nombre ?? '',
                         faseNombre: fase.nombre ?? '',
+                        tipoDeFase: fase.tipoDeFase ?? '',
                       },
                     })
                   }
