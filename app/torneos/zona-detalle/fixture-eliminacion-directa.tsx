@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -42,6 +43,44 @@ function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | und
 function textoPenal(p: string | undefined) {
   const t = (p ?? '').trim()
   return t.length > 0 ? t : null
+}
+
+/** Parsea un resultado numérico; devuelve null si no hay valor jugable. */
+function parseNumeroResultado(s: string | undefined): number | null {
+  const t = (s ?? '').trim()
+  if (!t || t === '—') return null
+  const n = Number(String(t).replace(',', '.'))
+  return Number.isFinite(n) ? n : null
+}
+
+type LadoGanador = 'local' | 'visitante'
+
+function ganadorDelPartido(partido: PartidoEliminacionDirectaDTO): LadoGanador | null {
+  const rL = parseNumeroResultado(partido.resultadoLocal)
+  const rV = parseNumeroResultado(partido.resultadoVisitante)
+  if (rL === null || rV === null) return null
+  if (rL > rV) return 'local'
+  if (rV > rL) return 'visitante'
+  const pL = parseNumeroResultado(partido.penalesLocal)
+  const pV = parseNumeroResultado(partido.penalesVisitante)
+  if (pL === null || pV === null) return null
+  if (pL > pV) return 'local'
+  if (pV > pL) return 'visitante'
+  return null
+}
+
+function esInstanciaFinal(instancia: InstanciasDTO): boolean {
+  return (instancia.titulo ?? '').trim().toLowerCase() === 'final'
+}
+
+function partidoFinalConResultados(instancia: InstanciasDTO): PartidoEliminacionDirectaDTO | null {
+  const partidos = instancia.partidos ?? []
+  if (partidos.length === 0) return null
+  const p = partidos[0]
+  const rL = parseNumeroResultado(p.resultadoLocal)
+  const rV = parseNumeroResultado(p.resultadoVisitante)
+  if (rL === null || rV === null) return null
+  return p
 }
 
 function FilaPartido({
@@ -110,6 +149,39 @@ function CardInstancia({
   )
 }
 
+function BloqueCampeonFinal({
+  partido,
+  apiUrl,
+}: {
+  partido: PartidoEliminacionDirectaDTO
+  apiUrl: string | undefined
+}) {
+  const lado = ganadorDelPartido(partido)
+  if (lado === null) return null
+  const nombre = lado === 'local' ? partido.local : partido.visitante
+  const escudo = lado === 'local' ? partido.escudoLocal : partido.escudoVisitante
+  const nombreLimpio = (nombre ?? '').trim()
+  if (!nombreLimpio) return null
+
+  return (
+    <View className="my-6 items-center px-2 pt-1">
+      <Ionicons name="trophy" size={48} color="#ca8a04" accessibilityLabel="Trofeo" />
+      <Escudo uri={escudo} apiUrl={apiUrl} />
+      <View className="mt-2 flex-row items-center gap-2">
+        <Text
+          className="max-w-[220px] text-center text-base font-semibold text-gray-900"
+          numberOfLines={2}
+        >
+          {nombreLimpio}
+        </Text>
+      </View>
+      <Text className="mt-1 text-center text-xs font-semibold uppercase tracking-wide text-amber-700">
+        Campeón
+      </Text>
+    </View>
+  )
+}
+
 export default function FixtureEliminacionDirecta() {
   const configLiga = useConfigLiga()
   const { zonaId: zonaIdParam } = useLocalSearchParams<{ zonaId?: string }>()
@@ -164,12 +236,18 @@ export default function FixtureEliminacionDirecta() {
 
   const apiUrl = configLiga?.apiUrl
 
+  const instanciaFinal = instancias.find((i) => esInstanciaFinal(i))
+  const partidoDeLaFinal = instanciaFinal ? partidoFinalConResultados(instanciaFinal) : null
+
   return (
     <ScrollView
       className="flex-1 bg-gray-50"
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator
     >
+      {partidoDeLaFinal != null ? (
+        <BloqueCampeonFinal partido={partidoDeLaFinal} apiUrl={apiUrl} />
+      ) : null}
       {instancias.map((inst, idx) => (
         <CardInstancia
           key={`${inst.titulo ?? 'inst'}-${inst.dia ?? idx}-${idx}`}
