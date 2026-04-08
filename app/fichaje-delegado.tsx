@@ -59,7 +59,9 @@ export default function FichajeDelegadoScreen() {
   }
 
   if (fichajeEstaHabilitado === false) {
-    return <PantallaFichajeDeshabilitado tituloCabecera="Fichar jugador" onVolver={handleVolverInicio} />
+    return (
+      <PantallaFichajeDeshabilitado tituloCabecera="Fichar jugador" onVolver={handleVolverInicio} />
+    )
   }
 
   if (flujo === 'intro') {

@@ -26,7 +26,9 @@ export default function HomeMobile() {
   const leagueId = configLiga?.leagueId ?? ''
   const leagueDisplayName = configLiga?.leagueDisplayName ?? ''
   const logo = leagueId ? LOGOS_LIGAS[leagueId] : undefined
-  const cargarFichajeEstaHabilitado = useConfiguracionFichajeStore((s) => s.cargarFichajeEstaHabilitado)
+  const cargarFichajeEstaHabilitado = useConfiguracionFichajeStore(
+    (s) => s.cargarFichajeEstaHabilitado
+  )
   const ligaPrevParaConfigFichaje = useRef<string>('')
 
   useEffect(() => {

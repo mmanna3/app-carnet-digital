@@ -15,12 +15,13 @@ const mockRouterReplace = jest.fn()
 describe('FichajesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(useConfiguracionFichajeStore as unknown as jest.Mock).mockImplementation((selector: (s: unknown) => unknown) =>
-      selector({
-        fichajeEstaHabilitado: true,
-        cargando: false,
-        cargarFichajeEstaHabilitado: jest.fn(),
-      })
+    ;(useConfiguracionFichajeStore as unknown as jest.Mock).mockImplementation(
+      (selector: (s: unknown) => unknown) =>
+        selector({
+          fichajeEstaHabilitado: true,
+          cargando: false,
+          cargarFichajeEstaHabilitado: jest.fn(),
+        })
     )
     ;(useFichajeStore as unknown as jest.Mock).mockReturnValue({
       flujo: 'intro',

@@ -35,7 +35,10 @@ export default function RegistroDelegadoScreen() {
 
   if (fichajeEstaHabilitado === false) {
     return (
-      <PantallaFichajeDeshabilitado tituloCabecera="Registro de delegado" onVolver={handleVolverInicio} />
+      <PantallaFichajeDeshabilitado
+        tituloCabecera="Registro de delegado"
+        onVolver={handleVolverInicio}
+      />
     )
   }
 

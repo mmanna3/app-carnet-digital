@@ -263,8 +263,7 @@ export default function Posiciones() {
   const { data, isLoading, isError, error } = useApiQuery({
     key: esAnual ? queryKeys.zonas.posicionesAnual(zonaId) : queryKeys.zonas.posiciones(zonaId),
     activado: zonaId != null,
-    fn: () =>
-      esAnual ? api.posicionesAnual(zonaId) : api.posicionesTodosContraTodos(zonaId),
+    fn: () => (esAnual ? api.posicionesAnual(zonaId) : api.posicionesTodosContraTodos(zonaId)),
   })
 
   const apiUrl = configLiga?.apiUrl
