@@ -185,6 +185,12 @@ function FilaEquipo({
   )
 }
 
+function LeyendaDebajoTabla({ texto }: { texto: string | undefined }) {
+  const t = (texto ?? '').trim()
+  if (!t) return null
+  return <Text className="mt-2 px-0.5 text-sm leading-5 text-gray-600">{t}</Text>
+}
+
 function TablaCategoria({
   bloque,
   apiUrl,
@@ -220,6 +226,7 @@ function TablaCategoria({
           </View>
         </ScrollView>
       )}
+      <LeyendaDebajoTabla texto={bloque.leyenda} />
     </View>
   )
 }
