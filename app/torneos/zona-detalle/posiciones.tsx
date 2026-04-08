@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Platform, ScrollView, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -185,10 +185,24 @@ function FilaEquipo({
   )
 }
 
-function LeyendaDebajoTabla({ texto }: { texto: string | undefined }) {
+function LeyendaDebajoTabla({
+  texto,
+  anchoTabla,
+}: {
+  texto: string | undefined
+  anchoTabla: number
+}) {
   const t = (texto ?? '').trim()
   if (!t) return null
-  return <Text className="mt-2 px-0.5 text-sm leading-5 text-gray-600">{t}</Text>
+  const cuerpo = <Text className="px-0.5 text-sm leading-5 text-gray-600">{t}</Text>
+  if (Platform.OS !== 'web') {
+    return <View className="mt-2">{cuerpo}</View>
+  }
+  return (
+    <View className="mt-2" style={{ maxWidth: anchoTabla, alignSelf: 'flex-start' }}>
+      {cuerpo}
+    </View>
+  )
 }
 
 function TablaCategoria({
@@ -226,7 +240,7 @@ function TablaCategoria({
           </View>
         </ScrollView>
       )}
-      <LeyendaDebajoTabla texto={bloque.leyenda} />
+      <LeyendaDebajoTabla texto={bloque.leyenda} anchoTabla={anchoTotal} />
     </View>
   )
 }
