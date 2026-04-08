@@ -87,6 +87,7 @@ appId: com.blueservant.edefi
     commands:
       - tapOn:
           id: 'input-dni-jugador'
+      - eraseText: 10
       - inputText: '1234567'
 - runFlow:
     when:

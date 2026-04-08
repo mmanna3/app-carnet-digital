@@ -3708,6 +3708,49 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    actualizarTarjetas(body: ActualizarTarjetasJugadorDTO | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Jugador/actualizar-tarjetas";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processActualizarTarjetas(_response);
+        });
+    }
+
+    protected processActualizarTarjetas(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
      * @return OK
      */
     jugadorGET(id: number): Promise<JugadorDTO> {
@@ -5292,6 +5335,50 @@ export class Client {
     }
 }
 
+export class ActualizarTarjetasJugadorDTO implements IActualizarTarjetasJugadorDTO {
+    jugadorEquipoId?: number;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
+
+    constructor(data?: IActualizarTarjetasJugadorDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.jugadorEquipoId = _data["jugadorEquipoId"];
+            this.tarjetasAmarillas = _data["tarjetasAmarillas"];
+            this.tarjetasRojas = _data["tarjetasRojas"];
+        }
+    }
+
+    static fromJS(data: any): ActualizarTarjetasJugadorDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ActualizarTarjetasJugadorDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["jugadorEquipoId"] = this.jugadorEquipoId;
+        data["tarjetasAmarillas"] = this.tarjetasAmarillas;
+        data["tarjetasRojas"] = this.tarjetasRojas;
+        return data;
+    }
+}
+
+export interface IActualizarTarjetasJugadorDTO {
+    jugadorEquipoId?: number;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
+}
+
 export class AprobarDelegadoEnElClubDTO implements IAprobarDelegadoEnElClubDTO {
     id?: number;
     dni!: string;
@@ -6573,6 +6660,8 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
     estado?: EstadoJugadorEnum;
     motivo?: string | undefined;
     fechaPagoDeFichaje?: Date | undefined;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
 
     constructor(data?: IEquipoDelJugadorDTO) {
         if (data) {
@@ -6593,6 +6682,8 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
             this.estado = _data["estado"];
             this.motivo = _data["motivo"];
             this.fechaPagoDeFichaje = _data["fechaPagoDeFichaje"] ? new Date(_data["fechaPagoDeFichaje"].toString()) : <any>undefined;
+            this.tarjetasAmarillas = _data["tarjetasAmarillas"];
+            this.tarjetasRojas = _data["tarjetasRojas"];
         }
     }
 
@@ -6613,6 +6704,8 @@ export class EquipoDelJugadorDTO implements IEquipoDelJugadorDTO {
         data["estado"] = this.estado;
         data["motivo"] = this.motivo;
         data["fechaPagoDeFichaje"] = this.fechaPagoDeFichaje ? this.fechaPagoDeFichaje.toISOString() : <any>undefined;
+        data["tarjetasAmarillas"] = this.tarjetasAmarillas;
+        data["tarjetasRojas"] = this.tarjetasRojas;
         return data;
     }
 }
@@ -6626,6 +6719,8 @@ export interface IEquipoDelJugadorDTO {
     estado?: EstadoJugadorEnum;
     motivo?: string | undefined;
     fechaPagoDeFichaje?: Date | undefined;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
 }
 
 export class EquipoParaZonasDTO implements IEquipoParaZonasDTO {
@@ -8140,9 +8235,12 @@ export class JugadorDelEquipoDTO implements IJugadorDelEquipoDTO {
     dni?: string | undefined;
     nombre?: string | undefined;
     apellido?: string | undefined;
+    anioNacimiento?: number;
     estado?: EstadoJugadorEnum;
     jugadorEquipoId?: number;
     motivo?: string | undefined;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
 
     constructor(data?: IJugadorDelEquipoDTO) {
         if (data) {
@@ -8159,9 +8257,12 @@ export class JugadorDelEquipoDTO implements IJugadorDelEquipoDTO {
             this.dni = _data["dni"];
             this.nombre = _data["nombre"];
             this.apellido = _data["apellido"];
+            this.anioNacimiento = _data["anioNacimiento"];
             this.estado = _data["estado"];
             this.jugadorEquipoId = _data["jugadorEquipoId"];
             this.motivo = _data["motivo"];
+            this.tarjetasAmarillas = _data["tarjetasAmarillas"];
+            this.tarjetasRojas = _data["tarjetasRojas"];
         }
     }
 
@@ -8178,9 +8279,12 @@ export class JugadorDelEquipoDTO implements IJugadorDelEquipoDTO {
         data["dni"] = this.dni;
         data["nombre"] = this.nombre;
         data["apellido"] = this.apellido;
+        data["anioNacimiento"] = this.anioNacimiento;
         data["estado"] = this.estado;
         data["jugadorEquipoId"] = this.jugadorEquipoId;
         data["motivo"] = this.motivo;
+        data["tarjetasAmarillas"] = this.tarjetasAmarillas;
+        data["tarjetasRojas"] = this.tarjetasRojas;
         return data;
     }
 }
@@ -8190,9 +8294,12 @@ export interface IJugadorDelEquipoDTO {
     dni?: string | undefined;
     nombre?: string | undefined;
     apellido?: string | undefined;
+    anioNacimiento?: number;
     estado?: EstadoJugadorEnum;
     jugadorEquipoId?: number;
     motivo?: string | undefined;
+    tarjetasAmarillas?: number;
+    tarjetasRojas?: number;
 }
 
 export class JugadoresPorCategoriaDTO implements IJugadoresPorCategoriaDTO {
