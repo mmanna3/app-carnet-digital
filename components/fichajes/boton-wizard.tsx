@@ -27,6 +27,7 @@ export default function BotonWizard({
       testID={testID}
       onPress={onPress}
       disabled={deshabilitado}
+      accessibilityState={{ disabled: deshabilitado }}
       activeOpacity={0.85}
       className={`${bg} rounded-2xl py-5 px-6 shadow-md flex-row items-center justify-center gap-2`}
     >

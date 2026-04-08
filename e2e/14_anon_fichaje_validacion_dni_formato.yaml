@@ -79,15 +79,15 @@ appId: com.blueservant.edefi
     id: 'boton-continuar'
     enabled: false
 # Completar el DNI con 2 dígitos más para llegar a 7 (válido)
-# Android: inputText reemplaza el contenido existente → ingresar el DNI completo
+# Android: inputText reemplaza el contenido existente → ingresar el DNI completo sin eraseText
 # iOS: inputText agrega al final → ingresar solo los 2 dígitos restantes
 - runFlow:
     when:
       platform: android
     commands:
+      - hideKeyboard
       - tapOn:
           id: 'input-dni-jugador'
-      - eraseText: 10
       - inputText: '1234567'
 - runFlow:
     when:
