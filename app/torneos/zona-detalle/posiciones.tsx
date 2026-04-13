@@ -215,8 +215,22 @@ function TablaCategoria({
   const renglones = bloque.renglones ?? []
   const anchoTotal = anchoTablaTotal(mostrarGoles)
   return (
-    <View className="mb-5">
-      <Text className="mb-2 px-0.5 text-base font-semibold text-gray-900" numberOfLines={2}>
+    <View className="my-5">
+      <Text
+        className={`mb-2 px-0.5 text-gray-900 ${Platform.OS === 'web' ? '' : 'text-lg font-semibold'}`}
+        numberOfLines={2}
+        style={
+          Platform.OS === 'web'
+            ? {
+                fontSize: 30,
+                lineHeight: 36,
+                fontWeight: '600',
+                textAlign: 'center',
+                width: '100%',
+              }
+            : undefined
+        }
+      >
         {textoOGuion(bloque.categoria)}
       </Text>
       {renglones.length === 0 ? (
