@@ -68,7 +68,7 @@ function ClubCard({ item, uriEscudo }: ClubCardProps) {
             {lineaDireccionLocalidad(item.direccion, item.localidad)}
           </Text>
           <Text className="text-sm leading-5 text-gray-500" numberOfLines={2}>
-            {textoTechado(item.esTechado)}
+            Cancha: {item.tipoCancha}
           </Text>
         </View>
       </View>
