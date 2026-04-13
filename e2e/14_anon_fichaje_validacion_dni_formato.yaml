@@ -14,7 +14,11 @@ appId: com.ykn.edefidelegados
     timeout: 15000
 - tapOn:
     id: 'card-fichaje'
-# PantallaIntro
+# Esperar la navegación (puede haber spinner de fichaje-esta-habilitado)
+- extendedWaitUntil:
+    visible:
+      id: 'card-nuevo'
+    timeout: 15000
 - tapOn:
     id: 'card-nuevo'
 # PasoCodigoEquipo — pasar con código válido
@@ -41,6 +45,13 @@ appId: com.ykn.edefidelegados
 - tapOn:
     id: 'input-apellido'
 - inputText: 'Perez'
+# Android: con el teclado abierto y KeyboardAvoidingView behavior='height', el campo
+# DNI puede quedar fuera del área accesible. Cerrar el teclado primero.
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
 # Ingresar solo 5 dígitos (mínimo requerido: 7)
 - tapOn:
     id: 'input-dni-jugador'
@@ -74,10 +85,13 @@ appId: com.ykn.edefidelegados
       - tapOn:
           text: 'Aceptar'
           optional: true
-# Con DNI de 5 dígitos, el botón debe estar deshabilitado
-- assertVisible:
+# Con DNI de 5 dígitos, el botón debe estar deshabilitado.
+# Android: assertVisible enabled:false no funciona con New Architecture/Fabric.
+# En su lugar, tapear el botón y verificar que no avanzó el paso.
+- tapOn:
     id: 'boton-continuar'
-    enabled: false
+- assertVisible:
+    id: 'paso-datos-jugador'
 # Completar el DNI con 2 dígitos más para llegar a 7 (válido)
 # Android: inputText reemplaza el contenido existente → ingresar el DNI completo sin eraseText
 # iOS: inputText agrega al final → ingresar solo los 2 dígitos restantes

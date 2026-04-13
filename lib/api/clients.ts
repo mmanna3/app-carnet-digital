@@ -6839,6 +6839,8 @@ export class ClubDTO implements IClubDTO {
     escudo?: string | undefined;
     direccion?: string | undefined;
     esTechado?: boolean | undefined;
+    canchaTipoId?: number;
+    canchaTipo?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
@@ -6859,6 +6861,8 @@ export class ClubDTO implements IClubDTO {
             this.escudo = _data["escudo"];
             this.direccion = _data["direccion"];
             this.esTechado = _data["esTechado"];
+            this.canchaTipoId = _data["canchaTipoId"];
+            this.canchaTipo = _data["canchaTipo"];
             this.localidad = _data["localidad"];
             if (Array.isArray(_data["equipos"])) {
                 this.equipos = [] as any;
@@ -6887,6 +6891,8 @@ export class ClubDTO implements IClubDTO {
         data["escudo"] = this.escudo;
         data["direccion"] = this.direccion;
         data["esTechado"] = this.esTechado;
+        data["canchaTipoId"] = this.canchaTipoId;
+        data["canchaTipo"] = this.canchaTipo;
         data["localidad"] = this.localidad;
         if (Array.isArray(this.equipos)) {
             data["equipos"] = [];
@@ -6908,6 +6914,8 @@ export interface IClubDTO {
     escudo?: string | undefined;
     direccion?: string | undefined;
     esTechado?: boolean | undefined;
+    canchaTipoId?: number;
+    canchaTipo?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
