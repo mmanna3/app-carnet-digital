@@ -222,7 +222,7 @@ function TablaCategoria({
         style={
           Platform.OS === 'web'
             ? {
-                fontSize: 30,
+                fontSize: 24,
                 lineHeight: 36,
                 fontWeight: '600',
                 textAlign: 'center',
