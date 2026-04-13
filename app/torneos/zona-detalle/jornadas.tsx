@@ -50,13 +50,13 @@ function fechaTieneResultados(fecha: FechasParaJornadasDTO): boolean {
   return false
 }
 
-/** Índice de la última fecha con al menos un resultado cargado; si ninguna, la última fecha de la lista. */
+/** Índice de la última fecha con al menos un resultado cargado; si ninguna, la primera. */
 function indiceUltimaFechaConResultados(fechas: FechasParaJornadasDTO[]): number {
   if (fechas.length === 0) return 0
   for (let i = fechas.length - 1; i >= 0; i--) {
     if (fechaTieneResultados(fechas[i])) return i
   }
-  return fechas.length - 1
+  return 0
 }
 
 /** El API repite la misma lista en local y visitante; `resultado` sigue `FormatearResultadoPartido` (ej. "2 - 1 (3 - 4)"). */

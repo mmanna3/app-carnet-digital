@@ -33,16 +33,16 @@ const ANCHO = {
 } as const
 
 function titulosTabla(mostrarGoles: boolean): string[] {
-  const t = ['Pts', 'Pos', 'Esc', 'Equipo', 'J', 'G', 'E', 'P', 'Np']
+  const t = ['Pos', 'Esc', 'Equipo', 'Pts', 'J', 'G', 'E', 'P', 'Np']
   if (mostrarGoles) t.push('Gf', 'Gc', 'Df')
   return t
 }
 
 function anchoColumna(i: number, mostrarGoles: boolean, numColumnas: number): number {
-  if (i === 0) return ANCHO.pts
-  if (i === 1) return ANCHO.pos
-  if (i === 2) return ANCHO.esc
-  if (i === 3) return ANCHO.equipo
+  if (i === 0) return ANCHO.pos
+  if (i === 1) return ANCHO.esc
+  if (i === 2) return ANCHO.equipo
+  if (i === 3) return ANCHO.pts
   if (mostrarGoles && i >= numColumnas - 3 && i <= numColumnas - 1) return ANCHO.goles
   return ANCHO.num
 }
@@ -124,9 +124,9 @@ function FilaEncabezado({ mostrarGoles }: { mostrarGoles: boolean }) {
         <Celda
           key={h}
           ancho={anchoColumna(i, mostrarGoles, n)}
-          alinear={i === 0 ? 'center' : i >= 1 && i <= 3 ? 'left' : 'center'}
+          alinear={i <= 2 ? 'left' : 'center'}
           negrita
-          tabular={i === 0 || i >= 4}
+          tabular={i === 3 || i >= 4}
         >
           {h}
         </Celda>
