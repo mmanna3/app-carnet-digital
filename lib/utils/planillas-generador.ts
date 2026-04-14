@@ -3,13 +3,10 @@ import * as Sharing from 'expo-sharing'
 import { Alert } from 'react-native'
 import { PlanillaDeJuegoDTO } from '@/lib/api/clients'
 
-const primeraMayuscRestoMinusc = (texto: string | undefined): string => {
+/** Nombre en planilla: mayúsculas para escritura a mano clara. */
+const nombreParaPlanilla = (texto: string | undefined): string => {
   if (!texto) return ''
-  return texto
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+  return texto.trim().toUpperCase()
 }
 
 const stylesTag = `
@@ -31,12 +28,17 @@ const stylesTag = `
     margin: 0 auto;
     background: white;
     box-sizing: border-box;
-    page-break-after: always;
     position: relative;
   }
 
-  .pagina:last-child {
-    page-break-after: avoid;
+  /**
+   * Nunca usar page-break-after: always aquí: si una .pagina ocupa más de una hoja física,
+   * ese break agrega una página en blanco al final del bloque (común en WebKit/PDF).
+   * Cada hoja nueva se fuerza solo con break-before en la siguiente .pagina.
+   */
+  .pagina + .pagina {
+    page-break-before: always;
+    break-before: page;
   }
 
   .titulo {
@@ -98,17 +100,29 @@ const stylesTag = `
   }
 
   .faltas {
-    margin: 20px 0;
-  }
-
-  .faltas-titulo {
-    font-weight: 500;
-    margin-bottom: 10px;
+    margin: 8px 0 10px;
   }
 
   .faltas-contenedor {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+  }
+
+  .faltas-titulo-inline {
+    font-weight: 500;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .faltas-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
   }
 
   .faltas-grupo {
@@ -129,16 +143,17 @@ const stylesTag = `
   .tabla {
     width: 100%;
     border-collapse: collapse;
-    margin: 15px 0;
+    margin: 8px 0 10px;
   }
 
   .tabla th, .tabla td {
     border: 1px solid #000;
-    padding: 5px;
+    padding: 2px 4px;
     text-align: left;
-    height: 25px;
-    min-height: 25px;
+    height: 20px;
+    min-height: 20px;
     font-size: 11px;
+    vertical-align: middle;
   }
 
   .tabla th {
@@ -146,10 +161,27 @@ const stylesTag = `
     font-weight: 500;
   }
 
+  .tabla td.col-nombre,
+  .tabla td.col-dni {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.15;
+  }
+
+  .tabla td.col-nombre {
+    text-transform: uppercase;
+  }
+
   .firmas {
-    margin-top: 60px;
+    margin-top: 22px;
     display: flex;
     justify-content: space-between;
+  }
+
+  /** Mismo aire entre observaciones y firmas (FUTSAL y no FUTSAL). */
+  .firmas.firmas-futsal,
+  .firmas.firmas-no-futsal {
+    margin-top: 46px;
   }
 
   .firma-grupo {
@@ -170,6 +202,35 @@ const stylesTag = `
 
   .observaciones-item {
     margin-bottom: 10px;
+  }
+
+  .observaciones-fila {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 0;
+  }
+
+  .observaciones-fila label {
+    flex-shrink: 0;
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  .observaciones-linea-extension {
+    flex: 1;
+    border-bottom: 1px solid #000;
+    min-height: 16px;
+  }
+
+  /** Segundo renglón: solo línea inferior para escribir a mano (sin caja). */
+  .observaciones-linea-sola {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #000;
+    min-height: 18px;
+    margin-top: 10px;
+    box-sizing: border-box;
   }
 
   .numero-pagina {
@@ -204,7 +265,6 @@ const generarPaginaHtml = (
           mostrarEncabezadoCompleto
             ? `
         <label>GOLES: <input type="text" /></label>
-        ${esTorneoFutsal ? `<label>Min: <input type="text" /><input type="text" /></label>` : ''}
         `
             : ''
         }
@@ -218,6 +278,7 @@ const generarPaginaHtml = (
           <label>Día:</label>
           <span> </span>/<span> </span>/<span> </span>
         </div>
+        ${esTorneoFutsal ? `<label>Min: <input type="text" /><input type="text" /></label>` : ''}
         `
             : ''
         }
@@ -228,23 +289,25 @@ const generarPaginaHtml = (
       mostrarEncabezadoCompleto && esTorneoFutsal
         ? `
     <div class="faltas">
-      <div class="faltas-titulo">Faltas Acumuladas:</div>
       <div class="faltas-contenedor">
-        <div class="faltas-grupo">
-          <label>1er T:</label>
-          <div class="faltas-checkbox">1</div>
-          <div class="faltas-checkbox">2</div>
-          <div class="faltas-checkbox">3</div>
-          <div class="faltas-checkbox">4</div>
-          <div class="faltas-checkbox">5</div>
-        </div>
-        <div class="faltas-grupo">
-          <label>2do T:</label>
-          <div class="faltas-checkbox">1</div>
-          <div class="faltas-checkbox">2</div>
-          <div class="faltas-checkbox">3</div>
-          <div class="faltas-checkbox">4</div>
-          <div class="faltas-checkbox">5</div>
+        <span class="faltas-titulo-inline">Faltas Acumuladas</span>
+        <div class="faltas-inline">
+          <div class="faltas-grupo">
+            <label>1er T:</label>
+            <div class="faltas-checkbox">1</div>
+            <div class="faltas-checkbox">2</div>
+            <div class="faltas-checkbox">3</div>
+            <div class="faltas-checkbox">4</div>
+            <div class="faltas-checkbox">5</div>
+          </div>
+          <div class="faltas-grupo">
+            <label>2do T:</label>
+            <div class="faltas-checkbox">1</div>
+            <div class="faltas-checkbox">2</div>
+            <div class="faltas-checkbox">3</div>
+            <div class="faltas-checkbox">4</div>
+            <div class="faltas-checkbox">5</div>
+          </div>
         </div>
       </div>
     </div>
@@ -280,8 +343,8 @@ const generarPaginaHtml = (
             (jugador) => `
           <tr>
             <td></td>
-            <td>${primeraMayuscRestoMinusc(jugador.nombre)}</td>
-            <td>${jugador.dni ?? ''}</td>
+            <td class="col-nombre">${nombreParaPlanilla(jugador.nombre)}</td>
+            <td class="col-dni">${jugador.dni ?? ''}</td>
             <td>${jugador.estado !== 'Activo' ? (jugador.estado ?? '') : ''}</td>
             <td></td>
             ${
@@ -325,18 +388,14 @@ const generarPaginaHtml = (
     </div>
 
     <div class="observaciones">
-      <div class="observaciones-item">
-        <label>Jug. Expulsado: </label>
+      <div class="observaciones-item observaciones-fila">
+        <label>Observaciones:</label>
+        <div class="observaciones-linea-extension"></div>
       </div>
-      <div class="observaciones-item">
-        <label>Público Expulsado: </label>
-      </div>
-      <div class="observaciones-item">
-        <label>Observaciones: </label>
-      </div>
+      <div class="observaciones-linea-sola" aria-hidden="true"></div>
     </div>
 
-    <div class="firmas">
+    <div class="firmas${esTorneoFutsal ? ' firmas-futsal' : ' firmas-no-futsal'}">
       <div class="firma-grupo">
         <div class="firma-linea"></div>
         <label>Firma Delegado LOCAL</label>
@@ -371,17 +430,26 @@ const generarPlanillaHtml = (
   const categoria = planilla.categoria ?? ''
   const esTorneoFutsal = torneo.toLowerCase().includes('futsal')
 
-  const jugadoresConBlancos = [...jugadores, ...Array(6).fill({ nombre: '', dni: '', estado: '' })]
+  /** Cantidad fija de renglones por hoja según formato (siempre igual en cada planilla del mismo tipo). */
+  const RENGLONES_POR_PAGINA_FUTSAL = 28
+  const RENGLONES_POR_PAGINA_NO_FUTSAL = 30
+  const jugadoresPorPagina = esTorneoFutsal ? RENGLONES_POR_PAGINA_FUTSAL : RENGLONES_POR_PAGINA_NO_FUTSAL
 
-  const jugadoresPorPagina = esTorneoFutsal ? 25 : 30
-  const totalPaginas = Math.ceil(jugadoresConBlancos.length / jugadoresPorPagina)
+  const filaVacia = (): { nombre: string; dni: string; estado: string } => ({
+    nombre: '',
+    dni: '',
+    estado: '',
+  })
+
+  const totalPaginas = Math.max(1, Math.ceil(jugadores.length / jugadoresPorPagina))
 
   let paginasHtml = ''
 
   for (let i = 0; i < totalPaginas; i++) {
     const inicio = i * jugadoresPorPagina
-    const fin = Math.min(inicio + jugadoresPorPagina, jugadoresConBlancos.length)
-    const jugadoresEnPagina = jugadoresConBlancos.slice(inicio, fin)
+    const parcial = jugadores.slice(inicio, inicio + jugadoresPorPagina)
+    const huecos = jugadoresPorPagina - parcial.length
+    const jugadoresEnPagina = [...parcial, ...Array.from({ length: huecos }, filaVacia)]
     const esUltimaPagina = i === totalPaginas - 1
     const mostrarEncabezadoCompleto = i === 0
 
