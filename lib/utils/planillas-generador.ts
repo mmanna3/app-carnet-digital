@@ -1,7 +1,28 @@
+import { Asset } from 'expo-asset'
 import * as Print from 'expo-print'
 import * as Sharing from 'expo-sharing'
+import * as FileSystem from 'expo-file-system/legacy'
 import { Alert } from 'react-native'
 import { PlanillaDeJuegoDTO } from '@/lib/api/clients'
+
+/** Logo EDeFI para marca de agua en planillas (PDF). */
+const PLANILLA_MARCA_AGUA_ICON = require('@/assets/ligas/edefi/icon.png')
+
+async function obtenerDataUriMarcaAguaEdifi(): Promise<string | null> {
+  try {
+    const asset = Asset.fromModule(PLANILLA_MARCA_AGUA_ICON)
+    await asset.downloadAsync()
+    const uri = asset.localUri ?? asset.uri
+    if (!uri) return null
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    })
+    return `data:image/png;base64,${base64}`
+  } catch (e) {
+    console.warn('Marca de agua planilla (EDEFI):', e)
+    return null
+  }
+}
 
 /** Nombre en planilla: mayúsculas para escritura a mano clara. */
 const nombreParaPlanilla = (texto: string | undefined): string => {
@@ -39,6 +60,27 @@ const stylesTag = `
   .pagina + .pagina {
     page-break-before: always;
     break-before: page;
+  }
+
+  .pagina-cuerpo {
+    position: relative;
+    z-index: 1;
+  }
+
+  .pagina-marca-agua {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100mm;
+    max-width: 78%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.14;
+    pointer-events: none;
+    z-index: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .titulo {
@@ -251,10 +293,17 @@ const generarPaginaHtml = (
   mostrarEncabezadoCompleto: boolean,
   esUltimaPagina: boolean,
   numeroPagina: number,
-  totalPaginas: number
+  totalPaginas: number,
+  dataUriMarcaAgua: string | null
 ) => {
+  const marcaAguaHtml = dataUriMarcaAgua
+    ? `<img class="pagina-marca-agua" src="${dataUriMarcaAgua}" alt="" />`
+    : ''
+
   return `
   <div class="pagina">
+    ${marcaAguaHtml}
+    <div class="pagina-cuerpo">
     <div class="titulo">PLANILLA DE JUEGO</div>
 
     <div class="encabezado">
@@ -414,6 +463,7 @@ const generarPaginaHtml = (
     }
 
     <div class="numero-pagina">Página ${numeroPagina} de ${totalPaginas}</div>
+    </div>
   </div>
 `
 }
@@ -424,7 +474,8 @@ const generarPlanillaHtml = (
     jugadores?: { nombre?: string; dni?: string; estado?: string }[]
   },
   torneo: string,
-  equipo: string
+  equipo: string,
+  dataUriMarcaAgua: string | null
 ): string => {
   const jugadores = planilla.jugadores ?? []
   const categoria = planilla.categoria ?? ''
@@ -462,7 +513,8 @@ const generarPlanillaHtml = (
       mostrarEncabezadoCompleto,
       esUltimaPagina,
       i + 1,
-      totalPaginas
+      totalPaginas,
+      dataUriMarcaAgua
     )
   }
 
@@ -474,8 +526,10 @@ export const generatePlanillas = async (dto: PlanillaDeJuegoDTO, codigoEquipo: s
   const equipo = dto.equipo ?? ''
   const planillas = dto.planillas ?? []
 
+  const dataUriMarcaAgua = await obtenerDataUriMarcaAguaEdifi()
+
   const planillasHtml = planillas
-    .map((planilla) => generarPlanillaHtml(planilla, torneo, equipo))
+    .map((planilla) => generarPlanillaHtml(planilla, torneo, equipo, dataUriMarcaAgua))
     .join('')
 
   const html = `
