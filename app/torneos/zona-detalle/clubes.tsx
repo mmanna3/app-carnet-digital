@@ -31,14 +31,6 @@ function lineaDireccionLocalidad(direccion: string | undefined, localidad: strin
   return `${d}, ${l}`
 }
 
-/** El API envía "Sí" / "No" (ver `AppCarnetDigitalCore`). */
-function textoTechado(esTechado: string | undefined) {
-  const t = (esTechado ?? '').trim().toLowerCase()
-  if (t === 'sí' || t === 'si' || t === 'yes' || t === 'true') return 'Es techado'
-  if (t === 'no' || t === 'false') return 'No es techado'
-  return '—'
-}
-
 type ClubCardProps = {
   item: ClubesDTO
   uriEscudo: string | null

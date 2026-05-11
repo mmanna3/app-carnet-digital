@@ -1298,6 +1298,49 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return OK
+     */
+    cambiarEscudoPorDefecto(body: CambiarEscudoPorDefectoDTO | undefined): Promise<boolean> {
+        let url_ = this.baseUrl + "/api/Configuracion/cambiar-escudo-por-defecto";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCambiarEscudoPorDefecto(_response);
+        });
+    }
+
+    protected processCambiarEscudoPorDefecto(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
      * @return OK
      */
     fichajeEstaHabilitado(): Promise<boolean> {
@@ -4763,6 +4806,39 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    jugadoresSinFoto(): Promise<void> {
+        let url_ = this.baseUrl + "/api/publico/jugadores-sin-foto";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processJugadoresSinFoto(_response);
+        });
+    }
+
+    protected processJugadoresSinFoto(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @param mes (optional) 
      * @param anio (optional) 
      * @return OK
@@ -6429,6 +6505,42 @@ export interface ICambiarEscudoDTO {
     imagenBase64: string;
 }
 
+export class CambiarEscudoPorDefectoDTO implements ICambiarEscudoPorDefectoDTO {
+    escudo!: string;
+
+    constructor(data?: ICambiarEscudoPorDefectoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.escudo = _data["escudo"];
+        }
+    }
+
+    static fromJS(data: any): CambiarEscudoPorDefectoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CambiarEscudoPorDefectoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["escudo"] = this.escudo;
+        return data;
+    }
+}
+
+export interface ICambiarEscudoPorDefectoDTO {
+    escudo: string;
+}
+
 export class CambiarEstadoDelJugadorDTO implements ICambiarEstadoDelJugadorDTO {
     jugadorId?: number;
     jugadorEquipoId?: number;
@@ -6874,9 +6986,10 @@ export class ClubDTO implements IClubDTO {
     nombre!: string;
     escudo?: string | undefined;
     direccion?: string | undefined;
-    esTechado?: boolean | undefined;
     canchaTipoId?: number;
     canchaTipo?: string | undefined;
+    canchaSuperficieId?: number;
+    canchaSuperficie?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
@@ -6896,9 +7009,10 @@ export class ClubDTO implements IClubDTO {
             this.nombre = _data["nombre"];
             this.escudo = _data["escudo"];
             this.direccion = _data["direccion"];
-            this.esTechado = _data["esTechado"];
             this.canchaTipoId = _data["canchaTipoId"];
             this.canchaTipo = _data["canchaTipo"];
+            this.canchaSuperficieId = _data["canchaSuperficieId"];
+            this.canchaSuperficie = _data["canchaSuperficie"];
             this.localidad = _data["localidad"];
             if (Array.isArray(_data["equipos"])) {
                 this.equipos = [] as any;
@@ -6926,9 +7040,10 @@ export class ClubDTO implements IClubDTO {
         data["nombre"] = this.nombre;
         data["escudo"] = this.escudo;
         data["direccion"] = this.direccion;
-        data["esTechado"] = this.esTechado;
         data["canchaTipoId"] = this.canchaTipoId;
         data["canchaTipo"] = this.canchaTipo;
+        data["canchaSuperficieId"] = this.canchaSuperficieId;
+        data["canchaSuperficie"] = this.canchaSuperficie;
         data["localidad"] = this.localidad;
         if (Array.isArray(this.equipos)) {
             data["equipos"] = [];
@@ -6949,9 +7064,10 @@ export interface IClubDTO {
     nombre: string;
     escudo?: string | undefined;
     direccion?: string | undefined;
-    esTechado?: boolean | undefined;
     canchaTipoId?: number;
     canchaTipo?: string | undefined;
+    canchaSuperficieId?: number;
+    canchaSuperficie?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
@@ -6962,8 +7078,8 @@ export class ClubesDTO implements IClubesDTO {
     escudo?: string | undefined;
     localidad?: string | undefined;
     direccion?: string | undefined;
-    esTechado?: string | undefined;
     tipoCancha?: string | undefined;
+    superficieCancha?: string | undefined;
 
     constructor(data?: IClubesDTO) {
         if (data) {
@@ -6980,8 +7096,8 @@ export class ClubesDTO implements IClubesDTO {
             this.escudo = _data["escudo"];
             this.localidad = _data["localidad"];
             this.direccion = _data["direccion"];
-            this.esTechado = _data["esTechado"];
             this.tipoCancha = _data["tipoCancha"];
+            this.superficieCancha = _data["superficieCancha"];
         }
     }
 
@@ -6998,8 +7114,8 @@ export class ClubesDTO implements IClubesDTO {
         data["escudo"] = this.escudo;
         data["localidad"] = this.localidad;
         data["direccion"] = this.direccion;
-        data["esTechado"] = this.esTechado;
         data["tipoCancha"] = this.tipoCancha;
+        data["superficieCancha"] = this.superficieCancha;
         return data;
     }
 }
@@ -7009,13 +7125,13 @@ export interface IClubesDTO {
     escudo?: string | undefined;
     localidad?: string | undefined;
     direccion?: string | undefined;
-    esTechado?: string | undefined;
     tipoCancha?: string | undefined;
+    superficieCancha?: string | undefined;
 }
 
 export class ConfiguracionDTO implements IConfiguracionDTO {
     id?: number;
-    fichajeEstaHabilitado?: boolean;
+    habilitacionFichajeId?: number;
 
     constructor(data?: IConfiguracionDTO) {
         if (data) {
@@ -7029,7 +7145,7 @@ export class ConfiguracionDTO implements IConfiguracionDTO {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.fichajeEstaHabilitado = _data["fichajeEstaHabilitado"];
+            this.habilitacionFichajeId = _data["habilitacionFichajeId"];
         }
     }
 
@@ -7043,14 +7159,14 @@ export class ConfiguracionDTO implements IConfiguracionDTO {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["fichajeEstaHabilitado"] = this.fichajeEstaHabilitado;
+        data["habilitacionFichajeId"] = this.habilitacionFichajeId;
         return data;
     }
 }
 
 export interface IConfiguracionDTO {
     id?: number;
-    fichajeEstaHabilitado?: boolean;
+    habilitacionFichajeId?: number;
 }
 
 export class CrearTorneoDTO implements ICrearTorneoDTO {
@@ -8889,8 +9005,7 @@ export class JornadaDTO implements IJornadaDTO {
     visitanteId?: number | undefined;
     local?: string | undefined;
     visitante?: string | undefined;
-    equipoLocalId?: number | undefined;
-    equipoLocal?: string | undefined;
+    numero?: number | undefined;
     equipoId?: number | undefined;
     equipo?: string | undefined;
     localOVisitante?: LocalVisitanteEnum;
@@ -8915,8 +9030,7 @@ export class JornadaDTO implements IJornadaDTO {
             this.visitanteId = _data["visitanteId"];
             this.local = _data["local"];
             this.visitante = _data["visitante"];
-            this.equipoLocalId = _data["equipoLocalId"];
-            this.equipoLocal = _data["equipoLocal"];
+            this.numero = _data["numero"];
             this.equipoId = _data["equipoId"];
             this.equipo = _data["equipo"];
             this.localOVisitante = _data["localOVisitante"];
@@ -8945,8 +9059,7 @@ export class JornadaDTO implements IJornadaDTO {
         data["visitanteId"] = this.visitanteId;
         data["local"] = this.local;
         data["visitante"] = this.visitante;
-        data["equipoLocalId"] = this.equipoLocalId;
-        data["equipoLocal"] = this.equipoLocal;
+        data["numero"] = this.numero;
         data["equipoId"] = this.equipoId;
         data["equipo"] = this.equipo;
         data["localOVisitante"] = this.localOVisitante;
@@ -8968,8 +9081,7 @@ export interface IJornadaDTO {
     visitanteId?: number | undefined;
     local?: string | undefined;
     visitante?: string | undefined;
-    equipoLocalId?: number | undefined;
-    equipoLocal?: string | undefined;
+    numero?: number | undefined;
     equipoId?: number | undefined;
     equipo?: string | undefined;
     localOVisitante?: LocalVisitanteEnum;
@@ -8980,6 +9092,8 @@ export class JornadaPorEquipoDTO implements IJornadaPorEquipoDTO {
     escudo?: string | undefined;
     equipo?: string | undefined;
     categorias?: ResultadoCategoriaDTO[] | undefined;
+    puntosTotales?: number;
+    partidosJugados?: number;
 
     constructor(data?: IJornadaPorEquipoDTO) {
         if (data) {
@@ -8999,6 +9113,8 @@ export class JornadaPorEquipoDTO implements IJornadaPorEquipoDTO {
                 for (let item of _data["categorias"])
                     this.categorias!.push(ResultadoCategoriaDTO.fromJS(item));
             }
+            this.puntosTotales = _data["puntosTotales"];
+            this.partidosJugados = _data["partidosJugados"];
         }
     }
 
@@ -9018,6 +9134,8 @@ export class JornadaPorEquipoDTO implements IJornadaPorEquipoDTO {
             for (let item of this.categorias)
                 data["categorias"].push(item.toJSON());
         }
+        data["puntosTotales"] = this.puntosTotales;
+        data["partidosJugados"] = this.partidosJugados;
         return data;
     }
 }
@@ -9026,6 +9144,8 @@ export interface IJornadaPorEquipoDTO {
     escudo?: string | undefined;
     equipo?: string | undefined;
     categorias?: ResultadoCategoriaDTO[] | undefined;
+    puntosTotales?: number;
+    partidosJugados?: number;
 }
 
 export class JornadasDTO implements IJornadasDTO {

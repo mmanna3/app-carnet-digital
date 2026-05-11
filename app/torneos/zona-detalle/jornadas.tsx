@@ -22,6 +22,10 @@ function textoOGuion(s: string | undefined) {
   return t.length > 0 ? t : '—'
 }
 
+function numeroOGuion(n: number | undefined) {
+  return n != null && Number.isFinite(n) ? String(n) : '—'
+}
+
 function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | undefined }) {
   const u = uriRecursoPublicoApi(apiUrl, uri)
   return (
@@ -101,6 +105,11 @@ function FilaJornada({
   const local = par.local
   const visitante = par.visitante
   const categorias = categoriasResultadoUnico(local?.categorias, visitante?.categorias)
+  const tieneTotalesJornada =
+    local?.puntosTotales != null ||
+    local?.partidosJugados != null ||
+    visitante?.puntosTotales != null ||
+    visitante?.partidosJugados != null
 
   return (
     <View className="border-b border-gray-100 py-2.5 last:border-b-0">
@@ -121,7 +130,7 @@ function FilaJornada({
         </View>
         <Escudo uri={visitante?.escudo} apiUrl={apiUrl} />
       </View>
-      {categorias.length > 0 && (
+      {(categorias.length > 0 || tieneTotalesJornada) && (
         <View className="mt-2.5 gap-2 rounded-lg bg-gray-100 px-1.5 py-2.5">
           {categorias.map((row, i) => {
             const mar = parseMarcadorPartido(row.resultado)
@@ -173,6 +182,36 @@ function FilaJornada({
               </View>
             )
           })}
+          {tieneTotalesJornada ? (
+            <>
+              {categorias.length > 0 ? <View className="mx-1.5 border-t border-gray-200" /> : null}
+              <View className="flex-row items-center gap-1.5 px-1.5">
+                <View style={{ width: 36 }} />
+                <View className="min-w-0 flex-1 items-end justify-center gap-0.5">
+                  <Text className="text-right text-xs tabular-nums text-gray-800">
+                    <Text className="font-semibold text-gray-500">P.T. </Text>
+                    {numeroOGuion(local?.puntosTotales)}
+                  </Text>
+                  <Text className="text-right text-xs tabular-nums text-gray-800">
+                    <Text className="font-semibold text-gray-500">P.J. </Text>
+                    {numeroOGuion(local?.partidosJugados)}
+                  </Text>
+                </View>
+                <View className="min-w-[52px] max-w-[40%] shrink" />
+                <View className="min-w-0 flex-1 items-start justify-center gap-0.5">
+                  <Text className="text-left text-xs tabular-nums text-gray-800">
+                    <Text className="font-semibold text-gray-500">P.T. </Text>
+                    {numeroOGuion(visitante?.puntosTotales)}
+                  </Text>
+                  <Text className="text-left text-xs tabular-nums text-gray-800">
+                    <Text className="font-semibold text-gray-500">P.J. </Text>
+                    {numeroOGuion(visitante?.partidosJugados)}
+                  </Text>
+                </View>
+                <View style={{ width: 36 }} />
+              </View>
+            </>
+          ) : null}
         </View>
       )}
     </View>

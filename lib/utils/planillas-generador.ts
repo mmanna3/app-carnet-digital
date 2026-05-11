@@ -233,6 +233,11 @@ const stylesTag = `
     gap: 5px;
   }
 
+  .firmas .firma-grupo label {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
   .firma-linea {
     width: 200px;
     border-bottom: 1px solid #000;
@@ -275,12 +280,6 @@ const stylesTag = `
     box-sizing: border-box;
   }
 
-  .numero-pagina {
-    position: absolute;
-    bottom: 10mm;
-    right: 15mm;
-    font-size: 12px;
-  }
 </style>
 `
 
@@ -292,8 +291,6 @@ const generarPaginaHtml = (
   esTorneoFutsal: boolean,
   mostrarEncabezadoCompleto: boolean,
   esUltimaPagina: boolean,
-  numeroPagina: number,
-  totalPaginas: number,
   dataUriMarcaAgua: string | null
 ) => {
   const marcaAguaHtml = dataUriMarcaAgua
@@ -462,7 +459,6 @@ const generarPaginaHtml = (
         : ''
     }
 
-    <div class="numero-pagina">Página ${numeroPagina} de ${totalPaginas}</div>
     </div>
   </div>
 `
@@ -512,8 +508,6 @@ const generarPlanillaHtml = (
       esTorneoFutsal,
       mostrarEncabezadoCompleto,
       esUltimaPagina,
-      i + 1,
-      totalPaginas,
       dataUriMarcaAgua
     )
   }
