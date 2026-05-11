@@ -62,6 +62,9 @@ function ClubCard({ item, uriEscudo }: ClubCardProps) {
           <Text className="text-sm leading-5 text-gray-500" numberOfLines={2}>
             Cancha: {item.tipoCancha}
           </Text>
+          <Text className="text-sm leading-5 text-gray-500" numberOfLines={2}>
+            Superficie: {item.superficieCancha}
+          </Text>
         </View>
       </View>
     </View>

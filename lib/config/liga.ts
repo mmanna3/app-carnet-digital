@@ -50,7 +50,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
           leagueId: liga.leagueId,
           leagueDisplayName: liga.leagueDisplayName,
           apiUrl:
-            E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.80:5072' : liga.apiUrl),
+            E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.94:5072' : liga.apiUrl),
           colorBase: liga.colorBase,
         }
       : null
@@ -60,7 +60,7 @@ function getConfigLigaFromStore(): ConfigLigaRuntime | null {
     leagueId: extra.leagueId,
     leagueDisplayName: extra.leagueDisplayName ?? '',
     apiUrl:
-      E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.80:5072' : (extra.apiUrl ?? '')),
+      E2E_API_URL ?? (__DEV__ && !USE_PROD_API ? 'http://192.168.0.94:5072' : (extra.apiUrl ?? '')),
     colorBase: extra.colorBase,
   }
 }
