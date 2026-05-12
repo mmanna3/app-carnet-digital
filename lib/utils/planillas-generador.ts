@@ -480,7 +480,9 @@ const generarPlanillaHtml = (
   /** Cantidad fija de renglones por hoja según formato (siempre igual en cada planilla del mismo tipo). */
   const RENGLONES_POR_PAGINA_FUTSAL = 28
   const RENGLONES_POR_PAGINA_NO_FUTSAL = 30
-  const jugadoresPorPagina = esTorneoFutsal ? RENGLONES_POR_PAGINA_FUTSAL : RENGLONES_POR_PAGINA_NO_FUTSAL
+  const jugadoresPorPagina = esTorneoFutsal
+    ? RENGLONES_POR_PAGINA_FUTSAL
+    : RENGLONES_POR_PAGINA_NO_FUTSAL
 
   const filaVacia = (): { nombre: string; dni: string; estado: string } => ({
     nombre: '',
