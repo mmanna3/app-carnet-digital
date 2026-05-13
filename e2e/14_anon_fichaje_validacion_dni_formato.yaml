@@ -99,6 +99,12 @@ appId: com.ykn.edefidelegados
 # Con DNI de 5 dígitos, el botón debe estar deshabilitado.
 # Android: assertVisible enabled:false no funciona con New Architecture/Fabric.
 # En su lugar, tapear el botón y verificar que no avanzó el paso.
+# El botón puede estar debajo del fold tras fecha + teclado.
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 25000
 - tapOn:
     id: 'boton-continuar'
 - assertVisible:
@@ -130,9 +136,17 @@ appId: com.ykn.edefidelegados
       - tapOn:
           id: 'input-dni-jugador'
       - inputText: '67'
-# Ahora el botón debe habilitarse
+# DNI válido + fecha ya cargada: Continuar debe poder completar validación y pasar a foto.
+# Android Fabric: no usar enabled:true en el árbol de accesibilidad (falla en CI). Verificación
+# conductual: scroll hasta el botón → tap → siguiente paso (mock el-dni-esta-fichado = false).
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 25000
+- tapOn:
+    id: 'boton-continuar'
 - extendedWaitUntil:
     visible:
-      id: 'boton-continuar'
-      enabled: true
-    timeout: 15000
+      id: 'paso-foto'
+    timeout: 20000

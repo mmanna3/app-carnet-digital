@@ -63,6 +63,10 @@ const RESPONSES = {
   'POST:/api/Auth/login': {
     happy: { exito: true, token: 'token-e2e-abc123' },
   },
+  /** Pantalla /fichajes: evita 404 y logs "sin handler"; el cliente también asume true si falla la red */
+  'GET:/api/Configuracion/fichaje-esta-habilitado': {
+    happy: true,
+  },
   'GET:/api/carnet-digital/equipos-del-delegado': {
     happy: {
       clubsConEquipos: [

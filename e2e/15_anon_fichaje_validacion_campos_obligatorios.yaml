@@ -37,10 +37,16 @@ appId: com.ykn.edefidelegados
     id: 'paso-datos-jugador'
 # Android + New Architecture: assertVisible enabled:false no refleja disabled en el árbol de accesibilidad.
 # Misma estrategia que 14_anon: tapear Continuar y comprobar que no se avanza de paso.
+# El botón puede estar fuera del viewport del ScrollView → scrollUntilVisible antes del tap.
 - runFlow:
     when:
       platform: android
     commands:
+      - scrollUntilVisible:
+          element:
+            id: 'boton-continuar'
+          direction: DOWN
+          timeout: 25000
       - tapOn:
           id: 'boton-continuar'
       - assertVisible:
@@ -60,6 +66,11 @@ appId: com.ykn.edefidelegados
     when:
       platform: android
     commands:
+      - scrollUntilVisible:
+          element:
+            id: 'boton-continuar'
+          direction: DOWN
+          timeout: 25000
       - tapOn:
           id: 'boton-continuar'
       - assertVisible:
@@ -79,6 +90,11 @@ appId: com.ykn.edefidelegados
     when:
       platform: android
     commands:
+      - scrollUntilVisible:
+          element:
+            id: 'boton-continuar'
+          direction: DOWN
+          timeout: 25000
       - tapOn:
           id: 'boton-continuar'
       - assertVisible:
@@ -148,8 +164,15 @@ appId: com.ykn.edefidelegados
       - tapOn:
           text: 'Aceptar'
           optional: true
+# Misma razón que 14: no assert enabled:true en Android. Confirmar avance real a paso foto.
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 25000
+- tapOn:
+    id: 'boton-continuar'
 - extendedWaitUntil:
     visible:
-      id: 'boton-continuar'
-      enabled: true
-    timeout: 15000
+      id: 'paso-foto'
+    timeout: 20000
