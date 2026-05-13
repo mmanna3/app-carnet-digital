@@ -50,7 +50,7 @@ jobs:
         run: npm ci
 
       - name: Export web
-        run: LIGA_ID=edefi npx expo export --platform web
+        run: LIGA_ID=edefi npx expo export --platform web && node scripts/postprocess-web-export.js
 
       - name: Sync files (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -60,8 +60,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          # Por defecto la acción excluye **/node_modules/**; el export web de Expo
-          # deja las fuentes de íconos en dist/assets/node_modules/... y no se subían.
+          # Por defecto la acción excluye **/node_modules/**. El script postprocess-web-export
+          # mueve dist/assets/node_modules → dist/assets/vendor y reescribe el bundle.
           exclude: |
             **/.git*
             **/.git*/**

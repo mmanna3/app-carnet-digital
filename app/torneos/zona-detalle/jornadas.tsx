@@ -106,9 +106,9 @@ function celdaResultadoCategoria(
 const ANCHO = {
   esc: 44,
   equipo: 148,
-  cat: 92,
+  cat: 102,
   pt: 40,
-  pj: 34,
+  pj: 40,
 } as const
 
 function anchoTablaJornadas(nCategorias: number): number {
