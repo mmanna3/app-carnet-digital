@@ -42,6 +42,9 @@ const crearJugador = (overrides: Record<string, any> = {}) => ({
 
 const htmlGenerado = () => mockPrint.printToFileAsync.mock.calls[0]![0]!.html as string
 
+/** Solo el contenedor de hoja (`page-content` no debe coincidir). */
+const contarHojasPdf = (html: string) => (html.match(/<div class="page">/g) || []).length
+
 describe('generatePDF', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -67,8 +70,8 @@ describe('generatePDF', () => {
     })
   })
 
-  describe('ordenamiento por fecha de nacimiento', () => {
-    it('los jugadores más viejos aparecen primero en el HTML', async () => {
+  describe('ordenamiento por categoría (año de nacimiento)', () => {
+    it('los jugadores aparecen por categoría ascendente (año), como en la app', async () => {
       const jugadores = [
         crearJugador({ id: 1, fechaNacimiento: new Date('2012-01-01'), nombre: 'Nuevo' }),
         crearJugador({ id: 2, fechaNacimiento: new Date('2008-01-01'), nombre: 'Viejo' }),
@@ -86,38 +89,37 @@ describe('generatePDF', () => {
     })
   })
 
-  describe('paginación (9 por página)', () => {
+  describe('paginación (capacidad por hoja, misma categoría)', () => {
+    /** Misma categoría (mismo año) para no inflar filas con carteles entre carnets. */
+    const mismaCategoria = (i: number) =>
+      crearJugador({
+        id: i + 1,
+        nombre: `Jugador${i + 1}`,
+        fechaNacimiento: new Date(2010, 0, 1 + (i % 28)),
+      })
+
     it('genera 1 página para 9 jugadores', async () => {
-      const jugadores = Array.from({ length: 9 }, (_, i) =>
-        crearJugador({ id: i + 1, fechaNacimiento: new Date(2010 + i, 0, 1) })
-      )
+      const jugadores = Array.from({ length: 9 }, (_, i) => mismaCategoria(i))
 
       await generatePDF(jugadores as any, 'EQUIPO-01')
 
-      const count = (htmlGenerado().match(/class="page"/g) || []).length
-      expect(count).toBe(1)
+      expect(contarHojasPdf(htmlGenerado())).toBe(1)
     })
 
     it('genera 2 páginas para 10 jugadores', async () => {
-      const jugadores = Array.from({ length: 10 }, (_, i) =>
-        crearJugador({ id: i + 1, fechaNacimiento: new Date(2010 + i, 0, 1) })
-      )
+      const jugadores = Array.from({ length: 10 }, (_, i) => mismaCategoria(i))
 
       await generatePDF(jugadores as any, 'EQUIPO-01')
 
-      const count = (htmlGenerado().match(/class="page"/g) || []).length
-      expect(count).toBe(2)
+      expect(contarHojasPdf(htmlGenerado())).toBe(2)
     })
 
     it('genera 3 páginas para 27 jugadores', async () => {
-      const jugadores = Array.from({ length: 27 }, (_, i) =>
-        crearJugador({ id: i + 1, fechaNacimiento: new Date(2010 + (i % 12), 0, 1) })
-      )
+      const jugadores = Array.from({ length: 27 }, (_, i) => mismaCategoria(i))
 
       await generatePDF(jugadores as any, 'EQUIPO-01')
 
-      const count = (htmlGenerado().match(/class="page"/g) || []).length
-      expect(count).toBe(3)
+      expect(contarHojasPdf(htmlGenerado())).toBe(3)
     })
   })
 
@@ -171,6 +173,15 @@ describe('generatePDF', () => {
 
       expect(htmlGenerado()).toContain('2011')
     })
+
+    it('incluye numeración de página en el pie', async () => {
+      await generatePDF(
+        [crearJugador(), crearJugador({ id: 2, dni: '87654321' })] as any,
+        'EQUIPO-01'
+      )
+
+      expect(htmlGenerado()).toMatch(/Página 1\/1/)
+    })
   })
 
   describe('sharing', () => {
@@ -212,10 +223,12 @@ describe('generatePDF', () => {
 
   describe('manejo de errores', () => {
     it('muestra Alert y re-lanza el error si Print falla', async () => {
+      const spyErr = jest.spyOn(console, 'error').mockImplementation(() => {})
       mockPrint.printToFileAsync.mockRejectedValue(new Error('Print falló'))
 
       await expect(generatePDF([crearJugador()] as any, 'EQUIPO-01')).rejects.toThrow('Print falló')
       expect(mockAlert).toHaveBeenCalledWith('Error', 'No se pudo generar el PDF')
+      spyErr.mockRestore()
     })
   })
 })

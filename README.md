@@ -32,6 +32,14 @@ Al iniciar, la consola muestra la URL efectiva (ej. `📡 API URL: https://admin
 
 ## Deploy
 
+### TL;DR
+
+1.  Subir `version` en `app.config.ts`
+2.  `LIGA_ID=edefi npm run android:build` y `LIGA_ID=edefi npm run ios:build`
+3.  `LIGA_ID=edefi npm run android:deploy` y `LIGA_ID=edefi npm run ios:deploy`
+
+### Más cosas
+
 1. **Configuración de la liga**  
    Verificá que en `configs-por-liga/datos.js` la liga tenga `appId`, `easProjectId`, `expoSlug` y `apiUrl` correctos.
 
