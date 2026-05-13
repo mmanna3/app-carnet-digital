@@ -3,10 +3,9 @@ import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } fr
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
-import type { FechasParaJornadasDTO, JornadasPorFechaDTO } from '@/lib/api/clients'
+import type { FechasParaJornadasDTO, JornadaPorEquipoDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { hexCabeceraPorColorAgrupadorApi, useConfigLiga } from '@/lib/config/liga'
-import { estiloAccentoPorColor } from '@/components/tarjeta-con-fondo-de-color'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -24,24 +23,6 @@ function textoOGuion(s: string | undefined) {
 
 function numeroOGuion(n: number | undefined) {
   return n != null && Number.isFinite(n) ? String(n) : '—'
-}
-
-function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | undefined }) {
-  const u = uriRecursoPublicoApi(apiUrl, uri)
-  return (
-    <View style={{ width: 36, height: 36 }} className="shrink-0 items-center justify-center">
-      {u ? (
-        <Image
-          source={{ uri: u }}
-          style={{ width: 36, height: 36 }}
-          className="rounded-md"
-          resizeMode="contain"
-        />
-      ) : (
-        <View className="h-9 w-9 rounded-md bg-gray-100" />
-      )}
-    </View>
-  )
 }
 
 function fechaTieneResultados(fecha: FechasParaJornadasDTO): boolean {
@@ -93,127 +74,155 @@ function parseMarcadorPartido(s: string | undefined): MarcadorParseado {
   return { ok: true, local, visitante }
 }
 
-function FilaJornada({
-  par,
-  apiUrl,
-  colorCategoria,
+/** Nombres de categoría en orden de aparición (unión de todos los partidos de la fecha). */
+function nombresCategoriasDeFecha(fecha: FechasParaJornadasDTO): string[] {
+  const seen = new Set<string>()
+  const ordered: string[] = []
+  for (const j of fecha.jornadas ?? []) {
+    for (const row of categoriasResultadoUnico(j.local?.categorias, j.visitante?.categorias)) {
+      const n = (row.categoria ?? '').trim()
+      if (!n || seen.has(n)) continue
+      seen.add(n)
+      ordered.push(n)
+    }
+  }
+  return ordered
+}
+
+function celdaResultadoCategoria(
+  categorias: { categoria?: string; resultado?: string }[] | undefined,
+  nombreCategoria: string,
+  lado: 'local' | 'visitante'
+): string {
+  const row = (categorias ?? []).find((r) => (r.categoria ?? '').trim() === nombreCategoria)
+  if (!row) return '—'
+  const mar = parseMarcadorPartido(row.resultado)
+  if (mar.ok) return lado === 'local' ? mar.local : mar.visitante
+  if (mar.texto !== '—') return lado === 'local' ? mar.texto : '—'
+  return '—'
+}
+
+/** `esc` / `equipo` / `pt` / `pj` alineados con posiciones; `cat` más ancho para títulos ~9 caracteres en una línea (padding de Celda). */
+const ANCHO = {
+  esc: 44,
+  equipo: 148,
+  cat: 92,
+  pt: 40,
+  pj: 34,
+} as const
+
+function anchoTablaJornadas(nCategorias: number): number {
+  return ANCHO.esc + ANCHO.equipo + nCategorias * ANCHO.cat + ANCHO.pt + ANCHO.pj
+}
+
+/** Misma idea que `Celda` en posiciones.tsx (sin líneas verticales entre columnas). */
+function Celda({
+  children,
+  ancho,
+  alinear = 'left',
+  negrita = false,
+  tabular = false,
+  numberOfLines = 2,
 }: {
-  par: JornadasPorFechaDTO
-  apiUrl: string | undefined
-  colorCategoria: string
+  children: React.ReactNode
+  ancho: number
+  alinear?: 'left' | 'center' | 'right'
+  negrita?: boolean
+  tabular?: boolean
+  /** Cabeceras de categoría largas: más líneas para no truncar. */
+  numberOfLines?: number
 }) {
-  const local = par.local
-  const visitante = par.visitante
-  const categorias = categoriasResultadoUnico(local?.categorias, visitante?.categorias)
-  const tieneTotalesJornada =
-    local?.puntosTotales != null ||
-    local?.partidosJugados != null ||
-    visitante?.puntosTotales != null ||
-    visitante?.partidosJugados != null
+  const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
+  return (
+    <View style={{ width: ancho, minWidth: ancho }} className="shrink-0 justify-center px-1.5 py-2">
+      <Text
+        className={`text-sm leading-5 text-gray-800 ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
+        style={{ textAlign: align }}
+        numberOfLines={numberOfLines}
+      >
+        {children}
+      </Text>
+    </View>
+  )
+}
+
+function FilaEncabezadoTablaJornadas({ nombresCategorias }: { nombresCategorias: string[] }) {
+  return (
+    <View className="flex-row border-b border-gray-300 bg-gray-100">
+      <Celda ancho={ANCHO.esc} alinear="center" negrita>
+        Esc
+      </Celda>
+      <Celda ancho={ANCHO.equipo} alinear="left" negrita>
+        Equipo
+      </Celda>
+      {nombresCategorias.map((cat) => (
+        <Celda key={cat} ancho={ANCHO.cat} alinear="center" negrita numberOfLines={4}>
+          {cat}
+        </Celda>
+      ))}
+      <Celda ancho={ANCHO.pt} alinear="center" negrita tabular>
+        P.T.
+      </Celda>
+      <Celda ancho={ANCHO.pj} alinear="center" negrita tabular>
+        P.J.
+      </Celda>
+    </View>
+  )
+}
+
+function FilaEquipoTabla({
+  equipo,
+  nombresCategorias,
+  lado,
+  apiUrl,
+  visitanteConMasPartidosDebajo,
+}: {
+  equipo: JornadaPorEquipoDTO | undefined
+  nombresCategorias: string[]
+  lado: 'local' | 'visitante'
+  apiUrl: string | undefined
+  /** Solo para la fila visitante: borde más marcado si sigue otro partido. */
+  visitanteConMasPartidosDebajo?: boolean
+}) {
+  const uri = uriRecursoPublicoApi(apiUrl, equipo?.escudo)
+  const bordeClase =
+    lado === 'local'
+      ? 'border-b border-gray-100'
+      : visitanteConMasPartidosDebajo
+        ? 'border-b border-gray-200'
+        : 'border-b border-gray-100'
 
   return (
-    <View className="border-b border-gray-100 py-2.5 last:border-b-0">
-      <View className="flex-row items-center gap-1.5 px-2">
-        <Escudo uri={local?.escudo} apiUrl={apiUrl} />
-        <View className="min-w-0 flex-1 items-end justify-center">
-          <Text className="text-right text-sm font-medium text-gray-900" numberOfLines={2}>
-            {textoOGuion(local?.equipo)}
-          </Text>
-        </View>
-        <View className="w-[52px] shrink-0 items-center justify-center">
-          <Text className="text-xs font-semibold text-gray-400">vs</Text>
-        </View>
-        <View className="min-w-0 flex-1 items-start justify-center">
-          <Text className="text-left text-sm font-medium text-gray-900" numberOfLines={2}>
-            {textoOGuion(visitante?.equipo)}
-          </Text>
-        </View>
-        <Escudo uri={visitante?.escudo} apiUrl={apiUrl} />
+    <View className={`flex-row ${bordeClase}`}>
+      <View
+        style={{ width: ANCHO.esc, minWidth: ANCHO.esc }}
+        className="shrink-0 items-center justify-center px-1 py-1.5"
+      >
+        {uri ? (
+          <Image
+            source={{ uri }}
+            style={{ width: 32, height: 32 }}
+            className="rounded-md"
+            resizeMode="contain"
+          />
+        ) : (
+          <View className="h-8 w-8 rounded-md bg-gray-100" />
+        )}
       </View>
-      {(categorias.length > 0 || tieneTotalesJornada) && (
-        <View className="mt-2.5 gap-2 rounded-lg bg-gray-100 px-1.5 py-2.5">
-          {categorias.map((row, i) => {
-            const mar = parseMarcadorPartido(row.resultado)
-            return (
-              <View key={`${row.categoria}-${i}`} className="flex-row items-center gap-1.5 px-1.5">
-                <View style={{ width: 36 }} />
-                <View className="min-w-0 flex-1 justify-center">
-                  {mar.ok ? (
-                    <Text
-                      className="text-right text-sm font-semibold tabular-nums text-gray-800"
-                      numberOfLines={2}
-                    >
-                      {mar.local}
-                    </Text>
-                  ) : (
-                    <Text className="text-right text-xs text-gray-400">—</Text>
-                  )}
-                </View>
-                <View className="min-w-[52px] max-w-[40%] shrink items-center justify-center px-0.5">
-                  <Text
-                    className="text-center text-xs font-semibold leading-4"
-                    style={{ color: colorCategoria }}
-                    numberOfLines={3}
-                  >
-                    {textoOGuion(row.categoria)}
-                  </Text>
-                  {!mar.ok && mar.texto !== '—' ? (
-                    <Text
-                      className="mt-0.5 text-center text-[11px] leading-4 text-gray-800"
-                      numberOfLines={3}
-                    >
-                      {mar.texto}
-                    </Text>
-                  ) : null}
-                </View>
-                <View className="min-w-0 flex-1 justify-center">
-                  {mar.ok ? (
-                    <Text
-                      className="text-left text-sm font-semibold tabular-nums text-gray-800"
-                      numberOfLines={2}
-                    >
-                      {mar.visitante}
-                    </Text>
-                  ) : (
-                    <Text className="text-left text-xs text-gray-400">—</Text>
-                  )}
-                </View>
-                <View style={{ width: 36 }} />
-              </View>
-            )
-          })}
-          {tieneTotalesJornada ? (
-            <>
-              {categorias.length > 0 ? <View className="mx-1.5 border-t border-gray-200" /> : null}
-              <View className="flex-row items-center gap-1.5 px-1.5">
-                <View style={{ width: 36 }} />
-                <View className="min-w-0 flex-1 items-end justify-center gap-0.5">
-                  <Text className="text-right text-xs tabular-nums text-gray-800">
-                    <Text className="font-semibold text-gray-500">P.T. </Text>
-                    {numeroOGuion(local?.puntosTotales)}
-                  </Text>
-                  <Text className="text-right text-xs tabular-nums text-gray-800">
-                    <Text className="font-semibold text-gray-500">P.J. </Text>
-                    {numeroOGuion(local?.partidosJugados)}
-                  </Text>
-                </View>
-                <View className="min-w-[52px] max-w-[40%] shrink" />
-                <View className="min-w-0 flex-1 items-start justify-center gap-0.5">
-                  <Text className="text-left text-xs tabular-nums text-gray-800">
-                    <Text className="font-semibold text-gray-500">P.T. </Text>
-                    {numeroOGuion(visitante?.puntosTotales)}
-                  </Text>
-                  <Text className="text-left text-xs tabular-nums text-gray-800">
-                    <Text className="font-semibold text-gray-500">P.J. </Text>
-                    {numeroOGuion(visitante?.partidosJugados)}
-                  </Text>
-                </View>
-                <View style={{ width: 36 }} />
-              </View>
-            </>
-          ) : null}
-        </View>
-      )}
+      <Celda ancho={ANCHO.equipo} alinear="left">
+        {textoOGuion(equipo?.equipo)}
+      </Celda>
+      {nombresCategorias.map((cat) => (
+        <Celda key={cat} ancho={ANCHO.cat} alinear="center" tabular>
+          {celdaResultadoCategoria(equipo?.categorias, cat, lado)}
+        </Celda>
+      ))}
+      <Celda ancho={ANCHO.pt} alinear="center" tabular>
+        {numeroOGuion(equipo?.puntosTotales)}
+      </Celda>
+      <Celda ancho={ANCHO.pj} alinear="center" tabular>
+        {numeroOGuion(equipo?.partidosJugados)}
+      </Celda>
     </View>
   )
 }
@@ -221,13 +230,15 @@ function FilaJornada({
 function CardFechaJornadas({
   fecha,
   apiUrl,
-  colorCategoria,
 }: {
   fecha: FechasParaJornadasDTO
   apiUrl: string | undefined
-  colorCategoria: string
 }) {
   const jornadas = fecha.jornadas ?? []
+  const nombresCategorias = useMemo(() => nombresCategoriasDeFecha(fecha), [fecha])
+  const anchoTotal = anchoTablaJornadas(nombresCategorias.length)
+  const ultimoIndicePartido = jornadas.length - 1
+
   return (
     <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm elevation-3">
       <View className="mb-1 flex-row items-baseline justify-between gap-2 border-b border-gray-200 px-2 py-2">
@@ -236,14 +247,37 @@ function CardFechaJornadas({
         </Text>
         <Text className="shrink-0 text-sm text-gray-500">{textoOGuion(fecha.dia)}</Text>
       </View>
-      {jornadas.map((j, i) => (
-        <FilaJornada
-          key={`${fecha.titulo ?? 'f'}-${i}`}
-          par={j}
-          apiUrl={apiUrl}
-          colorCategoria={colorCategoria}
-        />
-      ))}
+      {jornadas.length === 0 ? (
+        <Text className="px-0.5 py-4 text-sm leading-5 text-gray-600">
+          No hay partidos en esta fecha.
+        </Text>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
+          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
+            <FilaEncabezadoTablaJornadas nombresCategorias={nombresCategorias} />
+            {jornadas.map((j, i) => {
+              const hayMasPartidos = i < ultimoIndicePartido
+              return (
+                <View key={`${fecha.titulo ?? 'f'}-partido-${i}`}>
+                  <FilaEquipoTabla
+                    equipo={j.local}
+                    nombresCategorias={nombresCategorias}
+                    lado="local"
+                    apiUrl={apiUrl}
+                  />
+                  <FilaEquipoTabla
+                    equipo={j.visitante}
+                    nombresCategorias={nombresCategorias}
+                    lado="visitante"
+                    apiUrl={apiUrl}
+                    visitanteConMasPartidosDebajo={hayMasPartidos}
+                  />
+                </View>
+              )
+            })}
+          </View>
+        </ScrollView>
+      )}
     </View>
   )
 }
@@ -264,11 +298,6 @@ export default function Jornadas() {
   const colorAgrupador = useMemo(
     () => (colorParam != null && String(colorParam).length > 0 ? String(colorParam) : undefined),
     [colorParam]
-  )
-
-  const colorCategoria = useMemo(
-    () => estiloAccentoPorColor(colorAgrupador).iconoColor,
-    [colorAgrupador]
   )
 
   const colorFondoChipSeleccionado = useMemo(
@@ -323,7 +352,6 @@ export default function Jornadas() {
       zonaId={zonaId}
       fechas={fechas}
       apiUrl={configLiga?.apiUrl}
-      colorCategoria={colorCategoria}
       colorFondoChipSeleccionado={colorFondoChipSeleccionado}
     />
   )
@@ -333,7 +361,6 @@ type JornadasConSelectorFechaProps = {
   zonaId: number
   fechas: FechasParaJornadasDTO[]
   apiUrl: string | undefined
-  colorCategoria: string
   colorFondoChipSeleccionado: string
 }
 
@@ -341,7 +368,6 @@ function JornadasConSelectorFecha({
   zonaId,
   fechas,
   apiUrl,
-  colorCategoria,
   colorFondoChipSeleccionado,
 }: JornadasConSelectorFechaProps) {
   const indiceDefault = useMemo(() => indiceUltimaFechaConResultados(fechas), [fechas])
@@ -396,11 +422,7 @@ function JornadasConSelectorFecha({
           contentContainerStyle={{ paddingBottom: 24, paddingTop: 12 }}
           showsVerticalScrollIndicator
         >
-          <CardFechaJornadas
-            fecha={fechaMostrada}
-            apiUrl={apiUrl}
-            colorCategoria={colorCategoria}
-          />
+          <CardFechaJornadas fecha={fechaMostrada} apiUrl={apiUrl} />
         </ScrollView>
       ) : null}
     </View>
