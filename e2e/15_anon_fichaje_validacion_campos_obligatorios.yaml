@@ -35,24 +35,76 @@ appId: com.ykn.edefidelegados
 # PasoDatosJugador — al llegar, el botón debe estar deshabilitado (todos los campos vacíos)
 - assertVisible:
     id: 'paso-datos-jugador'
-- assertVisible:
-    id: 'boton-continuar'
-    enabled: false
+# Android + New Architecture: assertVisible enabled:false no refleja disabled en el árbol de accesibilidad.
+# Misma estrategia que 14_anon: tapear Continuar y comprobar que no se avanza de paso.
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          id: 'boton-continuar'
+      - assertVisible:
+          id: 'paso-datos-jugador'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - assertVisible:
+          id: 'boton-continuar'
+          enabled: false
 # Completar solo nombre → sigue deshabilitado
 - tapOn:
     id: 'input-nombre'
 - inputText: 'Juan'
-- assertVisible:
-    id: 'boton-continuar'
-    enabled: false
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          id: 'boton-continuar'
+      - assertVisible:
+          id: 'paso-datos-jugador'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - assertVisible:
+          id: 'boton-continuar'
+          enabled: false
 # Completar apellido → sigue deshabilitado (falta DNI y fecha)
 - tapOn:
     id: 'input-apellido'
 - inputText: 'Perez'
-- assertVisible:
-    id: 'boton-continuar'
-    enabled: false
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          id: 'boton-continuar'
+      - assertVisible:
+          id: 'paso-datos-jugador'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - assertVisible:
+          id: 'boton-continuar'
+          enabled: false
 # Completar DNI válido → sigue deshabilitado (falta fecha)
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          text: 'Datos del jugador'
+- swipe:
+    start: '50%, 72%'
+    end: '50%, 38%'
+    duration: 400
+- extendedWaitUntil:
+    visible:
+      id: 'input-dni-jugador'
+    timeout: 15000
 - tapOn:
     id: 'input-dni-jugador'
 - inputText: '12345678'

@@ -25,7 +25,8 @@ export default function CampoTexto({
       : 'border-gray-200'
 
   return (
-    <View>
+    // Android: evitar que el optimizador de vistas colapse el nodo y Maestro/E2E pierdan el testID.
+    <View collapsable={false}>
       {label ? <Text className="text-gray-700 text-sm mb-1.5">{label}</Text> : null}
       <TextInput
         testID={inputTestID}

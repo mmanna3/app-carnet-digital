@@ -45,13 +45,24 @@ appId: com.ykn.edefidelegados
 - tapOn:
     id: 'input-apellido'
 - inputText: 'Perez'
-# Android: con el teclado abierto y KeyboardAvoidingView behavior='height', el campo
-# DNI puede quedar fuera del área accesible. Cerrar el teclado primero.
+# Android: hideKeyboard en CI a veces deja el foco/layout de forma que el TextInput del DNI
+# no queda en el árbol accesible para Maestro. Igual que en 01_anon: tocar el título cierra
+# el teclado y estabiliza el ScrollView.
 - runFlow:
     when:
       platform: android
     commands:
-      - hideKeyboard
+      - tapOn:
+          text: 'Datos del jugador'
+# El formulario puede requerir scroll para que el DNI quede visible (ScrollView dentro de KAV).
+- swipe:
+    start: '50%, 72%'
+    end: '50%, 38%'
+    duration: 400
+- extendedWaitUntil:
+    visible:
+      id: 'input-dni-jugador'
+    timeout: 15000
 # Ingresar solo 5 dígitos (mínimo requerido: 7)
 - tapOn:
     id: 'input-dni-jugador'
@@ -99,7 +110,16 @@ appId: com.ykn.edefidelegados
     when:
       platform: android
     commands:
-      - hideKeyboard
+      - tapOn:
+          text: 'Datos del jugador'
+      - swipe:
+          start: '50%, 72%'
+          end: '50%, 38%'
+          duration: 400
+      - extendedWaitUntil:
+          visible:
+            id: 'input-dni-jugador'
+          timeout: 15000
       - tapOn:
           id: 'input-dni-jugador'
       - inputText: '1234567'
