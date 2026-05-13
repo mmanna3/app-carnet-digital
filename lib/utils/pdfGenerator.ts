@@ -5,6 +5,25 @@ import { CarnetDigitalDTO } from '@/lib/api/clients'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '../types/estado-jugador'
 import { getColorLiga600, getColorLiga700 } from '../config/liga'
 
+const obtenerAñoCategoría = (fechaNacimiento: Date) => new Date(fechaNacimiento).getFullYear()
+
+/** Misma agrupación y orden que en `buscar.tsx`: categorías por año ascendente; dentro de cada una, orden del listado original. */
+const jugadoresOrdenadosPorCategoría = (jugadores: CarnetDigitalDTO[]) => {
+  const porAño = jugadores.reduce(
+    (acc, jugador) => {
+      const año = obtenerAñoCategoría(jugador.fechaNacimiento)
+      if (!acc[año]) acc[año] = []
+      acc[año].push(jugador)
+      return acc
+    },
+    {} as Record<number, CarnetDigitalDTO[]>
+  )
+  const años = Object.keys(porAño)
+    .map(Number)
+    .sort((a, b) => a - b)
+  return años.flatMap((año) => porAño[año])
+}
+
 const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
   const estado = jugador.estado as EstadoJugador
   const debeMostrarEstado =
@@ -37,6 +56,99 @@ const generarCarnetHTML = (jugador: CarnetDigitalDTO) => {
   `
 }
 
+const MAX_FILAS_LAYOUT_TOTAL = 5
+/** Altura de ~3 filas de carnets (215px c/u); más filas de carnets recorta en carta. */
+const MAX_FILAS_CARNETS = 3
+
+/**
+ * Cuenta filas como las pinta la grilla CSS de 3 columnas:
+ * - Cada cartel = 1 fila (ancho completo).
+ * - Tras un cartel, el siguiente carnet abre una nueva fila de carnets.
+ * - Cada fila de carnets admite hasta 3 tarjetas; una sola tarjeta igual cuenta como 1 fila de altura.
+ * Así se detectan casos como [Cartel][1 carnet][Cartel][2–9] que con ceil(9/3) parecían “5 filas” pero son 6.
+ */
+const contarFilasLayoutPagina = (
+  todos: CarnetDigitalDTO[],
+  indicePrimerJugadorGlobal: number,
+  jugadoresEnPagina: CarnetDigitalDTO[]
+): { filasCarteles: number; filasCarnets: number } => {
+  let filasCarteles = 0
+  let filasCarnets = 0
+  let ocupacionFilaCarnets = 0
+
+  for (let j = 0; j < jugadoresEnPagina.length; j++) {
+    const indiceGlobal = indicePrimerJugadorGlobal + j
+    const jugador = jugadoresEnPagina[j]
+    const anterior = indiceGlobal > 0 ? todos[indiceGlobal - 1] : null
+    const cambiaCategoría =
+      !anterior || obtenerAñoCategoría(anterior.fechaNacimiento) !== obtenerAñoCategoría(jugador.fechaNacimiento)
+    if (cambiaCategoría) {
+      filasCarteles += 1
+      ocupacionFilaCarnets = 0
+    }
+    if (ocupacionFilaCarnets === 0) {
+      filasCarnets += 1
+    }
+    ocupacionFilaCarnets += 1
+    if (ocupacionFilaCarnets === 3) {
+      ocupacionFilaCarnets = 0
+    }
+  }
+  return { filasCarteles, filasCarnets }
+}
+
+const cabeLayoutEnUnaHoja = (filasCarteles: number, filasCarnets: number) =>
+  filasCarteles + filasCarnets <= MAX_FILAS_LAYOUT_TOTAL && filasCarnets <= MAX_FILAS_CARNETS
+
+/** Pagina según filas reales de cartel + filas de carnets en la grilla 3×N. */
+const armarPaginasPorCapacidad = (jugadoresOrdenados: CarnetDigitalDTO[]) => {
+  const paginas: { carnets: CarnetDigitalDTO[]; indiceInicio: number }[] = []
+  const n = jugadoresOrdenados.length
+  let globalStart = 0
+  while (globalStart < n) {
+    const carnets: CarnetDigitalDTO[] = []
+    let k = globalStart
+    while (k < n) {
+      const tentativa = [...carnets, jugadoresOrdenados[k]]
+      const { filasCarteles, filasCarnets } = contarFilasLayoutPagina(jugadoresOrdenados, globalStart, tentativa)
+      if (!cabeLayoutEnUnaHoja(filasCarteles, filasCarnets)) {
+        if (carnets.length === 0) {
+          carnets.push(jugadoresOrdenados[k])
+          k++
+        }
+        break
+      }
+      carnets.push(jugadoresOrdenados[k])
+      k++
+    }
+    paginas.push({ carnets, indiceInicio: globalStart })
+    globalStart = k
+  }
+  return paginas
+}
+
+/** Un cartel antes de cada carnet cuya categoría difiere del jugador anterior en la lista (igual que bloques en `buscar.tsx`). */
+const generarCarnetsGridHTML = (
+  jugadoresOrdenados: CarnetDigitalDTO[],
+  indiceInicioPagina: number,
+  carnetsEnPagina: CarnetDigitalDTO[]
+) => {
+  let html = ''
+  for (let j = 0; j < carnetsEnPagina.length; j++) {
+    const jugador = carnetsEnPagina[j]
+    const indiceGlobal = indiceInicioPagina + j
+    const anterior = indiceGlobal > 0 ? jugadoresOrdenados[indiceGlobal - 1] : null
+    const año = obtenerAñoCategoría(jugador.fechaNacimiento)
+    const cambiaCategoría =
+      !anterior || obtenerAñoCategoría(anterior.fechaNacimiento) !== año
+    if (cambiaCategoría) {
+      html += `<div class="categoria-banner">Categoría ${año}</div>`
+    }
+    html += generarCarnetHTML(jugador)
+  }
+  return html
+}
+
 const getPDFStyles = (colorLiga600: string, colorLiga700: string) => `
   * { print-color-adjust: exact !important; }
   @page {
@@ -52,10 +164,25 @@ const getPDFStyles = (colorLiga600: string, colorLiga700: string) => `
   .page {
     page-break-after: always;
     padding: 20px;
-    min-height: 100vh;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    min-height: 752px;
+  }
+  .page-content {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .page-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: 12px;
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+    font-weight: 500;
   }
   .header {
     text-align: center;
@@ -79,12 +206,29 @@ const getPDFStyles = (colorLiga600: string, colorLiga700: string) => `
     color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
   }
+  /* Cartel de categoría dentro de la grilla (misma fila completa que 3 carnets). */
+  .categoria-banner {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 8px 12px;
+    margin: 0 0 10px 0;
+    background: ${colorLiga600};
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
   .carnet-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     padding: 20px;
-    height: calc(100vh - 120px);
+    /* Sin altura fija: con carteles extra la grilla crece y recortaba al forzar 100vh. */
+    flex: 1 1 auto;
+    align-content: start;
   }
   .carnet {
     background: white;
@@ -96,6 +240,8 @@ const getPDFStyles = (colorLiga600: string, colorLiga700: string) => `
     height: 215px;
     position: relative;
     transition: transform 0.2s ease;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
   .carnet-header {
     background: linear-gradient(135deg, ${colorLiga700}, ${colorLiga600});
@@ -189,16 +335,11 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
       minute: '2-digit',
     })
 
-    // Ordenar jugadores por fecha de nacimiento (más viejos primero)
-    const jugadoresOrdenados = [...jugadores].sort(
-      (a, b) => new Date(a.fechaNacimiento).getTime() - new Date(b.fechaNacimiento).getTime()
-    )
+    const jugadoresOrdenados = jugadoresOrdenadosPorCategoría(jugadores)
 
-    // Dividir jugadores en grupos de 9 (3x3 por página)
-    const jugadoresPorPagina = []
-    for (let i = 0; i < jugadoresOrdenados.length; i += 9) {
-      jugadoresPorPagina.push(jugadoresOrdenados.slice(i, i + 9))
-    }
+    const paginas = armarPaginasPorCapacidad(jugadoresOrdenados)
+
+    const totalPaginas = paginas.length
 
     const htmlContent = `
       <html>
@@ -209,17 +350,20 @@ export const generatePDF = async (jugadores: CarnetDigitalDTO[], codigoEquipo: s
           </style>
         </head>
         <body>
-          ${jugadoresPorPagina
+          ${paginas
             .map(
-              (pagina) => `
+              ({ carnets, indiceInicio }, indicePagina) => `
             <div class="page">
-              <div class="header">
-                <h1>${jugadores[0]?.equipo || 'Equipo'}</h1>
-                <p>Generado el ${fechaGeneracion}</p>
+              <div class="page-content">
+                <div class="header">
+                  <h1>${jugadores[0]?.equipo || 'Equipo'}</h1>
+                  <p>Generado el ${fechaGeneracion}</p>
+                </div>
+                <div class="carnet-grid">
+                  ${generarCarnetsGridHTML(jugadoresOrdenados, indiceInicio, carnets)}
+                </div>
               </div>
-              <div class="carnet-grid">
-                ${pagina.map((jugador) => generarCarnetHTML(jugador)).join('')}
-              </div>
+              <div class="page-footer">Página ${indicePagina + 1}/${totalPaginas}</div>
             </div>
           `
             )
