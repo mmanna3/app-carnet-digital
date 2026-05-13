@@ -81,7 +81,8 @@ const contarFilasLayoutPagina = (
     const jugador = jugadoresEnPagina[j]
     const anterior = indiceGlobal > 0 ? todos[indiceGlobal - 1] : null
     const cambiaCategoría =
-      !anterior || obtenerAñoCategoría(anterior.fechaNacimiento) !== obtenerAñoCategoría(jugador.fechaNacimiento)
+      !anterior ||
+      obtenerAñoCategoría(anterior.fechaNacimiento) !== obtenerAñoCategoría(jugador.fechaNacimiento)
     if (cambiaCategoría) {
       filasCarteles += 1
       ocupacionFilaCarnets = 0
@@ -110,7 +111,11 @@ const armarPaginasPorCapacidad = (jugadoresOrdenados: CarnetDigitalDTO[]) => {
     let k = globalStart
     while (k < n) {
       const tentativa = [...carnets, jugadoresOrdenados[k]]
-      const { filasCarteles, filasCarnets } = contarFilasLayoutPagina(jugadoresOrdenados, globalStart, tentativa)
+      const { filasCarteles, filasCarnets } = contarFilasLayoutPagina(
+        jugadoresOrdenados,
+        globalStart,
+        tentativa
+      )
       if (!cabeLayoutEnUnaHoja(filasCarteles, filasCarnets)) {
         if (carnets.length === 0) {
           carnets.push(jugadoresOrdenados[k])
@@ -139,8 +144,7 @@ const generarCarnetsGridHTML = (
     const indiceGlobal = indiceInicioPagina + j
     const anterior = indiceGlobal > 0 ? jugadoresOrdenados[indiceGlobal - 1] : null
     const año = obtenerAñoCategoría(jugador.fechaNacimiento)
-    const cambiaCategoría =
-      !anterior || obtenerAñoCategoría(anterior.fechaNacimiento) !== año
+    const cambiaCategoría = !anterior || obtenerAñoCategoría(anterior.fechaNacimiento) !== año
     if (cambiaCategoría) {
       html += `<div class="categoria-banner">Categoría ${año}</div>`
     }
