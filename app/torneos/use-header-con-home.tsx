@@ -2,11 +2,19 @@ import { useLayoutEffect } from 'react'
 import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation, useRouter } from 'expo-router'
 import { Entypo } from '@expo/vector-icons'
+import { useAuth } from '@/lib/hooks/use-auth'
+
+// Si el delegado está logueado, "Ir al inicio" lleva al home del delegado (mis jugadores),
+// no al home general de la app.
+function rutaDeHome(isAuthenticated: boolean): string {
+  return isAuthenticated ? '/(tabs)/mis-jugadores' : '/home'
+}
 
 function WebHeader({ titulo, backgroundColor }: { titulo: string; backgroundColor: string }) {
   const router = useRouter()
   const navigation = useNavigation()
   const canGoBack = navigation.canGoBack()
+  const isAuthenticated = useAuth((s) => s.isAuthenticated)
 
   return (
     <View style={{ backgroundColor }}>
@@ -34,7 +42,7 @@ function WebHeader({ titulo, backgroundColor }: { titulo: string; backgroundColo
         ) : null}
         <Text style={{ flex: 1, color: '#ffffff', fontWeight: '600', fontSize: 17 }}>{titulo}</Text>
         <TouchableOpacity
-          onPress={() => router.replace('/home')}
+          onPress={() => router.replace(rutaDeHome(isAuthenticated) as any)}
           accessibilityRole="button"
           accessibilityLabel="Ir al inicio"
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -55,6 +63,7 @@ export function useHeaderConHome({
 }) {
   const router = useRouter()
   const navigation = useNavigation()
+  const isAuthenticated = useAuth((s) => s.isAuthenticated)
 
   useLayoutEffect(() => {
     if (Platform.OS === 'web') {
@@ -74,7 +83,7 @@ export function useHeaderConHome({
         headerBackTitle: '',
         headerRight: () => (
           <TouchableOpacity
-            onPress={() => router.replace('/home')}
+            onPress={() => router.replace(rutaDeHome(isAuthenticated) as any)}
             accessibilityRole="button"
             accessibilityLabel="Ir al inicio"
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -84,5 +93,5 @@ export function useHeaderConHome({
         ),
       })
     }
-  }, [navigation, router, titulo, backgroundColor])
+  }, [navigation, router, titulo, backgroundColor, isAuthenticated])
 }

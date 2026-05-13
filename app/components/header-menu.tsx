@@ -66,12 +66,14 @@ export default function HeaderMenu() {
 
   const MenuItem = ({
     icon,
+    iconNode,
     label,
     onSelect,
     destructive,
     testID,
   }: {
-    icon: React.ComponentProps<typeof Feather>['name']
+    icon?: React.ComponentProps<typeof Feather>['name']
+    iconNode?: React.ReactNode
     label: string
     onSelect: () => void
     destructive?: boolean
@@ -79,7 +81,7 @@ export default function HeaderMenu() {
   }) => (
     <MenuOption onSelect={onSelect}>
       <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
-        <Feather name={icon} size={20} color={destructive ? '#dc2626' : '#111827'} />
+        {iconNode ?? <Feather name={icon!} size={20} color={destructive ? '#dc2626' : '#111827'} />}
         <Text
           className={`text-base ${destructive ? 'text-red-600' : 'text-[#111827]'} font-medium`}
         >
@@ -113,6 +115,13 @@ export default function HeaderMenu() {
             label="Fichar jugadores"
             testID="menu-item-fichar-jugadores"
             onSelect={() => router.push('/fichaje-delegado' as any)}
+          />
+          <View className="h-px bg-gray-200 my-2 mx-4" />
+          <MenuItem
+            iconNode={<Entypo name="trophy" size={20} color="#111827" />}
+            label="Ver torneos"
+            testID="menu-item-ver-torneos"
+            onSelect={() => router.push('/torneos' as any)}
           />
           <View className="h-px bg-gray-200 my-2 mx-4" />
           <MenuItem
