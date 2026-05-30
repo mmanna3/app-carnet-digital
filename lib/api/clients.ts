@@ -4839,6 +4839,130 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    escudosClubes(): Promise<EscudoClubDTO[]> {
+        let url_ = this.baseUrl + "/api/publico/escudos-clubes";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processEscudosClubes(_response);
+        });
+    }
+
+    protected processEscudosClubes(response: Response): Promise<EscudoClubDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(EscudoClubDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<EscudoClubDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sponsorsWebPublica(): Promise<SponsorWebPublicaPublicoDTO[]> {
+        let url_ = this.baseUrl + "/api/publico/sponsors-web-publica";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorsWebPublica(_response);
+        });
+    }
+
+    protected processSponsorsWebPublica(response: Response): Promise<SponsorWebPublicaPublicoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SponsorWebPublicaPublicoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SponsorWebPublicaPublicoDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sponsorLogo(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/publico/sponsor-logo/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorLogo(_response);
+        });
+    }
+
+    protected processSponsorLogo(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
      * @param mes (optional) 
      * @param anio (optional) 
      * @return OK
@@ -4890,6 +5014,263 @@ export class Client {
             });
         }
         return Promise.resolve<ReportePagosDTO[]>(null as any);
+    }
+
+    /**
+     * @param anio (optional) 
+     * @return OK
+     */
+    obtenerReporteJugadoresHabilitadosPorTorneo(anio: number | undefined): Promise<ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO[]> {
+        let url_ = this.baseUrl + "/api/Reporte/obtener-reporte-jugadores-habilitados-por-torneo?";
+        if (anio === null)
+            throw new Error("The parameter 'anio' cannot be null.");
+        else if (anio !== undefined)
+            url_ += "anio=" + encodeURIComponent("" + anio) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processObtenerReporteJugadoresHabilitadosPorTorneo(_response);
+        });
+    }
+
+    protected processObtenerReporteJugadoresHabilitadosPorTorneo(response: Response): Promise<ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    sponsorWebPublicaPOST(body: CrearSponsorWebPublicaDTO | undefined): Promise<SponsorWebPublicaDTO> {
+        let url_ = this.baseUrl + "/api/SponsorWebPublica";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorWebPublicaPOST(_response);
+        });
+    }
+
+    protected processSponsorWebPublicaPOST(response: Response): Promise<SponsorWebPublicaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SponsorWebPublicaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SponsorWebPublicaDTO>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sponsorWebPublicaAll(): Promise<SponsorWebPublicaDTO[]> {
+        let url_ = this.baseUrl + "/api/SponsorWebPublica";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorWebPublicaAll(_response);
+        });
+    }
+
+    protected processSponsorWebPublicaAll(response: Response): Promise<SponsorWebPublicaDTO[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SponsorWebPublicaDTO.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SponsorWebPublicaDTO[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sponsorWebPublicaGET(id: number): Promise<SponsorWebPublicaDTO> {
+        let url_ = this.baseUrl + "/api/SponsorWebPublica/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorWebPublicaGET(_response);
+        });
+    }
+
+    protected processSponsorWebPublicaGET(response: Response): Promise<SponsorWebPublicaDTO> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SponsorWebPublicaDTO.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SponsorWebPublicaDTO>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    sponsorWebPublicaPUT(id: number, body: SponsorWebPublicaDTO | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/SponsorWebPublica/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorWebPublicaPUT(_response);
+        });
+    }
+
+    protected processSponsorWebPublicaPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    sponsorWebPublicaDELETE(id: number): Promise<number> {
+        let url_ = this.baseUrl + "/api/SponsorWebPublica/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSponsorWebPublicaDELETE(_response);
+        });
+    }
+
+    protected processSponsorWebPublicaDELETE(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
     }
 
     /**
@@ -6988,8 +7369,6 @@ export class ClubDTO implements IClubDTO {
     direccion?: string | undefined;
     canchaTipoId?: number;
     canchaTipo?: string | undefined;
-    canchaSuperficieId?: number;
-    canchaSuperficie?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
@@ -7011,8 +7390,6 @@ export class ClubDTO implements IClubDTO {
             this.direccion = _data["direccion"];
             this.canchaTipoId = _data["canchaTipoId"];
             this.canchaTipo = _data["canchaTipo"];
-            this.canchaSuperficieId = _data["canchaSuperficieId"];
-            this.canchaSuperficie = _data["canchaSuperficie"];
             this.localidad = _data["localidad"];
             if (Array.isArray(_data["equipos"])) {
                 this.equipos = [] as any;
@@ -7042,8 +7419,6 @@ export class ClubDTO implements IClubDTO {
         data["direccion"] = this.direccion;
         data["canchaTipoId"] = this.canchaTipoId;
         data["canchaTipo"] = this.canchaTipo;
-        data["canchaSuperficieId"] = this.canchaSuperficieId;
-        data["canchaSuperficie"] = this.canchaSuperficie;
         data["localidad"] = this.localidad;
         if (Array.isArray(this.equipos)) {
             data["equipos"] = [];
@@ -7066,8 +7441,6 @@ export interface IClubDTO {
     direccion?: string | undefined;
     canchaTipoId?: number;
     canchaTipo?: string | undefined;
-    canchaSuperficieId?: number;
-    canchaSuperficie?: string | undefined;
     localidad?: string | undefined;
     equipos?: EquipoDTO[] | undefined;
     delegados?: DelegadoDTO[] | undefined;
@@ -7079,7 +7452,6 @@ export class ClubesDTO implements IClubesDTO {
     localidad?: string | undefined;
     direccion?: string | undefined;
     tipoCancha?: string | undefined;
-    superficieCancha?: string | undefined;
 
     constructor(data?: IClubesDTO) {
         if (data) {
@@ -7097,7 +7469,6 @@ export class ClubesDTO implements IClubesDTO {
             this.localidad = _data["localidad"];
             this.direccion = _data["direccion"];
             this.tipoCancha = _data["tipoCancha"];
-            this.superficieCancha = _data["superficieCancha"];
         }
     }
 
@@ -7115,7 +7486,6 @@ export class ClubesDTO implements IClubesDTO {
         data["localidad"] = this.localidad;
         data["direccion"] = this.direccion;
         data["tipoCancha"] = this.tipoCancha;
-        data["superficieCancha"] = this.superficieCancha;
         return data;
     }
 }
@@ -7126,7 +7496,6 @@ export interface IClubesDTO {
     localidad?: string | undefined;
     direccion?: string | undefined;
     tipoCancha?: string | undefined;
-    superficieCancha?: string | undefined;
 }
 
 export class ConfiguracionDTO implements IConfiguracionDTO {
@@ -7167,6 +7536,58 @@ export class ConfiguracionDTO implements IConfiguracionDTO {
 export interface IConfiguracionDTO {
     id?: number;
     habilitacionFichajeId?: number;
+}
+
+export class CrearSponsorWebPublicaDTO implements ICrearSponsorWebPublicaDTO {
+    id?: number;
+    nombre!: string;
+    orden?: number;
+    imagen?: string | undefined;
+    imagenBase64!: string;
+
+    constructor(data?: ICrearSponsorWebPublicaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.orden = _data["orden"];
+            this.imagen = _data["imagen"];
+            this.imagenBase64 = _data["imagenBase64"];
+        }
+    }
+
+    static fromJS(data: any): CrearSponsorWebPublicaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new CrearSponsorWebPublicaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["orden"] = this.orden;
+        data["imagen"] = this.imagen;
+        data["imagenBase64"] = this.imagenBase64;
+        return data;
+    }
+}
+
+export interface ICrearSponsorWebPublicaDTO {
+    id?: number;
+    nombre: string;
+    orden?: number;
+    imagen?: string | undefined;
+    imagenBase64: string;
 }
 
 export class CrearTorneoDTO implements ICrearTorneoDTO {
@@ -8007,6 +8428,50 @@ export class EquiposDelDelegadoDTO implements IEquiposDelDelegadoDTO {
 
 export interface IEquiposDelDelegadoDTO {
     clubsConEquipos?: ClubConEquiposDTO[] | undefined;
+}
+
+export class EscudoClubDTO implements IEscudoClubDTO {
+    clubId?: number;
+    nombre?: string | undefined;
+    escudo?: string | undefined;
+
+    constructor(data?: IEscudoClubDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.clubId = _data["clubId"];
+            this.nombre = _data["nombre"];
+            this.escudo = _data["escudo"];
+        }
+    }
+
+    static fromJS(data: any): EscudoClubDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new EscudoClubDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clubId"] = this.clubId;
+        data["nombre"] = this.nombre;
+        data["escudo"] = this.escudo;
+        return data;
+    }
+}
+
+export interface IEscudoClubDTO {
+    clubId?: number;
+    nombre?: string | undefined;
+    escudo?: string | undefined;
 }
 
 export class EstadoDelegadoDTO implements IEstadoDelegadoDTO {
@@ -10189,6 +10654,142 @@ export interface IRechazarJugadorDTO {
     motivo?: string | undefined;
 }
 
+export class ReporteJugadoresHabilitadosFilaDTO implements IReporteJugadoresHabilitadosFilaDTO {
+    nombreTorneo?: string | undefined;
+    enero?: number;
+    febrero?: number;
+    marzo?: number;
+    abril?: number;
+    mayo?: number;
+    junio?: number;
+    julio?: number;
+    agosto?: number;
+    septiembre?: number;
+    octubre?: number;
+    noviembre?: number;
+    diciembre?: number;
+    totalEnElAnio?: number;
+
+    constructor(data?: IReporteJugadoresHabilitadosFilaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.nombreTorneo = _data["nombreTorneo"];
+            this.enero = _data["enero"];
+            this.febrero = _data["febrero"];
+            this.marzo = _data["marzo"];
+            this.abril = _data["abril"];
+            this.mayo = _data["mayo"];
+            this.junio = _data["junio"];
+            this.julio = _data["julio"];
+            this.agosto = _data["agosto"];
+            this.septiembre = _data["septiembre"];
+            this.octubre = _data["octubre"];
+            this.noviembre = _data["noviembre"];
+            this.diciembre = _data["diciembre"];
+            this.totalEnElAnio = _data["totalEnElAnio"];
+        }
+    }
+
+    static fromJS(data: any): ReporteJugadoresHabilitadosFilaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReporteJugadoresHabilitadosFilaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nombreTorneo"] = this.nombreTorneo;
+        data["enero"] = this.enero;
+        data["febrero"] = this.febrero;
+        data["marzo"] = this.marzo;
+        data["abril"] = this.abril;
+        data["mayo"] = this.mayo;
+        data["junio"] = this.junio;
+        data["julio"] = this.julio;
+        data["agosto"] = this.agosto;
+        data["septiembre"] = this.septiembre;
+        data["octubre"] = this.octubre;
+        data["noviembre"] = this.noviembre;
+        data["diciembre"] = this.diciembre;
+        data["totalEnElAnio"] = this.totalEnElAnio;
+        return data;
+    }
+}
+
+export interface IReporteJugadoresHabilitadosFilaDTO {
+    nombreTorneo?: string | undefined;
+    enero?: number;
+    febrero?: number;
+    marzo?: number;
+    abril?: number;
+    mayo?: number;
+    junio?: number;
+    julio?: number;
+    agosto?: number;
+    septiembre?: number;
+    octubre?: number;
+    noviembre?: number;
+    diciembre?: number;
+    totalEnElAnio?: number;
+}
+
+export class ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO implements IReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO {
+    nombreAgrupador?: string | undefined;
+    torneos?: ReporteJugadoresHabilitadosFilaDTO[] | undefined;
+
+    constructor(data?: IReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.nombreAgrupador = _data["nombreAgrupador"];
+            if (Array.isArray(_data["torneos"])) {
+                this.torneos = [] as any;
+                for (let item of _data["torneos"])
+                    this.torneos!.push(ReporteJugadoresHabilitadosFilaDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nombreAgrupador"] = this.nombreAgrupador;
+        if (Array.isArray(this.torneos)) {
+            data["torneos"] = [];
+            for (let item of this.torneos)
+                data["torneos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IReporteJugadoresHabilitadosPorAgrupadorDeTorneoDTO {
+    nombreAgrupador?: string | undefined;
+    torneos?: ReporteJugadoresHabilitadosFilaDTO[] | undefined;
+}
+
 export class ReportePagosDTO implements IReportePagosDTO {
     nombreEquipo?: string | undefined;
     mes?: number;
@@ -10277,6 +10878,98 @@ export interface IResultadoCategoriaDTO {
     resultado?: string | undefined;
 }
 
+export class SponsorWebPublicaDTO implements ISponsorWebPublicaDTO {
+    id?: number;
+    nombre!: string;
+    orden?: number;
+    imagen?: string | undefined;
+
+    constructor(data?: ISponsorWebPublicaDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.orden = _data["orden"];
+            this.imagen = _data["imagen"];
+        }
+    }
+
+    static fromJS(data: any): SponsorWebPublicaDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new SponsorWebPublicaDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["orden"] = this.orden;
+        data["imagen"] = this.imagen;
+        return data;
+    }
+}
+
+export interface ISponsorWebPublicaDTO {
+    id?: number;
+    nombre: string;
+    orden?: number;
+    imagen?: string | undefined;
+}
+
+export class SponsorWebPublicaPublicoDTO implements ISponsorWebPublicaPublicoDTO {
+    id?: number;
+    nombre?: string | undefined;
+    logoUrl?: string | undefined;
+
+    constructor(data?: ISponsorWebPublicaPublicoDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.nombre = _data["nombre"];
+            this.logoUrl = _data["logoUrl"];
+        }
+    }
+
+    static fromJS(data: any): SponsorWebPublicaPublicoDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new SponsorWebPublicaPublicoDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["nombre"] = this.nombre;
+        data["logoUrl"] = this.logoUrl;
+        return data;
+    }
+}
+
+export interface ISponsorWebPublicaPublicoDTO {
+    id?: number;
+    nombre?: string | undefined;
+    logoUrl?: string | undefined;
+}
+
 export enum TipoDeFaseEnum {
     _1 = 1,
     _2 = 2,
@@ -10351,6 +11044,7 @@ export class TorneoCategoriaDTO implements ITorneoCategoriaDTO {
     nombre!: string;
     anioDesde!: number;
     anioHasta!: number;
+    orden!: number;
     torneoId?: number;
 
     constructor(data?: ITorneoCategoriaDTO) {
@@ -10368,6 +11062,7 @@ export class TorneoCategoriaDTO implements ITorneoCategoriaDTO {
             this.nombre = _data["nombre"];
             this.anioDesde = _data["anioDesde"];
             this.anioHasta = _data["anioHasta"];
+            this.orden = _data["orden"];
             this.torneoId = _data["torneoId"];
         }
     }
@@ -10385,6 +11080,7 @@ export class TorneoCategoriaDTO implements ITorneoCategoriaDTO {
         data["nombre"] = this.nombre;
         data["anioDesde"] = this.anioDesde;
         data["anioHasta"] = this.anioHasta;
+        data["orden"] = this.orden;
         data["torneoId"] = this.torneoId;
         return data;
     }
@@ -10395,6 +11091,7 @@ export interface ITorneoCategoriaDTO {
     nombre: string;
     anioDesde: number;
     anioHasta: number;
+    orden: number;
     torneoId?: number;
 }
 
@@ -10550,6 +11247,7 @@ export class ZonaDTO implements IZonaDTO {
     id?: number;
     nombre!: string;
     faseId?: number;
+    orden!: number;
     categoriaId?: number | undefined;
     categoriaNombre?: string | undefined;
     equipos?: EquipoDeLaZonaDTO[] | undefined;
@@ -10568,6 +11266,7 @@ export class ZonaDTO implements IZonaDTO {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
             this.faseId = _data["faseId"];
+            this.orden = _data["orden"];
             this.categoriaId = _data["categoriaId"];
             this.categoriaNombre = _data["categoriaNombre"];
             if (Array.isArray(_data["equipos"])) {
@@ -10590,6 +11289,7 @@ export class ZonaDTO implements IZonaDTO {
         data["id"] = this.id;
         data["nombre"] = this.nombre;
         data["faseId"] = this.faseId;
+        data["orden"] = this.orden;
         data["categoriaId"] = this.categoriaId;
         data["categoriaNombre"] = this.categoriaNombre;
         if (Array.isArray(this.equipos)) {
@@ -10605,6 +11305,7 @@ export interface IZonaDTO {
     id?: number;
     nombre: string;
     faseId?: number;
+    orden: number;
     categoriaId?: number | undefined;
     categoriaNombre?: string | undefined;
     equipos?: EquipoDeLaZonaDTO[] | undefined;
@@ -10613,6 +11314,7 @@ export interface IZonaDTO {
 export class ZonaDeFaseDTO implements IZonaDeFaseDTO {
     id?: number;
     nombre?: string | undefined;
+    orden?: number;
     cantidadDeEquipos?: number;
     categoriaId?: number | undefined;
     categoriaNombre?: string | undefined;
@@ -10630,6 +11332,7 @@ export class ZonaDeFaseDTO implements IZonaDeFaseDTO {
         if (_data) {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
+            this.orden = _data["orden"];
             this.cantidadDeEquipos = _data["cantidadDeEquipos"];
             this.categoriaId = _data["categoriaId"];
             this.categoriaNombre = _data["categoriaNombre"];
@@ -10647,6 +11350,7 @@ export class ZonaDeFaseDTO implements IZonaDeFaseDTO {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["nombre"] = this.nombre;
+        data["orden"] = this.orden;
         data["cantidadDeEquipos"] = this.cantidadDeEquipos;
         data["categoriaId"] = this.categoriaId;
         data["categoriaNombre"] = this.categoriaNombre;
@@ -10657,6 +11361,7 @@ export class ZonaDeFaseDTO implements IZonaDeFaseDTO {
 export interface IZonaDeFaseDTO {
     id?: number;
     nombre?: string | undefined;
+    orden?: number;
     cantidadDeEquipos?: number;
     categoriaId?: number | undefined;
     categoriaNombre?: string | undefined;
