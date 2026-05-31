@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react'
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
-import { getColorLiga600, hexCabeceraPorColorAgrupadorApi, useConfigLiga } from '@/lib/config/liga'
-import { TarjetaConFondoDeColor } from '@/components/tarjeta-con-fondo-de-color'
+import { useConfigLiga } from '@/lib/config/liga'
+import { TarjetaTorneo } from '@/components/torneos/tarjeta-torneo'
 import type { InformacionInicialAgrupadorDTO } from '@/lib/api/clients'
 import { useHeaderConHome } from '@/app/torneos/use-header-con-home'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
+import { EstadoCarga, EstadoVacio, Texto } from '@/components/ui'
 
 function buscarTorneoEnAgrupadores(
   agrupadores: InformacionInicialAgrupadorDTO[],
@@ -63,43 +64,23 @@ export default function TorneoDetalle() {
   }, [agrupadores, torneoId, agrupadorId, torneoNombre])
 
   const titulo = resuelto?.torneo?.nombre?.trim() || 'Torneo'
-  const backgroundColor = resuelto
-    ? hexCabeceraPorColorAgrupadorApi(resuelto.color)
-    : getColorLiga600()
 
-  useHeaderConHome({ titulo, backgroundColor })
+  useHeaderConHome({ titulo })
 
   if (!leagueId) {
-    return (
-      <View className="flex-1 bg-gray-50 justify-center items-center px-6">
-        <Text className="text-gray-600 text-center text-base">Seleccioná una liga.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="Seleccioná una liga." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 bg-gray-50 items-center justify-center gap-3">
-        <ActivityIndicator size="large" color="#16a34a" />
-        <Text className="text-base text-gray-600">Cargando...</Text>
-      </View>
-    )
+    return <EstadoCarga mensaje="Cargando..." />
   }
 
   if (isError || !agrupadores) {
-    return (
-      <View className="flex-1 bg-gray-50 justify-center items-center px-6">
-        <Text className="text-gray-600 text-center text-base">No se pudo cargar el torneo.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No se pudo cargar el torneo." />
   }
 
   if (!resuelto) {
-    return (
-      <View className="flex-1 bg-gray-50 justify-center items-center px-6">
-        <Text className="text-gray-600 text-center text-base">No encontramos ese torneo.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No encontramos ese torneo." />
   }
 
   const { torneo, color } = resuelto
@@ -107,7 +88,7 @@ export default function TorneoDetalle() {
 
   return (
     <ScrollView
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-surface"
       contentContainerStyle={{
         paddingHorizontal: 16,
         paddingTop: 24,
@@ -120,7 +101,9 @@ export default function TorneoDetalle() {
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">
           {fase.nombre ? (
-            <Text className="mb-3 text-lg font-medium text-gray-700">{fase.nombre}</Text>
+            <Texto variante="eyebrow" className="mb-3 text-base text-zinc-300 normal-case tracking-wide">
+              {fase.nombre}
+            </Texto>
           ) : null}
           <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
             {(fase.zonas ?? []).map((zona) => (
@@ -128,7 +111,7 @@ export default function TorneoDetalle() {
                 key={zona.id ?? zona.nombre}
                 style={grande ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' } : undefined}
               >
-                <TarjetaConFondoDeColor
+                <TarjetaTorneo
                   nombre={zona.nombre?.trim() || 'Sin nombre'}
                   color={color}
                   iconName="map"

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native'
+import { Image, ScrollView, Text, View } from 'react-native'
+import { CabeceraBloque, ContenedorTabla, EstadoCarga, EstadoVacio } from '@/components/ui'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
@@ -135,16 +136,19 @@ function CardInstancia({
 }) {
   const partidos = instancia.partidos ?? []
   return (
-    <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm elevation-3">
-      <View className="mb-1 border-b border-gray-200 px-2 py-2">
-        <Text className="text-center text-base font-semibold text-gray-900" numberOfLines={2}>
-          {textoOGuion(instancia.titulo)}
-        </Text>
-        <Text className="mt-1 text-center text-sm text-gray-400">{textoOGuion(instancia.dia)}</Text>
-      </View>
-      {partidos.map((p, i) => (
-        <FilaPartido key={`${p.local}-${p.visitante}-${i}`} partido={p} apiUrl={apiUrl} />
-      ))}
+    <View className="mb-3">
+      <ContenedorTabla>
+        <CabeceraBloque
+          titulo={textoOGuion(instancia.titulo)}
+          subtitulo={textoOGuion(instancia.dia)}
+          centrado
+        />
+        <View className="px-3 py-2">
+          {partidos.map((p, i) => (
+            <FilaPartido key={`${p.local}-${p.visitante}-${i}`} partido={p} apiUrl={apiUrl} />
+          ))}
+        </View>
+      </ContenedorTabla>
     </View>
   )
 }
@@ -199,19 +203,11 @@ export default function FixtureEliminacionDirecta() {
   })
 
   if (zonaId == null) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay zona para mostrar el fixture.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay zona para mostrar el fixture." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center py-12">
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <EstadoCarga />
   }
 
   if (isError) {
@@ -227,11 +223,7 @@ export default function FixtureEliminacionDirecta() {
   const instancias = data?.instancias ?? []
 
   if (instancias.length === 0) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay partidos para esta zona.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay partidos para esta zona." />
   }
 
   const apiUrl = configLiga?.apiUrl
@@ -241,7 +233,7 @@ export default function FixtureEliminacionDirecta() {
 
   return (
     <ScrollView
-      className="flex-1 bg-gray-50"
+      className="flex-1"
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator
     >

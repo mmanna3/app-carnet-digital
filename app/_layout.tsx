@@ -1,8 +1,14 @@
 import '../global.css'
 import { LogBox } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation'
 import { useFonts } from 'expo-font'
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
 import { Slot, Stack, useSegments, useRouter, useRootNavigationState } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
@@ -111,6 +117,12 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
+    Coalition: require('../assets/fonts/Coalition.ttf'),
+    D3Euronism: require('../assets/fonts/D3Euronism.ttf'),
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })

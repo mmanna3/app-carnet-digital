@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import type { FechasParaJornadasDTO, JornadaPorEquipoDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
-import { hexCabeceraPorColorAgrupadorApi, useConfigLiga } from '@/lib/config/liga'
+import { useConfigLiga } from '@/lib/config/liga'
+import { hexIconoAgrupador } from '@/lib/design-system'
+import { CabeceraBloque, ContenedorTabla, EstadoCarga, EstadoVacio } from '@/components/ui'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -123,20 +125,22 @@ function Celda({
   negrita = false,
   tabular = false,
   numberOfLines = 2,
+  encabezado = false,
 }: {
   children: React.ReactNode
   ancho: number
   alinear?: 'left' | 'center' | 'right'
   negrita?: boolean
   tabular?: boolean
-  /** Cabeceras de categoría largas: más líneas para no truncar. */
   numberOfLines?: number
+  encabezado?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
+  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-800'
   return (
     <View style={{ width: ancho, minWidth: ancho }} className="shrink-0 justify-center px-1.5 py-2">
       <Text
-        className={`text-sm leading-5 text-gray-800 ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
+        className={`text-sm leading-5 ${colorTexto} ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
         numberOfLines={numberOfLines}
       >
@@ -148,22 +152,22 @@ function Celda({
 
 function FilaEncabezadoTablaJornadas({ nombresCategorias }: { nombresCategorias: string[] }) {
   return (
-    <View className="flex-row border-b border-gray-300 bg-gray-100">
-      <Celda ancho={ANCHO.esc} alinear="center" negrita>
+    <View className="flex-row border-b border-zinc-700 bg-zinc-900">
+      <Celda ancho={ANCHO.esc} alinear="center" negrita encabezado>
         Esc
       </Celda>
-      <Celda ancho={ANCHO.equipo} alinear="left" negrita>
+      <Celda ancho={ANCHO.equipo} alinear="left" negrita encabezado>
         Equipo
       </Celda>
       {nombresCategorias.map((cat) => (
-        <Celda key={cat} ancho={ANCHO.cat} alinear="center" negrita numberOfLines={4}>
+        <Celda key={cat} ancho={ANCHO.cat} alinear="center" negrita encabezado numberOfLines={4}>
           {cat}
         </Celda>
       ))}
-      <Celda ancho={ANCHO.pt} alinear="center" negrita tabular>
+      <Celda ancho={ANCHO.pt} alinear="center" negrita encabezado tabular>
         P.T.
       </Celda>
-      <Celda ancho={ANCHO.pj} alinear="center" negrita tabular>
+      <Celda ancho={ANCHO.pj} alinear="center" negrita encabezado tabular>
         P.J.
       </Celda>
     </View>
@@ -240,20 +244,19 @@ function CardFechaJornadas({
   const ultimoIndicePartido = jornadas.length - 1
 
   return (
-    <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm elevation-3">
-      <View className="mb-1 flex-row items-baseline justify-between gap-2 border-b border-gray-200 px-2 py-2">
-        <Text className="shrink text-base font-semibold text-gray-900" numberOfLines={2}>
-          {textoOGuion(fecha.titulo)}
-        </Text>
-        <Text className="shrink-0 text-sm text-gray-500">{textoOGuion(fecha.dia)}</Text>
-      </View>
-      {jornadas.length === 0 ? (
-        <Text className="px-0.5 py-4 text-sm leading-5 text-gray-600">
-          No hay partidos en esta fecha.
-        </Text>
-      ) : (
-        <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
-          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
+    <View className="mb-3">
+      <ContenedorTabla
+        horizontal={jornadas.length > 0}
+        encabezado={
+          <CabeceraBloque titulo={textoOGuion(fecha.titulo)} subtitulo={textoOGuion(fecha.dia)} />
+        }
+      >
+        {jornadas.length === 0 ? (
+          <Text className="px-3 py-4 text-sm leading-5 text-gray-600">
+            No hay partidos en esta fecha.
+          </Text>
+        ) : (
+          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }} className="px-1 py-1">
             <FilaEncabezadoTablaJornadas nombresCategorias={nombresCategorias} />
             {jornadas.map((j, i) => {
               const hayMasPartidos = i < ultimoIndicePartido
@@ -276,8 +279,8 @@ function CardFechaJornadas({
               )
             })}
           </View>
-        </ScrollView>
-      )}
+        )}
+      </ContenedorTabla>
     </View>
   )
 }
@@ -301,7 +304,7 @@ export default function Jornadas() {
   )
 
   const colorFondoChipSeleccionado = useMemo(
-    () => hexCabeceraPorColorAgrupadorApi(colorAgrupador),
+    () => hexIconoAgrupador(colorAgrupador),
     [colorAgrupador]
   )
 
@@ -312,19 +315,11 @@ export default function Jornadas() {
   })
 
   if (zonaId == null) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay zona para mostrar las jornadas.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay zona para mostrar las jornadas." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center py-12">
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <EstadoCarga />
   }
 
   if (isError) {
@@ -340,11 +335,7 @@ export default function Jornadas() {
   const fechas = data?.fechas ?? []
 
   if (fechas.length === 0) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay jornadas para esta zona.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay jornadas para esta zona." />
   }
 
   return (
@@ -385,8 +376,8 @@ function JornadasConSelectorFecha({
   const fechaMostrada = fechas[indiceSeguro]
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <View className="border-b border-gray-200 bg-white px-2 py-2.5">
+    <View className="flex-1">
+      <View className="border-b border-border-glass bg-surface-elevated px-2 py-2.5">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -397,7 +388,7 @@ function JornadasConSelectorFecha({
             return (
               <TouchableOpacity
                 key={`fecha-${index}`}
-                className={`rounded-full px-4 py-2 ${seleccionada ? '' : 'bg-gray-200'}`}
+                className={`rounded-full px-4 py-2 ${seleccionada ? '' : 'border border-border-glass bg-white/10'}`}
                 style={seleccionada ? { backgroundColor: colorFondoChipSeleccionado } : undefined}
                 onPress={() => setIndiceElegido(index)}
                 accessibilityRole="button"
@@ -405,7 +396,7 @@ function JornadasConSelectorFecha({
                 accessibilityLabel={textoOGuion(fecha.titulo)}
               >
                 <Text
-                  className={`text-sm font-semibold ${seleccionada ? 'text-white' : 'text-gray-800'}`}
+                  className={`text-sm font-semibold ${seleccionada ? 'text-black' : 'text-zinc-400'}`}
                   numberOfLines={1}
                 >
                   {textoOGuion(fecha.titulo)}

@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
+import { hexIconoAgrupador } from '@/lib/design-system'
 import Clubes from '@/app/torneos/zona-detalle/clubes'
 import FixtureEliminacionDirecta from '@/app/torneos/zona-detalle/fixture-eliminacion-directa'
 import FixtureTodosContraTodos from '@/app/torneos/zona-detalle/fixture-todos-contra-todos'
@@ -17,6 +17,8 @@ import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 type IconName = ComponentProps<typeof Ionicons>['name']
 
 type TabDef = { titulo: string; icon: IconName; Contenido: React.ComponentType }
+
+const COLOR_INACTIVO = '#71717a'
 
 export default function ZonaDetalle() {
   const insets = useSafeAreaInsets()
@@ -69,15 +71,9 @@ export default function ZonaDetalle() {
 
   const tituloHeader = TABS[tabIndex]?.titulo ?? 'Zona'
 
-  const colorIconoActivo = useMemo(() => {
-    return colorAgrupador ? hexCabeceraPorColorAgrupadorApi(colorAgrupador) : getColorLiga600()
-  }, [colorAgrupador])
+  const colorIconoActivo = hexIconoAgrupador(colorAgrupador)
 
-  const backgroundColor = colorAgrupador
-    ? hexCabeceraPorColorAgrupadorApi(colorAgrupador)
-    : getColorLiga600()
-
-  useHeaderConHome({ titulo: tituloHeader, backgroundColor })
+  useHeaderConHome({ titulo: tituloHeader })
 
   const Contenido = TABS[tabIndex]?.Contenido ?? Posiciones
 
@@ -86,7 +82,7 @@ export default function ZonaDetalle() {
   const textoZona = zonaNombre != null ? String(zonaNombre) : ''
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-surface">
       <View
         className="flex-1 px-4 pt-6"
         style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%' }}
@@ -103,7 +99,7 @@ export default function ZonaDetalle() {
       </View>
 
       <View
-        className="flex-row border-t border-gray-200 bg-white"
+        className="flex-row border-t border-border-glass bg-surface-elevated"
         style={{ paddingBottom: Math.max(insets.bottom, 8) }}
       >
         <View
@@ -120,7 +116,11 @@ export default function ZonaDetalle() {
                 accessibilityLabel={t.titulo}
                 accessibilityState={{ selected: activo }}
               >
-                <Ionicons name={t.icon} size={26} color={activo ? colorIconoActivo : '#9ca3af'} />
+                <Ionicons
+                  name={t.icon}
+                  size={26}
+                  color={activo ? colorIconoActivo : COLOR_INACTIVO}
+                />
               </TouchableOpacity>
             )
           })}

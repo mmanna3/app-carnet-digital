@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { ActivityIndicator, Image, Platform, ScrollView, Text, View } from 'react-native'
+import { Image, Platform, ScrollView, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -7,6 +7,7 @@ import type { CategoriasConPosicionesDTO, PosicionDelEquipoDTO } from '@/lib/api
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
+import { ContenedorTabla, EstadoCarga, EstadoVacio, Texto } from '@/components/ui'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -94,18 +95,21 @@ function Celda({
   alinear = 'left',
   negrita = false,
   tabular = false,
+  encabezado = false,
 }: {
   children: React.ReactNode
   ancho: number
   alinear?: 'left' | 'center' | 'right'
   negrita?: boolean
   tabular?: boolean
+  encabezado?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
+  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-800'
   return (
     <View style={{ width: ancho, minWidth: ancho }} className="shrink-0 justify-center px-1.5 py-2">
       <Text
-        className={`text-sm leading-5 text-gray-800 ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
+        className={`text-sm leading-5 ${colorTexto} ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
         numberOfLines={2}
       >
@@ -119,13 +123,14 @@ function FilaEncabezado({ mostrarGoles }: { mostrarGoles: boolean }) {
   const titulos = titulosTabla(mostrarGoles)
   const n = titulos.length
   return (
-    <View className="flex-row border-b border-gray-300 bg-gray-100">
+    <View className="flex-row rounded-t-2xl border-b border-zinc-700 bg-zinc-900">
       {titulos.map((h, i) => (
         <Celda
           key={h}
           ancho={anchoColumna(i, mostrarGoles, n)}
           alinear={i <= 2 ? 'left' : 'center'}
           negrita
+          encabezado
           tabular={i === 3 || i >= 4}
         >
           {h}
@@ -216,29 +221,19 @@ function TablaCategoria({
   const anchoTotal = anchoTablaTotal(mostrarGoles)
   return (
     <View className="my-5">
-      <Text
-        className={`mb-2 px-0.5 text-gray-900 ${Platform.OS === 'web' ? '' : 'text-lg font-semibold'}`}
+      <Texto
+        variante="titulo"
+        className={`mb-3 px-0.5 text-center text-zinc-100 ${Platform.OS === 'web' ? 'text-2xl' : 'text-xl'}`}
         numberOfLines={2}
-        style={
-          Platform.OS === 'web'
-            ? {
-                fontSize: 24,
-                lineHeight: 36,
-                fontWeight: '600',
-                textAlign: 'center',
-                width: '100%',
-              }
-            : undefined
-        }
       >
         {textoOGuion(bloque.categoria)}
-      </Text>
+      </Texto>
       {renglones.length === 0 ? (
-        <Text className="px-0.5 text-sm leading-5 text-gray-600">
+        <Texto variante="caption" className="px-0.5 text-zinc-600">
           Aún no hay partidos en esta categoría
-        </Text>
+        </Texto>
       ) : (
-        <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled>
+        <ContenedorTabla horizontal>
           <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
             <FilaEncabezado mostrarGoles={mostrarGoles} />
             {renglones.map((r, i) => (
@@ -250,7 +245,7 @@ function TablaCategoria({
               />
             ))}
           </View>
-        </ScrollView>
+        </ContenedorTabla>
       )}
       <LeyendaDebajoTabla texto={bloque.leyenda} anchoTabla={anchoTotal} />
     </View>
@@ -281,19 +276,11 @@ export default function Posiciones() {
   const apiUrl = configLiga?.apiUrl
 
   if (zonaId == null) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay zona para mostrar posiciones.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay zona para mostrar posiciones." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center py-12">
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <EstadoCarga />
   }
 
   if (isError) {
@@ -310,16 +297,12 @@ export default function Posiciones() {
   const mostrarGoles = data?.verGoles !== false
 
   if (categorias.length === 0) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay posiciones para esta zona.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay posiciones para esta zona." />
   }
 
   return (
     <ScrollView
-      className="flex-1 bg-gray-50"
+      className="flex-1"
       contentContainerStyle={{
         paddingBottom: 24,
         alignItems: grande ? 'center' : 'stretch',

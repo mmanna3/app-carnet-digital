@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native'
+import { Image, ScrollView, Text, View } from 'react-native'
+import { CabeceraBloque, ContenedorTabla, EstadoCarga, EstadoVacio } from '@/components/ui'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -70,16 +71,15 @@ function FilaPartido({
 function CardFecha({ fecha, apiUrl }: { fecha: FixtureFechaDTO; apiUrl: string | undefined }) {
   const partidos = fecha.partidos ?? []
   return (
-    <View className="mb-3 overflow-hidden rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm elevation-3">
-      <View className="mb-1 flex-row items-baseline justify-between gap-2 border-b border-gray-200 px-2 py-2">
-        <Text className="shrink text-base font-semibold text-gray-900" numberOfLines={2}>
-          {textoOGuion(fecha.titulo)}
-        </Text>
-        <Text className="shrink-0 text-sm text-gray-500">{textoOGuion(fecha.dia)}</Text>
-      </View>
-      {partidos.map((p, i) => (
-        <FilaPartido key={`${p.local}-${p.visitante}-${i}`} partido={p} apiUrl={apiUrl} />
-      ))}
+    <View className="mb-3">
+      <ContenedorTabla>
+        <CabeceraBloque titulo={textoOGuion(fecha.titulo)} subtitulo={textoOGuion(fecha.dia)} />
+        <View className="px-3 py-2">
+          {partidos.map((p, i) => (
+            <FilaPartido key={`${p.local}-${p.visitante}-${i}`} partido={p} apiUrl={apiUrl} />
+          ))}
+        </View>
+      </ContenedorTabla>
     </View>
   )
 }
@@ -101,19 +101,11 @@ export default function FixtureTodosContraTodos() {
   })
 
   if (zonaId == null) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay zona para mostrar el fixture.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay zona para mostrar el fixture." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center py-12">
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <EstadoCarga />
   }
 
   if (isError) {
@@ -129,18 +121,14 @@ export default function FixtureTodosContraTodos() {
   const fechas = data?.fechas ?? []
 
   if (fechas.length === 0) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay fechas para esta zona.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay fechas para esta zona." />
   }
 
   const apiUrl = configLiga?.apiUrl
 
   return (
     <ScrollView
-      className="flex-1 bg-gray-50"
+      className="flex-1"
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator
     >

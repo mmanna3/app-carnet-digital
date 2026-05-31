@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo } from 'react'
-import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
+import { FlatList, Image, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import type { ClubesDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
+import { EstadoCarga, EstadoVacio, Texto } from '@/components/ui'
 
 /** La API devuelve ruta relativa (p. ej. `/Imagenes/Escudos/1.jpg`); Image necesita URL absoluta. */
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
@@ -38,7 +39,7 @@ type ClubCardProps = {
 
 function ClubCard({ item, uriEscudo }: ClubCardProps) {
   return (
-    <View className="rounded-xl border border-gray-200 bg-white px-5 py-4">
+    <View className="rounded-2xl border border-zinc-700 bg-white px-5 py-4">
       <View className="flex-row items-center gap-4">
         <View style={{ width: 50, height: 50 }} className="shrink-0 items-center justify-center">
           {uriEscudo ? (
@@ -49,17 +50,17 @@ function ClubCard({ item, uriEscudo }: ClubCardProps) {
               resizeMode="contain"
             />
           ) : (
-            <View className="h-11 w-11 rounded-lg bg-gray-100" />
+            <View className="h-11 w-11 rounded-lg bg-zinc-100" />
           )}
         </View>
         <View className="min-w-0 flex-1 gap-1">
-          <Text className="text-base font-bold leading-5 text-gray-900" numberOfLines={3}>
+          <Text className="text-base font-bold leading-5 text-zinc-900" numberOfLines={3}>
             {textoOGuion(item.equipo)}
           </Text>
-          <Text className="text-sm leading-5 text-gray-500" numberOfLines={4}>
+          <Text className="text-sm leading-5 text-zinc-600" numberOfLines={4}>
             {lineaDireccionLocalidad(item.direccion, item.localidad)}
           </Text>
-          <Text className="text-sm leading-5 text-gray-500" numberOfLines={2}>
+          <Text className="text-sm leading-5 text-zinc-600" numberOfLines={2}>
             Cancha: {textoOGuion(item.tipoCancha)}
           </Text>
         </View>
@@ -98,19 +99,11 @@ export default function Clubes() {
   )
 
   if (zonaId == null) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay zona para listar clubes.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay zona para listar clubes." />
   }
 
   if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center py-12">
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <EstadoCarga />
   }
 
   if (isError) {
@@ -124,11 +117,7 @@ export default function Clubes() {
   }
 
   if (filas.length === 0) {
-    return (
-      <View className="flex-1 justify-center py-8">
-        <Text className="text-center text-gray-600">No hay clubes en esta zona.</Text>
-      </View>
-    )
+    return <EstadoVacio mensaje="No hay clubes en esta zona." />
   }
 
   return (

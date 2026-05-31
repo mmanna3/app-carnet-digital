@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .glass {
+    @apply border border-border-glass bg-white/5;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+
+  .font-brand {
+    font-family: D3Euronism;
+    letter-spacing: 0.06em;
+  }
+}

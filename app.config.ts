@@ -72,13 +72,7 @@ export default (): ExpoConfig => ({
   icon: config.icon,
   scheme: config.scheme,
   userInterfaceStyle: 'automatic',
-  newArchEnabled: true,
   backgroundColor: splashHex,
-  splash: {
-    image: config.splashImage,
-    resizeMode: 'contain',
-    backgroundColor: splashHex,
-  },
   ios: {
     supportsTablet: true,
     bundleIdentifier: config.appId,
@@ -103,6 +97,11 @@ export default (): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-system-ui',
+    '@react-native-community/datetimepicker',
+    'expo-font',
+    'expo-sharing',
+    'expo-status-bar',
+    'expo-web-browser',
     [
       'expo-splash-screen',
       {

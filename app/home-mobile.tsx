@@ -3,16 +3,67 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
 import { Feather } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
 import { useAuth } from '@/lib/hooks/use-auth'
-import { useConfigLiga } from '@/lib/config/liga'
+import { getColorLiga600, useConfigLiga } from '@/lib/config/liga'
 import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
+import { PantallaPublica, Texto } from '@/components/ui'
+import { TOKENS } from '@/lib/design-system'
+import { FUENTE_BRAND, FUENTE_SANS } from '@/lib/design-system/fuentes'
 
 /** Logos de ligas (require estático para Metro) */
 const LOGOS_LIGAS: Record<string, number> = {
   edefi: require('@/assets/ligas/edefi/icon.png'),
   luefi: require('@/assets/ligas/luefi/icono.png'),
+}
+
+type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
+
+function TarjetaAccion({
+  testID,
+  onPress,
+  iconName,
+  titulo,
+  subtitulo,
+  colorIcono,
+  bordeIcono,
+  fondoIcono,
+}: {
+  testID?: string
+  onPress: () => void
+  iconName: IoniconsName
+  titulo: string
+  subtitulo: string
+  colorIcono: string
+  bordeIcono: string
+  fondoIcono: string
+}) {
+  return (
+    <TouchableOpacity testID={testID} onPress={onPress} className="flex-1" activeOpacity={0.85}>
+      <View className={`rounded-2xl border border-zinc-700 bg-surface-elevated p-4 ${bordeIcono}`}>
+        <View
+          className={`mb-3 h-10 w-10 items-center justify-center rounded-lg border ${bordeIcono} ${fondoIcono}`}
+        >
+          <Ionicons name={iconName} size={22} color={colorIcono} />
+        </View>
+        <Texto
+          variante="titulo"
+          className="mb-1 text-sm"
+          style={{ color: '#fafafa' }}
+        >
+          {titulo}
+        </Texto>
+        <Text
+          className="text-sm leading-snug"
+          style={{ fontFamily: FUENTE_SANS, color: '#d4d4d8' }}
+        >
+          {subtitulo}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  )
 }
 
 export default function HomeMobile() {
@@ -22,6 +73,7 @@ export default function HomeMobile() {
   const { limpiarLiga } = useLigaStore()
   const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
   const configLiga = useConfigLiga()
+  const colorLiga = getColorLiga600()
 
   const leagueId = configLiga?.leagueId ?? ''
   const leagueDisplayName = configLiga?.leagueDisplayName ?? ''
@@ -65,83 +117,88 @@ export default function HomeMobile() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
-      {/* Cabecera */}
-      <View className="bg-liga-600 pb-8 px-6 pt-14 overflow-hidden">
-        {/* Círculos decorativos */}
-        <View
-          className="absolute rounded-full bg-white/10"
-          style={{ top: -64, right: -64, width: 192, height: 192 }}
-        />
-        <View
-          className="absolute rounded-full bg-white/10"
-          style={{ bottom: -48, left: -48, width: 144, height: 144 }}
-        />
+    <PantallaPublica safeArea={false} className="flex-1">
+      <View className="pb-8 px-6 pt-14" style={{ backgroundColor: colorLiga }}>
+        <View className="absolute inset-0 overflow-hidden" pointerEvents="none">
+          <View
+            className="absolute rounded-full bg-white/10"
+            style={{ top: -64, right: -64, width: 192, height: 192 }}
+          />
+          <View
+            className="absolute rounded-full bg-white/10"
+            style={{ bottom: -48, left: -48, width: 144, height: 144 }}
+          />
+        </View>
 
-        {/* Logo y nombre de la liga */}
-        <View className="items-center mb-4 mt-4">
+        <View className="mb-4 mt-4 w-full items-center">
           {logo && (
             <Image
               source={logo}
               style={{ width: 96, height: 96 }}
-              className="mb-4 drop-shadow-lg"
+              className="mb-4"
               resizeMode="contain"
             />
           )}
-          <Text className="text-white font-medium text-4xl tracking-tight">
-            {leagueDisplayName}
-          </Text>
+          <View className="w-full px-2">
+            <Text
+              className="text-center text-white"
+              style={{
+                fontFamily: FUENTE_BRAND,
+                fontSize: 32,
+                letterSpacing: 2,
+              }}
+              numberOfLines={2}
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}
+            >
+              {leagueDisplayName}
+            </Text>
+          </View>
         </View>
 
         <TouchableOpacity
           onPress={handleBuscarEquipo}
           activeOpacity={0.85}
-          className="flex-row items-center bg-white rounded-2xl px-4 py-3.5 mx-0"
+          className="flex-row items-center rounded-full border border-white/25 bg-white px-4 py-3.5"
           accessibilityRole="button"
           accessibilityLabel="Buscar torneos"
         >
           <Feather name="search" size={20} color="#9ca3af" />
-          <Text className="text-gray-400 text-base ml-2">Buscar torneos...</Text>
+          <Text className="ml-2 text-base text-gray-500">Buscar torneos...</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Tarjetas de acción */}
-      <View className="px-6 pt-6 flex-row gap-3">
-        {/* Fichaje */}
-        <TouchableOpacity
+      <View className="flex-row gap-3 bg-surface px-6 pb-6 pt-6">
+        <TarjetaAccion
           testID="card-fichaje"
           onPress={handleFichajes}
-          className="flex-1 bg-blue-600 rounded-2xl p-4 shadow-md"
-          activeOpacity={0.85}
-        >
-          <View className="bg-white/20 rounded-xl p-2 mb-3 self-start">
-            <Feather name="users" size={20} color="white" />
-          </View>
-          <Text className="text-white text-lg font-semibold mb-1">Fichaje</Text>
-          <Text className="text-blue-100 text-sm leading-snug">Fichaje de nuevo jugador</Text>
-        </TouchableOpacity>
-
-        {/* Delegados/DT */}
-        <TouchableOpacity
+          iconName="person-add-outline"
+          titulo="Fichaje"
+          subtitulo="Fichaje de nuevo jugador de la liga"
+          colorIcono={TOKENS.accentHot}
+          bordeIcono="border-emerald-500/30"
+          fondoIcono="bg-emerald-500/10"
+        />
+        <TarjetaAccion
           testID="card-delegados"
           onPress={handleDelegadosDT}
-          className="flex-1 bg-gray-800 rounded-2xl p-4 shadow-md"
-          activeOpacity={0.85}
-        >
-          <View className="bg-white/10 rounded-xl p-2 mb-3 self-start">
-            <Feather name="clipboard" size={20} color="white" />
-          </View>
-          <Text className="text-white text-lg font-semibold mb-1">Delegados/DT</Text>
-          <Text className="text-gray-300 text-sm leading-snug">Accedé a tu panel de gestión</Text>
-        </TouchableOpacity>
+          iconName="clipboard-outline"
+          titulo="Delegados/DT"
+          subtitulo="Accedé a tu panel de gestión"
+          colorIcono="#38bdf8"
+          bordeIcono="border-sky-500/30"
+          fondoIcono="bg-sky-500/10"
+        />
       </View>
 
-      {/* Seleccionar otra liga (solo multiliga) */}
       {esMultiliga && (
-        <TouchableOpacity onPress={handleSeleccionarOtraLiga} className="mt-12 py-2 items-center">
-          <Text className="text-sm text-gray-500">Seleccionar otra liga</Text>
+        <TouchableOpacity
+          onPress={handleSeleccionarOtraLiga}
+          className="items-center bg-surface py-2 pb-8"
+        >
+          <Texto variante="caption">Seleccionar otra liga</Texto>
         </TouchableOpacity>
       )}
-    </View>
+    </PantallaPublica>
   )
 }
