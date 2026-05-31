@@ -20,9 +20,7 @@ export function Chip({
   const estilo = activo ? classNameActivo : classNameInactivo
   const texto = activo ? 'text-black font-semibold' : 'text-zinc-400 font-medium'
 
-  const contenido = (
-    <Text className={`text-sm ${texto}`}>{label}</Text>
-  )
+  const contenido = <Text className={`text-sm ${texto}`}>{label}</Text>
 
   if (onPress) {
     return (
@@ -38,5 +36,9 @@ export function Chip({
     )
   }
 
-  return <TouchableOpacity className={`${base} ${estilo}`} disabled>{contenido}</TouchableOpacity>
+  return (
+    <TouchableOpacity className={`${base} ${estilo}`} disabled>
+      {contenido}
+    </TouchableOpacity>
+  )
 }

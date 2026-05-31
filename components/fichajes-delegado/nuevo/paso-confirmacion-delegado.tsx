@@ -22,16 +22,24 @@ export default function PasoConfirmacionDelegado() {
   const [errorNombreUsuario, setErrorNombreUsuario] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!nombreUsuario) {
+    if (nombreUsuario) return
+
+    let cancelado = false
+    void (async () => {
       setCargandoUsuario(true)
       setErrorNombreUsuario(null)
-      obtenerNombreUsuario()
-        .then((result) => {
-          if (!result.ok) {
-            setErrorNombreUsuario(result.error ?? 'Error al obtener el nombre de usuario')
-          }
-        })
-        .finally(() => setCargandoUsuario(false))
+      try {
+        const result = await obtenerNombreUsuario()
+        if (!cancelado && !result.ok) {
+          setErrorNombreUsuario(result.error ?? 'Error al obtener el nombre de usuario')
+        }
+      } finally {
+        if (!cancelado) setCargandoUsuario(false)
+      }
+    })()
+
+    return () => {
+      cancelado = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch nombre solo al montar
   }, [])

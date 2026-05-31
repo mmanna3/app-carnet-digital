@@ -41,11 +41,7 @@ export function Texto({ variante = 'cuerpo', className = '', style, children, ..
     ? estilosPorVariante[variante].replace(/\btext-\S+/g, '').trim()
     : estilosPorVariante[variante]
   return (
-    <Text
-      className={`${clasesVariante} ${className}`.trim()}
-      style={[fontStyle, style]}
-      {...rest}
-    >
+    <Text className={`${clasesVariante} ${className}`.trim()} style={[fontStyle, style]} {...rest}>
       {children}
     </Text>
   )

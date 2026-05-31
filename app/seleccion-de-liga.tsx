@@ -48,7 +48,11 @@ export default function SeleccionDeLigaScreen() {
         renderItem={({ item }) => {
           const iconSource = ICONOS_LIGAS[item.leagueId]
           return (
-            <TouchableOpacity onPress={() => handleSelect(item)} className="my-3" activeOpacity={0.85}>
+            <TouchableOpacity
+              onPress={() => handleSelect(item)}
+              className="my-3"
+              activeOpacity={0.85}
+            >
               <Tarjeta className="items-center">
                 {iconSource ? (
                   <View className="mb-3 h-28 w-28 items-center justify-center rounded-xl border border-border-glass bg-white/5">

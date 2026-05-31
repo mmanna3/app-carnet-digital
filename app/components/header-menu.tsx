@@ -12,6 +12,35 @@ import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import { queryKeys } from '@/lib/api/query-keys'
 
+function MenuItem({
+  icon,
+  iconNode,
+  label,
+  onSelect,
+  destructive,
+  testID,
+}: {
+  icon?: React.ComponentProps<typeof Feather>['name']
+  iconNode?: React.ReactNode
+  label: string
+  onSelect: () => void
+  destructive?: boolean
+  testID?: string
+}) {
+  return (
+    <MenuOption onSelect={onSelect}>
+      <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
+        {iconNode ?? <Feather name={icon!} size={20} color={destructive ? '#dc2626' : '#111827'} />}
+        <Text
+          className={`text-base ${destructive ? 'text-red-600' : 'text-[#111827]'} font-medium`}
+        >
+          {label}
+        </Text>
+      </View>
+    </MenuOption>
+  )
+}
+
 export default function HeaderMenu() {
   const router = useRouter()
   const pathname = usePathname()
@@ -63,33 +92,6 @@ export default function HeaderMenu() {
       }
     }
   }
-
-  const MenuItem = ({
-    icon,
-    iconNode,
-    label,
-    onSelect,
-    destructive,
-    testID,
-  }: {
-    icon?: React.ComponentProps<typeof Feather>['name']
-    iconNode?: React.ReactNode
-    label: string
-    onSelect: () => void
-    destructive?: boolean
-    testID?: string
-  }) => (
-    <MenuOption onSelect={onSelect}>
-      <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
-        {iconNode ?? <Feather name={icon!} size={20} color={destructive ? '#dc2626' : '#111827'} />}
-        <Text
-          className={`text-base ${destructive ? 'text-red-600' : 'text-[#111827]'} font-medium`}
-        >
-          {label}
-        </Text>
-      </View>
-    </MenuOption>
-  )
 
   return (
     <View className="mr-2.5">

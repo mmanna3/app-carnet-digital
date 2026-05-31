@@ -27,7 +27,9 @@ export function estiloAccentoPorColor(color: string | undefined) {
 function TarjetaCompacta({ nombre, color, iconName, onPress }: Props) {
   const tema = getTemaAgrupador(color)
   const contenido = (
-    <View className={`glass flex-row items-center overflow-hidden rounded-2xl border ${tema.border} py-3 pl-3 pr-4`}>
+    <View
+      className={`glass flex-row items-center overflow-hidden rounded-2xl border ${tema.border} py-3 pl-3 pr-4`}
+    >
       <View
         className={`mr-3 h-10 w-10 items-center justify-center rounded-lg border ${tema.border} ${tema.iconBg}`}
       >
@@ -40,7 +42,12 @@ function TarjetaCompacta({ nombre, color, iconName, onPress }: Props) {
   )
   if (onPress) {
     return (
-      <TouchableOpacity className="mb-2.5" onPress={onPress} activeOpacity={0.7} accessibilityRole="button">
+      <TouchableOpacity
+        className="mb-2.5"
+        onPress={onPress}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+      >
         {contenido}
       </TouchableOpacity>
     )
@@ -62,10 +69,12 @@ export function TarjetaTorneo(props: Props) {
   const card = (
     <View
       className={`overflow-hidden rounded-2xl border ${tema.border} bg-white/5`}
-      style={{
-        boxShadow: hovered ? '0 8px 28px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0,0,0,0.2)',
-        transform: [{ translateY: hovered ? -3 : 0 }],
-      } as object}
+      style={
+        {
+          boxShadow: hovered ? '0 8px 28px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0,0,0,0.2)',
+          transform: [{ translateY: hovered ? -3 : 0 }],
+        } as object
+      }
     >
       <View className="items-center px-5 py-7">
         <View

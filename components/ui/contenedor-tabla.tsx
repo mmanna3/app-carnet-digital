@@ -13,19 +13,9 @@ type Props = {
 /**
  * Card blanca con borde sólido sobre fondo oscuro.
  */
-export function ContenedorTabla({
-  children,
-  horizontal = false,
-  encabezado,
-  scrollProps,
-}: Props) {
+export function ContenedorTabla({ children, horizontal = false, encabezado, scrollProps }: Props) {
   const cuerpo = horizontal ? (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator
-      nestedScrollEnabled
-      {...scrollProps}
-    >
+    <ScrollView horizontal showsHorizontalScrollIndicator nestedScrollEnabled {...scrollProps}>
       {children}
     </ScrollView>
   ) : (

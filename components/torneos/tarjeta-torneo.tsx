@@ -17,7 +17,9 @@ export function TarjetaTorneo({ nombre, color, iconName, onPress }: Props) {
   const tema = getTemaAgrupador(color)
 
   const contenido = (
-    <View className={`glass flex-row items-center overflow-hidden rounded-2xl border ${tema.border} py-3 pl-3 pr-4`}>
+    <View
+      className={`glass flex-row items-center overflow-hidden rounded-2xl border ${tema.border} py-3 pl-3 pr-4`}
+    >
       <View
         className={`mr-3 h-10 w-10 items-center justify-center rounded-lg border ${tema.border} ${tema.iconBg}`}
       >

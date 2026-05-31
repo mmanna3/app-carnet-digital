@@ -10,6 +10,20 @@ import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import { queryKeys } from '@/lib/api/query-keys'
 import Boton from '@/components/boton'
 
+function BotonCerrarSesion({ onPress }: { onPress: () => void }) {
+  return (
+    <View className="mb-6 items-end">
+      <Boton
+        testID="boton-cerrar-sesion-seleccion-equipo"
+        texto="Cerrar sesión"
+        onPress={onPress}
+        variante="Secundario"
+        className="h-[40px] px-4 mt-0"
+      />
+    </View>
+  )
+}
+
 export default function TeamSelectionScreen() {
   const { logout } = useAuth()
   const { limpiarEquipoSeleccionado } = useEquipoStore()
@@ -36,25 +50,13 @@ export default function TeamSelectionScreen() {
     router.replace('/(auth)/login')
   }
 
-  const BotonCerrarSesion = () => (
-    <View className="mb-6 items-end">
-      <Boton
-        testID="boton-cerrar-sesion-seleccion-equipo"
-        texto="Cerrar sesión"
-        onPress={handleCerrarSesion}
-        variante="Secundario"
-        className="h-[40px] px-4 mt-0"
-      />
-    </View>
-  )
-
   if (isLoading) {
     return (
       <View className="flex-1 bg-[#f8f8f8] p-5">
         <View className="flex-1 justify-center">
           <Text className="text-2xl font-bold text-center">Cargando equipos...</Text>
         </View>
-        <BotonCerrarSesion />
+        <BotonCerrarSesion onPress={handleCerrarSesion} />
       </View>
     )
   }
@@ -65,7 +67,7 @@ export default function TeamSelectionScreen() {
         <View className="flex-1 justify-center">
           <Text className="text-2xl font-bold text-center">Error al cargar los equipos</Text>
         </View>
-        <BotonCerrarSesion />
+        <BotonCerrarSesion onPress={handleCerrarSesion} />
       </View>
     )
   }
@@ -95,7 +97,7 @@ export default function TeamSelectionScreen() {
           </View>
         ))}
       </ScrollView>
-      <BotonCerrarSesion />
+      <BotonCerrarSesion onPress={handleCerrarSesion} />
     </View>
   )
 }

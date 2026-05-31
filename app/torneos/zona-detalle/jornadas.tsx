@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
@@ -340,7 +340,7 @@ export default function Jornadas() {
 
   return (
     <JornadasConSelectorFecha
-      zonaId={zonaId}
+      key={zonaId}
       fechas={fechas}
       apiUrl={configLiga?.apiUrl}
       colorFondoChipSeleccionado={colorFondoChipSeleccionado}
@@ -349,14 +349,12 @@ export default function Jornadas() {
 }
 
 type JornadasConSelectorFechaProps = {
-  zonaId: number
   fechas: FechasParaJornadasDTO[]
   apiUrl: string | undefined
   colorFondoChipSeleccionado: string
 }
 
 function JornadasConSelectorFecha({
-  zonaId,
   fechas,
   apiUrl,
   colorFondoChipSeleccionado,
@@ -364,10 +362,6 @@ function JornadasConSelectorFecha({
   const indiceDefault = useMemo(() => indiceUltimaFechaConResultados(fechas), [fechas])
 
   const [indiceElegido, setIndiceElegido] = useState<number | null>(null)
-
-  useEffect(() => {
-    setIndiceElegido(null)
-  }, [zonaId])
 
   const indiceActivo = indiceElegido ?? indiceDefault
 

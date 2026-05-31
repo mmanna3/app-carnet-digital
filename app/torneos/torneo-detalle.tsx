@@ -101,7 +101,10 @@ export default function TorneoDetalle() {
       {fases.map((fase) => (
         <View key={fase.id ?? fase.nombre} className="mb-6">
           {fase.nombre ? (
-            <Texto variante="eyebrow" className="mb-3 text-base text-zinc-300 normal-case tracking-wide">
+            <Texto
+              variante="eyebrow"
+              className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
+            >
               {fase.nombre}
             </Texto>
           ) : null}

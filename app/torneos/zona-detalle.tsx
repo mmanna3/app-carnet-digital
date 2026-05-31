@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
@@ -21,6 +21,15 @@ type TabDef = { titulo: string; icon: IconName; Contenido: React.ComponentType }
 const COLOR_INACTIVO = '#71717a'
 
 export default function ZonaDetalle() {
+  const { zonaId: zonaIdParam, tipoDeFase: tipoDeFaseParam } = useLocalSearchParams<{
+    zonaId?: string
+    tipoDeFase?: string
+  }>()
+  const scopeKey = `${zonaIdParam ?? ''}-${tipoDeFaseParam ?? ''}`
+  return <ZonaDetalleContenido key={scopeKey} />
+}
+
+function ZonaDetalleContenido() {
   const insets = useSafeAreaInsets()
   const grande = usePantallaGrande()
   const [tabIndex, setTabIndex] = useState(0)
@@ -30,7 +39,6 @@ export default function ZonaDetalle() {
     torneoNombre,
     faseNombre,
     zonaNombre,
-    zonaId: zonaIdParam,
     tipoDeFase: tipoDeFaseParam,
   } = useLocalSearchParams<{
     zonaNombre?: string
@@ -44,10 +52,6 @@ export default function ZonaDetalle() {
   const tipoDeFase = tipoDeFaseParam != null ? String(tipoDeFaseParam) : ''
   const esEliminacionDirecta = tipoDeFase === 'EliminacionDirecta'
   const esAnual = tipoDeFase === 'Anual'
-
-  useEffect(() => {
-    setTabIndex(0)
-  }, [zonaIdParam, tipoDeFase])
 
   const TABS: TabDef[] = useMemo(() => {
     if (esEliminacionDirecta) {

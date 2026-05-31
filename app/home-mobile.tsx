@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
-import { Feather } from '@expo/vector-icons'
-import { Ionicons } from '@expo/vector-icons'
+import { Feather , Ionicons } from '@expo/vector-icons'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
 import { useAuth } from '@/lib/hooks/use-auth'
@@ -48,11 +47,7 @@ function TarjetaAccion({
         >
           <Ionicons name={iconName} size={22} color={colorIcono} />
         </View>
-        <Texto
-          variante="titulo"
-          className="mb-1 text-sm"
-          style={{ color: '#fafafa' }}
-        >
+        <Texto variante="titulo" className="mb-1 text-sm" style={{ color: '#fafafa' }}>
           {titulo}
         </Texto>
         <Text

@@ -55,7 +55,10 @@ export default function Torneos() {
       {agrupadores.map((a) => (
         <View key={a.id ?? a.nombre} className="mb-6">
           {a.nombre ? (
-            <Texto variante="eyebrow" className="mb-3 text-base text-zinc-300 normal-case tracking-wide">
+            <Texto
+              variante="eyebrow"
+              className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
+            >
               {a.nombre}
             </Texto>
           ) : null}

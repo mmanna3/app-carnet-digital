@@ -6,7 +6,7 @@ import { api } from '@/lib/api/api'
 import type { ClubesDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
-import { EstadoCarga, EstadoVacio, Texto } from '@/components/ui'
+import { EstadoCarga, EstadoVacio } from '@/components/ui'
 
 /** La API devuelve ruta relativa (p. ej. `/Imagenes/Escudos/1.jpg`); Image necesita URL absoluta. */
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
