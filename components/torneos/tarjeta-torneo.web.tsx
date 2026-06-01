@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, Pressable } from 'react-native'
+import { View, TouchableOpacity, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 import { getTemaAgrupador } from '@/lib/design-system'
-import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
 import { Texto } from '@/components/ui/texto'
+import { TarjetaTorneoGrilla } from '@/components/torneos/tarjeta-torneo-grilla'
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
 
@@ -63,12 +63,10 @@ export function TarjetaTorneo(props: Props) {
     return <TarjetaCompacta {...props} />
   }
 
-  const tema = getTemaAgrupador(props.color)
-  const { nombre, iconName, onPress } = props
+  const { onPress } = props
 
   const card = (
     <View
-      className={`overflow-hidden rounded-2xl border ${tema.border} bg-white/5`}
       style={
         {
           boxShadow: hovered ? '0 8px 28px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0,0,0,0.2)',
@@ -76,25 +74,7 @@ export function TarjetaTorneo(props: Props) {
         } as object
       }
     >
-      <View className="items-center px-5 py-7">
-        <View
-          className={`mb-4 h-[72px] w-[72px] items-center justify-center rounded-2xl border ${tema.border} ${tema.iconBg}`}
-        >
-          <Ionicons name={iconName} size={36} color={tema.iconColor} />
-        </View>
-        <Text
-          style={{
-            fontFamily: FUENTE_DISPLAY,
-            fontSize: 16,
-            color: '#f4f4f5',
-            textAlign: 'center',
-            lineHeight: 22,
-          }}
-          numberOfLines={3}
-        >
-          {nombre}
-        </Text>
-      </View>
+      <TarjetaTorneoGrilla {...props} />
     </View>
   )
 
