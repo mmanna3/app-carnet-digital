@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react-native'
-import FichajesScreen from '../fichajes'
+import FichajesScreen from '../(rutas)/fichajes'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
 import { useRouter } from 'expo-router'

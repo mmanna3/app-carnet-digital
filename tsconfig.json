@@ -2,11 +2,39 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "types": ["jest", "node"],
+    "types": [
+      "jest",
+      "node"
+    ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ],
+      "@/flujos/*": [
+        "./app/flujos/*"
+      ],
+      "@/design-system/*": [
+        "./app/design-system/*"
+      ],
+      "@/logica-compartida/*": [
+        "./app/logica-compartida/*"
+      ],
+      "@/lib/*": [
+        "./app/logica-compartida/*"
+      ],
+      "@/constants/*": [
+        "./app/logica-compartida/constantes/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"],
-  "exclude": ["FIGMA-UI-PROTOTYPE.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ],
+  "exclude": [
+    "FIGMA-UI-PROTOTYPE.tsx"
+  ]
 }

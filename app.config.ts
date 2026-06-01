@@ -89,11 +89,6 @@ export default (): ExpoConfig => ({
     },
     package: config.appId,
   },
-  web: {
-    bundler: 'metro',
-    output: 'static',
-    favicon: config.favicon,
-  },
   plugins: [
     'expo-router',
     'expo-system-ui',
@@ -113,6 +108,7 @@ export default (): ExpoConfig => ({
     [
       'expo-build-properties',
       {
+        ios: { deploymentTarget: '16.4' },
         android: { usesCleartextTraffic: true },
       },
     ],

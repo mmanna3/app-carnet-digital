@@ -17,11 +17,10 @@
     "ios": "expo run:ios",
     "ios:dev": "expo start --ios --dev-client",
     "ios:prod": "expo start --ios --no-dev",
-    "web": "expo start --web",
-    "export:web": "expo export --platform web && node scripts/postprocess-web-export.js",
     "test": "jest --watchAll",
     "test:ci": "jest --no-coverage",
     "e2e": "bash e2e/run-e2e-android-dev.sh",
+    "e2e:ios": "bash e2e/run-e2e-ios-dev.sh",
     "e2e:limpio": "bash e2e/run-e2e-android-limpio.sh",
     "pretest:e2e": "adb push e2e/foto-e2e.jpg /sdcard/DCIM/foto-e2e-1.jpg && adb push e2e/foto-e2e.jpg /sdcard/DCIM/foto-e2e-2.jpg && adb push e2e/foto-e2e.jpg /sdcard/DCIM/foto-e2e-3.jpg && adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/DCIM/foto-e2e-1.jpg && adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/DCIM/foto-e2e-2.jpg && adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/DCIM/foto-e2e-3.jpg",
     "test:e2e": "maestro test --debug-output ./e2e-debug --format HTML --output e2e-report.html e2e",
@@ -46,7 +45,15 @@
     "preset": "jest-expo",
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.ts"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@/flujos/(.*)$": "<rootDir>/app/flujos/$1",
+      "^@/design-system/(.*)$": "<rootDir>/app/design-system/$1",
+      "^@/logica-compartida/(.*)$": "<rootDir>/app/logica-compartida/$1",
+      "^@/lib/(.*)$": "<rootDir>/app/logica-compartida/$1",
+      "^@/constants/(.*)$": "<rootDir>/app/logica-compartida/constantes/$1",
+      "^@/(.*)$": "<rootDir>/$1"
+    }
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
@@ -54,7 +61,7 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "9.1.0",
     "@tanstack/react-query": "^5.68.0",
-    "expo": "~56.0.8",
+    "expo": "~54.0.0",
     "expo-build-properties": "~56.0.16",
     "expo-constants": "^56.0.16",
     "expo-font": "~56.0.5",
@@ -62,6 +69,7 @@
     "expo-image-picker": "~56.0.15",
     "expo-linear-gradient": "~56.0.4",
     "expo-linking": "^56.0.13",
+    "expo-modules-core": "^56.0.14",
     "expo-print": "~56.0.3",
     "expo-router": "^56.2.8",
     "expo-sharing": "~56.0.15",
