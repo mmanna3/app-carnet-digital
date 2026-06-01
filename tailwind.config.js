@@ -6,7 +6,7 @@ const { tailwind: colorBase } = require('./configs-por-liga/color-base.js')
 const ligaColors = colors[colorBase]
 
 module.exports = {
-  content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}'],
+  content: ['./app/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
     extend: {

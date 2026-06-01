@@ -47,7 +47,11 @@
       "<rootDir>/jest.setup.ts"
     ],
     "moduleNameMapper": {
-      "^@/flujos/(.*)$": "<rootDir>/app/flujos/$1",
+      "^@/home/(.*)$": "<rootDir>/app/(home)/$1",
+      "^@/fichaje-jugador/(.*)$": "<rootDir>/app/(fichaje-jugador)/$1",
+      "^@/delegados/(.*)$": "<rootDir>/app/(delegados)/$1",
+      "^@/inicio-delegados/(.*)$": "<rootDir>/app/(delegados)/(inicio)/$1",
+      "^@/torneos/(.*)$": "<rootDir>/app/(torneos)/torneos/$1",
       "^@/design-system/(.*)$": "<rootDir>/app/design-system/$1",
       "^@/logica-compartida/(.*)$": "<rootDir>/app/logica-compartida/$1",
       "^@/lib/(.*)$": "<rootDir>/app/logica-compartida/$1",

@@ -1,1 +1,1 @@
-export * from '@/app/design-system/tokens/tokens'
+export * from '@/design-system/tokens/tokens'

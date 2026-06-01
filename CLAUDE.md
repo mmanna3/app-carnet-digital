@@ -53,19 +53,22 @@ npm run limpiar          # Limpiar dependencias y cachés
 
 | Capa | Ruta | Rol |
 |------|------|-----|
-| Rutas (Expo Router) | `app/(rutas)/` | Archivos finos que re-exportan pantallas; URLs estables |
-| Flujos | `app/flujos/` | Implementación por dominio (home, fichaje-jugador, delegados, torneos) |
-| Design system | `app/design-system/` | Tokens, componentes UI, layouts (`layout-asistente`) |
-| Lógica compartida | `app/logica-compartida/` | API, hooks Zustand, config liga, utilidades, tipos, constantes |
+| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(torneos)/` | Pantallas navegables por flujo |
+| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc. | UI y pasos de wizard (no son rutas) |
+| Design system | `app/design-system/` | Tokens, componentes UI, layouts |
+| Lógica compartida | `app/logica-compartida/` | API, hooks, config, utilidades, **constantes de rutas** |
+
+Expo Router ignora `design-system/`, `logica-compartida/` y carpetas colocated cuyo segmento empieza con `_` seguido de `/` (p. ej. `_components/`, `_pasos/`). **No** excluye `_layout.tsx`.
 
 ### Archivos clave
 
 - `configs-por-liga/datos.js` — Fuente única: LIGAS, APPS_UNILIGAS, LIGAS_DE_APP_MULTILIGA, CONFIG_APP_MULTILIGA
 - `configs-por-liga/color-base.js` — Color base para Tailwind y splash
 - `app.config.ts` — Config de Expo según LIGA_ID
+- `app/logica-compartida/constantes/rutas.ts` — **`RUTAS`**: paths tipados para navegación (`router.push(RUTAS.HOME)`, etc.)
 - `app/logica-compartida/config/liga.ts` — `getConfigLiga()`, `useConfigLiga()`
 - `app/logica-compartida/hooks/use-liga-store.ts` — Liga seleccionada (MULTILIGA); key `liga-storage`
-- `app/flujos/home/seleccion-de-liga/pantalla-seleccion-de-liga.tsx` — Selección de liga (MULTILIGA)
+- `app/(home)/seleccion-de-liga.tsx` — Selección de liga (MULTILIGA)
 - `assets/ligas/<id>/` — Assets por liga
 
 **Colores liga:** Clases NativeWind `liga-*`: `bg-liga-600`, `text-liga-500`, etc.
@@ -74,21 +77,24 @@ npm run limpiar          # Limpiar dependencias y cachés
 
 ```
 app/
-├── _layout.tsx                      # Auth guard + Stack
-└── (rutas)/                         # Grupo de rutas (no afecta URL)
-    ├── index.tsx, home.tsx, fichajes.tsx, registro-delegado.tsx, …
-    ├── (auth)/login.tsx, cambiar-password.tsx   # → flujos/delegados
-    ├── (delegados-home)/mis-jugadores.tsx, …    # → flujos/delegados/delegados-home
-    └── torneos/…                                # → app/flujos/torneos
+├── _layout.tsx, index.tsx, +not-found.tsx
+├── design-system/, logica-compartida/
+├── (home)/                     # /home, /seleccion-de-liga
+├── (fichaje-jugador)/          # /fichajes (+ _pasos, _components)
+├── (delegados)/                # login, tabs (inicio), fichaje/registro delegado
+│   └── (inicio)/               # tabs: mis-jugadores, buscar, pendientes
+└── (torneos)/torneos/          # /torneos/*
 ```
 
-Cada archivo en `(rutas)/` suele ser un **bridge**: `export { default } from '@/app/flujos/...'`.
+Los route groups `(home)`, `(fichaje-jugador)`, `(delegados)`, `(torneos)` y `(inicio)` no aparecen en la URL.
 
-**Auth guard** (`app/_layout.tsx`): MULTILIGA sin liga → seleccion-de-liga. No autenticado → home público. Autenticado sin equipo → seleccion-de-equipo. Tabs delegados: grupo `(delegados-home)`.
+**Navegación:** usar `RUTAS` de `@/logica-compartida/constantes/rutas` (alias `@/constants/rutas`).
+
+**Auth guard** (`app/_layout.tsx`): MULTILIGA sin liga → `RUTAS.SELECCION_LIGA`. No autenticado → `RUTAS.HOME`. Autenticado sin equipo → `RUTAS.SELECCION_EQUIPO`.
 
 ### State Management
 
-**Zustand** (persistidos) en `app/logica-compartida/hooks/`:
+**Zustand** (persistidos) en `logica-compartida/hooks/`:
 
 - `use-auth.ts` — key `auth-storage`
 - `use-equipo-store.ts` — key `equipo-storage`
@@ -98,24 +104,28 @@ Cada archivo en `(rutas)/` suele ser un **bridge**: `export { default } from '@/
 
 ### API Layer
 
-- `app/logica-compartida/api/clients.ts` — Cliente NSwag **auto-generado**. No editar.
-- `app/logica-compartida/api/http-client-wrapper.ts` — JWT; 401 → logout.
-- `app/logica-compartida/api/api.ts` — Proxy con `getConfigLiga().apiUrl`.
+- `logica-compartida/api/clients.ts` — Cliente NSwag **auto-generado**. No editar.
+- `logica-compartida/api/http-client-wrapper.ts` — JWT; 401 → logout.
+- `logica-compartida/api/api.ts` — Proxy con `getConfigLiga().apiUrl`.
 
 Regenerar contrato: script `generar-contrato-be-en-app.sh` en el monorepo.
 
 ### Design system
 
-- `app/design-system/componentes/` — `Texto`, `BotonUi`, `PantallaPublica`, etc.
-- `app/design-system/tokens/` — TOKENS, fuentes, tema agrupador
-- `app/design-system/layouts/layout-asistente.tsx` — shell oscuro para wizards
+- `design-system/componentes/` — `Texto`, `BotonUi`, `PantallaPublica`, etc.
+- `design-system/tokens/` — TOKENS, fuentes, tema agrupador
+- `design-system/layouts/layout-asistente.tsx` — shell oscuro para wizards
 
-`Boton` / `BotonUi` en `app/design-system/componentes/boton.tsx` — variante `tema="liga"` para acentos de liga en formularios claros.
+`Boton` / `BotonUi` en `design-system/componentes/boton.tsx` — variante `tema="liga"` para acentos de liga en formularios claros.
 
 ### Path aliases (`tsconfig.json`)
 
-- `@/flujos/*` → `app/flujos/*`
+- `@/home/*` → `app/(home)/*`
+- `@/fichaje-jugador/*` → `app/(fichaje-jugador)/*`
+- `@/delegados/*` → `app/(delegados)/*`
+- `@/inicio-delegados/*` → `app/(delegados)/(inicio)/*`
+- `@/torneos/*` → `app/(torneos)/torneos/*`
 - `@/design-system/*` → `app/design-system/*`
 - `@/logica-compartida/*` → `app/logica-compartida/*`
-- `@/lib/*` → `app/logica-compartida/*` (compat; shims `utils/`, `types/`, `storage/` para nombres viejos)
-- `@/constants/*` → `app/logica-compartida/constantes/*`
+- `@/lib/*` → `app/logica-compartida/*` (compat)
+- `@/constants/*` → `app/logica-compartida/constantes/*` (incluye `rutas.ts`)

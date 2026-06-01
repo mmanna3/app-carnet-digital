@@ -1,1 +1,1 @@
-export * from '@/app/design-system/tokens/tema-agrupador'
+export * from '@/design-system/tokens/tema-agrupador'

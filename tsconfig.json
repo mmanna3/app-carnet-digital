@@ -10,8 +10,20 @@
       "@/*": [
         "./*"
       ],
-      "@/flujos/*": [
-        "./app/flujos/*"
+      "@/home/*": [
+        "./app/(home)/*"
+      ],
+      "@/fichaje-jugador/*": [
+        "./app/(fichaje-jugador)/*"
+      ],
+      "@/delegados/*": [
+        "./app/(delegados)/*"
+      ],
+      "@/inicio-delegados/*": [
+        "./app/(delegados)/(inicio)/*"
+      ],
+      "@/torneos/*": [
+        "./app/(torneos)/torneos/*"
       ],
       "@/design-system/*": [
         "./app/design-system/*"

@@ -4,6 +4,7 @@ jest.mock('expo-router', () => ({
 
 import { HttpClientWrapper } from '../http-client-wrapper'
 import { router } from 'expo-router'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 const mockRouterReplace = router.replace as jest.Mock
 const mockLogout = jest.fn()
@@ -106,7 +107,7 @@ describe('HttpClientWrapper', () => {
       await wrapper.fetch('https://api.example.com/api/privado/recurso')
 
       expect(mockLogout).toHaveBeenCalledTimes(1)
-      expect(mockRouterReplace).toHaveBeenCalledWith('/login')
+      expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.LOGIN)
     })
 
     it('respuesta 401 en ruta pública NO ejecuta logout', async () => {

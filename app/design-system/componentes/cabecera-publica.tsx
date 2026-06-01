@@ -5,9 +5,10 @@ import { Entypo } from '@expo/vector-icons'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
 import { TOKENS } from '@/lib/design-system'
+import { RUTAS, type RutaApp } from '@/logica-compartida/constantes/rutas'
 
-function rutaDeHome(isAuthenticated: boolean): string {
-  return isAuthenticated ? '/(delegados-home)/mis-jugadores' : '/home'
+function rutaDeHome(isAuthenticated: boolean): RutaApp {
+  return isAuthenticated ? RUTAS.MIS_JUGADORES : RUTAS.HOME
 }
 
 export function CabeceraPublicaWeb({ titulo }: { titulo: string }) {
@@ -53,7 +54,7 @@ export function CabeceraPublicaWeb({ titulo }: { titulo: string }) {
           {titulo}
         </Text>
         <TouchableOpacity
-          onPress={() => router.replace(rutaDeHome(isAuthenticated) as any)}
+          onPress={() => router.replace(rutaDeHome(isAuthenticated))}
           accessibilityRole="button"
           accessibilityLabel="Ir al inicio"
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -92,7 +93,7 @@ export function useCabeceraPublica({ titulo }: { titulo: string }) {
         headerBackTitle: '',
         headerRight: () => (
           <TouchableOpacity
-            onPress={() => router.replace(rutaDeHome(isAuthenticated) as any)}
+            onPress={() => router.replace(rutaDeHome(isAuthenticated))}
             accessibilityRole="button"
             accessibilityLabel="Ir al inicio"
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}

@@ -86,3 +86,7 @@ curl -X POST http://localhost:3001/_set-scenario -d '{"scenario":"codigo_invalid
 ```
 
 Escenarios disponibles: `happy`, `codigo_invalido`, `dni_fichado`
+
+## Rutas de la app
+
+Los flujos E2E navegan por **testID** (cards, pasos del wizard), no por URL. Las rutas de la app están centralizadas en `app/logica-compartida/constantes/rutas.ts` (`RUTAS`). Tras cambios de routing, correr `LIGA_ID=edefi npm run typecheck` y `npm run test:ci`.

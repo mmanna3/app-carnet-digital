@@ -1,4 +1,5 @@
 import { router } from 'expo-router'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 type TokenGetter = () => string | null
 type OnUnauthorized = () => void
@@ -41,7 +42,7 @@ export class HttpClientWrapper {
     // Manejar token expirado (solo si había sesión; un 401 sin token no debe cerrar sesión)
     if (response.status === 401 && !isPublicRoute && token) {
       this.onUnauthorized()
-      router.replace('/login')
+      router.replace(RUTAS.LOGIN)
     }
 
     return response

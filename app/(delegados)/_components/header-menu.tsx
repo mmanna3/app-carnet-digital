@@ -1,0 +1,170 @@
+import React from 'react'
+import { Platform, Text, View } from 'react-native'
+import { Entypo, Feather } from '@expo/vector-icons'
+import { useRouter, usePathname } from 'expo-router'
+import Constants from 'expo-constants'
+import { useQueryClient } from '@tanstack/react-query'
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
+import { useAuth } from '@/lib/hooks/use-auth'
+import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
+import { useLigaStore } from '@/lib/hooks/use-liga-store'
+import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
+import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
+import { queryKeys } from '@/lib/api/query-keys'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
+
+function MenuItem({
+  icon,
+  iconNode,
+  label,
+  onSelect,
+  destructive,
+  testID,
+}: {
+  icon?: React.ComponentProps<typeof Feather>['name']
+  iconNode?: React.ReactNode
+  label: string
+  onSelect: () => void
+  destructive?: boolean
+  testID?: string
+}) {
+  return (
+    <MenuOption onSelect={onSelect}>
+      <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
+        {iconNode ?? <Feather name={icon!} size={20} color={destructive ? '#f87171' : '#e4e4e7'} />}
+        <Text
+          className={`text-base ${destructive ? 'text-red-400' : 'text-zinc-200'} font-medium`}
+        >
+          {label}
+        </Text>
+      </View>
+    </MenuOption>
+  )
+}
+
+export default function HeaderMenu() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const queryClient = useQueryClient()
+  const { logout } = useAuth()
+  const { equipoSeleccionadoId, limpiarEquipoSeleccionado } = useEquipoStore()
+  const { limpiarLiga } = useLigaStore()
+  const { modoSeleccion, activar, desactivar } = useSeleccionJugadores()
+  const { resetear } = useFichajeStore()
+
+  const esMultiliga = Constants.expoConfig?.extra?.esMultiliga === true
+
+  const handleActualizar = () => {
+    if (equipoSeleccionadoId) {
+      queryClient.invalidateQueries({ queryKey: queryKeys.carnets.byEquipo(equipoSeleccionadoId) })
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.jugadores.pendientes(equipoSeleccionadoId),
+      })
+    }
+  }
+
+  const handleCambiarEquipo = () => {
+    router.push(RUTAS.SELECCION_EQUIPO)
+  }
+
+  const handleCambiarLiga = () => {
+    logout()
+    limpiarEquipoSeleccionado()
+    limpiarLiga()
+    router.replace(RUTAS.SELECCION_LIGA)
+  }
+
+  const handleCerrarSesion = () => {
+    logout()
+    limpiarEquipoSeleccionado()
+    resetear()
+    router.replace(RUTAS.LOGIN)
+  }
+
+  const handleSeleccionarJugadores = () => {
+    if (modoSeleccion) {
+      desactivar()
+    } else {
+      if (pathname !== RUTAS.MIS_JUGADORES) {
+        router.push(RUTAS.MIS_JUGADORES)
+        setTimeout(activar, 300)
+      } else {
+        activar()
+      }
+    }
+  }
+
+  return (
+    <View className="mr-2.5">
+      <Menu>
+        <MenuTrigger>
+          <View testID="boton-menu-principal" className="p-2">
+            <Entypo name="dots-three-vertical" size={24} color="#e4e4e7" />
+          </View>
+        </MenuTrigger>
+        <MenuOptions customStyles={optionsStyles}>
+          <MenuItem icon="refresh-cw" label="Actualizar" onSelect={handleActualizar} />
+          <MenuItem
+            icon={modoSeleccion ? 'check-square' : 'list'}
+            label={modoSeleccion ? 'Salir de selección' : 'Seleccionar jugadores'}
+            testID="menu-item-seleccionar-jugadores"
+            onSelect={handleSeleccionarJugadores}
+          />
+          {esMultiliga && (
+            <MenuItem icon="globe" label="Cambiar liga" onSelect={handleCambiarLiga} />
+          )}
+          <MenuItem
+            icon="user-plus"
+            label="Fichar jugadores"
+            testID="menu-item-fichar-jugadores"
+            onSelect={() => router.push(RUTAS.FICHAJE_DELEGADO)}
+          />
+          <View className="h-px bg-border-glass my-2 mx-4" />
+          <MenuItem
+            iconNode={<Entypo name="trophy" size={20} color="#e4e4e7" />}
+            label="Ver torneos"
+            testID="menu-item-ver-torneos"
+            onSelect={() => router.push(RUTAS.TORNEOS)}
+          />
+          <View className="h-px bg-border-glass my-2 mx-4" />
+          <MenuItem
+            icon="users"
+            label="Cambiar equipo"
+            testID="menu-item-cambiar-equipo"
+            onSelect={handleCambiarEquipo}
+          />
+          <MenuItem
+            icon="log-out"
+            label="Cerrar sesión"
+            testID="menu-item-cerrar-sesion"
+            onSelect={handleCerrarSesion}
+            destructive
+          />
+        </MenuOptions>
+      </Menu>
+    </View>
+  )
+}
+
+const optionsStyles = {
+  optionsContainer: {
+    backgroundColor: '#141416',
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+    borderRadius: 12,
+    minWidth: 220,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+}
