@@ -13,14 +13,14 @@ export default function PantallaFichajeDeshabilitado({ tituloCabecera, onVolver 
     <View testID="pantalla-fichaje-deshabilitado" className="flex-1 bg-surface">
       <Cabecera titulo={tituloCabecera} onBack={onVolver} />
       <View className="flex-1 px-6 justify-center items-center gap-4">
-        <View className="bg-yellow-50 py-24 border border-yellow-200 rounded-2xl p-6 w-full">
+        <View className="glass py-24 border border-yellow-500/40 rounded-2xl p-6 w-full">
           <Feather
             name="alert-circle"
             size={28}
-            color="#b45309"
+            color="#fbbf24"
             style={{ alignSelf: 'center', marginBottom: 12 }}
           />
-          <Text className="text-center text-red-900 text-base leading-relaxed">
+          <Text className="text-center text-yellow-200 text-base leading-relaxed">
             El fichaje está deshabilitado
           </Text>
         </View>

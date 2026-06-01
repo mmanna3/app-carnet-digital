@@ -37,7 +37,7 @@ export default function PasoCodigoEquipo() {
   return (
     <KeyboardAvoidingView
       testID="paso-codigo-equipo"
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-surface"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Cabecera titulo={titulo} onBack={irAIntro} />
@@ -46,7 +46,7 @@ export default function PasoCodigoEquipo() {
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
           <Titulo testID="titulo-codigo-equipo">Ingresá el código de tu equipo</Titulo>
-          <Text className="text-gray-500 text-sm">Pedíselo a tu delegado</Text>
+          <Text className="text-zinc-400 text-sm">Pedíselo a tu delegado</Text>
         </View>
 
         <View className="gap-3">
@@ -62,12 +62,12 @@ export default function PasoCodigoEquipo() {
           />
 
           {nombreEquipo && !error && (
-            <Text className="text-green-600 text-sm font-medium text-center">
-              Tu equipo es: <Text className="font-bold">{nombreEquipo}</Text>
+            <Text className="text-green-400 text-sm font-medium text-center">
+              Tu equipo es: <Text className="font-bold text-zinc-100">{nombreEquipo}</Text>
             </Text>
           )}
 
-          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+          {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-validar"

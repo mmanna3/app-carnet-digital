@@ -62,7 +62,7 @@ export default function PasoDatosJugador() {
   }
 
   return (
-    <View testID="paso-datos-jugador" style={{ flex: 1 }} className="bg-gray-50">
+    <View testID="paso-datos-jugador" style={{ flex: 1 }} className="bg-surface">
       {/* Cabecera y progreso fuera del KeyboardAvoidingView para no comprimir el scroll */}
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAlPasoAnterior()} />
       <Progreso />
@@ -81,11 +81,11 @@ export default function PasoDatosJugador() {
           <View className="mb-6">
             <Titulo>Datos del jugador</Titulo>
             {nombreEquipo ? (
-              <Text className="text-gray-500 text-sm">
-                Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+              <Text className="text-zinc-400 text-sm">
+                Fichándose en <Text className="font-bold text-zinc-100">{nombreEquipo}</Text>
               </Text>
             ) : (
-              <Text className="text-gray-500 text-sm">Ingresá tus datos personales</Text>
+              <Text className="text-zinc-400 text-sm">Ingresá tus datos personales</Text>
             )}
           </View>
 
@@ -117,27 +117,28 @@ export default function PasoDatosJugador() {
             />
 
             <View>
-              <Text className="text-gray-700 text-sm mb-1.5">Fecha de nacimiento</Text>
+              <Text className="text-zinc-400 text-sm mb-1.5">Fecha de nacimiento</Text>
               <TouchableOpacity
                 testID="input-fecha-nacimiento"
                 onPress={() => {
                   Keyboard.dismiss()
                   setMostrarPicker(true)
                 }}
-                className="w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 border-gray-200"
+                className="glass w-full px-4 py-5 rounded-2xl border border-border-glass"
               >
-                <Text className={fechaNac ? 'text-gray-900' : 'text-[#9ca3af]'}>
+                <Text className={fechaNac ? 'text-zinc-100' : 'text-zinc-500'}>
                   {fechaNac ? formatearFecha(fechaNac) : 'Seleccioná la fecha de nacimiento'}
                 </Text>
               </TouchableOpacity>
             </View>
 
-            {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+            {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
             <BotonWizard
               testID="boton-continuar"
               texto={loading ? 'Verificando...' : 'Continuar'}
-              icono={loading ? undefined : 'arrow-right'}
+              icono="arrow-right"
+              cargando={loading}
               onPress={handleContinuar}
               deshabilitado={!puedeAvanzar || loading}
             />

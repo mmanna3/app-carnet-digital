@@ -28,7 +28,7 @@ export default function PasoAutorizacion() {
   }
 
   return (
-    <View testID="paso-autorizacion" className="flex-1 bg-gray-50">
+    <View testID="paso-autorizacion" className="flex-1 bg-surface">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={() => irAlPasoAnterior()} />
       <Progreso />
 
@@ -36,25 +36,26 @@ export default function PasoAutorizacion() {
         <View className="mb-6">
           <Titulo>Autorizar</Titulo>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">
-              Fichando a <Text className="font-bold">{nombre}</Text> en{' '}
-              <Text className="font-bold">{nombreEquipo}</Text> (DNI:{' '}
-              <Text className="font-bold">{dni}</Text>)
+            <Text className="text-zinc-400 text-sm">
+              Fichando a <Text className="font-bold text-zinc-100">{nombre}</Text> en{' '}
+              <Text className="font-bold text-zinc-100">{nombreEquipo}</Text> (DNI:{' '}
+              <Text className="font-bold text-zinc-100">{dni}</Text>)
             </Text>
           )}
         </View>
 
         <View className="gap-4">
-          <View className="bg-surface0 rounded-2xl p-5 shadow-md">
-            <Text className="text-white text-sm text-center leading-relaxed">{DECLARACION}</Text>
+          <View className="glass rounded-2xl border border-border-glass p-5">
+            <Text className="text-zinc-200 text-sm text-center leading-relaxed">{DECLARACION}</Text>
           </View>
 
-          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+          {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-enviar"
             texto={loading ? 'Enviando...' : 'Enviar'}
-            icono={loading ? undefined : 'send'}
+            icono="send"
+            cargando={loading}
             onPress={handleEnviar}
             deshabilitado={loading}
           />

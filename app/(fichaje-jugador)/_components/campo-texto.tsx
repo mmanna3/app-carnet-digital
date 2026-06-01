@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, TextInputProps } from 'react-native'
+import { TEMAS_TARJETA_ACCION } from '@/design-system/tokens/tarjeta-accion'
+
+const bordeVerde = TEMAS_TARJETA_ACCION.verde.borde
 
 interface Props extends TextInputProps {
   label?: string
@@ -19,18 +22,18 @@ export default function CampoTexto({
   const tieneError = !!error
 
   const borderClass = tieneError
-    ? 'border-red-500'
+    ? 'border-red-500/80'
     : focused
-      ? 'border-zinc-400'
-      : 'border-zinc-700'
+      ? 'border-green-400/80'
+      : 'border-border-glass'
 
   return (
     // Android: evitar que el optimizador de vistas colapse el nodo y Maestro/E2E pierdan el testID.
     <View collapsable={false}>
-      {label ? <Text className="text-zinc-300 text-sm mb-1.5">{label}</Text> : null}
+      {label ? <Text className="mb-1.5 text-sm text-zinc-400">{label}</Text> : null}
       <TextInput
         testID={inputTestID}
-        className={`w-full px-4 py-5 rounded-2xl bg-zinc-900/90 border text-zinc-100 ${borderClass}`}
+        className={`glass w-full rounded-2xl border px-4 py-5 text-zinc-100 ${borderClass}`}
         placeholderTextColor="#71717a"
         onFocus={(e) => {
           setFocused(true)
@@ -40,9 +43,10 @@ export default function CampoTexto({
           setFocused(false)
           onBlur?.(e)
         }}
+        style={focused && !tieneError ? { borderColor: bordeVerde } : undefined}
         {...props}
       />
-      {error ? <Text className="text-red-500 text-sm mt-1">{error}</Text> : null}
+      {error ? <Text className="mt-1 text-sm text-red-400">{error}</Text> : null}
     </View>
   )
 }

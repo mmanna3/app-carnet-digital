@@ -97,7 +97,7 @@ export default function PasoFoto() {
   }
 
   return (
-    <View testID="paso-foto" className="flex-1 bg-gray-50">
+    <View testID="paso-foto" className="flex-1 bg-surface">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
       <Progreso />
 
@@ -105,15 +105,15 @@ export default function PasoFoto() {
         <View className="mb-6">
           <Titulo>Foto de la cara del jugador</Titulo>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">
-              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreEquipo}</Text>
             </Text>
           )}
         </View>
 
         <View className="gap-4">
           <View className="items-center">
-            <View className="w-48 h-48 bg-white rounded-2xl shadow-md border-2 border-gray-200 items-center justify-center overflow-hidden">
+            <View className="w-48 h-48 glass rounded-2xl border border-border-glass items-center justify-center overflow-hidden">
               {fotoUri ? (
                 <Image
                   source={{ uri: fotoUri }}
@@ -121,18 +121,19 @@ export default function PasoFoto() {
                   resizeMode="cover"
                 />
               ) : (
-                <Feather name="user" size={64} color="#d1d5db" />
+                <Feather name="user" size={64} color="#52525b" />
               )}
             </View>
           </View>
 
           <BotonWizard
             testID="boton-seleccionar-foto"
+            primario={false}
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
           />
-          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
+          {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
           <BotonWizard
             testID="boton-subir-foto"
             texto="Subir"

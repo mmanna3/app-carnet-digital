@@ -7,11 +7,11 @@ type Props = TextProps & {
   children: React.ReactNode
 }
 
-/** Título de sección en wizards con fondo claro. Tipografía Coalition. */
+/** Título de sección en wizards (fondo oscuro). Tipografía Coalition. */
 export function Titulo({ className = '', style, children, ...rest }: Props) {
   return (
     <Text
-      className={`mb-1 text-lg text-gray-900 ${className}`.trim()}
+      className={`mb-1 text-lg text-zinc-100 ${className}`.trim()}
       style={[{ fontFamily: FUENTE_DISPLAY }, style]}
       {...rest}
     >

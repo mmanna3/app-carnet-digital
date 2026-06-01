@@ -35,7 +35,7 @@ export default function PasoDni() {
   return (
     <KeyboardAvoidingView
       testID="paso-dni"
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-surface"
       {...(Platform.OS === 'ios' && { behavior: 'padding' })}
     >
       <Cabecera titulo="Fichaje" onBack={handleVolver} />
@@ -45,11 +45,11 @@ export default function PasoDni() {
         <View className="mb-6">
           <Titulo>Datos generales</Titulo>
           {nombreEquipo ? (
-            <Text className="text-gray-500 text-sm">
-              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreEquipo}</Text>
             </Text>
           ) : (
-            <Text className="text-gray-500 text-sm">Ingresá tu DNI para identificarte</Text>
+            <Text className="text-zinc-400 text-sm">Ingresá tu DNI para identificarte</Text>
           )}
         </View>
 
@@ -66,12 +66,13 @@ export default function PasoDni() {
             keyboardType="numeric"
           />
 
-          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+          {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-continuar"
             texto={loading ? 'Fichando...' : 'Continuar'}
-            icono={loading ? undefined : 'arrow-right'}
+            icono="arrow-right"
+            cargando={loading}
             onPress={handleContinuar}
             deshabilitado={!dniValido || loading}
           />

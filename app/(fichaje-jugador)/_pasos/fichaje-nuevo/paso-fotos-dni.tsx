@@ -28,11 +28,11 @@ function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
 
 function PreviewDni({ uri }: { uri: string | null }) {
   return (
-    <View className="w-full h-40 bg-white rounded-2xl shadow-sm border-2 border-gray-200 items-center justify-center overflow-hidden">
+    <View className="w-full h-40 glass rounded-2xl border border-border-glass items-center justify-center overflow-hidden">
       {uri ? (
         <Image source={{ uri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
       ) : (
-        <Feather name="credit-card" size={48} color="#d1d5db" />
+        <Feather name="credit-card" size={48} color="#52525b" />
       )}
     </View>
   )
@@ -133,7 +133,7 @@ export default function PasoFotosDni() {
   }
 
   return (
-    <View testID="paso-fotos-dni" className="flex-1 bg-gray-50">
+    <View testID="paso-fotos-dni" className="flex-1 bg-surface">
       <Cabecera titulo="Fichaje de nuevo jugador" onBack={handleVolver} />
       <Progreso />
 
@@ -141,18 +141,19 @@ export default function PasoFotosDni() {
         <View className="mb-6">
           <Titulo>Fotos del DNI</Titulo>
           {nombreEquipo && (
-            <Text className="text-gray-500 text-sm">
-              Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreEquipo}</Text>
             </Text>
           )}
         </View>
 
         <View className="gap-6">
           <View className="gap-3">
-            <Text className="text-gray-700 text-sm font-medium">Frente del DNI</Text>
+            <Text className="text-zinc-400 text-sm font-medium">Frente del DNI</Text>
             <PreviewDni uri={dniFrenteUri} />
             <BotonWizard
               testID="boton-seleccionar-frente"
+              primario={false}
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() =>
@@ -165,10 +166,11 @@ export default function PasoFotosDni() {
           </View>
 
           <View className="gap-3">
-            <Text className="text-gray-700 text-sm font-medium">Dorso del DNI</Text>
+            <Text className="text-zinc-400 text-sm font-medium">Dorso del DNI</Text>
             <PreviewDni uri={dniDorsoUri} />
             <BotonWizard
               testID="boton-seleccionar-dorso"
+              primario={false}
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() =>
@@ -180,7 +182,7 @@ export default function PasoFotosDni() {
             />
           </View>
 
-          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
+          {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
 
           <BotonWizard
             testID="boton-subir-dni"

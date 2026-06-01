@@ -56,3 +56,9 @@ export const TEMAS_TARJETA_ACCION: Record<ColorTarjeta, TemaTarjetaAccion> = {
     colorIcono: '#4ade80',
   },
 }
+
+/** CTA principal del wizard fichaje (verde sólido/brillante, sin negro en el degradado). */
+export const TEMA_BOTON_WIZARD = {
+  degradado: ['#4ade80', '#16a34a'] as const,
+  borde: 'rgba(134, 239, 172, 0.85)',
+}
