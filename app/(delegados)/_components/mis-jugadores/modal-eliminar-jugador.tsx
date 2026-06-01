@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Alert, Text } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
@@ -50,19 +50,15 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
       </ModalOscuroCuerpo>
 
       <ModalOscuroAcciones>
-        <TouchableOpacity
+        <BotonWizard
           testID="boton-quitar-del-equipo"
-          className="bg-red-600 rounded-2xl p-4 items-center"
+          texto="Quitar del equipo"
+          icono="trash-2"
+          color="rojo"
           onPress={handleDesvincular}
-          disabled={cargando}
-          activeOpacity={0.85}
-        >
-          {cargando ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="text-white font-semibold text-base">Quitar del equipo</Text>
-          )}
-        </TouchableOpacity>
+          cargando={cargando}
+          deshabilitado={cargando}
+        />
 
         <BotonWizard
           testID="boton-cancelar-eliminar"

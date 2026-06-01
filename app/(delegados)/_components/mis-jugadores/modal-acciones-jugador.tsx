@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import {
@@ -33,14 +33,13 @@ export default function ModalAccionesJugador({
       </ModalOscuroEncabezado>
 
       <ModalOscuroAcciones>
-        <TouchableOpacity
+        <BotonWizard
           testID="boton-eliminar-jugador"
-          className="bg-red-600 rounded-2xl p-4 items-center"
+          texto="Eliminar jugador"
+          icono="trash-2"
+          color="rojo"
           onPress={onEliminar}
-          activeOpacity={0.85}
-        >
-          <Text className="text-white font-semibold text-base">Eliminar jugador</Text>
-        </TouchableOpacity>
+        />
 
         <BotonWizard
           testID="boton-transferir-jugador"

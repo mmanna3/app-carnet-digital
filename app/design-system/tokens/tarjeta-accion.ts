@@ -62,3 +62,9 @@ export const TEMA_BOTON_WIZARD = {
   degradado: ['#4ade80', '#16a34a'] as const,
   borde: 'rgba(134, 239, 172, 0.85)',
 }
+
+/** CTA destructivo (misma estética que wizard, en rojo). */
+export const TEMA_BOTON_WIZARD_ROJO = {
+  degradado: ['#f87171', '#dc2626'] as const,
+  borde: 'rgba(248, 113, 113, 0.85)',
+}

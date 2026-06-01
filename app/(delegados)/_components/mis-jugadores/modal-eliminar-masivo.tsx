@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native'
+import { Alert, View, Text, ScrollView } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
@@ -62,21 +62,15 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
       </ScrollView>
 
       <ModalOscuroAcciones className="pt-3">
-        <TouchableOpacity
+        <BotonWizard
           testID="boton-quitar-masivo"
-          className="bg-red-600 rounded-2xl p-4 items-center"
+          texto={`Quitar ${jugadores.length} jugadores del equipo`}
+          icono="trash-2"
+          color="rojo"
           onPress={handleDesvincular}
-          disabled={cargando}
-          activeOpacity={0.85}
-        >
-          {cargando ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="text-white font-semibold text-base">
-              Quitar {jugadores.length} jugadores del equipo
-            </Text>
-          )}
-        </TouchableOpacity>
+          cargando={cargando}
+          deshabilitado={cargando}
+        />
 
         <BotonWizard texto="Cancelar" primario={false} onPress={onCerrar} deshabilitado={cargando} />
       </ModalOscuroAcciones>

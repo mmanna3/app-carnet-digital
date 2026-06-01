@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
 } from 'react-native'
@@ -265,15 +264,14 @@ export default function MisJugadoresScreen() {
         <View className="bg-surface-elevated border-t border-border-glass px-4 pt-3 pb-6 gap-3">
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <TouchableOpacity
+              <BotonWizard
                 testID="boton-bulk-eliminar"
-                className={`bg-red-600 rounded-2xl p-3 items-center ${!haySeleccionados ? 'opacity-50' : ''}`}
+                texto="Eliminar"
+                icono="trash-2"
+                color="rojo"
                 onPress={() => setModalBulk('eliminar')}
-                disabled={!haySeleccionados}
-                activeOpacity={0.85}
-              >
-                <Text className="text-white font-semibold text-sm">Eliminar</Text>
-              </TouchableOpacity>
+                deshabilitado={!haySeleccionados}
+              />
             </View>
             <View className="flex-1">
               <BotonWizard

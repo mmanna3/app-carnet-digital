@@ -3,7 +3,12 @@ import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'rea
 import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
 import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
-import { TEMA_BOTON_WIZARD } from '@/design-system/tokens/tarjeta-accion'
+import { TEMA_BOTON_WIZARD, TEMA_BOTON_WIZARD_ROJO } from '@/design-system/tokens/tarjeta-accion'
+
+const TEMAS_BOTON_WIZARD = {
+  verde: TEMA_BOTON_WIZARD,
+  rojo: TEMA_BOTON_WIZARD_ROJO,
+} as const
 
 type IconoName = React.ComponentProps<typeof Feather>['name']
 
@@ -11,8 +16,10 @@ interface Props {
   texto: string
   onPress: () => void
   icono?: IconoName
-  /** true = CTA principal (verde brillante habilitado); false = acción secundaria glass */
+  /** true = CTA principal (degradado habilitado); false = acción secundaria glass */
   primario?: boolean
+  /** Color del degradado cuando primario=true */
+  color?: keyof typeof TEMAS_BOTON_WIZARD
   deshabilitado?: boolean
   cargando?: boolean
   testID?: string
@@ -23,12 +30,14 @@ export default function BotonWizard({
   onPress,
   icono,
   primario = true,
+  color = 'verde',
   deshabilitado = false,
   cargando = false,
   testID,
 }: Props) {
   const isDisabled = deshabilitado || cargando
   const habilitado = primario && !isDisabled
+  const tema = TEMAS_BOTON_WIZARD[color]
 
   const colorTexto = habilitado ? '#fafafa' : isDisabled ? '#71717a' : '#e4e4e7'
   const colorIcono = colorTexto
@@ -46,12 +55,12 @@ export default function BotonWizard({
         className="glass overflow-hidden rounded-2xl"
         style={{
           borderWidth: 1.5,
-          borderColor: habilitado ? TEMA_BOTON_WIZARD.borde : 'rgba(255, 255, 255, 0.08)',
+          borderColor: habilitado ? tema.borde : 'rgba(255, 255, 255, 0.08)',
         }}
       >
         {habilitado ? (
           <LinearGradient
-            colors={[...TEMA_BOTON_WIZARD.degradado]}
+            colors={[...tema.degradado]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={StyleSheet.absoluteFill}
