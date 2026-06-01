@@ -3,9 +3,10 @@ import { View, Text, Image, ScrollView, ActionSheetIOS, Alert, Platform } from '
 import * as ImagePicker from 'expo-image-picker'
 import { Feather } from '@expo/vector-icons'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
-import CabeceraDelegado from '@/delegados/_registro-delegado/components/cabecera-delegado'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
@@ -27,11 +28,11 @@ function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
 
 function PreviewDni({ uri }: { uri: string | null }) {
   return (
-    <View className="w-full h-40 bg-white rounded-2xl shadow-sm border-2 border-gray-200 items-center justify-center overflow-hidden">
+    <View className="w-full h-40 glass rounded-2xl border border-border-glass items-center justify-center overflow-hidden">
       {uri ? (
         <Image source={{ uri }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
       ) : (
-        <Feather name="credit-card" size={48} color="#d1d5db" />
+        <Feather name="credit-card" size={48} color="#52525b" />
       )}
     </View>
   )
@@ -122,26 +123,27 @@ export default function PasoFotosDniDelegado() {
   }
 
   return (
-    <View testID="paso-fotos-dni-delegado" className="flex-1 bg-gray-50">
-      <CabeceraDelegado titulo="Registro de nuevo delegado" onBack={handleVolver} />
+    <View testID="paso-fotos-dni-delegado" className="flex-1 bg-surface">
+      <Cabecera titulo="Registro de nuevo delegado" onBack={handleVolver} />
       <ProgresoDelegado />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Fotos del DNI</Text>
+          <Titulo>Fotos del DNI</Titulo>
           {nombreClub && (
-            <Text className="text-gray-500 text-sm">
-              Fichándose en <Text className="font-bold">{nombreClub}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreClub}</Text>
             </Text>
           )}
         </View>
 
         <View className="gap-6">
           <View className="gap-3">
-            <Text className="text-gray-700 text-sm font-medium">Frente del DNI</Text>
+            <Text className="text-zinc-400 text-sm font-medium">Frente del DNI</Text>
             <PreviewDni uri={dniFrenteUri} />
             <BotonWizard
               testID="boton-seleccionar-frente-delegado"
+              primario={false}
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() =>
@@ -154,10 +156,11 @@ export default function PasoFotosDniDelegado() {
           </View>
 
           <View className="gap-3">
-            <Text className="text-gray-700 text-sm font-medium">Dorso del DNI</Text>
+            <Text className="text-zinc-400 text-sm font-medium">Dorso del DNI</Text>
             <PreviewDni uri={dniDorsoUri} />
             <BotonWizard
               testID="boton-seleccionar-dorso-delegado"
+              primario={false}
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
               icono="camera"
               onPress={() =>
@@ -169,7 +172,7 @@ export default function PasoFotosDniDelegado() {
             />
           </View>
 
-          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
+          {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
 
           <BotonWizard
             testID="boton-subir-dni-delegado"

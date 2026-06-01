@@ -16,7 +16,7 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
 import Carnet from '@/delegados/_components/mis-jugadores/carnet'
-import Boton from '@/design-system/componentes/boton'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import ModalAccionesJugador from '@/delegados/_components/mis-jugadores/modal-acciones-jugador'
 import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-eliminar-jugador'
 import ModalTransferirJugador from '@/delegados/_components/mis-jugadores/modal-transferir-jugador'
@@ -113,7 +113,7 @@ export default function MisJugadoresScreen() {
   if (!equipoSeleccionadoId) {
     return (
       <View className="flex-1 bg-surface">
-        <Text className="text-base text-center p-5">Debes seleccionar un equipo primero</Text>
+        <Text className="text-base text-center p-5 text-zinc-400">Debes seleccionar un equipo primero</Text>
       </View>
     )
   }
@@ -121,8 +121,8 @@ export default function MisJugadoresScreen() {
   if (isLoading) {
     return (
       <View className="flex-1 bg-surface items-center justify-center gap-3">
-        <ActivityIndicator size="large" color="#6b7280" />
-        <Text className="text-base text-gray-600">Cargando jugadores...</Text>
+        <ActivityIndicator size="large" color="#a1a1aa" />
+        <Text className="text-base text-zinc-400">Cargando jugadores...</Text>
       </View>
     )
   }
@@ -130,7 +130,7 @@ export default function MisJugadoresScreen() {
   if (isError || !jugadores) {
     return (
       <View className="flex-1 bg-surface items-center justify-center p-5">
-        <Text className="text-base text-center text-gray-600">Error al cargar los jugadores.</Text>
+        <Text className="text-base text-center text-zinc-400">Error al cargar los jugadores.</Text>
       </View>
     )
   }
@@ -147,7 +147,7 @@ export default function MisJugadoresScreen() {
         }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleActualizar} />}
       >
-        <Text className="text-base text-center text-gray-600">
+        <Text className="text-base text-center text-zinc-400">
           No hay jugadores activos en este equipo.
         </Text>
       </ScrollView>
@@ -266,27 +266,29 @@ export default function MisJugadoresScreen() {
       </ScrollView>
 
       {modoSeleccion && (
-        <View className="bg-surface-elevated border-t border-border-glass px-4 pt-3 pb-6 gap-2">
+        <View className="bg-surface-elevated border-t border-border-glass px-4 pt-3 pb-6 gap-3">
           <View className="flex-row gap-3">
-            <Boton
-              testID="boton-bulk-eliminar"
-              variante="Destructivo"
-              icono="trash-2"
-              texto="Eliminar"
-              onPress={() => setModalBulk('eliminar')}
-              deshabilitado={!haySeleccionados}
-              className="flex-1 mt-0"
-            />
-            <Boton
-              variante="Principal"
-              icono="external-link"
-              texto="Transferir"
-              onPress={() => setModalBulk('transferir')}
-              deshabilitado={!haySeleccionados}
-              className="flex-1 mt-0"
-            />
+            <View className="flex-1">
+              <TouchableOpacity
+                testID="boton-bulk-eliminar"
+                className={`bg-red-600 rounded-2xl p-3 items-center ${!haySeleccionados ? 'opacity-50' : ''}`}
+                onPress={() => setModalBulk('eliminar')}
+                disabled={!haySeleccionados}
+                activeOpacity={0.85}
+              >
+                <Text className="text-white font-semibold text-sm">Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="flex-1">
+              <BotonWizard
+                texto="Transferir"
+                icono="external-link"
+                onPress={() => setModalBulk('transferir')}
+                deshabilitado={!haySeleccionados}
+              />
+            </View>
           </View>
-          <Boton variante="Secundario" texto="Cancelar" onPress={desactivar} className="mt-0" />
+          <BotonWizard texto="Cancelar" primario={false} onPress={desactivar} />
         </View>
       )}
 

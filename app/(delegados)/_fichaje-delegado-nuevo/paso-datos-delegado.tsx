@@ -10,11 +10,12 @@ import {
   type LayoutChangeEvent,
 } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
-import CabeceraDelegado from '@/delegados/_registro-delegado/components/cabecera-delegado'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
+import { Titulo } from '@/design-system/componentes'
 
 const formatearFecha = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
@@ -149,8 +150,8 @@ export default function PasoDatosDelegado() {
   }
 
   return (
-    <View testID="paso-datos-delegado" style={{ flex: 1 }} className="bg-gray-50">
-      <CabeceraDelegado titulo="Registro de nuevo delegado" onBack={() => irAlPasoAnterior()} />
+    <View testID="paso-datos-delegado" style={{ flex: 1 }} className="bg-surface">
+      <Cabecera titulo="Registro de nuevo delegado" onBack={() => irAlPasoAnterior()} />
       <ProgresoDelegado />
 
       <KeyboardAvoidingView
@@ -166,13 +167,13 @@ export default function PasoDatosDelegado() {
           showsVerticalScrollIndicator={false}
         >
           <View className="mb-6">
-            <Text className="text-gray-900 text-lg font-semibold mb-1">Datos del delegado</Text>
+            <Titulo>Datos del delegado</Titulo>
             {nombreClub ? (
-              <Text className="text-gray-500 text-sm">
-                Fichándose en <Text className="font-bold">{nombreClub}</Text>
+              <Text className="text-zinc-400 text-sm">
+                Fichándose en <Text className="font-bold text-zinc-100">{nombreClub}</Text>
               </Text>
             ) : (
-              <Text className="text-gray-500 text-sm">Ingresá tus datos personales</Text>
+              <Text className="text-zinc-400 text-sm">Ingresá tus datos personales</Text>
             )}
           </View>
 
@@ -224,7 +225,7 @@ export default function PasoDatosDelegado() {
             </View>
 
             <View onLayout={handleFieldLayout('fecha')}>
-              <Text className="text-gray-700 text-sm mb-1.5">Fecha de nacimiento</Text>
+              <Text className="text-zinc-400 text-sm mb-1.5">Fecha de nacimiento</Text>
               <TouchableOpacity
                 testID="input-fecha-nacimiento-delegado"
                 onPress={() => {
@@ -232,16 +233,16 @@ export default function PasoDatosDelegado() {
                   fechaSeleccionadaEnModal.current = fechaNac
                   setMostrarPicker(true)
                 }}
-                className={`w-full px-4 py-5 rounded-2xl bg-gray-50 border-2 ${
-                  errores.fechaNac ? 'border-red-500' : 'border-gray-200'
+                className={`glass w-full px-4 py-5 rounded-2xl border ${
+                  errores.fechaNac ? 'border-red-500/80' : 'border-border-glass'
                 }`}
               >
-                <Text className={fechaNac ? 'text-gray-900' : 'text-[#9ca3af]'}>
+                <Text className={fechaNac ? 'text-zinc-100' : 'text-zinc-500'}>
                   {fechaNac ? formatearFecha(fechaNac) : 'Seleccioná la fecha de nacimiento'}
                 </Text>
               </TouchableOpacity>
               {errores.fechaNac ? (
-                <Text className="text-red-500 text-sm mt-1">{errores.fechaNac}</Text>
+                <Text className="text-red-400 text-sm mt-1">{errores.fechaNac}</Text>
               ) : null}
             </View>
 
@@ -273,12 +274,13 @@ export default function PasoDatosDelegado() {
               />
             </View>
 
-            {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+            {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
             <BotonWizard
               testID="boton-continuar-datos"
               texto={loading ? 'Verificando...' : 'Continuar'}
-              icono={loading ? undefined : 'arrow-right'}
+              icono="arrow-right"
+              cargando={loading}
               onPress={handleContinuar}
               deshabilitado={!puedeAvanzar || loading}
             />

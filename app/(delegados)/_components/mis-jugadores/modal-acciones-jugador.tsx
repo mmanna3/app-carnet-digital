@@ -1,6 +1,12 @@
 import React from 'react'
-import { Modal, View, Text, TouchableOpacity, Pressable } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import {
+  ModalOscuro,
+  ModalOscuroEncabezado,
+  ModalOscuroAcciones,
+} from '@/design-system/componentes/modal-oscuro'
 
 interface Props {
   jugador: CarnetDigitalDTO | null
@@ -18,41 +24,33 @@ export default function ModalAccionesJugador({
   if (!jugador) return null
 
   return (
-    <Modal transparent animationType="fade" visible={!!jugador} onRequestClose={onCerrar}>
-      <Pressable className="flex-1 bg-black/50 justify-end" onPress={onCerrar}>
-        <Pressable onPress={() => {}}>
-          <View className="bg-white rounded-t-2xl overflow-hidden pb-4">
-            <View className="p-4 border-b border-gray-200">
-              <Text className="text-base font-semibold text-center text-gray-800">
-                {jugador.nombre} {jugador.apellido}
-              </Text>
-              <Text className="text-sm text-center text-gray-500">DNI: {jugador.dni}</Text>
-            </View>
+    <ModalOscuro visible={!!jugador} onClose={onCerrar} variante="inferior">
+      <ModalOscuroEncabezado>
+        <Text className="text-base font-semibold text-center text-zinc-100">
+          {jugador.nombre} {jugador.apellido}
+        </Text>
+        <Text className="text-sm text-center text-zinc-400 mt-1">DNI: {jugador.dni}</Text>
+      </ModalOscuroEncabezado>
 
-            <View className="px-4 pt-4 pb-4 gap-3">
-              <TouchableOpacity
-                testID="boton-eliminar-jugador"
-                className="bg-red-600 rounded-xl p-4 items-center"
-                onPress={onEliminar}
-              >
-                <Text className="text-white font-semibold text-base">Eliminar jugador</Text>
-              </TouchableOpacity>
+      <ModalOscuroAcciones>
+        <TouchableOpacity
+          testID="boton-eliminar-jugador"
+          className="bg-red-600 rounded-2xl p-4 items-center"
+          onPress={onEliminar}
+          activeOpacity={0.85}
+        >
+          <Text className="text-white font-semibold text-base">Eliminar jugador</Text>
+        </TouchableOpacity>
 
-              <TouchableOpacity
-                testID="boton-transferir-jugador"
-                className="bg-liga-600 rounded-xl p-4 items-center"
-                onPress={onTransferir}
-              >
-                <Text className="text-white font-semibold text-base">Transferir</Text>
-              </TouchableOpacity>
+        <BotonWizard
+          testID="boton-transferir-jugador"
+          texto="Transferir"
+          icono="external-link"
+          onPress={onTransferir}
+        />
 
-              <TouchableOpacity className="rounded-xl p-4 items-center" onPress={onCerrar}>
-                <Text className="text-base text-center text-gray-500">Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Pressable>
-      </Pressable>
-    </Modal>
+        <BotonWizard testID="boton-cancelar-acciones" texto="Cancelar" primario={false} onPress={onCerrar} />
+      </ModalOscuroAcciones>
+    </ModalOscuro>
   )
 }

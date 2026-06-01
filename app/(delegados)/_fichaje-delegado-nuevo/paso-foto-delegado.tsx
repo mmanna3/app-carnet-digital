@@ -4,9 +4,10 @@ import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { Feather } from '@expo/vector-icons'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
-import CabeceraDelegado from '@/delegados/_registro-delegado/components/cabecera-delegado'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
@@ -95,25 +96,23 @@ export default function PasoFotoDelegado() {
   }
 
   return (
-    <View testID="paso-foto-delegado" className="flex-1 bg-gray-50">
-      <CabeceraDelegado titulo="Registro de nuevo delegado" onBack={handleVolver} />
+    <View testID="paso-foto-delegado" className="flex-1 bg-surface">
+      <Cabecera titulo="Registro de nuevo delegado" onBack={handleVolver} />
       <ProgresoDelegado />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">
-            Foto de la cara del delegado
-          </Text>
+          <Titulo>Foto de la cara del delegado</Titulo>
           {nombreClub && (
-            <Text className="text-gray-500 text-sm">
-              Fichándose en <Text className="font-bold">{nombreClub}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreClub}</Text>
             </Text>
           )}
         </View>
 
         <View className="gap-4">
           <View className="items-center">
-            <View className="w-48 h-48 bg-white rounded-2xl shadow-md border-2 border-gray-200 items-center justify-center overflow-hidden">
+            <View className="w-48 h-48 glass rounded-2xl border border-border-glass items-center justify-center overflow-hidden">
               {fotoUri ? (
                 <Image
                   source={{ uri: fotoUri }}
@@ -121,18 +120,19 @@ export default function PasoFotoDelegado() {
                   resizeMode="cover"
                 />
               ) : (
-                <Feather name="user" size={64} color="#d1d5db" />
+                <Feather name="user" size={64} color="#52525b" />
               )}
             </View>
           </View>
 
           <BotonWizard
             testID="boton-seleccionar-foto-delegado"
+            primario={false}
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
           />
-          {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
+          {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
           <BotonWizard
             testID="boton-subir-foto-delegado"
             texto="Subir"

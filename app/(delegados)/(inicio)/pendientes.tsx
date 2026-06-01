@@ -31,7 +31,7 @@ export default function PendientesScreen() {
   if (!equipoSeleccionadoId) {
     return (
       <View className="flex-1 bg-surface">
-        <Text className="text-base text-center p-5">Debes seleccionar un equipo primero</Text>
+        <Text className="text-base text-center p-5 text-zinc-400">Debes seleccionar un equipo primero</Text>
       </View>
     )
   }
@@ -39,8 +39,8 @@ export default function PendientesScreen() {
   if (isLoading) {
     return (
       <View className="flex-1 bg-surface items-center justify-center gap-3">
-        <ActivityIndicator size="large" color="#6b7280" />
-        <Text className="text-base text-gray-600">Cargando jugadores...</Text>
+        <ActivityIndicator size="large" color="#a1a1aa" />
+        <Text className="text-base text-zinc-400">Cargando jugadores...</Text>
       </View>
     )
   }
@@ -48,7 +48,7 @@ export default function PendientesScreen() {
   if (isError || !jugadores) {
     return (
       <View className="flex-1 bg-surface items-center justify-center p-5">
-        <Text className="text-base text-center text-gray-600">
+        <Text className="text-base text-center text-zinc-400">
           Error al cargar los jugadores pendientes.
         </Text>
       </View>
@@ -87,7 +87,7 @@ export default function PendientesScreen() {
       <View className="p-2.5">
         {jugadoresRechazados.length > 0 && (
           <View>
-            <View style={{ backgroundColor: '#EF5350' }} className="p-3 mb-4 rounded-lg shadow-md">
+            <View className="bg-red-500 p-3 mb-4 rounded-lg">
               <Text className="text-white text-lg font-bold text-center">Fichajes Rechazados</Text>
             </View>
             {jugadoresRechazados.map((jugador) => (
@@ -103,7 +103,7 @@ export default function PendientesScreen() {
 
         {jugadoresAprobadosPendientesDePago.length > 0 && (
           <View>
-            <View style={{ backgroundColor: '#2513c2' }} className="p-3 mb-4 rounded-lg shadow-md">
+            <View className="bg-indigo-700 p-3 mb-4 rounded-lg">
               <Text className="text-white text-lg font-bold text-center">Pendientes de Pago</Text>
             </View>
             {jugadoresAprobadosPendientesDePago.map((jugador) => (
@@ -119,7 +119,7 @@ export default function PendientesScreen() {
 
         {jugadoresPendientes.length > 0 && (
           <View>
-            <View style={{ backgroundColor: '#FFA726' }} className="p-3 mb-4 rounded-lg shadow-md">
+            <View className="bg-orange-400 p-3 mb-4 rounded-lg">
               <Text className="text-white text-lg font-bold text-center">
                 Pendientes de Aprobación
               </Text>
@@ -138,7 +138,7 @@ export default function PendientesScreen() {
         {jugadoresRechazados.length === 0 &&
           jugadoresPendientes.length === 0 &&
           jugadoresAprobadosPendientesDePago.length === 0 && (
-            <Text className="text-base text-center p-5">No hay jugadores pendientes</Text>
+            <Text className="text-base text-center p-5 text-zinc-400">No hay jugadores pendientes</Text>
           )}
       </View>
     </ScrollView>

@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import { Feather } from '@expo/vector-icons'
+import { View } from 'react-native'
+import { Tarjeta, COLOR_TARJETA } from '@/design-system/componentes'
 
 interface Props {
   onNuevo: () => void
@@ -11,38 +11,23 @@ interface Props {
 export default function PantallaIntroDelegado({ onNuevo, onYaFichado }: Props) {
   return (
     <View testID="pantalla-intro-delegado" className="flex-1 bg-surface">
-      <View className="px-6 pt-6 gap-3">
-        <TouchableOpacity
+      <View className="gap-3 px-6 pt-6">
+        <Tarjeta
           testID="card-nuevo"
+          icono="person-add-outline"
+          titulo="Fichar nuevo jugador"
+          subtitulo="Para jugadores no fichados en ningún equipo de la liga"
+          color={COLOR_TARJETA.AZUL}
           onPress={onNuevo}
-          className="bg-blue-600 rounded-2xl p-7 shadow-md"
-          activeOpacity={0.85}
-        >
-          <View className="bg-white/20 rounded-xl p-2 mb-3 self-start">
-            <Feather name="user-plus" size={20} color="white" />
-          </View>
-          <Text className="text-white text-xl font-semibold mb-2">Fichar nuevo jugador</Text>
-          <Text className="text-blue-100 text-sm leading-tight">
-            Para jugadores no fichados en ningún equipo de la liga
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
+        />
+        <Tarjeta
           testID="card-ya-fichado"
+          icono="people-outline"
+          titulo="Jugador ya fichado en la liga"
+          subtitulo="Para jugadores fichados en otro equipo de la liga"
+          color={COLOR_TARJETA.VERDE}
           onPress={onYaFichado}
-          className="bg-liga-600 rounded-2xl p-7 shadow-md"
-          activeOpacity={0.85}
-        >
-          <View className="bg-white/10 rounded-xl p-2 mb-3 self-start">
-            <Feather name="users" size={20} color="white" />
-          </View>
-          <Text className="text-white text-xl font-semibold mb-2">
-            Jugador ya fichado en la liga
-          </Text>
-          <Text className="text-blue-100 text-sm leading-tight">
-            Para jugadores fichados en otro equipo de la liga
-          </Text>
-        </TouchableOpacity>
+        />
       </View>
     </View>
   )

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
-import CabeceraDelegado from '@/delegados/_registro-delegado/components/cabecera-delegado'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 export default function PasoDniDelegado() {
   const { dni, nombreClub, setDni, irAlPasoAnterior, irAlPasoSiguiente, validarDniVerde } =
@@ -34,21 +35,21 @@ export default function PasoDniDelegado() {
   return (
     <KeyboardAvoidingView
       testID="paso-dni-delegado"
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-surface"
       {...(Platform.OS === 'ios' && { behavior: 'padding' })}
     >
-      <CabeceraDelegado titulo="Fichaje de delegado" onBack={handleVolver} />
+      <Cabecera titulo="Fichaje de delegado" onBack={handleVolver} />
       <ProgresoDelegado />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Tu DNI</Text>
+          <Titulo>Tu DNI</Titulo>
           {nombreClub ? (
-            <Text className="text-gray-500 text-sm">
-              Fichando en club <Text className="font-bold">{nombreClub}</Text>
+            <Text className="text-zinc-400 text-sm">
+              Fichando en club <Text className="font-bold text-zinc-100">{nombreClub}</Text>
             </Text>
           ) : (
-            <Text className="text-gray-500 text-sm">Ingresá tu DNI para identificarte</Text>
+            <Text className="text-zinc-400 text-sm">Ingresá tu DNI para identificarte</Text>
           )}
         </View>
 
@@ -65,12 +66,13 @@ export default function PasoDniDelegado() {
             keyboardType="numeric"
           />
 
-          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+          {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-continuar-dni-verde"
             texto={loading ? 'Verificando...' : 'Continuar'}
-            icono={loading ? undefined : 'arrow-right'}
+            icono="arrow-right"
+            cargando={loading}
             onPress={handleContinuar}
             deshabilitado={!dniValido || loading}
           />

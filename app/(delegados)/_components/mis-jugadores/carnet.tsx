@@ -68,49 +68,46 @@ export default function Carnet({
       onPress={modoSeleccion ? onPress : undefined}
       onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}
-      className={`m-4 overflow-hidden rounded-2xl border elevation-5 ${
-        esDelegado
-          ? 'border-4 border-liga-600 glass'
-          : 'border border-border-glass glass'
+      className={`m-4 overflow-hidden rounded-2xl border ${
+        esDelegado ? 'border-4 border-liga-600 glass' : 'border border-border-glass glass'
       }`}
     >
       {modoSeleccion && (
-        <View className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full border-2 border-liga-600 bg-white/80 items-center justify-center">
+        <View
+          className={`absolute top-3 left-3 z-10 w-7 h-7 rounded-full border-2 items-center justify-center ${
+            seleccionado ? 'border-green-400 bg-green-500/20' : 'border-border-glass glass'
+          }`}
+        >
           {seleccionado && (
-            <Text className="text-liga-600 text-base font-bold leading-none">✓</Text>
+            <Text className="text-green-400 text-base font-bold leading-none">✓</Text>
           )}
         </View>
       )}
       {debeMostrarEstado && (
-        <View
-          style={{ backgroundColor: obtenerColorEstado(estado) }}
-          className="p-3 border-b-2 border-gray-200"
-        >
+        <View style={{ backgroundColor: obtenerColorEstado(estado) }} className="p-3">
           <Text className="text-white text-base font-bold text-center uppercase">
             {obtenerTextoEstado(estado)}
           </Text>
         </View>
       )}
       {esDelegado && (
-        <View className="bg-liga-600 py-2 px-4 border-y-2 border-liga-700">
+        <View className="bg-liga-600 py-2 px-4 border-y border-liga-700">
           <Text className="text-white text-center font-bold text-sm uppercase tracking-wider">
             DT/Delegado
           </Text>
         </View>
       )}
-      <View
-        className={`p-4 ${esDelegado ? 'bg-white mx-2 mt-2 mb-2 rounded-xl border-2 border-dashed border-liga-300' : ''}`}
-      >
-        <View className="items-center mb-4 border-b border-gray-200 pb-3">
-          <Text className="text-2xl font-bold mb-1 text-[#1a1a1a]">{jugador.equipo}</Text>
-          <Text className="text-lg text-gray-500">{jugador.torneo}</Text>
+      <View className={`p-4 ${esDelegado ? 'mx-2 mt-2 mb-2 rounded-xl border border-dashed border-liga-600/50' : ''}`}>
+        <View className="items-center mb-4 border-b border-border-glass pb-3">
+          <Text className="text-2xl font-bold mb-1 text-zinc-100">{jugador.equipo}</Text>
+          <Text className="text-lg text-zinc-400">{jugador.torneo}</Text>
         </View>
 
         <View className="mb-4 items-center">
           {jugador.fotoCarnet || muestraTarjetasAmarillas || muestraTarjetasRojas ? (
             <View className="relative h-40 w-40">
               {jugador.fotoCarnet ? (
-                <View className="h-40 w-40 overflow-hidden rounded-lg border-2 border-gray-200">
+                <View className="h-40 w-40 overflow-hidden rounded-lg border border-border-glass">
                   <Image
                     source={{ uri: jugador.fotoCarnet }}
                     className="h-full w-full"
@@ -118,7 +115,6 @@ export default function Carnet({
                   />
                 </View>
               ) : null}
-              {/* Posiciones fijas a la derecha: amarilla centrada en altura (h-9=36px → top 62px); roja más abajo (62+36+8) */}
               {muestraTarjetasAmarillas ? (
                 <View className="absolute left-full ml-3 top-[62px]">
                   <MiniTarjetaDisciplina cantidad={ta} variante="amarilla" />
@@ -133,37 +129,37 @@ export default function Carnet({
           ) : null}
         </View>
 
-        <View className="bg-gray-50 rounded-lg p-3">
-          <View className="flex-row justify-between items-center py-1.5 border-b border-gray-200">
-            <Text className="text-base font-semibold text-gray-500">DNI:</Text>
-            <Text className="text-base text-gray-700">{jugador.dni}</Text>
+        <View className="bg-surface-elevated rounded-lg p-3 border border-border-glass">
+          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
+            <Text className="text-base font-semibold text-zinc-400">DNI:</Text>
+            <Text className="text-base text-zinc-100">{jugador.dni}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-gray-200">
-            <Text className="text-base font-semibold text-gray-500">Nombre:</Text>
-            <Text className="text-base text-gray-700">{jugador.nombre}</Text>
+          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
+            <Text className="text-base font-semibold text-zinc-400">Nombre:</Text>
+            <Text className="text-base text-zinc-100">{jugador.nombre}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-gray-200">
-            <Text className="text-base font-semibold text-gray-500">Apellido:</Text>
-            <Text className="text-base text-gray-700">{jugador.apellido}</Text>
+          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
+            <Text className="text-base font-semibold text-zinc-400">Apellido:</Text>
+            <Text className="text-base text-zinc-100">{jugador.apellido}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-gray-200">
-            <Text className="text-base font-semibold text-gray-500">Fecha Nac:</Text>
-            <Text className="text-base text-gray-700">
+          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
+            <Text className="text-base font-semibold text-zinc-400">Fecha Nac:</Text>
+            <Text className="text-base text-zinc-100">
               {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
             </Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-gray-200">
-            <Text className="text-base font-semibold text-gray-500">Categoría:</Text>
-            <Text className="text-base text-gray-700">
+          <View className="flex-row justify-between items-center py-1.5">
+            <Text className="text-base font-semibold text-zinc-400">Categoría:</Text>
+            <Text className="text-base text-zinc-100">
               Cat {obtenerCategoria(jugador.fechaNacimiento)}
             </Text>
           </View>
         </View>
 
         {mostrarMotivo && 'motivo' in jugador && jugador.motivo && (
-          <View className="mt-4 p-3 bg-[#fff3f3] rounded-lg border border-[#ffcdd2]">
-            <Text className="text-base font-bold mb-1 text-[#d32f2f]">Motivo:</Text>
-            <Text className="text-sm text-gray-700 leading-5">{jugador.motivo}</Text>
+          <View className="mt-4 p-3 bg-red-500/10 rounded-lg border border-red-500/30">
+            <Text className="text-base font-bold mb-1 text-red-400">Motivo:</Text>
+            <Text className="text-sm text-zinc-400 leading-5">{jugador.motivo}</Text>
           </View>
         )}
       </View>

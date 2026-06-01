@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
-import { Alert, Modal, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Alert, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import {
+  ModalOscuro,
+  ModalOscuroCuerpo,
+  ModalOscuroAcciones,
+} from '@/design-system/componentes/modal-oscuro'
 
 interface Props {
   jugador: CarnetDigitalDTO | null
@@ -34,42 +40,38 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
   }
 
   return (
-    <Modal transparent animationType="fade" visible={!!jugador} onRequestClose={onCerrar}>
-      <View className="flex-1 bg-black/50 justify-center items-center p-6">
-        <View className="bg-white rounded-2xl w-full overflow-hidden">
-          <View className="p-6">
-            <Text className="text-lg font-bold text-gray-900 mb-3">Quitar jugador del equipo</Text>
-            <Text className="text-base text-gray-600 leading-6">
-              ¿Estás seguro que querés eliminar este jugador del equipo? Si el jugador juega en
-              otros equipos, no se eliminará de ellos.
-            </Text>
-          </View>
+    <ModalOscuro visible={!!jugador} onClose={onCerrar}>
+      <ModalOscuroCuerpo className="p-6">
+        <Text className="text-lg font-bold text-zinc-100 mb-3">Quitar jugador del equipo</Text>
+        <Text className="text-base text-zinc-400 leading-6">
+          ¿Estás seguro que querés eliminar este jugador del equipo? Si el jugador juega en otros
+          equipos, no se eliminará de ellos.
+        </Text>
+      </ModalOscuroCuerpo>
 
-          <View className="px-4 pb-4 gap-3">
-            <TouchableOpacity
-              testID="boton-quitar-del-equipo"
-              className="bg-red-600 rounded-xl p-4 items-center"
-              onPress={handleDesvincular}
-              disabled={cargando}
-            >
-              {cargando ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text className="text-white font-semibold text-base">Quitar del equipo</Text>
-              )}
-            </TouchableOpacity>
+      <ModalOscuroAcciones>
+        <TouchableOpacity
+          testID="boton-quitar-del-equipo"
+          className="bg-red-600 rounded-2xl p-4 items-center"
+          onPress={handleDesvincular}
+          disabled={cargando}
+          activeOpacity={0.85}
+        >
+          {cargando ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white font-semibold text-base">Quitar del equipo</Text>
+          )}
+        </TouchableOpacity>
 
-            <TouchableOpacity
-              testID="boton-cancelar-eliminar"
-              className="rounded-xl p-4 items-center"
-              onPress={onCerrar}
-              disabled={cargando}
-            >
-              <Text className="text-gray-500 text-base">Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
+        <BotonWizard
+          testID="boton-cancelar-eliminar"
+          texto="Cancelar"
+          primario={false}
+          onPress={onCerrar}
+          deshabilitado={cargando}
+        />
+      </ModalOscuroAcciones>
+    </ModalOscuro>
   )
 }

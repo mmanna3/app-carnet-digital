@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import {
-  Alert,
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native'
+import { Alert, View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import {
+  ModalOscuro,
+  ModalOscuroEncabezado,
+  ModalOscuroAcciones,
+} from '@/design-system/componentes/modal-oscuro'
 
 interface Props {
   jugadores: CarnetDigitalDTO[] | null
@@ -44,55 +42,44 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
   }
 
   return (
-    <Modal transparent animationType="fade" visible={!!jugadores} onRequestClose={onCerrar}>
-      <View className="flex-1 bg-black/50 justify-center items-center p-6">
-        <View className="bg-white rounded-2xl w-full overflow-hidden max-h-[80%]">
-          <View className="p-6 border-b border-gray-200">
-            <Text className="text-lg font-bold text-gray-900 mb-3">
-              Quitar jugadores del equipo
-            </Text>
-            <Text className="text-base text-gray-600 leading-6">
-              ¿Estás seguro que querés eliminar estos jugadores del equipo? Los jugadores que juegan
-              en otros equipos no se eliminarán de ellos.
+    <ModalOscuro visible={!!jugadores} onClose={onCerrar} className="max-h-[80%]">
+      <ModalOscuroEncabezado className="p-6">
+        <Text className="text-lg font-bold text-zinc-100 mb-3">Quitar jugadores del equipo</Text>
+        <Text className="text-base text-zinc-400 leading-6">
+          ¿Estás seguro que querés eliminar estos jugadores del equipo? Los jugadores que juegan en
+          otros equipos no se eliminarán de ellos.
+        </Text>
+      </ModalOscuroEncabezado>
+
+      <ScrollView className="max-h-60">
+        {jugadores.map((jugador) => (
+          <View key={jugador.id} className="px-6 py-3 border-b border-border-glass">
+            <Text className="text-base text-zinc-200">
+              {jugador.nombre} {jugador.apellido} - DNI: {jugador.dni}
             </Text>
           </View>
+        ))}
+      </ScrollView>
 
-          <ScrollView className="max-h-60">
-            {jugadores.map((jugador) => (
-              <View key={jugador.id} className="px-6 py-3 border-b border-gray-100">
-                <Text className="text-base text-gray-800">
-                  {jugador.nombre} {jugador.apellido} - DNI: {jugador.dni}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
+      <ModalOscuroAcciones className="pt-3">
+        <TouchableOpacity
+          testID="boton-quitar-masivo"
+          className="bg-red-600 rounded-2xl p-4 items-center"
+          onPress={handleDesvincular}
+          disabled={cargando}
+          activeOpacity={0.85}
+        >
+          {cargando ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white font-semibold text-base">
+              Quitar {jugadores.length} jugadores del equipo
+            </Text>
+          )}
+        </TouchableOpacity>
 
-          <View className="px-4 pb-4 pt-3 gap-3">
-            <TouchableOpacity
-              testID="boton-quitar-masivo"
-              className="bg-red-600 rounded-xl p-4 items-center"
-              onPress={handleDesvincular}
-              disabled={cargando}
-            >
-              {cargando ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text className="text-white font-semibold text-base">
-                  Quitar {jugadores.length} jugadores del equipo
-                </Text>
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="rounded-xl p-4 items-center"
-              onPress={onCerrar}
-              disabled={cargando}
-            >
-              <Text className="text-gray-500 text-base">Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
+        <BotonWizard texto="Cancelar" primario={false} onPress={onCerrar} deshabilitado={cargando} />
+      </ModalOscuroAcciones>
+    </ModalOscuro>
   )
 }

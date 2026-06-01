@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
-import CabeceraDelegado from './cabecera-delegado'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from './progreso-delegado'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 export default function PasoCodigoClub() {
   const {
@@ -36,18 +37,18 @@ export default function PasoCodigoClub() {
   return (
     <KeyboardAvoidingView
       testID="paso-codigo-club"
-      className="flex-1 bg-gray-50"
+      className="flex-1 bg-surface"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <CabeceraDelegado titulo={titulo} onBack={irAIntro} />
+      <Cabecera titulo={titulo} onBack={irAIntro} />
       <ProgresoDelegado />
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text testID="titulo-codigo-club" className="text-gray-900 text-lg font-semibold mb-1">
+          <Titulo testID="titulo-codigo-club">
             Ingresá el código de cualquiera de los equipos de tu club
-          </Text>
-          <Text className="text-gray-500 text-sm">Si no lo tenés, pedíselo a la liga</Text>
+          </Titulo>
+          <Text className="text-zinc-400 text-sm">Si no lo tenés, pedíselo a la liga</Text>
         </View>
 
         <View className="gap-3">
@@ -63,17 +64,18 @@ export default function PasoCodigoClub() {
           />
 
           {nombreClub && !error && (
-            <Text className="text-green-600 text-sm font-medium text-center">
-              Tu club es: <Text className="font-bold">{nombreClub}</Text>
+            <Text className="text-green-400 text-sm font-medium text-center">
+              Tu club es: <Text className="font-bold text-zinc-100">{nombreClub}</Text>
             </Text>
           )}
 
-          {error && <Text className="text-red-500 text-sm text-center">{error}</Text>}
+          {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
           <BotonWizard
             testID="boton-validar-club"
             texto={loading ? 'Validando...' : 'Validar'}
-            icono={loading ? undefined : 'check'}
+            icono="check"
+            cargando={loading}
             onPress={handleValidar}
             deshabilitado={!codigoEquipo.trim() || loading}
           />
