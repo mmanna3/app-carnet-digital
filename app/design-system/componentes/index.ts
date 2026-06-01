@@ -1,6 +1,6 @@
 export { Texto } from './texto'
 export { Titulo } from './titulo'
-export { BotonUi } from './boton'
+export { default as Boton } from './boton'
 export { Tarjeta, COLOR_TARJETA, ICONO_DONDE, VARIANTE_TARJETA } from './tarjeta'
 export type { ColorTarjeta, IconoDonde, VarianteTarjeta, PropsTarjeta } from './tarjeta'
 export { PantallaPublica } from './pantalla'

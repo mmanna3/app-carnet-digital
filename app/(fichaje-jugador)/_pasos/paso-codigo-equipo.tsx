@@ -4,7 +4,7 @@ import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 
 export default function PasoCodigoEquipo() {
@@ -69,7 +69,7 @@ export default function PasoCodigoEquipo() {
 
           {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
-          <BotonWizard
+          <Boton
             testID="boton-validar"
             texto={loading ? 'Validando...' : 'Validar'}
             icono="check"

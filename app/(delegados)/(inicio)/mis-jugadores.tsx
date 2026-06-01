@@ -15,7 +15,7 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
 import Carnet from '@/delegados/_components/mis-jugadores/carnet'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { FranjaSeccion } from '@/design-system/componentes'
 import ModalAccionesJugador from '@/delegados/_components/mis-jugadores/modal-acciones-jugador'
 import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-eliminar-jugador'
@@ -264,7 +264,7 @@ export default function MisJugadoresScreen() {
         <View className="bg-surface-elevated border-t border-border-glass px-4 pt-3 pb-6 gap-3">
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <BotonWizard
+              <Boton
                 testID="boton-bulk-eliminar"
                 texto="Eliminar"
                 icono="trash-2"
@@ -274,7 +274,7 @@ export default function MisJugadoresScreen() {
               />
             </View>
             <View className="flex-1">
-              <BotonWizard
+              <Boton
                 texto="Transferir"
                 icono="external-link"
                 onPress={() => setModalBulk('transferir')}
@@ -282,7 +282,7 @@ export default function MisJugadoresScreen() {
               />
             </View>
           </View>
-          <BotonWizard texto="Cancelar" primario={false} onPress={desactivar} />
+          <Boton texto="Cancelar" primario={false} onPress={desactivar} />
         </View>
       )}
 

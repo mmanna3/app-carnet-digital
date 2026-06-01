@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 
 const DECLARACION =
@@ -51,7 +51,7 @@ export default function PasoAutorizacion() {
 
           {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
-          <BotonWizard
+          <Boton
             testID="boton-enviar"
             texto={loading ? 'Enviando...' : 'Enviar'}
             icono="send"

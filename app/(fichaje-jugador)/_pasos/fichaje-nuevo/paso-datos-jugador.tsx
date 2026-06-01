@@ -12,7 +12,7 @@ import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import { Titulo } from '@/design-system/componentes'
 
@@ -134,7 +134,7 @@ export default function PasoDatosJugador() {
 
             {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
-            <BotonWizard
+            <Boton
               testID="boton-continuar"
               texto={loading ? 'Verificando...' : 'Continuar'}
               icono="arrow-right"

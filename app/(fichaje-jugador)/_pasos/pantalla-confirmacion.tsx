@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 
 interface Props {
   mensaje: string
@@ -26,14 +26,14 @@ export default function PantallaConfirmacion({ mensaje, onVolverInicio, onFichar
         </View>
 
         <View className="w-full gap-3">
-          <BotonWizard
+          <Boton
             testID="boton-volver-inicio"
             texto="Volver al inicio"
             icono="home"
             onPress={onVolverInicio}
           />
           {onFicharOtro && (
-            <BotonWizard
+            <Boton
               testID="boton-fichar-otro"
               texto="Fichar otro jugador"
               icono="user-plus"

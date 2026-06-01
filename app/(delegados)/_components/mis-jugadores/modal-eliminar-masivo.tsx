@@ -3,7 +3,7 @@ import { Alert, View, Text, ScrollView } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import {
   ModalOscuro,
   ModalOscuroEncabezado,
@@ -62,7 +62,7 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
       </ScrollView>
 
       <ModalOscuroAcciones className="pt-3">
-        <BotonWizard
+        <Boton
           testID="boton-quitar-masivo"
           texto={`Quitar ${jugadores.length} jugadores del equipo`}
           icono="trash-2"
@@ -72,7 +72,7 @@ export default function ModalEliminarMasivo({ jugadores, equipoId, onEliminado, 
           deshabilitado={cargando}
         />
 
-        <BotonWizard texto="Cancelar" primario={false} onPress={onCerrar} deshabilitado={cargando} />
+        <Boton texto="Cancelar" primario={false} onPress={onCerrar} deshabilitado={cargando} />
       </ModalOscuroAcciones>
     </ModalOscuro>
   )

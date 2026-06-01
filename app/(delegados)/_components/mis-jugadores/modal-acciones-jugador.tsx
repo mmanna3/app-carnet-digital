@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'react-native'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import {
   ModalOscuro,
   ModalOscuroEncabezado,
@@ -33,7 +33,7 @@ export default function ModalAccionesJugador({
       </ModalOscuroEncabezado>
 
       <ModalOscuroAcciones>
-        <BotonWizard
+        <Boton
           testID="boton-eliminar-jugador"
           texto="Eliminar jugador"
           icono="trash-2"
@@ -41,14 +41,14 @@ export default function ModalAccionesJugador({
           onPress={onEliminar}
         />
 
-        <BotonWizard
+        <Boton
           testID="boton-transferir-jugador"
           texto="Transferir"
           icono="external-link"
           onPress={onTransferir}
         />
 
-        <BotonWizard testID="boton-cancelar-acciones" texto="Cancelar" primario={false} onPress={onCerrar} />
+        <Boton testID="boton-cancelar-acciones" texto="Cancelar" primario={false} onPress={onCerrar} />
       </ModalOscuroAcciones>
     </ModalOscuro>
   )

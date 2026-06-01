@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
@@ -126,7 +126,7 @@ export default function PasoFoto() {
             </View>
           </View>
 
-          <BotonWizard
+          <Boton
             testID="boton-seleccionar-foto"
             primario={false}
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
@@ -134,7 +134,7 @@ export default function PasoFoto() {
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
           />
           {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
-          <BotonWizard
+          <Boton
             testID="boton-subir-foto"
             texto="Subir"
             icono="upload"

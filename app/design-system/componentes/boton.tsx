@@ -1,100 +1,86 @@
 import React from 'react'
-import { TouchableOpacity, Text, ActivityIndicator } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
+import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
+import { TEMA_BOTON_WIZARD, TEMA_BOTON_WIZARD_ROJO } from '@/design-system/tokens/tarjeta-accion'
 
-type VarianteUi = 'Principal' | 'Secundario' | 'Destructivo'
-type VarianteLegacy = 'Principal' | 'Secundario' | 'Destructivo'
+const TEMAS_BOTON = {
+  verde: TEMA_BOTON_WIZARD,
+  rojo: TEMA_BOTON_WIZARD_ROJO,
+} as const
 
-type Props = {
-  onPress: () => void
+type IconoName = React.ComponentProps<typeof Feather>['name']
+
+interface Props {
   texto: string
+  onPress: () => void
+  icono?: IconoName
+  /** true = CTA principal (degradado habilitado); false = acción secundaria glass */
+  primario?: boolean
+  /** Color del degradado cuando primario=true */
+  color?: keyof typeof TEMAS_BOTON
   deshabilitado?: boolean
   cargando?: boolean
-  variante?: VarianteUi
-  icono?: keyof typeof Feather.glyphMap
-  className?: string
   testID?: string
-  /** Estilo claro con color de liga (pantallas delegados legacy). */
-  tema?: 'oscuro' | 'liga'
 }
 
-const estilosOscuro: Record<VarianteUi, string> = {
-  Principal: 'rounded-full bg-white px-5 py-3',
-  Secundario: 'glass rounded-full border border-border-glass px-5 py-3',
-  Destructivo: 'rounded-full bg-red-600 px-5 py-3',
-}
-
-const textoOscuro: Record<VarianteUi, string> = {
-  Principal: 'font-display text-xs uppercase tracking-widest text-black',
-  Secundario: 'font-display text-xs uppercase tracking-widest text-zinc-200',
-  Destructivo: 'font-display text-xs uppercase tracking-widest text-white',
-}
-
-const estilosLiga: Record<VarianteLegacy, string> = {
-  Principal: 'bg-liga-600 shadow-md',
-  Destructivo: 'bg-red-600 shadow-md',
-  Secundario: 'border-2 border-gray-300 bg-transparent',
-}
-
-const textoLiga: Record<VarianteLegacy, string> = {
-  Principal: 'text-white',
-  Destructivo: 'text-white',
-  Secundario: 'text-gray-500',
-}
-
-export function BotonUi({
-  onPress,
+export default function Boton({
   texto,
+  onPress,
+  icono,
+  primario = true,
+  color = 'verde',
   deshabilitado = false,
   cargando = false,
-  variante = 'Principal',
-  icono,
-  className = '',
   testID,
-  tema = 'oscuro',
 }: Props) {
   const isDisabled = deshabilitado || cargando
-  const base =
-    tema === 'liga'
-      ? 'h-[50px] rounded-xl flex-row items-center justify-center gap-2 px-4 mt-2.5'
-      : 'min-h-[48px] flex-row items-center justify-center gap-2'
-  const varianteStyles = tema === 'liga' ? estilosLiga[variante] : estilosOscuro[variante]
-  const textoStyles = tema === 'liga' ? textoLiga[variante] : textoOscuro[variante]
-  const colorIcono =
-    tema === 'liga'
-      ? variante === 'Secundario'
-        ? '#6b7280'
-        : '#ffffff'
-      : variante === 'Principal'
-        ? '#000000'
-        : '#e4e4e7'
+  const habilitado = primario && !isDisabled
+  const tema = TEMAS_BOTON[color]
+
+  const colorTexto = habilitado ? '#fafafa' : isDisabled ? '#71717a' : '#e4e4e7'
+  const colorIcono = colorTexto
 
   return (
     <TouchableOpacity
       testID={testID}
-      className={`${base} ${varianteStyles} ${isDisabled ? 'opacity-70' : ''} ${className}`.trim()}
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.85}
+      className={`w-full overflow-hidden rounded-2xl ${isDisabled ? 'opacity-50' : ''}`}
+      accessibilityRole="button"
     >
-      {cargando ? (
-        <ActivityIndicator color={colorIcono} />
-      ) : (
-        <>
-          {icono && <Feather name={icono} size={tema === 'liga' ? 22 : 18} color={colorIcono} />}
+      <View
+        className="glass overflow-hidden rounded-2xl"
+        style={{
+          borderWidth: 1.5,
+          borderColor: habilitado ? tema.borde : 'rgba(255, 255, 255, 0.08)',
+        }}
+      >
+        {habilitado ? (
+          <LinearGradient
+            colors={[...tema.degradado]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
+        ) : null}
+        <View className="min-h-[48px] flex-row items-center justify-center gap-2 px-5 py-3">
+          {cargando ? (
+            <ActivityIndicator color={colorIcono} size="small" />
+          ) : icono ? (
+            <Feather name={icono} size={20} color={colorIcono} />
+          ) : null}
           <Text
-            className={tema === 'liga' ? `text-base font-semibold ${textoStyles}` : textoStyles}
-            style={tema === 'oscuro' ? { fontFamily: 'Coalition' } : undefined}
+            className="text-sm uppercase tracking-wide"
+            style={{ fontFamily: FUENTE_DISPLAY, color: colorTexto }}
           >
             {texto}
           </Text>
-        </>
-      )}
+        </View>
+      </View>
     </TouchableOpacity>
   )
-}
-
-/** Alias default para pantallas que importaban `@/components/boton`. */
-export default function Boton(props: Props) {
-  return <BotonUi {...props} tema="liga" />
 }

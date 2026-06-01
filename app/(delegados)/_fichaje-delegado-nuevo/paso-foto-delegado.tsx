@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
@@ -125,7 +125,7 @@ export default function PasoFotoDelegado() {
             </View>
           </View>
 
-          <BotonWizard
+          <Boton
             testID="boton-seleccionar-foto-delegado"
             primario={false}
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
@@ -133,7 +133,7 @@ export default function PasoFotoDelegado() {
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
           />
           {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
-          <BotonWizard
+          <Boton
             testID="boton-subir-foto-delegado"
             texto="Subir"
             icono="upload"

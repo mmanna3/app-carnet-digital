@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 
 interface Props {
   tituloCabecera: string
@@ -28,7 +28,7 @@ export default function PantallaFichajeDeshabilitado({ tituloCabecera, onVolver 
           </View>
         </View>
 
-        <BotonWizard
+        <Boton
           testID="boton-volver-fichaje-deshabilitado"
           texto="Volver"
           icono="arrow-left"

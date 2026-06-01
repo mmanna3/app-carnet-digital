@@ -13,7 +13,7 @@ import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import { Titulo } from '@/design-system/componentes'
 
@@ -276,7 +276,7 @@ export default function PasoDatosDelegado() {
 
             {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
 
-            <BotonWizard
+            <Boton
               testID="boton-continuar-datos"
               texto={loading ? 'Verificando...' : 'Continuar'}
               icono="arrow-right"

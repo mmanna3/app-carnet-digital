@@ -3,7 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 
 export default function PasoConfirmacionDelegado() {
@@ -104,7 +104,7 @@ export default function PasoConfirmacionDelegado() {
 
         {error && <Text className="text-red-400 text-sm text-center mb-4">{error}</Text>}
 
-        <BotonWizard
+        <Boton
           testID="boton-enviar-delegado"
           texto={enviando ? 'Enviando...' : 'Enviar'}
           icono="send"

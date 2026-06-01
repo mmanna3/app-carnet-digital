@@ -112,11 +112,11 @@ Regenerar contrato: script `generar-contrato-be-en-app.sh` en el monorepo.
 
 ### Design system
 
-- `design-system/componentes/` — `Texto`, `BotonUi`, `PantallaPublica`, etc.
+- `design-system/componentes/` — `Texto`, `Boton`, `PantallaPublica`, etc.
 - `design-system/tokens/` — TOKENS, fuentes, tema agrupador
 - `design-system/layouts/layout-asistente.tsx` — shell oscuro para wizards
 
-`Boton` / `BotonUi` en `design-system/componentes/boton.tsx` — variante `tema="liga"` para acentos de liga en formularios claros.
+`Boton` en `design-system/componentes/boton.tsx` — CTA con degradado (`primario`) o acción secundaria glass; props `color` (`verde` | `rojo`).
 
 ### Path aliases (`tsconfig.json`)
 

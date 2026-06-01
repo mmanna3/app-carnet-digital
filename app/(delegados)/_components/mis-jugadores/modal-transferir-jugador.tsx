@@ -12,7 +12,7 @@ import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import {
   ModalOscuro,
   ModalOscuroEncabezado,
@@ -87,7 +87,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
             </Text>
           </ModalOscuroCuerpo>
           <ModalOscuroAcciones>
-            <BotonWizard
+            <Boton
               testID="boton-confirmar-transferencia"
               texto={cargando ? 'Transfiriendo...' : 'Sí, transferir'}
               icono="check"
@@ -95,7 +95,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
               onPress={handleTransferir}
               deshabilitado={cargando}
             />
-            <BotonWizard
+            <Boton
               texto="Cancelar"
               primario={false}
               onPress={() => setEquipoDestino(null)}
@@ -145,7 +145,7 @@ export default function ModalTransferirJugador({ jugador, onTransferido, onCerra
           )}
 
           <ModalOscuroAcciones>
-            <BotonWizard texto="Cancelar" primario={false} onPress={handleCerrar} />
+            <Boton texto="Cancelar" primario={false} onPress={handleCerrar} />
           </ModalOscuroAcciones>
         </View>
       )}

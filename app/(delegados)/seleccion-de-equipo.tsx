@@ -8,14 +8,14 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import { queryKeys } from '@/lib/api/query-keys'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Texto } from '@/design-system/componentes/texto'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 function BotonCerrarSesion({ onPress }: { onPress: () => void }) {
   return (
     <View className="mb-6">
-      <BotonWizard
+      <Boton
         testID="boton-cerrar-sesion-seleccion-equipo"
         texto="Cerrar sesión"
         icono="log-out"

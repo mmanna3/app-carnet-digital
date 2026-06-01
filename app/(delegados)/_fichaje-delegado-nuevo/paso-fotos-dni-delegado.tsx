@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo } from '@/design-system/componentes'
 
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
@@ -141,7 +141,7 @@ export default function PasoFotosDniDelegado() {
           <View className="gap-3">
             <Text className="text-zinc-400 text-sm font-medium">Frente del DNI</Text>
             <PreviewDni uri={dniFrenteUri} />
-            <BotonWizard
+            <Boton
               testID="boton-seleccionar-frente-delegado"
               primario={false}
               texto={dniFrenteUri ? 'Cambiar' : 'Seleccionar'}
@@ -158,7 +158,7 @@ export default function PasoFotosDniDelegado() {
           <View className="gap-3">
             <Text className="text-zinc-400 text-sm font-medium">Dorso del DNI</Text>
             <PreviewDni uri={dniDorsoUri} />
-            <BotonWizard
+            <Boton
               testID="boton-seleccionar-dorso-delegado"
               primario={false}
               texto={dniDorsoUri ? 'Cambiar' : 'Seleccionar'}
@@ -174,7 +174,7 @@ export default function PasoFotosDniDelegado() {
 
           {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
 
-          <BotonWizard
+          <Boton
             testID="boton-subir-dni-delegado"
             texto="Subir"
             icono="upload"

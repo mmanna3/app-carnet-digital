@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 
 interface Props {
   onVolverInicio: () => void
@@ -25,7 +25,7 @@ export default function PantallaCompletado({ onVolverInicio }: Props) {
           </View>
         </View>
 
-        <BotonWizard
+        <Boton
           testID="boton-volver-inicio-delegado"
           texto="Volver al inicio"
           icono="home"

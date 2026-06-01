@@ -3,7 +3,7 @@ import { Alert, Text } from 'react-native'
 import { CarnetDigitalDTO, DesvincularJugadorDelEquipoDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import {
   ModalOscuro,
   ModalOscuroCuerpo,
@@ -50,7 +50,7 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
       </ModalOscuroCuerpo>
 
       <ModalOscuroAcciones>
-        <BotonWizard
+        <Boton
           testID="boton-quitar-del-equipo"
           texto="Quitar del equipo"
           icono="trash-2"
@@ -60,7 +60,7 @@ export default function ModalEliminarJugador({ jugador, equipoId, onEliminado, o
           deshabilitado={cargando}
         />
 
-        <BotonWizard
+        <Boton
           testID="boton-cancelar-eliminar"
           texto="Cancelar"
           primario={false}

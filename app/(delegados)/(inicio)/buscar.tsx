@@ -7,7 +7,7 @@ import Carnet from '@/delegados/_components/mis-jugadores/carnet'
 import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import Boton from '@/design-system/componentes/boton'
 import { Titulo, FranjaSeccion } from '@/design-system/componentes'
 
 export default function BuscarScreen() {
@@ -152,7 +152,7 @@ export default function BuscarScreen() {
               />
             </View>
           </View>
-          <BotonWizard
+          <Boton
             testID="boton-buscar"
             texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
             icono="search"
@@ -163,7 +163,7 @@ export default function BuscarScreen() {
           {error && <Text className="text-red-400 mt-3 text-sm text-center">{error}</Text>}
           {jugadores.length > 0 && (
             <View className="mt-3 gap-3">
-              <BotonWizard
+              <Boton
                 testID="boton-generar-pdf"
                 primario={false}
                 texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
@@ -172,7 +172,7 @@ export default function BuscarScreen() {
                 onPress={handleGeneratePDF}
                 deshabilitado={isGeneratingPDF || isGeneratingPlanillas}
               />
-              <BotonWizard
+              <Boton
                 testID="boton-generar-planillas"
                 primario={false}
                 texto={isGeneratingPlanillas ? 'Generando planillas...' : 'Planillas'}
