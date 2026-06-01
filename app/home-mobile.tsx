@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import Constants from 'expo-constants'
-import { Feather, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
 import { useAuth } from '@/lib/hooks/use-auth'
@@ -12,9 +12,6 @@ import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fich
 import { FondoHome } from '@/components/home/fondo-home'
 import { PantallaPublica, Texto } from '@/components/ui'
 import { FUENTE_BRAND, FUENTE_DISPLAY, FUENTE_SANS } from '@/lib/design-system/fuentes'
-
-/** Verde liga shade 600 (`lib/config/liga.ts`) — buscador de torneos */
-const COLOR_VERDE_LIGA = '#16a34a'
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
 
@@ -41,31 +38,52 @@ function degradadoFondoHome(colorLiga: string) {
   return { colors, locations }
 }
 
-/** Transparencia del fondo de las cards (0.5 = 50% transparente) */
-const OPACIDAD_FONDO_CARD = 0.5
+const OPACIDAD_COLOR_CARD = 0.72
+const OPACIDAD_NEGRO_CARD = 0.55
 
 const CARD_FICHAJE = {
-  borde: 'rgba(248, 113, 113, 0.55)',
-  degradado: [`rgba(220, 38, 38, ${OPACIDAD_FONDO_CARD})`, `rgba(0, 0, 0, ${OPACIDAD_FONDO_CARD})`] as const,
-  bordeIcono: 'border-red-500/30',
-  fondoIcono: 'bg-red-500/10',
+  borde: 'rgba(248, 113, 113, 0.7)',
+  degradado: [
+    `rgba(220, 38, 38, ${OPACIDAD_COLOR_CARD})`,
+    `rgba(0, 0, 0, ${OPACIDAD_NEGRO_CARD})`,
+  ] as const,
+  bordeIcono: 'rgba(248, 113, 113, 0.7)',
+  fondoIcono: 'rgba(220, 38, 38, 0.2)',
   colorIcono: '#f87171',
 }
 
 const CARD_DELEGADOS = {
-  borde: 'rgba(56, 189, 248, 0.55)',
-  degradado: [`rgba(37, 99, 235, ${OPACIDAD_FONDO_CARD})`, `rgba(0, 0, 0, ${OPACIDAD_FONDO_CARD})`] as const,
-  bordeIcono: 'border-sky-500/30',
-  fondoIcono: 'bg-sky-500/10',
+  borde: 'rgba(56, 189, 248, 0.7)',
+  degradado: [
+    `rgba(37, 99, 235, ${OPACIDAD_COLOR_CARD})`,
+    `rgba(0, 0, 0, ${OPACIDAD_NEGRO_CARD})`,
+  ] as const,
+  bordeIcono: 'rgba(56, 189, 248, 0.7)',
+  fondoIcono: 'rgba(37, 99, 235, 0.2)',
   colorIcono: '#38bdf8',
 }
 
-const BUSCADOR_TORNEOS = {
-  borde: 'rgba(52, 211, 153, 0.55)',
-  degradado: [`rgba(22, 163, 74, ${OPACIDAD_FONDO_CARD})`, `rgba(0, 0, 0, ${OPACIDAD_FONDO_CARD})`] as const,
-  bordeIcono: 'border-emerald-500/30',
-  fondoIcono: 'bg-emerald-500/10',
+const CARD_RESULTADOS = {
+  borde: 'rgba(74, 222, 128, 0.7)',
+  degradado: [
+    `rgba(22, 163, 74, ${OPACIDAD_COLOR_CARD})`,
+    `rgba(0, 0, 0, ${OPACIDAD_NEGRO_CARD})`,
+  ] as const,
+  bordeIcono: 'rgba(74, 222, 128, 0.7)',
+  fondoIcono: 'rgba(22, 163, 74, 0.2)',
+  colorIcono: '#4ade80',
 }
+
+const estilosIconoCard = StyleSheet.create({
+  caja: {
+    height: 48,
+    width: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+})
 
 function TarjetaAccionHome({
   testID,
@@ -105,7 +123,7 @@ function TarjetaAccionHome({
       testID={testID}
       onPress={onPress}
       className="flex-1 self-stretch overflow-hidden rounded-2xl"
-      style={{ minHeight: 152, borderWidth: 1, borderColor: borde }}
+      style={{ minHeight: 152, borderWidth: 1.5, borderColor: borde }}
       activeOpacity={0.85}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -118,7 +136,7 @@ function TarjetaAccionHome({
       />
       <View style={paddingContenido}>
         <View
-          className={`h-10 w-10 items-center justify-center rounded-lg border ${bordeIcono} ${fondoIcono}`}
+          style={[estilosIconoCard.caja, { borderColor: bordeIcono, backgroundColor: fondoIcono }]}
         >
           <Ionicons name={iconName} size={tamanoIcono} color={colorIcono} />
         </View>
@@ -149,42 +167,70 @@ function TarjetaAccionHome({
   )
 }
 
-function BuscadorTorneosHome({ onPress }: { onPress: () => void }) {
+function TarjetaResultadosHome({ onPress }: { onPress: () => void }) {
   return (
     <TouchableOpacity
+      testID="card-resultados"
       onPress={onPress}
-      activeOpacity={0.75}
+      activeOpacity={0.85}
       className="overflow-hidden rounded-2xl"
       style={{
-        borderWidth: 1,
-        borderColor: BUSCADOR_TORNEOS.borde,
+        borderWidth: 1.5,
+        borderColor: CARD_RESULTADOS.borde,
+        minHeight: 112,
       }}
       accessibilityRole="button"
-      accessibilityLabel="Buscar torneos"
+      accessibilityLabel="Ver resultados. Fixture, posiciones y clubes de cada torneo."
     >
       <LinearGradient
-        colors={[...BUSCADOR_TORNEOS.degradado]}
+        colors={[...CARD_RESULTADOS.degradado]}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
         style={StyleSheet.absoluteFill}
       />
-      <View className="flex-row items-center px-4 py-5">
+      <View className="flex-row items-start px-5 py-5">
         <View
-          className={`mr-3 h-10 w-10 items-center justify-center rounded-lg border ${BUSCADOR_TORNEOS.bordeIcono} ${BUSCADOR_TORNEOS.fondoIcono}`}
+          style={[
+            estilosIconoCard.caja,
+            {
+              borderColor: CARD_RESULTADOS.bordeIcono,
+              backgroundColor: CARD_RESULTADOS.fondoIcono,
+            },
+          ]}
         >
-          <Feather name="search" size={22} color={COLOR_VERDE_LIGA} />
+          <Ionicons name="football-outline" size={26} color={CARD_RESULTADOS.colorIcono} />
         </View>
-        <Text
-          className="flex-1"
-          style={{
-            fontFamily: FUENTE_DISPLAY,
-            fontSize: 15,
-            color: '#f4f4f5',
-            lineHeight: 20,
-          }}
-        >
-          Buscar torneos
-        </Text>
+        <View className="ml-4 min-w-0 flex-1">
+          <Text
+            style={{
+              fontFamily: FUENTE_DISPLAY,
+              fontSize: 17,
+              color: '#fafafa',
+              lineHeight: 22,
+              letterSpacing: 0.3,
+            }}
+          >
+            Ver resultados
+          </Text>
+          <Text
+            style={{
+              fontFamily: FUENTE_SANS,
+              fontSize: 13,
+              lineHeight: 18,
+              color: '#d4d4d8',
+              marginTop: 4,
+            }}
+            numberOfLines={2}
+          >
+            Fixture, posiciones, jornadas y clubes de cada torneo.
+          </Text>
+        </View>
+        <Ionicons
+          name="chevron-forward"
+          size={22}
+          color="rgba(255, 255, 255, 0.45)"
+          style={{ marginLeft: 8, alignSelf: 'center' }}
+        />
       </View>
     </TouchableOpacity>
   )
@@ -236,7 +282,7 @@ export default function HomeMobile() {
     router.push('/fichajes')
   }
 
-  const handleBuscarEquipo = () => {
+  const handleVerResultados = () => {
     router.push('/torneos')
   }
 
@@ -259,81 +305,77 @@ export default function HomeMobile() {
           style={StyleSheet.absoluteFill}
         />
       </View>
-      <PantallaPublica
-        safeArea={false}
-        className="flex-1 bg-transparent"
-        style={estilos.contenido}
-      >
-      <View className="flex-1">
-      <View className="pb-8 px-6 pt-14">
-        <View className="mb-8 mt-4 w-full items-center">
-          {logo && (
-            <Image
-              source={logo}
-              style={{ width: 96, height: 96 }}
-              className="mb-4"
-              resizeMode="contain"
-            />
-          )}
-          <View className="w-full px-2">
-            <Text
-              className="text-center text-white"
-              style={{
-                fontFamily: FUENTE_BRAND,
-                fontSize: 32,
-                letterSpacing: 2,
-              }}
-              numberOfLines={2}
-              adjustsFontSizeToFit
-              minimumFontScale={0.85}
-            >
-              {leagueDisplayName}
-            </Text>
+      <PantallaPublica safeArea={false} className="flex-1 bg-transparent" style={estilos.contenido}>
+        <View className="flex-1">
+          <View className="px-6 pb-4 pt-14">
+            <View className="mb-6 mt-4 w-full items-center">
+              {logo && (
+                <Image
+                  source={logo}
+                  style={{ width: 96, height: 96 }}
+                  className="mb-4"
+                  resizeMode="contain"
+                />
+              )}
+              <View className="w-full px-2">
+                <Text
+                  className="text-center text-white"
+                  style={{
+                    fontFamily: FUENTE_BRAND,
+                    fontSize: 32,
+                    letterSpacing: 2,
+                  }}
+                  numberOfLines={2}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.85}
+                >
+                  {leagueDisplayName}
+                </Text>
+              </View>
+            </View>
+
+            <TarjetaResultadosHome onPress={handleVerResultados} />
           </View>
+
+          <View className="flex-row items-stretch gap-3 px-6 pb-6 pt-2">
+            <TarjetaAccionHome
+              testID="card-fichaje"
+              titulo="Fichaje"
+              subtitulo="Fichaje de nuevo jugador de la liga."
+              iconName="person-add-outline"
+              onPress={handleFichajes}
+              borde={CARD_FICHAJE.borde}
+              degradado={CARD_FICHAJE.degradado}
+              bordeIcono={CARD_FICHAJE.bordeIcono}
+              fondoIcono={CARD_FICHAJE.fondoIcono}
+              colorIcono={CARD_FICHAJE.colorIcono}
+              accessibilityLabel="Fichaje. Fichaje de nuevo jugador de la liga"
+            />
+            <TarjetaAccionHome
+              testID="card-delegados"
+              titulo="Delegados"
+              subtitulo="Accedé a tu panel de gestión."
+              iconName="clipboard-outline"
+              tamanoIcono={20}
+              onPress={handleDelegadosDT}
+              borde={CARD_DELEGADOS.borde}
+              degradado={CARD_DELEGADOS.degradado}
+              bordeIcono={CARD_DELEGADOS.bordeIcono}
+              fondoIcono={CARD_DELEGADOS.fondoIcono}
+              colorIcono={CARD_DELEGADOS.colorIcono}
+              accessibilityLabel="Delegados. Accedé a tu panel de gestión"
+            />
+          </View>
+
+          {esMultiliga && (
+            <TouchableOpacity
+              onPress={handleSeleccionarOtraLiga}
+              className="items-center py-2 pb-8"
+            >
+              <Texto variante="caption">Seleccionar otra liga</Texto>
+            </TouchableOpacity>
+          )}
         </View>
-
-        <BuscadorTorneosHome onPress={handleBuscarEquipo} />
-      </View>
-
-      <View className="flex-row items-stretch gap-3 px-6 pb-6 pt-3">
-        <TarjetaAccionHome
-          testID="card-fichaje"
-          titulo="Fichaje"
-          subtitulo="Fichaje de nuevo jugador de la liga"
-          iconName="person-add-outline"
-          onPress={handleFichajes}
-          borde={CARD_FICHAJE.borde}
-          degradado={CARD_FICHAJE.degradado}
-          bordeIcono={CARD_FICHAJE.bordeIcono}
-          fondoIcono={CARD_FICHAJE.fondoIcono}
-          colorIcono={CARD_FICHAJE.colorIcono}
-          accessibilityLabel="Fichaje. Fichaje de nuevo jugador de la liga"
-        />
-        <TarjetaAccionHome
-          testID="card-delegados"
-          titulo="Delegados"
-          subtitulo="Accedé a tu panel de gestión"
-          iconName="clipboard-outline"
-          tamanoIcono={20}
-          onPress={handleDelegadosDT}
-          borde={CARD_DELEGADOS.borde}
-          degradado={CARD_DELEGADOS.degradado}
-          bordeIcono={CARD_DELEGADOS.bordeIcono}
-          fondoIcono={CARD_DELEGADOS.fondoIcono}
-          colorIcono={CARD_DELEGADOS.colorIcono}
-          accessibilityLabel="Delegados. Accedé a tu panel de gestión"
-        />
-      </View>
-
-      {esMultiliga && (
-        <TouchableOpacity
-          onPress={handleSeleccionarOtraLiga}
-          className="items-center py-2 pb-8"
-        >
-          <Texto variante="caption">Seleccionar otra liga</Texto>
-        </TouchableOpacity>
-      )}
-      </View>
       </PantallaPublica>
     </View>
   )
