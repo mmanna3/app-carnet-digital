@@ -1,7 +1,7 @@
 import '../global.css'
 import { LogBox } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import {
   Inter_400Regular,

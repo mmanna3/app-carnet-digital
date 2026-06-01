@@ -94,9 +94,6 @@ export default (): ExpoConfig => ({
     'expo-system-ui',
     '@react-native-community/datetimepicker',
     'expo-font',
-    'expo-sharing',
-    'expo-status-bar',
-    'expo-web-browser',
     [
       'expo-splash-screen',
       {
@@ -108,7 +105,7 @@ export default (): ExpoConfig => ({
     [
       'expo-build-properties',
       {
-        ios: { deploymentTarget: '16.4' },
+        ios: { deploymentTarget: '15.1' },
         android: { usesCleartextTraffic: true },
       },
     ],

@@ -22,7 +22,7 @@ export function FondoHome() {
 
 const estilos = StyleSheet.create({
   contenedor: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     overflow: 'hidden',
   },
   imagenFondo: {

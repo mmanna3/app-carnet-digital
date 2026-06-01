@@ -106,7 +106,7 @@ describe('HttpClientWrapper', () => {
       await wrapper.fetch('https://api.example.com/api/privado/recurso')
 
       expect(mockLogout).toHaveBeenCalledTimes(1)
-      expect(mockRouterReplace).toHaveBeenCalledWith('/(auth)/login')
+      expect(mockRouterReplace).toHaveBeenCalledWith('/login')
     })
 
     it('respuesta 401 en ruta pública NO ejecuta logout', async () => {

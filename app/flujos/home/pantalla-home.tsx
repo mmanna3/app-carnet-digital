@@ -274,7 +274,7 @@ export default function HomeMobile() {
 
   const handleDelegadosDT = () => {
     void cargarFichajeEstaHabilitado()
-    router.push('/(auth)/login')
+    router.push('/login')
   }
 
   const handleFichajes = () => {
@@ -387,7 +387,7 @@ const estilos = StyleSheet.create({
     backgroundColor: '#0a0a0b',
   },
   fondo: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     zIndex: 0,
   },
   contenido: {

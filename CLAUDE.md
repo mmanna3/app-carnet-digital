@@ -4,7 +4,9 @@ Este archivo guía a Claude Code al trabajar con el código de este repositorio.
 
 ## Descripción del proyecto
 
-App React Native + Expo para gestionar carnets digitales de jugadores. Los delegados inician sesión, eligen su equipo y ven/buscan carnets con el estado de registro. Soporta iOS y Android (sin target web).
+App React Native + Expo **SDK 54** para gestionar carnets digitales de jugadores. Compatible con **Expo Go** (App Store, SDK 54) vía QR. Los delegados inician sesión, eligen su equipo y ven/buscan carnets con el estado de registro. Soporta iOS y Android (sin target web).
+
+**Stack:** Expo SDK 54, React Native 0.81, React 19.1, expo-router ~6.0. iOS mínimo 15.1.
 
 ## Comandos
 
@@ -12,7 +14,9 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 
 ```bash
 # Desarrollo
-LIGA_ID=edefi npm start           # UNILIGA (app EDeFI). Muestra API URL en consola.
+LIGA_ID=edefi npm start           # UNILIGA — escanear QR con Expo Go SDK 54
+LIGA_ID=edefi npx expo start -c   # Con cache limpia
+LIGA_ID=edefi npx expo start --tunnel  # Si LAN falla (iPhone físico)
 LIGA_ID=multiliga npm start       # MULTILIGA (selección de liga)
 LIGA_ID=edefi npm run start:dev   # Con dev client
 
