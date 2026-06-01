@@ -1,6 +1,7 @@
 export { Texto } from './texto'
 export { BotonUi } from './boton'
-export { Tarjeta } from './tarjeta'
+export { Tarjeta, COLOR_TARJETA, ICONO_DONDE, VARIANTE_TARJETA } from './tarjeta'
+export type { ColorTarjeta, IconoDonde, VarianteTarjeta, PropsTarjeta } from './tarjeta'
 export { PantallaPublica } from './pantalla'
 export { EstadoCarga } from './estado-carga'
 export { EstadoVacio } from './estado-vacio'
