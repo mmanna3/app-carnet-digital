@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, Text, View } from 'react-native'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
@@ -8,7 +8,7 @@ import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
-import { Titulo } from '@/design-system/componentes'
+import { Titulo, FranjaSeccion } from '@/design-system/componentes'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -122,13 +122,14 @@ export default function BuscarScreen() {
             contentContainerStyle={{ paddingHorizontal: 10 }}
           >
             {categorias.map((año) => (
-              <TouchableOpacity
+              <FranjaSeccion
                 key={`button-${año}`}
-                className="bg-liga-600 px-5 py-2 rounded-full mx-1.5"
+                variante="pill"
+                className="mx-1.5 mb-0"
                 onPress={() => scrollToCategory(año)}
               >
-                <Text className="text-white text-base font-semibold">{año}</Text>
-              </TouchableOpacity>
+                {String(año)}
+              </FranjaSeccion>
             ))}
           </ScrollView>
         </View>
@@ -188,9 +189,7 @@ export default function BuscarScreen() {
           <View className="p-2.5">
             {categorias.map((año) => (
               <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
-                <View className="bg-liga-600 p-3 mb-4 rounded-lg">
-                  <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
-                </View>
+                <FranjaSeccion>Categoría {año}</FranjaSeccion>
                 {jugadoresPorCategoria[año].map((jugador) => (
                   <Carnet key={jugador.id} jugador={jugador} />
                 ))}

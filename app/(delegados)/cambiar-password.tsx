@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { api } from '@/lib/api/api'
 import { CambiarPasswordDTO } from '@/lib/api/clients'
 import { useAuth } from '@/lib/hooks/use-auth'
-import { BotonUi } from '@/design-system/componentes/boton'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import { Texto } from '@/design-system/componentes/texto'
 import { LayoutAsistente } from '@/design-system/layouts/layout-asistente'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
@@ -84,12 +84,13 @@ export default function CambiarPasswordScreen() {
           </Texto>
         ) : null}
 
-        <BotonUi
+        <BotonWizard
+          testID="boton-cambiar-password"
           texto={loading ? 'Cambiando contraseña…' : 'Cambiar contraseña'}
+          icono="check"
           onPress={handleSubmit}
           deshabilitado={loading}
           cargando={loading}
-          testID="boton-cambiar-password"
         />
       </View>
     </LayoutAsistente>

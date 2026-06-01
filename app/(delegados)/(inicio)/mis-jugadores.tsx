@@ -17,6 +17,7 @@ import { queryKeys } from '@/lib/api/query-keys'
 import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
 import Carnet from '@/delegados/_components/mis-jugadores/carnet'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { FranjaSeccion } from '@/design-system/componentes'
 import ModalAccionesJugador from '@/delegados/_components/mis-jugadores/modal-acciones-jugador'
 import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-eliminar-jugador'
 import ModalTransferirJugador from '@/delegados/_components/mis-jugadores/modal-transferir-jugador'
@@ -210,15 +211,14 @@ export default function MisJugadoresScreen() {
           contentContainerStyle={{ paddingHorizontal: 10 }}
         >
           {secciones.map((seccion) => (
-            <TouchableOpacity
+            <FranjaSeccion
               key={`button-${seccion}`}
-              className="bg-liga-600 px-5 py-2 rounded-full mx-1.5"
+              variante="pill"
+              className="mx-1.5 mb-0"
               onPress={() => scrollToSection(seccion)}
             >
-              <Text className="text-white text-base font-semibold">
-                {seccion === 'delegados' ? 'DT/Delegado' : seccion}
-              </Text>
-            </TouchableOpacity>
+              {seccion === 'delegados' ? 'DT/Delegado' : String(seccion)}
+            </FranjaSeccion>
           ))}
         </ScrollView>
       </View>
@@ -230,9 +230,7 @@ export default function MisJugadoresScreen() {
         <View className="p-2.5">
           {hayDelegados && (
             <View key="delegados" onLayout={(event) => handleSectionLayout('delegados', event)}>
-              <View className="bg-liga-600 p-3 mb-4 rounded-lg shadow-md">
-                <Text className="text-white text-lg font-bold text-center">DT/Delegado</Text>
-              </View>
+              <FranjaSeccion>DT/Delegado</FranjaSeccion>
               {delegados.map((jugador) => (
                 <Carnet
                   key={jugador.id}
@@ -247,9 +245,7 @@ export default function MisJugadoresScreen() {
           )}
           {categoriasAño.map((año) => (
             <View key={año} onLayout={(event) => handleSectionLayout(año, event)}>
-              <View className="bg-liga-600 p-3 mb-4 rounded-lg shadow-md">
-                <Text className="text-white text-lg font-bold text-center">Categoría {año}</Text>
-              </View>
+              <FranjaSeccion>Categoría {año}</FranjaSeccion>
               {jugadoresPorCategoria[año].map((jugador) => (
                 <Carnet
                   key={jugador.id}

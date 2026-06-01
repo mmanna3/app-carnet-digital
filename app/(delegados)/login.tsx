@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/lib/hooks/use-auth'
-import { BotonUi } from '@/design-system/componentes/boton'
+import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import { Texto } from '@/design-system/componentes/texto'
 import { LayoutAsistente } from '@/design-system/layouts/layout-asistente'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
@@ -83,9 +83,10 @@ export default function LoginScreen() {
           </Texto>
         ) : null}
 
-        <BotonUi
+        <BotonWizard
           testID="boton-iniciar-sesion"
           texto={loading ? 'Iniciando sesión…' : 'Iniciar sesión'}
+          icono="log-in"
           onPress={handleLogin}
           deshabilitado={loading}
           cargando={loading}

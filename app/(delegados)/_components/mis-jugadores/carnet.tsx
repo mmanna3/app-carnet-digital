@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, Pressable } from 'react-native'
 import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
+import { FranjaSeccion } from '@/design-system/componentes'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
 function MiniTarjetaDisciplina({
@@ -91,11 +92,7 @@ export default function Carnet({
         </View>
       )}
       {esDelegado && (
-        <View className="bg-liga-600 py-2 px-4 border-y border-liga-700">
-          <Text className="text-white text-center font-bold text-sm uppercase tracking-wider">
-            DT/Delegado
-          </Text>
-        </View>
+        <FranjaSeccion className="mb-0 rounded-none border-x-0 border-t-0">DT/Delegado</FranjaSeccion>
       )}
       <View className={`p-4 ${esDelegado ? 'mx-2 mt-2 mb-2 rounded-xl border border-dashed border-liga-600/50' : ''}`}>
         <View className="items-center mb-4 border-b border-border-glass pb-3">

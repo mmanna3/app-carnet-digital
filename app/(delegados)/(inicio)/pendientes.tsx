@@ -6,6 +6,7 @@ import { api } from '@/lib/api/api'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { queryKeys } from '@/lib/api/query-keys'
 import Carnet from '@/delegados/_components/mis-jugadores/carnet'
+import { FranjaSeccion, COLOR_TARJETA } from '@/design-system/componentes'
 import { EstadoJugador } from '@/lib/types/estado-jugador'
 
 export default function PendientesScreen() {
@@ -87,9 +88,7 @@ export default function PendientesScreen() {
       <View className="p-2.5">
         {jugadoresRechazados.length > 0 && (
           <View>
-            <View className="bg-red-500 p-3 mb-4 rounded-lg">
-              <Text className="text-white text-lg font-bold text-center">Fichajes Rechazados</Text>
-            </View>
+            <FranjaSeccion tema={COLOR_TARJETA.ROJO}>Fichajes Rechazados</FranjaSeccion>
             {jugadoresRechazados.map((jugador) => (
               <Carnet
                 key={jugador.id}
@@ -103,9 +102,7 @@ export default function PendientesScreen() {
 
         {jugadoresAprobadosPendientesDePago.length > 0 && (
           <View>
-            <View className="bg-indigo-700 p-3 mb-4 rounded-lg">
-              <Text className="text-white text-lg font-bold text-center">Pendientes de Pago</Text>
-            </View>
+            <FranjaSeccion tema={COLOR_TARJETA.AZUL}>Pendientes de Pago</FranjaSeccion>
             {jugadoresAprobadosPendientesDePago.map((jugador) => (
               <Carnet
                 key={jugador.id}
@@ -119,11 +116,7 @@ export default function PendientesScreen() {
 
         {jugadoresPendientes.length > 0 && (
           <View>
-            <View className="bg-orange-400 p-3 mb-4 rounded-lg">
-              <Text className="text-white text-lg font-bold text-center">
-                Pendientes de Aprobación
-              </Text>
-            </View>
+            <FranjaSeccion tema="ambar">Pendientes de Aprobación</FranjaSeccion>
             {jugadoresPendientes.map((jugador) => (
               <Carnet
                 key={jugador.id}
