@@ -5,6 +5,7 @@ import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 export default function PasoCodigoEquipo() {
   const {
@@ -44,9 +45,7 @@ export default function PasoCodigoEquipo() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1" testID="titulo-codigo-equipo">
-            Ingresá el código de tu equipo
-          </Text>
+          <Titulo testID="titulo-codigo-equipo">Ingresá el código de tu equipo</Titulo>
           <Text className="text-gray-500 text-sm">Pedíselo a tu delegado</Text>
         </View>
 
@@ -73,7 +72,8 @@ export default function PasoCodigoEquipo() {
           <BotonWizard
             testID="boton-validar"
             texto={loading ? 'Validando...' : 'Validar'}
-            icono={loading ? undefined : 'check'}
+            icono="check"
+            cargando={loading}
             onPress={handleValidar}
             deshabilitado={!codigoEquipo.trim() || loading}
           />

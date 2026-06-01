@@ -150,7 +150,6 @@ export default function PasoFotosDniDelegado() {
                   () => elegirImagen('frente')
                 )
               }
-              variante="oscuro"
             />
           </View>
 
@@ -167,7 +166,6 @@ export default function PasoFotosDniDelegado() {
                   () => elegirImagen('dorso')
                 )
               }
-              variante="oscuro"
             />
           </View>
 

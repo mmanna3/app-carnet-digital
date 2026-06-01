@@ -4,6 +4,7 @@ import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 const DECLARACION =
   'Al enviar los datos, declaro ser mayor de edad o estar acompañado por un mayor de edad que autoriza que puedan publicarse fotos y videos de mi rostro en medios donde se difunda material sobre torneos organizados por la liga.'
@@ -33,7 +34,7 @@ export default function PasoAutorizacion() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Autorizar</Text>
+          <Titulo>Autorizar</Titulo>
           {nombreEquipo && (
             <Text className="text-gray-500 text-sm">
               Fichando a <Text className="font-bold">{nombre}</Text> en{' '}

@@ -7,6 +7,7 @@ import { useFichajeStore } from '@/lib/hooks/use-fichaje-store'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
   if (Platform.OS === 'ios') {
     ActionSheetIOS.showActionSheetWithOptions(
@@ -102,9 +103,7 @@ export default function PasoFoto() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">
-            Foto de la cara del jugador
-          </Text>
+          <Titulo>Foto de la cara del jugador</Titulo>
           {nombreEquipo && (
             <Text className="text-gray-500 text-sm">
               Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
@@ -132,7 +131,6 @@ export default function PasoFoto() {
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
-            variante="oscuro"
           />
           {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
           <BotonWizard

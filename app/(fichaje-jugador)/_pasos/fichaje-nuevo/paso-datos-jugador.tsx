@@ -14,6 +14,7 @@ import Progreso from '@/fichaje-jugador/_components/progreso'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
+import { Titulo } from '@/design-system/componentes'
 
 const formatearFecha = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
@@ -78,7 +79,7 @@ export default function PasoDatosJugador() {
           showsVerticalScrollIndicator={false}
         >
           <View className="mb-6">
-            <Text className="text-gray-900 text-lg font-semibold mb-1">Datos del jugador</Text>
+            <Titulo>Datos del jugador</Titulo>
             {nombreEquipo ? (
               <Text className="text-gray-500 text-sm">
                 Fichándose en <Text className="font-bold">{nombreEquipo}</Text>

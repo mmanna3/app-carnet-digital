@@ -131,7 +131,6 @@ export default function PasoFotoDelegado() {
             texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
             icono="camera"
             onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
-            variante="oscuro"
           />
           {errorCamara && <Text className="text-red-500 text-sm text-center">{errorCamara}</Text>}
           <BotonWizard

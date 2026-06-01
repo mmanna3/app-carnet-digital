@@ -17,7 +17,7 @@ export default function Cabecera({ titulo, onBack }: Props) {
   if (esDelegado) return null
 
   return (
-    <View className="border-b border-white/5 bg-surface px-4 pb-4 pt-14">
+    <View className="bg-surface px-4 pb-4 pt-14">
       <View className="min-h-[40px] flex-row items-center">
         <TouchableOpacity
           testID="boton-atras"

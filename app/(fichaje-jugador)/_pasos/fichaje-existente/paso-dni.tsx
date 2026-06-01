@@ -5,6 +5,7 @@ import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import Progreso from '@/fichaje-jugador/_components/progreso'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import BotonWizard from '@/fichaje-jugador/_components/boton-wizard'
+import { Titulo } from '@/design-system/componentes'
 
 export default function PasoDni() {
   const { dni, nombreEquipo, setDni, irAlPasoAnterior, irAlPasoSiguiente, enviarFichajeYaFichado } =
@@ -42,7 +43,7 @@ export default function PasoDni() {
 
       <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
         <View className="mb-6">
-          <Text className="text-gray-900 text-lg font-semibold mb-1">Datos generales</Text>
+          <Titulo>Datos generales</Titulo>
           {nombreEquipo ? (
             <Text className="text-gray-500 text-sm">
               Fichándose en <Text className="font-bold">{nombreEquipo}</Text>
