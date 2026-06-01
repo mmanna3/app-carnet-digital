@@ -11,7 +11,7 @@ import FixtureTodosContraTodos from '@/torneos/_zona-detalle/fixture-todos-contr
 import Jornadas from '@/torneos/_zona-detalle/jornadas'
 import Posiciones from '@/torneos/_zona-detalle/posiciones'
 import { ResumenTorneo } from '@/torneos/_zona-detalle/resumen-torneo'
-import { useHeaderConHome } from '@/torneos/_hooks/use-header-con-home'
+import { useHeaderConHome } from '@/torneos/_components/cabecera-publica'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 
 type IconName = ComponentProps<typeof Ionicons>['name']

@@ -29,8 +29,8 @@ function BotonIrInicio({ onPress }: { onPress: () => void }) {
   )
 }
 
-/** Cabecera propia: evita botones nativos de iOS 26 (círculo liquid glass descentrado). */
-export function CabeceraPublica({ titulo }: { titulo: string }) {
+/** Cabecera del flujo torneos: evita botones nativos de iOS 26 (círculo liquid glass descentrado). */
+function CabeceraTorneos({ titulo }: { titulo: string }) {
   const router = useRouter()
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
@@ -93,17 +93,20 @@ export function CabeceraPublica({ titulo }: { titulo: string }) {
   )
 }
 
-/** @deprecated Usar CabeceraPublica */
-export const CabeceraPublicaWeb = CabeceraPublica
-
-export function useCabeceraPublica({ titulo }: { titulo: string }) {
+export function useHeaderConHome({
+  titulo,
+  backgroundColor: _backgroundColor,
+}: {
+  titulo: string
+  backgroundColor?: string
+}) {
   const navigation = useNavigation()
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
       headerShadowVisible: false,
-      header: () => <CabeceraPublica titulo={titulo} />,
+      header: () => <CabeceraTorneos titulo={titulo} />,
     })
   }, [navigation, titulo])
 }
