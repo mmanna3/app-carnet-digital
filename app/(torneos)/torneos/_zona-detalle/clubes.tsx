@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo } from 'react'
-import { FlatList, Image, Text, View } from 'react-native'
+import { FlatList, Image, Linking, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import type { ClubesDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
+import { hexLinkAgrupadorOnLight } from '@/lib/design-system'
 import { EstadoCarga, EstadoVacio } from '@/design-system/componentes'
 
 /** La API devuelve ruta relativa (p. ej. `/Imagenes/Escudos/1.jpg`); Image necesita URL absoluta. */
@@ -32,12 +34,57 @@ function lineaDireccionLocalidad(direccion: string | undefined, localidad: strin
   return `${d}, ${l}`
 }
 
+function urlGoogleMaps(direccion: string | undefined, localidad: string | undefined): string | null {
+  const query = lineaDireccionLocalidad(direccion, localidad)
+  if (query === '—') return null
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+}
+
+type DireccionClubProps = {
+  direccion: string | undefined
+  localidad: string | undefined
+  colorLink: string
+}
+
+function DireccionClub({ direccion, localidad, colorLink }: DireccionClubProps) {
+  const texto = lineaDireccionLocalidad(direccion, localidad)
+  const url = urlGoogleMaps(direccion, localidad)
+
+  if (!url) {
+    return (
+      <Text className="text-sm leading-5 text-zinc-600" numberOfLines={4}>
+        {texto}
+      </Text>
+    )
+  }
+
+  return (
+    <TouchableOpacity
+      onPress={() => void Linking.openURL(url)}
+      activeOpacity={0.7}
+      accessibilityRole="link"
+      accessibilityLabel={`Abrir en Google Maps: ${texto}`}
+      className="flex-row items-start gap-1.5"
+    >
+      <Ionicons name="location-outline" size={16} color={colorLink} style={{ marginTop: 2 }} />
+      <Text
+        className="min-w-0 flex-1 text-sm leading-5 underline"
+        style={{ color: colorLink }}
+        numberOfLines={4}
+      >
+        {texto}
+      </Text>
+    </TouchableOpacity>
+  )
+}
+
 type ClubCardProps = {
   item: ClubesDTO
   uriEscudo: string | null
+  colorLink: string
 }
 
-function ClubCard({ item, uriEscudo }: ClubCardProps) {
+function ClubCard({ item, uriEscudo, colorLink }: ClubCardProps) {
   return (
     <View className="rounded-2xl border border-zinc-700 bg-white px-5 py-4">
       <View className="flex-row items-center gap-4">
@@ -57,9 +104,11 @@ function ClubCard({ item, uriEscudo }: ClubCardProps) {
           <Text className="text-base font-bold leading-5 text-zinc-900" numberOfLines={3}>
             {textoOGuion(item.equipo)}
           </Text>
-          <Text className="text-sm leading-5 text-zinc-600" numberOfLines={4}>
-            {lineaDireccionLocalidad(item.direccion, item.localidad)}
-          </Text>
+          <DireccionClub
+            direccion={item.direccion}
+            localidad={item.localidad}
+            colorLink={colorLink}
+          />
           <Text className="text-sm leading-5 text-zinc-600" numberOfLines={2}>
             Cancha: {textoOGuion(item.tipoCancha)}
           </Text>
@@ -71,13 +120,23 @@ function ClubCard({ item, uriEscudo }: ClubCardProps) {
 
 export default function Clubes() {
   const configLiga = useConfigLiga()
-  const { zonaId: zonaIdParam } = useLocalSearchParams<{ zonaId?: string }>()
+  const { zonaId: zonaIdParam, color: colorParam } = useLocalSearchParams<{
+    zonaId?: string
+    color?: string
+  }>()
 
   const zonaId = useMemo(() => {
     if (zonaIdParam == null || zonaIdParam === '') return undefined
     const n = Number(zonaIdParam)
     return Number.isFinite(n) ? n : undefined
   }, [zonaIdParam])
+
+  const colorAgrupador = useMemo(
+    () => (colorParam != null && String(colorParam).length > 0 ? String(colorParam) : undefined),
+    [colorParam]
+  )
+
+  const colorLink = useMemo(() => hexLinkAgrupadorOnLight(colorAgrupador), [colorAgrupador])
 
   const { data, isLoading, isError, error } = useApiQuery({
     key: queryKeys.zonas.clubes(zonaId),
@@ -93,9 +152,13 @@ export default function Clubes() {
 
   const renderItem = useCallback(
     ({ item }: { item: ClubesDTO }) => (
-      <ClubCard item={item} uriEscudo={uriRecursoPublicoApi(configLiga?.apiUrl, item.escudo)} />
+      <ClubCard
+        item={item}
+        uriEscudo={uriRecursoPublicoApi(configLiga?.apiUrl, item.escudo)}
+        colorLink={colorLink}
+      />
     ),
-    [configLiga?.apiUrl]
+    [configLiga?.apiUrl, colorLink]
   )
 
   if (zonaId == null) {
