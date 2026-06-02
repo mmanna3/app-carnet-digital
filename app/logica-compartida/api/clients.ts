@@ -9372,6 +9372,7 @@ export interface IInformacionInicialTorneoDTO {
 export class InformacionInicialZonaDTO implements IInformacionInicialZonaDTO {
     id?: number;
     nombre?: string | undefined;
+    orden?: number;
 
     constructor(data?: IInformacionInicialZonaDTO) {
         if (data) {
@@ -9386,6 +9387,7 @@ export class InformacionInicialZonaDTO implements IInformacionInicialZonaDTO {
         if (_data) {
             this.id = _data["id"];
             this.nombre = _data["nombre"];
+            this.orden = _data["orden"];
         }
     }
 
@@ -9400,6 +9402,7 @@ export class InformacionInicialZonaDTO implements IInformacionInicialZonaDTO {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["nombre"] = this.nombre;
+        data["orden"] = this.orden;
         return data;
     }
 }
@@ -9407,6 +9410,7 @@ export class InformacionInicialZonaDTO implements IInformacionInicialZonaDTO {
 export interface IInformacionInicialZonaDTO {
     id?: number;
     nombre?: string | undefined;
+    orden?: number;
 }
 
 export class InstanciasDTO implements IInstanciasDTO {

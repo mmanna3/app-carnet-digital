@@ -69,18 +69,18 @@ export default function Carnet({
       onPress={modoSeleccion ? onPress : undefined}
       onLongPress={modoSeleccion ? undefined : onLongPress}
       delayLongPress={400}
-      className={`m-4 overflow-hidden rounded-2xl border ${
-        esDelegado ? 'border-4 border-liga-600 glass' : 'border border-border-glass glass'
+      className={`m-4 overflow-hidden rounded-2xl bg-zinc-200 shadow-sm ${
+        esDelegado ? 'border-4 border-liga-600' : 'border border-zinc-200'
       }`}
     >
       {modoSeleccion && (
         <View
           className={`absolute top-3 left-3 z-10 w-7 h-7 rounded-full border-2 items-center justify-center ${
-            seleccionado ? 'border-green-400 bg-green-500/20' : 'border-border-glass glass'
+            seleccionado ? 'border-green-600 bg-green-100' : 'border-zinc-400 bg-white'
           }`}
         >
           {seleccionado && (
-            <Text className="text-green-400 text-base font-bold leading-none">✓</Text>
+            <Text className="text-green-700 text-base font-bold leading-none">✓</Text>
           )}
         </View>
       )}
@@ -92,19 +92,23 @@ export default function Carnet({
         </View>
       )}
       {esDelegado && (
-        <FranjaSeccion className="mb-0 rounded-none border-x-0 border-t-0">DT/Delegado</FranjaSeccion>
+        <FranjaSeccion className="mb-0 rounded-none border-x-0 border-t-0">
+          DT/Delegado
+        </FranjaSeccion>
       )}
-      <View className={`p-4 ${esDelegado ? 'mx-2 mt-2 mb-2 rounded-xl border border-dashed border-liga-600/50' : ''}`}>
-        <View className="items-center mb-4 border-b border-border-glass pb-3">
-          <Text className="text-2xl font-bold mb-1 text-zinc-100">{jugador.equipo}</Text>
-          <Text className="text-lg text-zinc-400">{jugador.torneo}</Text>
+      <View
+        className={`p-4 ${esDelegado ? 'mx-2 mt-2 mb-2 rounded-xl border border-dashed border-liga-600/60 bg-liga-50' : ''}`}
+      >
+        <View className="items-center mb-4 border-b border-zinc-200 pb-3">
+          <Text className="text-2xl font-bold mb-1 text-zinc-900">{jugador.equipo}</Text>
+          <Text className="text-lg text-zinc-600">{jugador.torneo}</Text>
         </View>
 
         <View className="mb-4 items-center">
           {jugador.fotoCarnet || muestraTarjetasAmarillas || muestraTarjetasRojas ? (
             <View className="relative h-40 w-40">
               {jugador.fotoCarnet ? (
-                <View className="h-40 w-40 overflow-hidden rounded-lg border border-border-glass">
+                <View className="h-40 w-40 overflow-hidden rounded-lg border border-zinc-300">
                   <Image
                     source={{ uri: jugador.fotoCarnet }}
                     className="h-full w-full"
@@ -126,37 +130,37 @@ export default function Carnet({
           ) : null}
         </View>
 
-        <View className="bg-surface-elevated rounded-lg p-3 border border-border-glass">
-          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
-            <Text className="text-base font-semibold text-zinc-400">DNI:</Text>
-            <Text className="text-base text-zinc-100">{jugador.dni}</Text>
+        <View className="rounded-lg border border-zinc-400/80 bg-zinc-300/80 p-3">
+          <View className="flex-row justify-between items-center py-1.5 border-b border-zinc-400/80">
+            <Text className="text-base font-semibold text-zinc-700">DNI:</Text>
+            <Text className="text-base font-medium text-zinc-950">{jugador.dni}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
-            <Text className="text-base font-semibold text-zinc-400">Nombre:</Text>
-            <Text className="text-base text-zinc-100">{jugador.nombre}</Text>
+          <View className="flex-row justify-between items-center py-1.5 border-b border-zinc-400/80">
+            <Text className="text-base font-semibold text-zinc-700">Nombre:</Text>
+            <Text className="text-base font-medium text-zinc-950">{jugador.nombre}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
-            <Text className="text-base font-semibold text-zinc-400">Apellido:</Text>
-            <Text className="text-base text-zinc-100">{jugador.apellido}</Text>
+          <View className="flex-row justify-between items-center py-1.5 border-b border-zinc-400/80">
+            <Text className="text-base font-semibold text-zinc-700">Apellido:</Text>
+            <Text className="text-base font-medium text-zinc-950">{jugador.apellido}</Text>
           </View>
-          <View className="flex-row justify-between items-center py-1.5 border-b border-border-glass">
-            <Text className="text-base font-semibold text-zinc-400">Fecha Nac:</Text>
-            <Text className="text-base text-zinc-100">
+          <View className="flex-row justify-between items-center py-1.5 border-b border-zinc-400/80">
+            <Text className="text-base font-semibold text-zinc-700">Fecha Nac:</Text>
+            <Text className="text-base font-medium text-zinc-950">
               {new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')}
             </Text>
           </View>
           <View className="flex-row justify-between items-center py-1.5">
-            <Text className="text-base font-semibold text-zinc-400">Categoría:</Text>
-            <Text className="text-base text-zinc-100">
+            <Text className="text-base font-semibold text-zinc-700">Categoría:</Text>
+            <Text className="text-base font-medium text-zinc-950">
               Cat {obtenerCategoria(jugador.fechaNacimiento)}
             </Text>
           </View>
         </View>
 
         {mostrarMotivo && 'motivo' in jugador && jugador.motivo && (
-          <View className="mt-4 p-3 bg-red-500/10 rounded-lg border border-red-500/30">
-            <Text className="text-base font-bold mb-1 text-red-400">Motivo:</Text>
-            <Text className="text-sm text-zinc-400 leading-5">{jugador.motivo}</Text>
+          <View className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3">
+            <Text className="text-base font-bold mb-1 text-red-800">Motivo:</Text>
+            <Text className="text-sm leading-5 text-zinc-700">{jugador.motivo}</Text>
           </View>
         )}
       </View>
