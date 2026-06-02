@@ -9,7 +9,14 @@ import { useAuth } from '@/lib/hooks/use-auth'
 import { getColorLiga600, useConfigLiga } from '@/lib/config/liga'
 import { useConfiguracionFichajeStore } from '@/lib/hooks/use-configuracion-fichaje-store'
 import { FondoHome } from '@/home/_components/fondo-home'
-import { PantallaPublica, Texto, Tarjeta, COLOR_TARJETA, ICONO_DONDE, VARIANTE_TARJETA } from '@/design-system/componentes'
+import {
+  PantallaPublica,
+  Texto,
+  Tarjeta,
+  COLOR_TARJETA,
+  ICONO_DONDE,
+  VARIANTE_TARJETA,
+} from '@/design-system/componentes'
 import { FUENTE_BRAND } from '@/lib/design-system/fuentes'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
@@ -154,7 +161,7 @@ export default function HomeMobile() {
               variante={VARIANTE_TARJETA.COMPACTA}
               icono="person-add-outline"
               titulo="Fichaje"
-              subtitulo="Fichaje de nuevo jugador de la liga."
+              subtitulo="Exclusivo para jugadores/as."
               color={COLOR_TARJETA.ROJO}
               onPress={handleFichajes}
               accessibilityLabel="Fichaje. Fichaje de nuevo jugador de la liga"
@@ -164,7 +171,7 @@ export default function HomeMobile() {
               className="flex-1 self-stretch"
               variante={VARIANTE_TARJETA.COMPACTA}
               icono="clipboard-outline"
-              titulo="Delegados"
+              titulo="DT/Delegado"
               subtitulo="Accedé a tu panel de gestión."
               color={COLOR_TARJETA.AZUL}
               tamanoIcono={20}
