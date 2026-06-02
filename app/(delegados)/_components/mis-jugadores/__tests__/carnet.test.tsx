@@ -27,12 +27,12 @@ describe('Carnet', () => {
 
     it('muestra el nombre', () => {
       render(<Carnet jugador={crearJugador({ nombre: 'Roberto' })} />)
-      expect(screen.getByText('Roberto')).toBeTruthy()
+      expect(screen.getByText('González, Roberto')).toBeTruthy()
     })
 
     it('muestra el apellido', () => {
       render(<Carnet jugador={crearJugador({ apellido: 'Suárez' })} />)
-      expect(screen.getByText('Suárez')).toBeTruthy()
+      expect(screen.getByText('Suárez, María')).toBeTruthy()
     })
 
     it('muestra el nombre del equipo', () => {
@@ -50,12 +50,12 @@ describe('Carnet', () => {
     // Usar constructor local (año, mes, día) para evitar problemas de timezone UTC vs local
     it('muestra los últimos 2 dígitos del año de nacimiento', () => {
       render(<Carnet jugador={crearJugador({ fechaNacimiento: new Date(2008, 5, 15) })} />)
-      expect(screen.getByText('Cat 08')).toBeTruthy()
+      expect(screen.getByText("Cat '08")).toBeTruthy()
     })
 
     it('calcula categoría correctamente para 2015', () => {
       render(<Carnet jugador={crearJugador({ fechaNacimiento: new Date(2015, 5, 1) })} />)
-      expect(screen.getByText('Cat 15')).toBeTruthy()
+      expect(screen.getByText("Cat '15")).toBeTruthy()
     })
   })
 
