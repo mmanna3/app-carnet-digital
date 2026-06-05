@@ -172,7 +172,7 @@ export default function HomeMobile() {
               variante={VARIANTE_TARJETA.COMPACTA}
               icono="clipboard-outline"
               titulo="DT/Delegado"
-              subtitulo="Accedé a tu panel de gestión."
+              subtitulo="Accedé a tu panel."
               color={COLOR_TARJETA.AZUL}
               tamanoIcono={20}
               onPress={handleDelegadosDT}

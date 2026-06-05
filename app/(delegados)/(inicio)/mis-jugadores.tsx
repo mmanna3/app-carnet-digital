@@ -22,6 +22,7 @@ import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-el
 import ModalTransferirJugador from '@/delegados/_components/mis-jugadores/modal-transferir-jugador'
 import ModalEliminarMasivo from '@/delegados/_components/mis-jugadores/modal-eliminar-masivo'
 import ModalTransferirMasivo from '@/delegados/_components/mis-jugadores/modal-transferir-masivo'
+import { temaFranjaCarnet } from '@/lib/utilidades/color-carnet'
 
 type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
 type ModalBulk = 'eliminar' | 'transferir' | null
@@ -179,6 +180,7 @@ export default function MisJugadoresScreen() {
 
   const hayDelegados = delegados.length > 0
   const secciones = hayDelegados ? ['delegados' as const, ...categoriasAño] : categoriasAño
+  const temaTorneo = temaFranjaCarnet(jugadores[0])
 
   const scrollToSection = (seccion: number | string) => {
     const position = categoryPositions[seccion]
@@ -213,6 +215,7 @@ export default function MisJugadoresScreen() {
             <FranjaSeccion
               key={`button-${seccion}`}
               variante="pill"
+              tema={temaTorneo}
               className="mx-1.5 mb-0"
               onPress={() => scrollToSection(seccion)}
             >
@@ -229,7 +232,9 @@ export default function MisJugadoresScreen() {
         <View className="p-2.5">
           {hayDelegados && (
             <View key="delegados" onLayout={(event) => handleSectionLayout('delegados', event)}>
-              <FranjaSeccion>DT/Delegado</FranjaSeccion>
+              <FranjaSeccion variante="separador" tema={temaTorneo}>
+                DT/Delegado
+              </FranjaSeccion>
               {delegados.map((jugador) => (
                 <Carnet
                   key={jugador.id}
@@ -244,7 +249,9 @@ export default function MisJugadoresScreen() {
           )}
           {categoriasAño.map((año) => (
             <View key={año} onLayout={(event) => handleSectionLayout(año, event)}>
-              <FranjaSeccion>Categoría {año}</FranjaSeccion>
+              <FranjaSeccion variante="separador" tema={temaTorneo}>
+                Categoría {año}
+              </FranjaSeccion>
               {jugadoresPorCategoria[año].map((jugador) => (
                 <Carnet
                   key={jugador.id}

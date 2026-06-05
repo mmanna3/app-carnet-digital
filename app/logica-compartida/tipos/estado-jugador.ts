@@ -18,7 +18,7 @@ export function obtenerTextoEstado(estado: EstadoJugador): string {
     case EstadoJugador.Activo:
       return 'ACTIVO'
     case EstadoJugador.Suspendido:
-      return 'CARNET SUSPENDIDO'
+      return 'SUSPENDIDO'
     case EstadoJugador.Inhabilitado:
       return 'INHABILITADO'
     case EstadoJugador.AprobadoPendienteDePago:
@@ -37,9 +37,9 @@ export function obtenerColorEstado(estado: EstadoJugador): string {
     case EstadoJugador.Activo:
       return '#66BB6A' // Verde
     case EstadoJugador.Suspendido:
-      return '#FF7043' // Naranja oscuro
+      return '#B71C1C' // Rojo (cinta de clausura en carnet)
     case EstadoJugador.Inhabilitado:
-      return '#E53935' // Rojo oscuro
+      return '#FACC15' // Amarillo (franja en carnet)
     case EstadoJugador.AprobadoPendienteDePago:
       return '#2513c2' // Azul
     default:

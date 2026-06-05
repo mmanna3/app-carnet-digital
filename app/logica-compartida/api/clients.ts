@@ -7107,6 +7107,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
     fotoCarnet?: string | undefined;
     equipo?: string | undefined;
     torneo?: string | undefined;
+    color?: string | undefined;
     estado?: number;
     esDelegado?: boolean;
     tarjetasAmarillas?: number;
@@ -7131,6 +7132,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
             this.fotoCarnet = _data["fotoCarnet"];
             this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
+            this.color = _data["color"];
             this.estado = _data["estado"];
             this.esDelegado = _data["esDelegado"];
             this.tarjetasAmarillas = _data["tarjetasAmarillas"];
@@ -7155,6 +7157,7 @@ export class CarnetDigitalDTO implements ICarnetDigitalDTO {
         data["fotoCarnet"] = this.fotoCarnet;
         data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
+        data["color"] = this.color;
         data["estado"] = this.estado;
         data["esDelegado"] = this.esDelegado;
         data["tarjetasAmarillas"] = this.tarjetasAmarillas;
@@ -7172,6 +7175,7 @@ export interface ICarnetDigitalDTO {
     fotoCarnet?: string | undefined;
     equipo?: string | undefined;
     torneo?: string | undefined;
+    color?: string | undefined;
     estado?: number;
     esDelegado?: boolean;
     tarjetasAmarillas?: number;
@@ -7187,6 +7191,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
     fotoCarnet?: string | undefined;
     equipo?: string | undefined;
     torneo?: string | undefined;
+    color?: string | undefined;
     estado?: number;
     esDelegado?: boolean;
     tarjetasAmarillas?: number;
@@ -7212,6 +7217,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
             this.fotoCarnet = _data["fotoCarnet"];
             this.equipo = _data["equipo"];
             this.torneo = _data["torneo"];
+            this.color = _data["color"];
             this.estado = _data["estado"];
             this.esDelegado = _data["esDelegado"];
             this.tarjetasAmarillas = _data["tarjetasAmarillas"];
@@ -7237,6 +7243,7 @@ export class CarnetDigitalPendienteDTO implements ICarnetDigitalPendienteDTO {
         data["fotoCarnet"] = this.fotoCarnet;
         data["equipo"] = this.equipo;
         data["torneo"] = this.torneo;
+        data["color"] = this.color;
         data["estado"] = this.estado;
         data["esDelegado"] = this.esDelegado;
         data["tarjetasAmarillas"] = this.tarjetasAmarillas;
@@ -7255,6 +7262,7 @@ export interface ICarnetDigitalPendienteDTO {
     fotoCarnet?: string | undefined;
     equipo?: string | undefined;
     torneo?: string | undefined;
+    color?: string | undefined;
     estado?: number;
     esDelegado?: boolean;
     tarjetasAmarillas?: number;

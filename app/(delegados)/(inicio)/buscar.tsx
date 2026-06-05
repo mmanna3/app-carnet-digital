@@ -9,6 +9,7 @@ import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Titulo, FranjaSeccion } from '@/design-system/componentes'
+import { temaFranjaCarnet } from '@/lib/utilidades/color-carnet'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -61,6 +62,8 @@ export default function BuscarScreen() {
   const categorias = Object.keys(jugadoresPorCategoria)
     .map(Number)
     .sort((a, b) => a - b)
+
+  const temaTorneo = jugadores.length > 0 ? temaFranjaCarnet(jugadores[0]) : undefined
 
   const scrollToCategory = (año: number) => {
     const position = categoryPositions[año]
@@ -125,6 +128,7 @@ export default function BuscarScreen() {
               <FranjaSeccion
                 key={`button-${año}`}
                 variante="pill"
+                tema={temaTorneo}
                 className="mx-1.5 mb-0"
                 onPress={() => scrollToCategory(año)}
               >
@@ -189,7 +193,9 @@ export default function BuscarScreen() {
           <View className="p-2.5">
             {categorias.map((año) => (
               <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
-                <FranjaSeccion>Categoría {año}</FranjaSeccion>
+                <FranjaSeccion variante="separador" tema={temaTorneo}>
+                  Categoría {año}
+                </FranjaSeccion>
                 {jugadoresPorCategoria[año].map((jugador) => (
                   <Carnet key={jugador.id} jugador={jugador} />
                 ))}

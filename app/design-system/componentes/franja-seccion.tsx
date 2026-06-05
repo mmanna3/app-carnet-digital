@@ -23,8 +23,8 @@ function obtenerTema(tema: TemaFranja) {
 interface Props {
   children: React.ReactNode
   tema?: TemaFranja
-  /** franja = encabezado de sección; pill = chip en navegación horizontal */
-  variante?: 'franja' | 'pill'
+  /** franja = encabezado; pill = chip; separador = división fuerte entre bloques de carnets */
+  variante?: 'franja' | 'pill' | 'separador'
   onPress?: () => void
   className?: string
   testID?: string
@@ -38,13 +38,21 @@ export function FranjaSeccion({
   className = '',
   testID,
 }: Props) {
-  const theme = obtenerTema(tema)
   const esPill = variante === 'pill'
+  const esSeparador = variante === 'separador'
+  const theme = obtenerTema(tema)
 
-  const contenido = (
+  const franja = (
     <View
-      className={`glass overflow-hidden ${esPill ? 'rounded-full px-5 py-2' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()}
-      style={{ borderWidth: 1.5, borderColor: theme.borde }}
+      className={
+        esSeparador
+          ? 'overflow-hidden rounded-xl px-6 py-12'
+          : `glass overflow-hidden ${esPill ? 'rounded-full px-5 py-2' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
+      }
+      style={{
+        borderWidth: esSeparador ? 2 : 1.5,
+        borderColor: theme.borde,
+      }}
     >
       <LinearGradient
         colors={[...theme.degradado]}
@@ -54,16 +62,27 @@ export function FranjaSeccion({
         pointerEvents="none"
       />
       <Text
-        className="text-center uppercase tracking-wide text-zinc-50"
+        className="text-center uppercase text-zinc-50"
         style={{
           fontFamily: FUENTE_DISPLAY,
-          fontSize: esPill ? 14 : 17,
-          lineHeight: esPill ? 18 : 22,
+          fontSize: esSeparador ? 22 : esPill ? 14 : 17,
+          lineHeight: esSeparador ? 28 : esPill ? 18 : 22,
+          letterSpacing: esSeparador ? 2 : 0.5,
         }}
       >
         {children}
       </Text>
     </View>
+  )
+
+  const contenido = esSeparador ? (
+    <View className={`my-8 ${className}`.trim()}>
+      <View className="mb-4 h-[3px] rounded-full" style={{ backgroundColor: theme.borde }} />
+      {franja}
+      <View className="mt-5 h-[3px] rounded-full" style={{ backgroundColor: theme.borde }} />
+    </View>
+  ) : (
+    franja
   )
 
   if (onPress) {
