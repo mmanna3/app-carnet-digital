@@ -9,7 +9,7 @@ import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Titulo, FranjaSeccion } from '@/design-system/componentes'
-import { temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
+import { colorAgrupadorEquipo, temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -19,7 +19,7 @@ export default function BuscarScreen() {
   const [isGeneratingPlanillas, setIsGeneratingPlanillas] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
-  const [categoryPositions, setCategoryPositions] = useState<Record<number, number>>({})
+  const [categoryPositions, setCategoryPositions] = useState<Record<number | string, number>>({})
 
   const buscarJugadores = async () => {
     if (!codigoEquipo.trim()) {
@@ -47,7 +47,10 @@ export default function BuscarScreen() {
     return new Date(fechaNacimiento).getFullYear()
   }
 
-  const jugadoresPorCategoria = jugadores.reduce(
+  const delegados = jugadores.filter((j) => j.esDelegado === true)
+  const jugadoresNoDelegados = jugadores.filter((j) => j.esDelegado !== true)
+
+  const jugadoresPorCategoria = jugadoresNoDelegados.reduce(
     (acc, jugador) => {
       const año = obtenerAñoCompleto(jugador.fechaNacimiento)
       if (!acc[año]) {
@@ -59,24 +62,27 @@ export default function BuscarScreen() {
     {} as Record<number, CarnetDigitalDTO[]>
   )
 
-  const categorias = Object.keys(jugadoresPorCategoria)
+  const categoriasAño = Object.keys(jugadoresPorCategoria)
     .map(Number)
     .sort((a, b) => a - b)
 
+  const hayDelegados = delegados.length > 0
+  const secciones = hayDelegados ? (['delegados' as const, ...categoriasAño] as const) : categoriasAño
   const temaTorneo = jugadores.length > 0 ? temaFranjaEquipo(jugadores) : undefined
+  const colorAgrupadorDelEquipo = jugadores.length > 0 ? colorAgrupadorEquipo(jugadores) : undefined
 
-  const scrollToCategory = (año: number) => {
-    const position = categoryPositions[año]
+  const scrollToSection = (seccion: number | string) => {
+    const position = categoryPositions[seccion]
     if (position !== undefined && scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: position, animated: true })
     }
   }
 
-  const handleCategoryLayout = (año: number, event: any) => {
+  const handleSectionLayout = (seccion: number | string, event: any) => {
     const { y } = event.nativeEvent.layout
     setCategoryPositions((prev) => ({
       ...prev,
-      [año]: y,
+      [seccion]: y,
     }))
   }
 
@@ -124,15 +130,15 @@ export default function BuscarScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 10 }}
           >
-            {categorias.map((año) => (
+            {secciones.map((seccion) => (
               <FranjaSeccion
-                key={`button-${año}`}
+                key={`button-${seccion}`}
                 variante="pill"
                 tema={temaTorneo}
                 className="mx-1.5 mb-0"
-                onPress={() => scrollToCategory(año)}
+                onPress={() => scrollToSection(seccion)}
               >
-                {String(año)}
+                {seccion === 'delegados' ? 'DT/Delegado' : String(seccion)}
               </FranjaSeccion>
             ))}
           </ScrollView>
@@ -191,8 +197,22 @@ export default function BuscarScreen() {
 
         {jugadores.length > 0 && (
           <View className="p-2.5">
-            {categorias.map((año) => (
-              <View key={año} onLayout={(event) => handleCategoryLayout(año, event)}>
+            {hayDelegados && (
+              <View key="delegados" onLayout={(event) => handleSectionLayout('delegados', event)}>
+                <FranjaSeccion variante="separador" tema={temaTorneo}>
+                  DT/Delegado
+                </FranjaSeccion>
+                {delegados.map((jugador) => (
+                  <Carnet
+                    key={jugador.id}
+                    jugador={jugador}
+                    colorAgrupadorEquipo={colorAgrupadorDelEquipo}
+                  />
+                ))}
+              </View>
+            )}
+            {categoriasAño.map((año) => (
+              <View key={año} onLayout={(event) => handleSectionLayout(año, event)}>
                 <FranjaSeccion variante="separador" tema={temaTorneo}>
                   Categoría {año}
                 </FranjaSeccion>
