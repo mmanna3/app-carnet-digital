@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, Pressable, StyleSheet, type TextProps } from 'react-native'
-import { Feather, Ionicons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient'
 import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
 import { Texto } from '@/design-system/componentes'
 import { FUENTE_DISPLAY, FUENTE_SANS_BOLD, FUENTE_SANS_SEMIBOLD } from '@/lib/design-system/fuentes'
@@ -69,18 +70,76 @@ function MiniTarjetaDisciplina({
 }
 
 type IconoFeatherFicha = React.ComponentProps<typeof Feather>['name']
-type IconoIonFicha = React.ComponentProps<typeof Ionicons>['name']
+
+function ColumnaCategoria({
+  etiqueta,
+  colorEquipo,
+  compacto = false,
+}: {
+  etiqueta: string
+  colorEquipo: string
+  compacto?: boolean
+}) {
+  const fondoOscuro = oscurecerHex(colorEquipo, 0.72)
+
+  return (
+    <View
+      className="shrink-0 flex-[1.56] items-center justify-center px-1"
+      accessibilityLabel={compacto ? 'Categoría: DT/Delegado' : `Categoría: ${etiqueta}`}
+    >
+      <View
+        className={`overflow-hidden rounded-full ${compacto ? 'px-4 py-2' : 'px-7 py-2'}`}
+        style={{
+          borderWidth: 1.5,
+          borderColor: hexConOpacidad(fondoOscuro, 0.85),
+        }}
+      >
+        <LinearGradient
+          colors={[colorEquipo, fondoOscuro]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+        {compacto ? (
+          <Text
+            className="text-center uppercase text-zinc-50"
+            style={{
+              fontFamily: FUENTE_DISPLAY,
+              fontSize: 13,
+              lineHeight: 15,
+              letterSpacing: 0.5,
+            }}
+          >
+            DT/{'\n'}Delegado
+          </Text>
+        ) : (
+          <Text
+            className="text-center uppercase text-zinc-50"
+            style={{
+              fontFamily: FUENTE_DISPLAY,
+              fontSize: 22,
+              lineHeight: 26,
+              letterSpacing: 1,
+            }}
+            numberOfLines={1}
+          >
+            {etiqueta}
+          </Text>
+        )}
+      </View>
+    </View>
+  )
+}
 
 function ColumnaDato({
   iconoFeather,
-  iconoIon,
   valor,
   descripcionAccesibilidad,
   colorIcono,
   classNameValor = 'text-zinc-900',
 }: {
-  iconoFeather?: IconoFeatherFicha
-  iconoIon?: IconoIonFicha
+  iconoFeather: IconoFeatherFicha
   valor: string
   descripcionAccesibilidad: string
   colorIcono: string
@@ -88,14 +147,10 @@ function ColumnaDato({
 }) {
   return (
     <View
-      className="min-w-0 flex-1 items-center px-1"
+      className="min-w-0 flex-[0.72] items-center px-0.5"
       accessibilityLabel={`${descripcionAccesibilidad}: ${valor}`}
     >
-      {iconoIon ? (
-        <Ionicons name={iconoIon} size={18} color={colorIcono} />
-      ) : (
-        <Feather name={iconoFeather!} size={17} color={colorIcono} />
-      )}
+      <Feather name={iconoFeather} size={17} color={colorIcono} />
       <Text
         className={`mt-1.5 text-center text-sm tabular-nums ${classNameValor}`}
         style={{ fontFamily: FUENTE_SANS_SEMIBOLD }}
@@ -107,22 +162,26 @@ function ColumnaDato({
   )
 }
 
-/** Tres datos en fila: icono + valor, sin recuadro. */
+/** Tres datos en fila: DNI — categoría (pill) — fecha de nacimiento. */
 function FichaDatosJugador({
   dni,
   fechaNacimiento,
-  categoria,
+  etiquetaCategoria,
+  esDelegado = false,
+  colorEquipo,
   colorIcono,
   classNameValor,
 }: {
   dni: string
   fechaNacimiento: string
-  categoria: string
+  etiquetaCategoria: string
+  esDelegado?: boolean
+  colorEquipo: string
   colorIcono: string
   classNameValor?: string
 }) {
   return (
-    <View className="w-full max-w-sm flex-row border-t border-zinc-200 pt-4">
+    <View className="w-full max-w-sm flex-row items-center border-t border-zinc-200 pt-4">
       <ColumnaDato
         iconoFeather="credit-card"
         valor={dni}
@@ -131,18 +190,16 @@ function FichaDatosJugador({
         classNameValor={classNameValor}
       />
       <View className="w-px self-stretch bg-zinc-200" accessibilityElementsHidden />
+      <ColumnaCategoria
+        etiqueta={etiquetaCategoria}
+        colorEquipo={colorEquipo}
+        compacto={esDelegado}
+      />
+      <View className="w-px self-stretch bg-zinc-200" accessibilityElementsHidden />
       <ColumnaDato
         iconoFeather="calendar"
         valor={fechaNacimiento}
         descripcionAccesibilidad="Fecha de nacimiento"
-        colorIcono={colorIcono}
-        classNameValor={classNameValor}
-      />
-      <View className="w-px self-stretch bg-zinc-200" accessibilityElementsHidden />
-      <ColumnaDato
-        iconoIon="football-outline"
-        valor={`Cat '${categoria}`}
-        descripcionAccesibilidad="Categoría"
         colorIcono={colorIcono}
         classNameValor={classNameValor}
       />
@@ -156,6 +213,14 @@ function hexConOpacidad(hex: string, alpha: number): string {
   const g = parseInt(h.slice(2, 4), 16)
   const b = parseInt(h.slice(4, 6), 16)
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function oscurecerHex(hex: string, factor: number): string {
+  const h = hex.replace('#', '')
+  const r = Math.min(255, Math.round(parseInt(h.slice(0, 2), 16) * factor))
+  const g = Math.min(255, Math.round(parseInt(h.slice(2, 4), 16) * factor))
+  const b = Math.min(255, Math.round(parseInt(h.slice(4, 6), 16) * factor))
+  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`
 }
 
 function DecoracionCarnet({ colorLiga }: { colorLiga: string }) {
@@ -234,7 +299,6 @@ const ROJO_CLAUSURA = '#B71C1C'
 const ROJO_CLAUSURA_BORDE = '#5D0000'
 const AMARILLO_INHABILITADO = '#FACC15'
 const GRIS_TEXTO_INHABILITADO = '#71717A'
-const GRIS_ICONO_INHABILITADO = '#A1A1AA'
 const GRIS_FRANJA_INHABILITADO = '#D4D4D8'
 
 /** Cinta oblicua tipo clausura sobre todo el carnet. */
@@ -313,7 +377,6 @@ export default function Carnet({
     (mostrarEstado || esInhabilitado || esSuspendido) && !esSuspendido
 
   const añoNacimiento = new Date(jugador.fechaNacimiento).getFullYear()
-  const categoria = añoNacimiento.toString().slice(-2)
 
   const nombreCompleto = `${jugador.apellido}, ${jugador.nombre}`.trim()
   const iniciales =
@@ -328,11 +391,10 @@ export default function Carnet({
     muestraFoto || muestraTarjetasAmarillas || muestraTarjetasRojas || !jugador.fotoCarnet
 
   const fechaNac = new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')
-  const { hexIcono, hexLink } = coloresDetalleCarnet(jugador)
+  const { hexLink } = coloresDetalleCarnet(jugador)
   const colorFranjaTorneo = hexFranjaCarnet(jugador)
   const colorFranja = esInhabilitado ? GRIS_FRANJA_INHABILITADO : colorFranjaTorneo
   const colorEquipo = esInhabilitado ? GRIS_TEXTO_INHABILITADO : hexLink
-  const colorIconoFicha = esInhabilitado ? GRIS_ICONO_INHABILITADO : hexIcono
   const leagueId = getConfigLiga()?.leagueId
 
   return (
@@ -465,8 +527,10 @@ export default function Carnet({
               <FichaDatosJugador
                 dni={String(jugador.dni ?? '—')}
                 fechaNacimiento={fechaNac}
-                categoria={categoria}
-                colorIcono={colorIconoFicha}
+                etiquetaCategoria={String(añoNacimiento)}
+                esDelegado={esDelegado}
+                colorEquipo={colorEquipo}
+                colorIcono={colorEquipo}
                 classNameValor={esInhabilitado ? 'text-zinc-500' : undefined}
               />
             </View>
