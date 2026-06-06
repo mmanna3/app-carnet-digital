@@ -48,3 +48,50 @@ export function temaFranjaCarnet(jugador: JugadorConColor): TemaFranjaCarnet {
   const color = colorAgrupadorParaCarnet(jugador).toLowerCase()
   return COLOR_A_TEMA_FRANJA[color] ?? COLOR_TARJETA.VERDE
 }
+
+function temaFranjaPorDefecto(): TemaFranjaCarnet {
+  const colorBase = getConfigLiga()?.colorBase ?? 'verde'
+  return COLOR_A_TEMA_FRANJA[colorBase] ?? COLOR_TARJETA.VERDE
+}
+
+/** Jugador de referencia para el acento del equipo (prioriza quien trae color del API). */
+export function jugadorReferenciaColorEquipo(
+  jugadores: JugadorConColor[]
+): JugadorConColor | undefined {
+  if (jugadores.length === 0) return undefined
+  return (
+    jugadores.find((j) => (j.color ?? '').trim() !== '') ??
+    jugadores.find((j) => j.esDelegado !== true) ??
+    jugadores[0]
+  )
+}
+
+/** Tema de acento para UI del equipo (slider, tabs, franjas). */
+export function temaFranjaEquipo(jugadores: JugadorConColor[]): TemaFranjaCarnet {
+  const ref = jugadorReferenciaColorEquipo(jugadores)
+  if (!ref) return temaFranjaPorDefecto()
+  return temaFranjaCarnet(ref)
+}
+
+/** Hex de acento para tabs e íconos activos del equipo seleccionado. */
+export function hexAcentoEquipo(jugadores: JugadorConColor[]): string {
+  const ref = jugadorReferenciaColorEquipo(jugadores)
+  if (!ref) return getColorLiga600()
+  return hexFranjaCarnet(ref)
+}
+
+/** Nombre de agrupador del equipo (p. ej. "azul" para FUTSAL). */
+export function colorAgrupadorEquipo(jugadores: JugadorConColor[]): string {
+  const ref = jugadorReferenciaColorEquipo(jugadores)
+  return colorAgrupadorParaCarnet(ref ?? {})
+}
+
+/** Usa el color del jugador o, si falta, el agrupador del equipo (p. ej. delegados). */
+export function jugadorParaColoresCarnet(
+  jugador: JugadorConColor,
+  colorAgrupadorEquipo?: string
+): JugadorConColor {
+  if ((jugador.color ?? '').trim()) return jugador
+  if (colorAgrupadorEquipo) return { ...jugador, color: colorAgrupadorEquipo }
+  return jugador
+}

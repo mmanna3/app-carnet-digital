@@ -9,7 +9,7 @@ import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Titulo, FranjaSeccion } from '@/design-system/componentes'
-import { temaFranjaCarnet } from '@/lib/utilidades/color-carnet'
+import { temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -63,7 +63,7 @@ export default function BuscarScreen() {
     .map(Number)
     .sort((a, b) => a - b)
 
-  const temaTorneo = jugadores.length > 0 ? temaFranjaCarnet(jugadores[0]) : undefined
+  const temaTorneo = jugadores.length > 0 ? temaFranjaEquipo(jugadores) : undefined
 
   const scrollToCategory = (año: number) => {
     const position = categoryPositions[año]

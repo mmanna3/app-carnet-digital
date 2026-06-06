@@ -7,7 +7,8 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import HeaderMenu from '@/delegados/_components/header-menu'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
-import { useConfigLiga, getColorLiga600 } from '@/lib/config/liga'
+import { useAcentoEquipoSeleccionado } from '@/lib/hooks/use-acento-equipo-seleccionado'
+import { useConfigLiga } from '@/lib/config/liga'
 import { Texto } from '@/design-system/componentes/texto'
 
 export {
@@ -21,7 +22,7 @@ const TAB_BAR_BASE_HEIGHT = 78
 export default function TabLayout() {
   const { equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore()
   useConfigLiga()
-  const colorLiga = getColorLiga600()
+  const { hexAcento } = useAcentoEquipoSeleccionado()
   const insets = useSafeAreaInsets()
   const tabBarHeight = TAB_BAR_BASE_HEIGHT + insets.bottom
 
@@ -40,7 +41,7 @@ export default function TabLayout() {
     <MenuProvider skipInstanceCheck>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: colorLiga,
+          tabBarActiveTintColor: hexAcento,
           tabBarInactiveTintColor: '#71717a',
           tabBarLabelStyle: { fontSize: 12 },
           headerStyle: { backgroundColor: '#0a0a0b', height: 110 },

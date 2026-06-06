@@ -6,7 +6,7 @@ import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
 import { Texto } from '@/design-system/componentes'
 import { FUENTE_DISPLAY, FUENTE_SANS_BOLD, FUENTE_SANS_SEMIBOLD } from '@/lib/design-system/fuentes'
 import { getConfigLiga } from '@/lib/config/liga'
-import { coloresDetalleCarnet, hexFranjaCarnet } from '@/lib/utilidades/color-carnet'
+import { coloresDetalleCarnet, hexFranjaCarnet, jugadorParaColoresCarnet } from '@/lib/utilidades/color-carnet'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
 /** Logos por liga (require estático para Metro; mismas rutas que home). */
@@ -352,6 +352,8 @@ function FranjaClausuraSuspendido() {
 
 interface CarnetProps {
   jugador: CarnetDigitalDTO | CarnetDigitalPendienteDTO
+  /** Agrupador del equipo cuando el jugador no trae color (p. ej. DT/delegado). */
+  colorAgrupadorEquipo?: string
   mostrarEstado?: boolean
   mostrarMotivo?: boolean
   onLongPress?: () => void
@@ -362,6 +364,7 @@ interface CarnetProps {
 
 export default function Carnet({
   jugador,
+  colorAgrupadorEquipo,
   mostrarEstado = false,
   mostrarMotivo = false,
   onLongPress,
@@ -391,8 +394,9 @@ export default function Carnet({
     muestraFoto || muestraTarjetasAmarillas || muestraTarjetasRojas || !jugador.fotoCarnet
 
   const fechaNac = new Date(jugador.fechaNacimiento).toLocaleDateString('es-AR')
-  const { hexLink } = coloresDetalleCarnet(jugador)
-  const colorFranjaTorneo = hexFranjaCarnet(jugador)
+  const jugadorColor = jugadorParaColoresCarnet(jugador, colorAgrupadorEquipo)
+  const { hexLink } = coloresDetalleCarnet(jugadorColor)
+  const colorFranjaTorneo = hexFranjaCarnet(jugadorColor)
   const colorFranja = esInhabilitado ? GRIS_FRANJA_INHABILITADO : colorFranjaTorneo
   const colorEquipo = esInhabilitado ? GRIS_TEXTO_INHABILITADO : hexLink
   const leagueId = getConfigLiga()?.leagueId
@@ -410,10 +414,13 @@ export default function Carnet({
         esDelegado
           ? esInhabilitado
             ? 'border-2 border-zinc-300'
-            : 'border-2 border-liga-600'
+            : 'border-2'
           : 'border-zinc-200'
       }`}
-      style={estilosFoto.carnet}
+      style={[
+        estilosFoto.carnet,
+        esDelegado && !esInhabilitado ? { borderColor: colorFranjaTorneo } : undefined,
+      ]}
     >
       <View className="relative z-10 h-1.5" style={{ backgroundColor: colorFranja }} />
       <DecoracionCarnet colorLiga={colorFranja} />
@@ -450,15 +457,24 @@ export default function Carnet({
 
         {esDelegado && (
           <View
-            className={`border-b px-4 py-2 ${
-              esInhabilitado ? 'border-zinc-300 bg-zinc-300' : 'border-liga-600/30 bg-liga-50'
-            }`}
+            className={`border-b px-4 py-2 ${esInhabilitado ? 'border-zinc-300 bg-zinc-300' : ''}`}
+            style={
+              esInhabilitado
+                ? undefined
+                : {
+                    borderBottomColor: hexConOpacidad(colorEquipo, 0.3),
+                    backgroundColor: hexConOpacidad(colorEquipo, 0.08),
+                  }
+            }
           >
             <Text
               className={`text-center text-xs uppercase tracking-wider ${
-                esInhabilitado ? 'text-zinc-500' : 'text-liga-800'
+                esInhabilitado ? 'text-zinc-500' : ''
               }`}
-              style={{ fontFamily: FUENTE_SANS_SEMIBOLD }}
+              style={{
+                fontFamily: FUENTE_SANS_SEMIBOLD,
+                color: esInhabilitado ? undefined : colorEquipo,
+              }}
             >
               DT / Delegado
             </Text>

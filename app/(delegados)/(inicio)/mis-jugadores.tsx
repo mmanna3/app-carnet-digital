@@ -22,7 +22,7 @@ import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-el
 import ModalTransferirJugador from '@/delegados/_components/mis-jugadores/modal-transferir-jugador'
 import ModalEliminarMasivo from '@/delegados/_components/mis-jugadores/modal-eliminar-masivo'
 import ModalTransferirMasivo from '@/delegados/_components/mis-jugadores/modal-transferir-masivo'
-import { temaFranjaCarnet } from '@/lib/utilidades/color-carnet'
+import { colorAgrupadorEquipo, temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
 
 type ModalActiva = 'acciones' | 'eliminar' | 'transferir' | null
 type ModalBulk = 'eliminar' | 'transferir' | null
@@ -180,7 +180,8 @@ export default function MisJugadoresScreen() {
 
   const hayDelegados = delegados.length > 0
   const secciones = hayDelegados ? ['delegados' as const, ...categoriasAño] : categoriasAño
-  const temaTorneo = temaFranjaCarnet(jugadores[0])
+  const temaTorneo = temaFranjaEquipo(jugadores)
+  const colorAgrupadorDelEquipo = colorAgrupadorEquipo(jugadores)
 
   const scrollToSection = (seccion: number | string) => {
     const position = categoryPositions[seccion]
@@ -239,6 +240,7 @@ export default function MisJugadoresScreen() {
                 <Carnet
                   key={jugador.id}
                   jugador={jugador}
+                  colorAgrupadorEquipo={colorAgrupadorDelEquipo}
                   modoSeleccion={modoSeleccion}
                   seleccionado={false}
                   onPress={undefined}
