@@ -19,6 +19,9 @@ const LOGOS_LIGAS: Record<string, number> = {
   luefi: require('@/assets/ligas/luefi/icono.png'),
 }
 
+const ANCHO_FOTO = 192
+const GAP_FOTO_TARJETAS = 12
+
 const estilosFoto = StyleSheet.create({
   marco: {
     shadowColor: '#000',
@@ -508,7 +511,7 @@ export default function Carnet({
 
           <View className="items-center border-t border-zinc-200 pt-5">
             {muestraBloqueFoto && (
-              <View className="flex-row items-start justify-center gap-3">
+              <View className="relative w-full items-center">
                 <View className="relative" style={estilosFoto.marco}>
                   {muestraFoto ? (
                     <View
@@ -528,7 +531,10 @@ export default function Carnet({
                 </View>
 
                 {(muestraTarjetasAmarillas || muestraTarjetasRojas) && (
-                  <View className="gap-2 pt-2">
+                  <View
+                    className="absolute gap-2 pt-2"
+                    style={{ left: '50%', marginLeft: ANCHO_FOTO / 2 + GAP_FOTO_TARJETAS }}
+                  >
                     {muestraTarjetasAmarillas && (
                       <MiniTarjetaDisciplina cantidad={ta} variante="amarilla" />
                     )}
