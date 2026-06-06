@@ -6,7 +6,11 @@ import { CarnetDigitalDTO, CarnetDigitalPendienteDTO } from '@/lib/api/clients'
 import { Texto } from '@/design-system/componentes'
 import { FUENTE_DISPLAY, FUENTE_SANS_BOLD, FUENTE_SANS_SEMIBOLD } from '@/lib/design-system/fuentes'
 import { getConfigLiga } from '@/lib/config/liga'
-import { coloresDetalleCarnet, hexFranjaCarnet, jugadorParaColoresCarnet } from '@/lib/utilidades/color-carnet'
+import {
+  coloresDetalleCarnet,
+  hexFranjaCarnet,
+  jugadorParaColoresCarnet,
+} from '@/lib/utilidades/color-carnet'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
 /** Logos por liga (require estático para Metro; mismas rutas que home). */
@@ -411,11 +415,7 @@ export default function Carnet({
       className={`relative m-4 overflow-hidden rounded-2xl border ${
         esInhabilitado ? 'bg-zinc-100' : 'bg-white'
       } ${
-        esDelegado
-          ? esInhabilitado
-            ? 'border-2 border-zinc-300'
-            : 'border-2'
-          : 'border-zinc-200'
+        esDelegado ? (esInhabilitado ? 'border-2 border-zinc-300' : 'border-2') : 'border-zinc-200'
       }`}
       style={[
         estilosFoto.carnet,
@@ -499,7 +499,8 @@ export default function Carnet({
             </Text>
             <Texto
               variante="caption"
-              className={`mt-1.5 text-center ${esInhabilitado ? 'text-zinc-400' : 'text-zinc-500'}`}
+              className={`mt-1.5 text-center text-lg tracking-wide ${esInhabilitado ? 'text-zinc-400' : 'text-zinc-900'}`}
+              style={{ fontFamily: FUENTE_SANS_BOLD }}
             >
               {jugador.torneo}
             </Texto>
