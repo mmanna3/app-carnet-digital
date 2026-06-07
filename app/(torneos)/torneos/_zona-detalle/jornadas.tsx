@@ -451,14 +451,12 @@ function PillJornada({
       {seleccionada ? (
         <FranjaSeccion
           variante="pill"
+          formaPill="circulo"
           tema={temaTorneo}
-          className="mb-0 items-center justify-center p-0"
+          className="mb-0"
           style={{
             width: DIAMETRO_PILL_JORNADA,
             height: DIAMETRO_PILL_JORNADA,
-            padding: 0,
-            alignItems: 'center',
-            justifyContent: 'center',
           }}
           onPress={onPress}
         >
