@@ -184,7 +184,10 @@ function Celda({
       : 'pl-1.5 pr-1 py-2.5'
     : clasePaddingCelda(encabezado, borde)
   return (
-    <View style={{ width: ancho, minWidth: ancho }} className={`shrink-0 justify-center ${padding}`}>
+    <View
+      style={{ width: ancho, minWidth: ancho }}
+      className={`shrink-0 justify-center ${padding}`}
+    >
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}

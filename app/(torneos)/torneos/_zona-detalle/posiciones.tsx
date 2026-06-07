@@ -121,7 +121,10 @@ function Celda({
       ? 'px-2 py-2.5'
       : 'px-1.5 py-2.5'
   return (
-    <View style={{ width: ancho, minWidth: ancho }} className={`shrink-0 justify-center ${padding}`}>
+    <View
+      style={{ width: ancho, minWidth: ancho }}
+      className={`shrink-0 justify-center ${padding}`}
+    >
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
