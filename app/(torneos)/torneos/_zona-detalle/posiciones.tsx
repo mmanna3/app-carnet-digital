@@ -25,7 +25,7 @@ function textoOGuion(s: string | undefined) {
 
 /** Anchos mínimos por columna (sin líneas verticales entre columnas). */
 const ANCHO = {
-  pos: 38,
+  pos: 40,
   esc: 44,
   equipo: 148,
   num: 34,
@@ -105,11 +105,14 @@ function Celda({
   encabezado?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
-  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-800'
+  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-900'
   return (
-    <View style={{ width: ancho, minWidth: ancho }} className="shrink-0 justify-center px-1.5 py-2">
+    <View
+      style={{ width: ancho, minWidth: ancho }}
+      className={`shrink-0 justify-center ${encabezado ? 'px-2 py-2.5' : 'px-1.5 py-2.5'}`}
+    >
       <Text
-        className={`text-sm leading-5 ${colorTexto} ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
+        className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
         numberOfLines={2}
       >
