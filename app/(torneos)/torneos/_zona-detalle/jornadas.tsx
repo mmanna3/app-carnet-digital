@@ -23,6 +23,7 @@ import {
   Texto,
   type TemaFranja,
 } from '@/design-system/componentes'
+import { anchoColumnaPorTexto, useAnchoColumnaEquipo } from '@/torneos/_zona-detalle/anchos-tabla'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -120,29 +121,19 @@ function celdaResultadoCategoria(
 }
 
 /** Ancho por header: el título manda (contenido ≤ 2 caracteres). Misma lógica para P.T. / P.J. */
-const ANCHO_CHAR_HEADER = 9
-const PADDING_HEADER = 16
-const ANCHO_MIN_COL = 28
-
-function anchoColumnaPorHeader(texto: string): number {
-  const n = texto.trim().length
-  return Math.max(ANCHO_MIN_COL, n * ANCHO_CHAR_HEADER + PADDING_HEADER)
-}
-
 const ANCHO = {
   esc: 44,
-  equipo: 148,
-  pt: anchoColumnaPorHeader('P.T.'),
-  pj: anchoColumnaPorHeader('P.J.'),
+  pt: anchoColumnaPorTexto('P.T.'),
+  pj: anchoColumnaPorTexto('P.J.'),
 } as const
 
 function anchosColumnasCategorias(nombres: string[]): number[] {
-  return nombres.map(anchoColumnaPorHeader)
+  return nombres.map(anchoColumnaPorTexto)
 }
 
-function anchoTablaJornadas(nombresCategorias: string[]): number {
+function anchoTablaJornadas(nombresCategorias: string[], anchoEquipo: number): number {
   const cats = anchosColumnasCategorias(nombresCategorias)
-  return ANCHO.esc + ANCHO.equipo + cats.reduce((a, b) => a + b, 0) + ANCHO.pt + ANCHO.pj
+  return ANCHO.esc + anchoEquipo + cats.reduce((a, b) => a + b, 0) + ANCHO.pt + ANCHO.pj
 }
 
 function numeroDeTituloFecha(titulo: string | undefined): string {
@@ -173,6 +164,7 @@ function Celda({
   numberOfLines = 2,
   encabezado = false,
   borde,
+  columnaEquipo = false,
 }: {
   children: React.ReactNode
   ancho: number
@@ -182,18 +174,21 @@ function Celda({
   numberOfLines?: number
   encabezado?: boolean
   borde?: 'inicio' | 'fin'
+  columnaEquipo?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
   const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-900'
+  const padding = columnaEquipo
+    ? encabezado
+      ? 'pl-2 pr-1 py-2.5'
+      : 'pl-1.5 pr-1 py-2.5'
+    : clasePaddingCelda(encabezado, borde)
   return (
-    <View
-      style={{ width: ancho, minWidth: ancho }}
-      className={`shrink-0 justify-center ${clasePaddingCelda(encabezado, borde)}`}
-    >
+    <View style={{ width: ancho, minWidth: ancho }} className={`shrink-0 justify-center ${padding}`}>
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
-        numberOfLines={numberOfLines}
+        numberOfLines={columnaEquipo ? 1 : numberOfLines}
       >
         {children}
       </Text>
@@ -204,16 +199,18 @@ function Celda({
 function FilaEncabezadoTablaJornadas({
   nombresCategorias,
   anchosCategorias,
+  anchoEquipo,
 }: {
   nombresCategorias: string[]
   anchosCategorias: number[]
+  anchoEquipo: number
 }) {
   return (
     <View className="flex-row rounded-t-2xl border-b border-zinc-700 bg-zinc-900">
       <Celda ancho={ANCHO.esc} alinear="center" negrita encabezado borde="inicio">
         Esc
       </Celda>
-      <Celda ancho={ANCHO.equipo} alinear="left" negrita encabezado>
+      <Celda ancho={anchoEquipo} alinear="left" negrita encabezado columnaEquipo>
         Equipo
       </Celda>
       {nombresCategorias.map((cat, i) => (
@@ -235,6 +232,7 @@ function FilaEquipoTabla({
   equipo,
   nombresCategorias,
   anchosCategorias,
+  anchoEquipo,
   lado,
   apiUrl,
   visitanteConMasPartidosDebajo,
@@ -242,6 +240,7 @@ function FilaEquipoTabla({
   equipo: JornadaPorEquipoDTO | undefined
   nombresCategorias: string[]
   anchosCategorias: number[]
+  anchoEquipo: number
   lado: 'local' | 'visitante'
   apiUrl: string | undefined
   /** Solo para la fila visitante: borde más marcado si sigue otro partido. */
@@ -272,7 +271,7 @@ function FilaEquipoTabla({
           <View className="h-8 w-8 rounded-md bg-gray-100" />
         )}
       </View>
-      <Celda ancho={ANCHO.equipo} alinear="left">
+      <Celda ancho={anchoEquipo} alinear="left" columnaEquipo>
         {textoOGuion(equipo?.equipo)}
       </Celda>
       {nombresCategorias.map((cat, i) => (
@@ -303,11 +302,17 @@ function CardFechaJornadas({
     () => anchosColumnasCategorias(nombresCategorias),
     [nombresCategorias]
   )
-  const anchoTotal = anchoTablaJornadas(nombresCategorias)
+  const nombresEquipos = useMemo(
+    () => jornadas.flatMap((j) => [j.local?.equipo, j.visitante?.equipo]),
+    [jornadas]
+  )
+  const { anchoEquipo, medidorAnchoEquipo } = useAnchoColumnaEquipo(nombresEquipos)
+  const anchoTotal = anchoTablaJornadas(nombresCategorias, anchoEquipo)
   const ultimoIndicePartido = jornadas.length - 1
 
   return (
     <View className="mb-3">
+      {medidorAnchoEquipo}
       <Texto
         variante="titulo"
         className={`mb-1 px-0.5 text-center text-zinc-100 ${Platform.OS === 'web' ? 'text-2xl' : 'text-xl'}`}
@@ -328,6 +333,7 @@ function CardFechaJornadas({
             <FilaEncabezadoTablaJornadas
               nombresCategorias={nombresCategorias}
               anchosCategorias={anchosCategorias}
+              anchoEquipo={anchoEquipo}
             />
             {jornadas.map((j, i) => {
               const hayMasPartidos = i < ultimoIndicePartido
@@ -337,6 +343,7 @@ function CardFechaJornadas({
                     equipo={j.local}
                     nombresCategorias={nombresCategorias}
                     anchosCategorias={anchosCategorias}
+                    anchoEquipo={anchoEquipo}
                     lado="local"
                     apiUrl={apiUrl}
                   />
@@ -344,6 +351,7 @@ function CardFechaJornadas({
                     equipo={j.visitante}
                     nombresCategorias={nombresCategorias}
                     anchosCategorias={anchosCategorias}
+                    anchoEquipo={anchoEquipo}
                     lado="visitante"
                     apiUrl={apiUrl}
                     visitanteConMasPartidosDebajo={hayMasPartidos}

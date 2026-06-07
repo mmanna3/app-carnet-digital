@@ -8,6 +8,7 @@ import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 import { ContenedorTabla, EstadoCarga, EstadoVacio, Texto } from '@/design-system/componentes'
+import { useAnchoColumnaEquipo } from '@/torneos/_zona-detalle/anchos-tabla'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -27,7 +28,6 @@ function textoOGuion(s: string | undefined) {
 const ANCHO = {
   pos: 40,
   esc: 44,
-  equipo: 148,
   num: 34,
   goles: 38,
   pts: 40,
@@ -39,21 +39,26 @@ function titulosTabla(mostrarGoles: boolean): string[] {
   return t
 }
 
-function anchoColumna(i: number, mostrarGoles: boolean, numColumnas: number): number {
+function anchoColumna(
+  i: number,
+  mostrarGoles: boolean,
+  numColumnas: number,
+  anchoEquipo: number
+): number {
   if (i === 0) return ANCHO.pos
   if (i === 1) return ANCHO.esc
-  if (i === 2) return ANCHO.equipo
+  if (i === 2) return anchoEquipo
   if (i === 3) return ANCHO.pts
   if (mostrarGoles && i >= numColumnas - 3 && i <= numColumnas - 1) return ANCHO.goles
   return ANCHO.num
 }
 
 /** Suma exacta de columnas: evita hueco vacío a la derecha al hacer scroll horizontal. */
-function anchoTablaTotal(mostrarGoles: boolean): number {
+function anchoTablaTotal(mostrarGoles: boolean, anchoEquipo: number): number {
   return (
     ANCHO.pos +
     ANCHO.esc +
-    ANCHO.equipo +
+    anchoEquipo +
     ANCHO.num * 5 +
     (mostrarGoles ? ANCHO.goles * 3 : 0) +
     ANCHO.pts
@@ -96,6 +101,7 @@ function Celda({
   negrita = false,
   tabular = false,
   encabezado = false,
+  columnaEquipo = false,
 }: {
   children: React.ReactNode
   ancho: number
@@ -103,18 +109,23 @@ function Celda({
   negrita?: boolean
   tabular?: boolean
   encabezado?: boolean
+  columnaEquipo?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
   const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-900'
+  const padding = columnaEquipo
+    ? encabezado
+      ? 'pl-2 pr-1 py-2.5'
+      : 'pl-1.5 pr-1 py-2.5'
+    : encabezado
+      ? 'px-2 py-2.5'
+      : 'px-1.5 py-2.5'
   return (
-    <View
-      style={{ width: ancho, minWidth: ancho }}
-      className={`shrink-0 justify-center ${encabezado ? 'px-2 py-2.5' : 'px-1.5 py-2.5'}`}
-    >
+    <View style={{ width: ancho, minWidth: ancho }} className={`shrink-0 justify-center ${padding}`}>
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
-        numberOfLines={2}
+        numberOfLines={columnaEquipo ? 1 : 2}
       >
         {children}
       </Text>
@@ -122,7 +133,13 @@ function Celda({
   )
 }
 
-function FilaEncabezado({ mostrarGoles }: { mostrarGoles: boolean }) {
+function FilaEncabezado({
+  mostrarGoles,
+  anchoEquipo,
+}: {
+  mostrarGoles: boolean
+  anchoEquipo: number
+}) {
   const titulos = titulosTabla(mostrarGoles)
   const n = titulos.length
   return (
@@ -130,11 +147,12 @@ function FilaEncabezado({ mostrarGoles }: { mostrarGoles: boolean }) {
       {titulos.map((h, i) => (
         <Celda
           key={h}
-          ancho={anchoColumna(i, mostrarGoles, n)}
+          ancho={anchoColumna(i, mostrarGoles, n, anchoEquipo)}
           alinear={i <= 2 ? 'left' : 'center'}
           negrita
           encabezado
           tabular={i === 3 || i >= 4}
+          columnaEquipo={h === 'Equipo'}
         >
           {h}
         </Celda>
@@ -147,10 +165,12 @@ function FilaEquipo({
   r,
   apiUrl,
   mostrarGoles,
+  anchoEquipo,
 }: {
   r: PosicionDelEquipoDTO
   apiUrl: string | undefined
   mostrarGoles: boolean
+  anchoEquipo: number
 }) {
   const uri = uriRecursoPublicoApi(apiUrl, r.escudo)
   const titulos = titulosTabla(mostrarGoles)
@@ -159,7 +179,7 @@ function FilaEquipo({
   return (
     <View className="flex-row border-b border-gray-100">
       {titulos.map((label, i) => {
-        const ancho = anchoColumna(i, mostrarGoles, n)
+        const ancho = anchoColumna(i, mostrarGoles, n, anchoEquipo)
         if (label === 'Esc') {
           return (
             <View
@@ -182,7 +202,13 @@ function FilaEquipo({
         }
         const alinear: 'left' | 'center' = label === 'Equipo' ? 'left' : 'center'
         return (
-          <Celda key={label} ancho={ancho} alinear={alinear} tabular={label !== 'Equipo'}>
+          <Celda
+            key={label}
+            ancho={ancho}
+            alinear={alinear}
+            tabular={label !== 'Equipo'}
+            columnaEquipo={label === 'Equipo'}
+          >
             {valorCeldaPosicion(label, r)}
           </Celda>
         )
@@ -221,9 +247,11 @@ function TablaCategoria({
   mostrarGoles: boolean
 }) {
   const renglones = bloque.renglones ?? []
-  const anchoTotal = anchoTablaTotal(mostrarGoles)
+  const { anchoEquipo, medidorAnchoEquipo } = useAnchoColumnaEquipo(renglones.map((r) => r.equipo))
+  const anchoTotal = anchoTablaTotal(mostrarGoles, anchoEquipo)
   return (
     <View className="my-5">
+      {medidorAnchoEquipo}
       <Texto
         variante="titulo"
         className={`mb-3 px-0.5 text-center text-zinc-100 ${Platform.OS === 'web' ? 'text-2xl' : 'text-xl'}`}
@@ -238,13 +266,14 @@ function TablaCategoria({
       ) : (
         <ContenedorTabla horizontal>
           <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
-            <FilaEncabezado mostrarGoles={mostrarGoles} />
+            <FilaEncabezado mostrarGoles={mostrarGoles} anchoEquipo={anchoEquipo} />
             {renglones.map((r, i) => (
               <FilaEquipo
                 key={`${r.equipo ?? 'eq'}-${i}`}
                 r={r}
                 apiUrl={apiUrl}
                 mostrarGoles={mostrarGoles}
+                anchoEquipo={anchoEquipo}
               />
             ))}
           </View>
