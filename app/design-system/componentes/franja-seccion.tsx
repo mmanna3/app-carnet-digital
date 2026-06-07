@@ -27,6 +27,7 @@ interface Props {
   variante?: 'franja' | 'pill' | 'separador'
   onPress?: () => void
   className?: string
+  style?: View['props']['style']
   testID?: string
 }
 
@@ -36,6 +37,7 @@ export function FranjaSeccion({
   variante = 'franja',
   onPress,
   className = '',
+  style,
   testID,
 }: Props) {
   const esPill = variante === 'pill'
@@ -49,10 +51,13 @@ export function FranjaSeccion({
           ? 'overflow-hidden rounded-xl px-6 py-12'
           : `glass overflow-hidden ${esPill ? 'rounded-full px-5 py-2' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
       }
-      style={{
-        borderWidth: esSeparador ? 2 : 1.5,
-        borderColor: theme.borde,
-      }}
+      style={[
+        {
+          borderWidth: esSeparador ? 2 : 1.5,
+          borderColor: theme.borde,
+        },
+        style,
+      ]}
     >
       <LinearGradient
         colors={[...theme.degradado]}

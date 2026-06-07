@@ -1,13 +1,28 @@
-import React, { useMemo, useState } from 'react'
-import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  Image,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  type LayoutChangeEvent,
+} from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import type { FechasParaJornadasDTO, JornadaPorEquipoDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
-import { hexIconoAgrupador } from '@/lib/design-system'
-import { ContenedorTabla, EstadoCarga, EstadoVacio, Texto } from '@/design-system/componentes'
+import { temaFranjaCarnet } from '@/lib/utilidades/color-carnet'
+import {
+  ContenedorTabla,
+  EstadoCarga,
+  EstadoVacio,
+  FranjaSeccion,
+  Texto,
+  type TemaFranja,
+} from '@/design-system/componentes'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -135,6 +150,9 @@ function numeroDeTituloFecha(titulo: string | undefined): string {
   const sinPrefijo = t.replace(/^Fecha\s+/i, '').trim()
   return sinPrefijo.length > 0 ? sinPrefijo : textoOGuion(titulo)
 }
+
+/** Mismo diámetro para seleccionada y no seleccionada → círculo, no óvalo. */
+const DIAMETRO_PILL_JORNADA = 48
 
 /** Misma idea que `Celda` en posiciones.tsx (sin líneas verticales entre columnas). */
 function Celda({
@@ -347,8 +365,8 @@ export default function Jornadas() {
     [colorParam]
   )
 
-  const colorFondoChipSeleccionado = useMemo(
-    () => hexIconoAgrupador(colorAgrupador),
+  const temaTorneo = useMemo(
+    () => temaFranjaCarnet({ color: colorAgrupador }),
     [colorAgrupador]
   )
 
@@ -387,7 +405,7 @@ export default function Jornadas() {
       key={zonaId}
       fechas={fechas}
       apiUrl={configLiga?.apiUrl}
-      colorFondoChipSeleccionado={colorFondoChipSeleccionado}
+      temaTorneo={temaTorneo}
     />
   )
 }
@@ -395,14 +413,10 @@ export default function Jornadas() {
 type JornadasConSelectorFechaProps = {
   fechas: FechasParaJornadasDTO[]
   apiUrl: string | undefined
-  colorFondoChipSeleccionado: string
+  temaTorneo: TemaFranja
 }
 
-function JornadasConSelectorFecha({
-  fechas,
-  apiUrl,
-  colorFondoChipSeleccionado,
-}: JornadasConSelectorFechaProps) {
+function JornadasConSelectorFecha({ fechas, apiUrl, temaTorneo }: JornadasConSelectorFechaProps) {
   const indiceDefault = useMemo(() => indiceUltimaFechaConResultados(fechas), [fechas])
 
   const [indiceElegido, setIndiceElegido] = useState<number | null>(null)
@@ -413,32 +427,87 @@ function JornadasConSelectorFecha({
 
   const fechaMostrada = fechas[indiceSeguro]
 
+  const scrollRef = useRef<ScrollView>(null)
+  const pillLayouts = useRef<Map<number, { x: number; width: number }>>(new Map())
+  const anchoScroll = useRef(0)
+
+  const scrollHastaIndice = useCallback((index: number, animated: boolean) => {
+    const layout = pillLayouts.current.get(index)
+    if (!layout || !scrollRef.current) return
+    const offset = layout.x - (anchoScroll.current / 2 - layout.width / 2)
+    scrollRef.current.scrollTo({ x: Math.max(0, offset), animated })
+  }, [])
+
+  const esSeleccionUsuario = indiceElegido !== null
+
+  useEffect(() => {
+    scrollHastaIndice(indiceSeguro, esSeleccionUsuario)
+  }, [indiceSeguro, esSeleccionUsuario, scrollHastaIndice])
+
+  const onPillLayout = useCallback(
+    (index: number, event: LayoutChangeEvent) => {
+      const { x, width } = event.nativeEvent.layout
+      pillLayouts.current.set(index, { x, width })
+      if (index === indiceSeguro) {
+        scrollHastaIndice(index, esSeleccionUsuario)
+      }
+    },
+    [indiceSeguro, esSeleccionUsuario, scrollHastaIndice]
+  )
+
   return (
     <View className="flex-1">
-      <View className="border-b border-border-glass bg-surface-elevated px-2 py-2.5">
+      <View className="z-[1] border-b border-border-glass bg-surface-elevated py-2.5">
         <ScrollView
+          ref={scrollRef}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
+          contentContainerStyle={{ paddingHorizontal: 10, alignItems: 'center' }}
+          onLayout={(e) => {
+            anchoScroll.current = e.nativeEvent.layout.width
+            scrollHastaIndice(indiceSeguro, esSeleccionUsuario)
+          }}
         >
           {fechas.map((fecha, index) => {
             const seleccionada = index === indiceSeguro
+            const label = numeroDeTituloFecha(fecha.titulo)
+
+            if (seleccionada) {
+              return (
+                <View key={`fecha-${index}`} onLayout={(e) => onPillLayout(index, e)}>
+                  <FranjaSeccion
+                    variante="pill"
+                    tema={temaTorneo}
+                    className="mx-1.5 mb-0 items-center justify-center p-0"
+                    style={{
+                      width: DIAMETRO_PILL_JORNADA,
+                      height: DIAMETRO_PILL_JORNADA,
+                    }}
+                    onPress={() => setIndiceElegido(index)}
+                  >
+                    {label}
+                  </FranjaSeccion>
+                </View>
+              )
+            }
+
             return (
               <TouchableOpacity
                 key={`fecha-${index}`}
-                className={`rounded-full px-5 py-2.5 ${seleccionada ? '' : 'border border-border-glass bg-white/10'}`}
-                style={seleccionada ? { backgroundColor: colorFondoChipSeleccionado } : undefined}
+                className="mx-1.5 items-center justify-center rounded-full border border-border-glass bg-white/10"
+                style={{ width: DIAMETRO_PILL_JORNADA, height: DIAMETRO_PILL_JORNADA }}
+                onLayout={(e) => onPillLayout(index, e)}
                 onPress={() => setIndiceElegido(index)}
                 accessibilityRole="button"
-                accessibilityState={{ selected: seleccionada }}
+                accessibilityState={{ selected: false }}
                 accessibilityLabel={textoOGuion(fecha.titulo)}
               >
                 <Texto
                   variante="titulo"
-                  className={`${Platform.OS === 'web' ? 'text-xl' : 'text-lg'} ${seleccionada ? 'text-black' : 'text-zinc-400'}`}
+                  className={`${Platform.OS === 'web' ? 'text-xl' : 'text-lg'} text-center text-zinc-400`}
                   numberOfLines={1}
                 >
-                  {numeroDeTituloFecha(fecha.titulo)}
+                  {label}
                 </Texto>
               </TouchableOpacity>
             )
