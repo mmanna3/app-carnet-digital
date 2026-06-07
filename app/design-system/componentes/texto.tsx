@@ -5,12 +5,20 @@ import { FUENTE_BRAND, FUENTE_DISPLAY, FUENTE_SANS } from '@/lib/design-system/f
 type Variante = 'display' | 'titulo' | 'cuerpo' | 'eyebrow' | 'caption' | 'brand'
 
 const estilosPorVariante: Record<Variante, string> = {
-  display: 'text-zinc-100 uppercase tracking-wide',
+  display: 'text-zinc-100 uppercase tracking-wide leading-relaxed',
   titulo: 'text-zinc-100 text-lg',
   cuerpo: 'text-base text-zinc-300',
   eyebrow: 'text-xs uppercase tracking-widest text-zinc-500',
   caption: 'text-sm text-zinc-500',
-  brand: 'text-zinc-100',
+  brand: 'text-zinc-100 leading-relaxed',
+}
+
+/** Coalition/D3Euronism dibujan tildes por encima del ascender; sin espacio extra se recortan. */
+const estiloAcentosPorVariante: Partial<Record<Variante, TextStyle>> = {
+  display: { paddingTop: 4 },
+  titulo: { paddingTop: 4, lineHeight: 32 },
+  brand: { paddingTop: 4 },
+  eyebrow: { paddingTop: 2, lineHeight: 18 },
 }
 
 const fuentePorVariante: Record<Variante, string> = {
@@ -36,7 +44,10 @@ function classNameTieneColorTexto(className: string): boolean {
 }
 
 export function Texto({ variante = 'cuerpo', className = '', style, children, ...rest }: Props) {
-  const fontStyle: TextStyle = { fontFamily: fuentePorVariante[variante] }
+  const fontStyle: TextStyle = {
+    fontFamily: fuentePorVariante[variante],
+    ...estiloAcentosPorVariante[variante],
+  }
   const clasesVariante = classNameTieneColorTexto(className)
     ? estilosPorVariante[variante].replace(/\btext-\S+/g, '').trim()
     : estilosPorVariante[variante]

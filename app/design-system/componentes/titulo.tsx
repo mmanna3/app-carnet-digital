@@ -12,7 +12,7 @@ export function Titulo({ className = '', style, children, ...rest }: Props) {
   return (
     <Text
       className={`mb-1 text-lg text-zinc-100 ${className}`.trim()}
-      style={[{ fontFamily: FUENTE_DISPLAY }, style]}
+      style={[{ fontFamily: FUENTE_DISPLAY, paddingTop: 4, lineHeight: 32 }, style]}
       {...rest}
     >
       {children}
