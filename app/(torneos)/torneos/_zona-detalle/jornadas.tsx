@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -7,7 +7,7 @@ import type { FechasParaJornadasDTO, JornadaPorEquipoDTO } from '@/lib/api/clien
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
 import { hexIconoAgrupador } from '@/lib/design-system'
-import { CabeceraBloque, ContenedorTabla, EstadoCarga, EstadoVacio } from '@/design-system/componentes'
+import { ContenedorTabla, EstadoCarga, EstadoVacio, Texto } from '@/design-system/componentes'
 
 function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
   const r = (ruta ?? '').trim()
@@ -136,11 +136,14 @@ function Celda({
   encabezado?: boolean
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
-  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-800'
+  const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-900'
   return (
-    <View style={{ width: ancho, minWidth: ancho }} className="shrink-0 justify-center px-1.5 py-2">
+    <View
+      style={{ width: ancho, minWidth: ancho }}
+      className={`shrink-0 justify-center ${encabezado ? 'px-2 py-2.5' : 'px-1.5 py-2.5'}`}
+    >
       <Text
-        className={`text-sm leading-5 ${colorTexto} ${negrita ? 'font-semibold' : ''} ${tabular ? 'tabular-nums' : ''}`}
+        className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
         numberOfLines={numberOfLines}
       >
@@ -245,12 +248,17 @@ function CardFechaJornadas({
 
   return (
     <View className="mb-3">
-      <ContenedorTabla
-        horizontal={jornadas.length > 0}
-        encabezado={
-          <CabeceraBloque titulo={textoOGuion(fecha.titulo)} subtitulo={textoOGuion(fecha.dia)} />
-        }
+      <Texto
+        variante="titulo"
+        className={`mb-1 px-0.5 text-center text-zinc-100 ${Platform.OS === 'web' ? 'text-2xl' : 'text-xl'}`}
+        numberOfLines={2}
       >
+        {textoOGuion(fecha.titulo)}
+      </Texto>
+      <Texto className="mb-3 text-center text-md  text-zinc-300" numberOfLines={1}>
+        {textoOGuion(fecha.dia)}
+      </Texto>
+      <ContenedorTabla horizontal={jornadas.length > 0}>
         {jornadas.length === 0 ? (
           <Text className="px-3 py-4 text-sm leading-5 text-gray-600">
             No hay partidos en esta fecha.
