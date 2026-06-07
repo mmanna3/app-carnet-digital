@@ -10,6 +10,9 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
+      spacing: {
+        30: '7.5rem',
+      },
       colors: {
         liga: ligaColors,
         verde: colors.green,

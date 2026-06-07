@@ -29,7 +29,7 @@ export default function CampoTexto({
 
   return (
     // Android: evitar que el optimizador de vistas colapse el nodo y Maestro/E2E pierdan el testID.
-    <View collapsable={false}>
+    <View collapsable={false} className="w-full">
       {label ? <Text className="mb-1.5 text-sm text-zinc-400">{label}</Text> : null}
       <TextInput
         testID={inputTestID}

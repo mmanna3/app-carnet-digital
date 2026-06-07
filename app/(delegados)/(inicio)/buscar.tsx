@@ -1,14 +1,13 @@
 import React, { useState, useRef } from 'react'
-import { Alert, ScrollView, Text, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
 import { CarnetDigitalDTO } from '@/lib/api/clients'
 import Carnet from '@/delegados/_components/mis-jugadores/carnet'
 import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
-import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import Boton from '@/design-system/componentes/boton'
-import { Titulo, FranjaSeccion } from '@/design-system/componentes'
+import { FranjaSeccion } from '@/design-system/componentes'
+import CuadroBuscador from '@/inicio-delegados/_components/cuadro-buscador'
 import { colorAgrupadorEquipo, temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
 
 export default function BuscarScreen() {
@@ -145,55 +144,18 @@ export default function BuscarScreen() {
         </View>
       )}
       <ScrollView ref={scrollViewRef} className="flex-1">
-        <View className="p-5 glass rounded-xl border border-border-glass m-2.5">
-          <View className="mb-4 items-center">
-            <Titulo className="text-center">Ingresá el código del equipo</Titulo>
-          </View>
-          <View className="mb-4 w-full items-center">
-            <View className="w-44">
-              <CampoTexto
-                inputTestID="input-codigo-buscar"
-                placeholder="Ej: ABC1234"
-                value={codigoEquipo}
-                onChangeText={setCodigoEquipo}
-                autoCapitalize="characters"
-                maxLength={7}
-                style={{ textAlign: 'center' }}
-              />
-            </View>
-          </View>
-          <Boton
-            testID="boton-buscar"
-            texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
-            icono="search"
-            cargando={isLoading}
-            onPress={buscarJugadores}
-            deshabilitado={isLoading}
-          />
-          {error && <Text className="text-red-400 mt-3 text-sm text-center">{error}</Text>}
-          {jugadores.length > 0 && (
-            <View className="mt-3 gap-3">
-              <Boton
-                testID="boton-generar-pdf"
-                primario={false}
-                texto={isGeneratingPDF ? 'Generando PDF...' : 'Generar PDF'}
-                icono="file-text"
-                cargando={isGeneratingPDF}
-                onPress={handleGeneratePDF}
-                deshabilitado={isGeneratingPDF || isGeneratingPlanillas}
-              />
-              <Boton
-                testID="boton-generar-planillas"
-                primario={false}
-                texto={isGeneratingPlanillas ? 'Generando planillas...' : 'Planillas'}
-                icono="clipboard"
-                cargando={isGeneratingPlanillas}
-                onPress={handleGeneratePlanillas}
-                deshabilitado={isGeneratingPDF || isGeneratingPlanillas}
-              />
-            </View>
-          )}
-        </View>
+        <CuadroBuscador
+          codigoEquipo={codigoEquipo}
+          onChangeCodigoEquipo={setCodigoEquipo}
+          onBuscar={buscarJugadores}
+          isLoading={isLoading}
+          error={error}
+          mostrarAcciones={jugadores.length > 0}
+          onGenerarPDF={handleGeneratePDF}
+          onGenerarPlanillas={handleGeneratePlanillas}
+          isGeneratingPDF={isGeneratingPDF}
+          isGeneratingPlanillas={isGeneratingPlanillas}
+        />
 
         {jugadores.length > 0 && (
           <View className="p-2.5">
