@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  type ViewProps,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, type ViewProps } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Ionicons } from '@expo/vector-icons'
 import { FUENTE_DISPLAY, FUENTE_SANS } from '@/lib/design-system/fuentes'
@@ -28,6 +22,9 @@ export const VARIANTE_TARJETA = {
 } as const
 
 export type VarianteTarjeta = (typeof VARIANTE_TARJETA)[keyof typeof VARIANTE_TARJETA]
+
+/** Icono arriba: 2 renglones de título + 1 de subtítulo + respiro abajo */
+const ALTURA_TARJETA_COMPACTA = 165
 
 type IconoName = React.ComponentProps<typeof Ionicons>['name']
 
@@ -86,7 +83,10 @@ function CajaIcono({
 }) {
   return (
     <View
-      style={[estilosIcono.caja, { borderColor: tema.bordeIcono, backgroundColor: tema.fondoIcono }]}
+      style={[
+        estilosIcono.caja,
+        { borderColor: tema.bordeIcono, backgroundColor: tema.fondoIcono },
+      ]}
     >
       <Ionicons name={icono} size={tamano} color={tema.colorIcono} />
     </View>
@@ -112,16 +112,12 @@ function ContenidoArriba({
 
   return (
     <View
-      style={
-        esCompacta
-          ? { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 24 }
-          : undefined
-      }
+      style={esCompacta ? { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 10 } : undefined}
       className={esCompacta ? '' : 'p-5'}
     >
       <CajaIcono icono={icono} tamano={tamanoIcono} tema={tema} />
       <Text
-        className={esCompacta ? 'mb-1.5 mt-3 min-h-[20px]' : 'mb-2 mt-3 min-h-[20px]'}
+        className={esCompacta ? 'mt-2' : 'mb-2 mt-3 min-h-[20px]'}
         style={{
           fontFamily: FUENTE_DISPLAY,
           fontSize: esCompacta ? 15 : 17,
@@ -129,6 +125,7 @@ function ContenidoArriba({
           letterSpacing: esCompacta ? 0 : 0.4,
           color: '#fafafa',
         }}
+        numberOfLines={esCompacta ? 2 : undefined}
       >
         {titulo}
       </Text>
@@ -138,8 +135,9 @@ function ContenidoArriba({
           fontSize: 13,
           lineHeight: 18,
           color: '#d4d4d8',
+          marginTop: esCompacta ? 2 : 0,
         }}
-        numberOfLines={3}
+        numberOfLines={esCompacta ? 2 : 3}
       >
         {subtitulo}
       </Text>
@@ -220,13 +218,21 @@ function TarjetaAccion({
 }: PropsAccion) {
   const tema = TEMAS_TARJETA_ACCION[color]
   const esArriba = iconoDonde === ICONO_DONDE.ARRIBA
+  const esCompacta = variante === VARIANTE_TARJETA.COMPACTA
   const tamano = tamanoIcono ?? (esArriba ? 22 : 26)
   const minHeight = esArriba ? 152 : 112
 
   const cuerpo = (
     <View
       className="glass overflow-hidden rounded-2xl"
-      style={[{ borderWidth: 1.5, borderColor: tema.borde, minHeight }, style]}
+      style={[
+        {
+          borderWidth: 1.5,
+          borderColor: tema.borde,
+          ...(esCompacta && esArriba ? { height: ALTURA_TARJETA_COMPACTA } : { minHeight }),
+        },
+        style,
+      ]}
       {...rest}
     >
       <LinearGradient

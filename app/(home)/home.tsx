@@ -154,10 +154,10 @@ export default function HomeMobile() {
             />
           </View>
 
-          <View className="flex-row items-stretch gap-3 px-6 pb-6 pt-2">
+          <View className="flex-row gap-3 px-6 pb-6 pt-2">
             <Tarjeta
               testID="card-fichaje"
-              className="flex-1 self-stretch"
+              className="flex-1"
               variante={VARIANTE_TARJETA.COMPACTA}
               icono="person-add-outline"
               titulo="Fichaje"
@@ -168,7 +168,7 @@ export default function HomeMobile() {
             />
             <Tarjeta
               testID="card-delegados"
-              className="flex-1 self-stretch"
+              className="flex-1"
               variante={VARIANTE_TARJETA.COMPACTA}
               icono="clipboard-outline"
               titulo="DT/Delegado"
