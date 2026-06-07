@@ -10,11 +10,11 @@ type Props = {
 
 export function EstadoCarga({ mensaje = 'Cargando...', className = '' }: Props) {
   return (
-    <View className={`flex-1 items-center justify-center gap-3 bg-surface py-12 ${className}`.trim()}>
+    <View
+      className={`flex-1 items-center justify-center gap-3 bg-surface py-12 ${className}`.trim()}
+    >
       <ActivityIndicator size="large" color={TOKENS.accentHot} />
-      <Texto variante="cuerpo" className="text-zinc-400">
-        {mensaje}
-      </Texto>
+      <Texto className="text-md tracking-wide text-zinc-400">{mensaje}</Texto>
     </View>
   )
 }
