@@ -63,9 +63,7 @@ export function FranjaSeccion({
         {
           borderWidth: esSeparador ? 2 : 1.5,
           borderColor: theme.borde,
-          ...(esPill && !esPillCirculo
-            ? { flexShrink: 0, alignSelf: 'flex-start' as const }
-            : {}),
+          ...(esPill && !esPillCirculo ? { flexShrink: 0, alignSelf: 'flex-start' as const } : {}),
         },
         style,
       ]}
