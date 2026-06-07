@@ -51,12 +51,12 @@ npm run limpiar          # Limpiar dependencias y cachés
 
 ### Capas del código
 
-| Capa | Ruta | Rol |
-|------|------|-----|
-| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(torneos)/` | Pantallas navegables por flujo |
-| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc. | UI y pasos de wizard (no son rutas) |
-| Design system | `app/design-system/` | Tokens, componentes UI, layouts |
-| Lógica compartida | `app/logica-compartida/` | API, hooks, config, utilidades, **constantes de rutas** |
+| Capa                | Ruta                                                                          | Rol                                                     |
+| ------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(torneos)/` | Pantallas navegables por flujo                          |
+| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc.                        | UI y pasos de wizard (no son rutas)                     |
+| Design system       | `app/design-system/`                                                          | Tokens, componentes UI, layouts                         |
+| Lógica compartida   | `app/logica-compartida/`                                                      | API, hooks, config, utilidades, **constantes de rutas** |
 
 Expo Router ignora `design-system/`, `logica-compartida/` y carpetas colocated cuyo segmento empieza con `_` seguido de `/` (p. ej. `_components/`, `_pasos/`). **No** excluye `_layout.tsx`.
 

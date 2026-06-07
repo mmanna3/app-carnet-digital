@@ -13,13 +13,7 @@ type Props = {
 }
 
 /** Shell oscuro para flujos tipo wizard (fichaje, registro). */
-export function LayoutAsistente({
-  titulo,
-  onVolver,
-  children,
-  scroll = true,
-  testID,
-}: Props) {
+export function LayoutAsistente({ titulo, onVolver, children, scroll = true, testID }: Props) {
   return (
     <PantallaPublica scroll={scroll} className="bg-surface">
       <View testID={testID} className={`gap-4 px-4 pt-2 ${scroll ? '' : 'flex-1'}`}>

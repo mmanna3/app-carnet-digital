@@ -40,7 +40,11 @@ export default function Boton({
   const isDisabled = deshabilitado || cargando
   const habilitado = primario && !isDisabled
   const colorAgrupador =
-    color === 'verde' ? (getConfigLiga()?.colorBase ?? 'verde') : color === 'ambar' ? 'amarillo' : color
+    color === 'verde'
+      ? (getConfigLiga()?.colorBase ?? 'verde')
+      : color === 'ambar'
+        ? 'amarillo'
+        : color
   const temaVisual = tema ?? temaBotonPrimario(colorAgrupador)
   const degradadoVertical = habilitado
 

@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
-import { CabeceraBloque, ContenedorTabla, EstadoCarga, EstadoVacio } from '@/design-system/componentes'
+import {
+  CabeceraBloque,
+  ContenedorTabla,
+  EstadoCarga,
+  EstadoVacio,
+} from '@/design-system/componentes'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'

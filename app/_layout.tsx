@@ -27,9 +27,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { tieneSegmento } from '@/logica-compartida/utilidades/segmentos-ruta'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
-export {
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
 SplashScreen.preventAutoHideAsync()
 

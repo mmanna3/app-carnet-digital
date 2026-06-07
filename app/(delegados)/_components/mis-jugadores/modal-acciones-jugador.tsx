@@ -48,7 +48,12 @@ export default function ModalAccionesJugador({
           onPress={onTransferir}
         />
 
-        <Boton testID="boton-cancelar-acciones" texto="Cancelar" primario={false} onPress={onCerrar} />
+        <Boton
+          testID="boton-cancelar-acciones"
+          texto="Cancelar"
+          primario={false}
+          onPress={onCerrar}
+        />
       </ModalOscuroAcciones>
     </ModalOscuro>
   )

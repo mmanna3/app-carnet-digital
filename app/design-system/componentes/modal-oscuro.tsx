@@ -41,9 +41,7 @@ export function ModalOscuro({
 }
 
 export function ModalOscuroEncabezado({ children, className = '' }: ViewProps) {
-  return (
-    <View className={`p-4 border-b border-border-glass ${className}`.trim()}>{children}</View>
-  )
+  return <View className={`p-4 border-b border-border-glass ${className}`.trim()}>{children}</View>
 }
 
 export function ModalOscuroCuerpo({ children, className = '' }: ViewProps) {

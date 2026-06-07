@@ -105,9 +105,7 @@ function ZonaDetalleContenido() {
         tabs={TABS.map((t, i) => ({
           key: t.titulo,
           titulo: t.titulo,
-          renderIcono: (color) => (
-            <Ionicons name={t.icon} size={TAB_ICON_SIZE} color={color} />
-          ),
+          renderIcono: (color) => <Ionicons name={t.icon} size={TAB_ICON_SIZE} color={color} />,
           onPress: () => setTabIndex(i),
         }))}
       />

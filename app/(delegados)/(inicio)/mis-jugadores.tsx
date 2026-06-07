@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-  RefreshControl,
-} from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator, RefreshControl } from 'react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
@@ -114,7 +108,9 @@ export default function MisJugadoresScreen() {
   if (!equipoSeleccionadoId) {
     return (
       <View className="flex-1 bg-surface">
-        <Text className="text-base text-center p-5 text-zinc-400">Debes seleccionar un equipo primero</Text>
+        <Text className="text-base text-center p-5 text-zinc-400">
+          Debes seleccionar un equipo primero
+        </Text>
       </View>
     )
   }

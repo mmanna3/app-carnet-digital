@@ -14,7 +14,12 @@ type TarjetaTorneoGrillaProps = {
 }
 
 /** Card de torneo en grilla (mismo aspecto que la vista web en pantalla grande). */
-export function TarjetaTorneoGrilla({ nombre, color, iconName, className = '' }: TarjetaTorneoGrillaProps) {
+export function TarjetaTorneoGrilla({
+  nombre,
+  color,
+  iconName,
+  className = '',
+}: TarjetaTorneoGrillaProps) {
   const tema = getTemaAgrupador(color)
 
   return (

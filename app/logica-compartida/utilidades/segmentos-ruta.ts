@@ -1,4 +1,10 @@
-const GRUPOS_OCULTOS = ['(home)', '(fichaje-jugador)', '(delegados)', '(torneos)', '(inicio)'] as const
+const GRUPOS_OCULTOS = [
+  '(home)',
+  '(fichaje-jugador)',
+  '(delegados)',
+  '(torneos)',
+  '(inicio)',
+] as const
 
 /** Segmentos visibles en la URL (sin route groups). */
 export function segmentosVisibles(segments: readonly string[]): string[] {

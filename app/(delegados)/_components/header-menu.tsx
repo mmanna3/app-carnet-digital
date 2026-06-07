@@ -32,9 +32,7 @@ function MenuItem({
     <MenuOption onSelect={onSelect}>
       <View testID={testID} className="flex-row items-center gap-3 px-6 py-3">
         {iconNode ?? <Feather name={icon!} size={20} color={destructive ? '#f87171' : '#e4e4e7'} />}
-        <Text
-          className={`text-base ${destructive ? 'text-red-400' : 'text-zinc-200'} font-medium`}
-        >
+        <Text className={`text-base ${destructive ? 'text-red-400' : 'text-zinc-200'} font-medium`}>
           {label}
         </Text>
       </View>

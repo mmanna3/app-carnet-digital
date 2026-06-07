@@ -46,11 +46,11 @@ bash e2e/run-e2e-ios-dev.sh
 
 Abre automáticamente 3 pestañas en iTerm:
 
-| Pestaña | Qué corre                                                          |
-| ------- | ------------------------------------------------------------------ |
-| 1       | Mock server HTTP en puerto 3001 (`node e2e/mock-server.js`)        |
-| 2       | Metro bundler con `EXPO_PUBLIC_E2E_API_URL=http://localhost:3001`  |
-| 3       | Build + instalación en simulador → cuando termina, lanza Maestro   |
+| Pestaña | Qué corre                                                         |
+| ------- | ----------------------------------------------------------------- |
+| 1       | Mock server HTTP en puerto 3001 (`node e2e/mock-server.js`)       |
+| 2       | Metro bundler con `EXPO_PUBLIC_E2E_API_URL=http://localhost:3001` |
+| 3       | Build + instalación en simulador → cuando termina, lanza Maestro  |
 
 La pestaña 3 ejecuta en secuencia:
 

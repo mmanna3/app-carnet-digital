@@ -27,30 +27,21 @@ export type TemaTarjetaAccion = {
 export const TEMAS_TARJETA_ACCION: Record<ColorTarjeta, TemaTarjetaAccion> = {
   rojo: {
     borde: 'rgba(248, 113, 113, 0.7)',
-    degradado: [
-      `rgba(220, 38, 38, ${OPACIDAD_COLOR})`,
-      `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`,
-    ],
+    degradado: [`rgba(220, 38, 38, ${OPACIDAD_COLOR})`, `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`],
     bordeIcono: 'rgba(248, 113, 113, 0.7)',
     fondoIcono: 'rgba(220, 38, 38, 0.2)',
     colorIcono: '#f87171',
   },
   azul: {
     borde: 'rgba(56, 189, 248, 0.7)',
-    degradado: [
-      `rgba(37, 99, 235, ${OPACIDAD_COLOR})`,
-      `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`,
-    ],
+    degradado: [`rgba(37, 99, 235, ${OPACIDAD_COLOR})`, `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`],
     bordeIcono: 'rgba(56, 189, 248, 0.7)',
     fondoIcono: 'rgba(37, 99, 235, 0.2)',
     colorIcono: '#38bdf8',
   },
   verde: {
     borde: 'rgba(74, 222, 128, 0.7)',
-    degradado: [
-      `rgba(22, 163, 74, ${OPACIDAD_COLOR})`,
-      `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`,
-    ],
+    degradado: [`rgba(22, 163, 74, ${OPACIDAD_COLOR})`, `rgba(0, 0, 0, ${OPACIDAD_NEGRO})`],
     bordeIcono: 'rgba(74, 222, 128, 0.7)',
     fondoIcono: 'rgba(22, 163, 74, 0.2)',
     colorIcono: '#4ade80',

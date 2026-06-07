@@ -34,7 +34,10 @@ function lineaDireccionLocalidad(direccion: string | undefined, localidad: strin
   return `${d}, ${l}`
 }
 
-function urlGoogleMaps(direccion: string | undefined, localidad: string | undefined): string | null {
+function urlGoogleMaps(
+  direccion: string | undefined,
+  localidad: string | undefined
+): string | null {
   const query = lineaDireccionLocalidad(direccion, localidad)
   if (query === '—') return null
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`

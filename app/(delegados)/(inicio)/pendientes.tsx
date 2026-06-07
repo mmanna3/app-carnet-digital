@@ -32,7 +32,9 @@ export default function PendientesScreen() {
   if (!equipoSeleccionadoId) {
     return (
       <View className="flex-1 bg-surface">
-        <Text className="text-base text-center p-5 text-zinc-400">Debes seleccionar un equipo primero</Text>
+        <Text className="text-base text-center p-5 text-zinc-400">
+          Debes seleccionar un equipo primero
+        </Text>
       </View>
     )
   }
@@ -131,7 +133,9 @@ export default function PendientesScreen() {
         {jugadoresRechazados.length === 0 &&
           jugadoresPendientes.length === 0 &&
           jugadoresAprobadosPendientesDePago.length === 0 && (
-            <Text className="text-base text-center p-5 text-zinc-400">No hay jugadores pendientes</Text>
+            <Text className="text-base text-center p-5 text-zinc-400">
+              No hay jugadores pendientes
+            </Text>
           )}
       </View>
     </ScrollView>

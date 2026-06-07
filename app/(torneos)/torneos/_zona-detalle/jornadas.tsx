@@ -153,6 +153,8 @@ function numeroDeTituloFecha(titulo: string | undefined): string {
 
 /** Mismo diámetro para seleccionada y no seleccionada → círculo, no óvalo. */
 const DIAMETRO_PILL_JORNADA = 48
+const MARGEN_HORIZONTAL_PILL = 6
+const PADDING_HORIZONTAL_SELECTOR = 10
 
 function clasePaddingCelda(encabezado: boolean, borde?: 'inicio' | 'fin'): string {
   const py = 'py-2.5'
@@ -374,10 +376,7 @@ export default function Jornadas() {
     [colorParam]
   )
 
-  const temaTorneo = useMemo(
-    () => temaFranjaCarnet({ color: colorAgrupador }),
-    [colorAgrupador]
-  )
+  const temaTorneo = useMemo(() => temaFranjaCarnet({ color: colorAgrupador }), [colorAgrupador])
 
   const { data, isLoading, isError, error } = useApiQuery({
     key: queryKeys.zonas.jornadas(zonaId),
@@ -425,6 +424,65 @@ type JornadasConSelectorFechaProps = {
   temaTorneo: TemaFranja
 }
 
+function PillJornada({
+  seleccionada,
+  label,
+  titulo,
+  temaTorneo,
+  onPress,
+  onLayout,
+}: {
+  seleccionada: boolean
+  label: string
+  titulo: string | undefined
+  temaTorneo: TemaFranja
+  onPress: () => void
+  onLayout: (event: LayoutChangeEvent) => void
+}) {
+  return (
+    <View
+      onLayout={onLayout}
+      style={{
+        width: DIAMETRO_PILL_JORNADA + MARGEN_HORIZONTAL_PILL * 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {seleccionada ? (
+        <FranjaSeccion
+          variante="pill"
+          tema={temaTorneo}
+          className="mb-0 items-center justify-center p-0"
+          style={{
+            width: DIAMETRO_PILL_JORNADA,
+            height: DIAMETRO_PILL_JORNADA,
+          }}
+          onPress={onPress}
+        >
+          {label}
+        </FranjaSeccion>
+      ) : (
+        <TouchableOpacity
+          className="items-center justify-center rounded-full border border-border-glass bg-white/10"
+          style={{ width: DIAMETRO_PILL_JORNADA, height: DIAMETRO_PILL_JORNADA }}
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityState={{ selected: false }}
+          accessibilityLabel={textoOGuion(titulo)}
+        >
+          <Texto
+            variante="titulo"
+            className={`${Platform.OS === 'web' ? 'text-xl' : 'text-lg'} text-center text-zinc-400`}
+            numberOfLines={1}
+          >
+            {label}
+          </Texto>
+        </TouchableOpacity>
+      )}
+    </View>
+  )
+}
+
 function JornadasConSelectorFecha({ fechas, apiUrl, temaTorneo }: JornadasConSelectorFechaProps) {
   const indiceDefault = useMemo(() => indiceUltimaFechaConResultados(fechas), [fechas])
 
@@ -438,30 +496,71 @@ function JornadasConSelectorFecha({ fechas, apiUrl, temaTorneo }: JornadasConSel
 
   const scrollRef = useRef<ScrollView>(null)
   const pillLayouts = useRef<Map<number, { x: number; width: number }>>(new Map())
-  const anchoScroll = useRef(0)
+  const [anchoContenedor, setAnchoContenedor] = useState(0)
+  const [anchoFilaPills, setAnchoFilaPills] = useState(0)
 
-  const scrollHastaIndice = useCallback((index: number, animated: boolean) => {
-    const layout = pillLayouts.current.get(index)
-    if (!layout || !scrollRef.current) return
-    const offset = layout.x - (anchoScroll.current / 2 - layout.width / 2)
-    scrollRef.current.scrollTo({ x: Math.max(0, offset), animated })
-  }, [])
+  const anchoPillsEstimado =
+    fechas.length * (DIAMETRO_PILL_JORNADA + MARGEN_HORIZONTAL_PILL * 2) +
+    PADDING_HORIZONTAL_SELECTOR * 2
+  const necesitaScroll =
+    anchoContenedor > 0 &&
+    (anchoFilaPills > anchoContenedor || anchoPillsEstimado > anchoContenedor)
+
+  const scrollHastaIndice = useCallback(
+    (index: number, animated: boolean) => {
+      if (!necesitaScroll) return
+      const layout = pillLayouts.current.get(index)
+      if (!layout || !scrollRef.current || anchoContenedor <= 0) return
+      const offset = layout.x - (anchoContenedor / 2 - layout.width / 2)
+      scrollRef.current.scrollTo({ x: Math.max(0, offset), animated })
+    },
+    [anchoContenedor, necesitaScroll]
+  )
 
   const esSeleccionUsuario = indiceElegido !== null
 
   useEffect(() => {
+    if (!necesitaScroll) {
+      scrollRef.current?.scrollTo({ x: 0, animated: false })
+      return
+    }
     scrollHastaIndice(indiceSeguro, esSeleccionUsuario)
-  }, [indiceSeguro, esSeleccionUsuario, scrollHastaIndice])
+  }, [indiceSeguro, esSeleccionUsuario, scrollHastaIndice, necesitaScroll])
 
-  const onPillLayout = useCallback(
-    (index: number, event: LayoutChangeEvent) => {
-      const { x, width } = event.nativeEvent.layout
-      pillLayouts.current.set(index, { x, width })
-      if (index === indiceSeguro) {
-        scrollHastaIndice(index, esSeleccionUsuario)
-      }
-    },
-    [indiceSeguro, esSeleccionUsuario, scrollHastaIndice]
+  const onPillLayout = useCallback((index: number, event: LayoutChangeEvent) => {
+    const { x, width } = event.nativeEvent.layout
+    pillLayouts.current.set(index, { x, width })
+  }, [])
+
+  const pills = fechas.map((fecha, index) => {
+    const seleccionada = index === indiceSeguro
+    const label = numeroDeTituloFecha(fecha.titulo)
+
+    return (
+      <PillJornada
+        key={`fecha-${index}`}
+        seleccionada={seleccionada}
+        label={label}
+        titulo={fecha.titulo}
+        temaTorneo={temaTorneo}
+        onPress={() => setIndiceElegido(index)}
+        onLayout={(e) => onPillLayout(index, e)}
+      />
+    )
+  })
+
+  const filaPills = (
+    <View
+      className="flex-row items-center"
+      style={{
+        paddingHorizontal: PADDING_HORIZONTAL_SELECTOR,
+        minWidth: anchoContenedor > 0 ? anchoContenedor : undefined,
+        justifyContent: 'center',
+      }}
+      onLayout={(e) => setAnchoFilaPills(e.nativeEvent.layout.width)}
+    >
+      {pills}
+    </View>
   )
 
   return (
@@ -470,57 +569,11 @@ function JornadasConSelectorFecha({ fechas, apiUrl, temaTorneo }: JornadasConSel
         <ScrollView
           ref={scrollRef}
           horizontal
+          scrollEnabled={necesitaScroll}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 10, alignItems: 'center' }}
-          onLayout={(e) => {
-            anchoScroll.current = e.nativeEvent.layout.width
-            scrollHastaIndice(indiceSeguro, esSeleccionUsuario)
-          }}
+          onLayout={(e) => setAnchoContenedor(e.nativeEvent.layout.width)}
         >
-          {fechas.map((fecha, index) => {
-            const seleccionada = index === indiceSeguro
-            const label = numeroDeTituloFecha(fecha.titulo)
-
-            if (seleccionada) {
-              return (
-                <View key={`fecha-${index}`} onLayout={(e) => onPillLayout(index, e)}>
-                  <FranjaSeccion
-                    variante="pill"
-                    tema={temaTorneo}
-                    className="mx-1.5 mb-0 items-center justify-center p-0"
-                    style={{
-                      width: DIAMETRO_PILL_JORNADA,
-                      height: DIAMETRO_PILL_JORNADA,
-                    }}
-                    onPress={() => setIndiceElegido(index)}
-                  >
-                    {label}
-                  </FranjaSeccion>
-                </View>
-              )
-            }
-
-            return (
-              <TouchableOpacity
-                key={`fecha-${index}`}
-                className="mx-1.5 items-center justify-center rounded-full border border-border-glass bg-white/10"
-                style={{ width: DIAMETRO_PILL_JORNADA, height: DIAMETRO_PILL_JORNADA }}
-                onLayout={(e) => onPillLayout(index, e)}
-                onPress={() => setIndiceElegido(index)}
-                accessibilityRole="button"
-                accessibilityState={{ selected: false }}
-                accessibilityLabel={textoOGuion(fecha.titulo)}
-              >
-                <Texto
-                  variante="titulo"
-                  className={`${Platform.OS === 'web' ? 'text-xl' : 'text-lg'} text-center text-zinc-400`}
-                  numberOfLines={1}
-                >
-                  {label}
-                </Texto>
-              </TouchableOpacity>
-            )
-          })}
+          {filaPills}
         </ScrollView>
       </View>
 

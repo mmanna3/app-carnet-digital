@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Alert,
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native'
+import { Alert, View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native'
 import { CarnetDigitalDTO, EfectuarPaseDTO, EquipoBaseDTO } from '@/lib/api/clients'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
@@ -141,9 +134,7 @@ export default function ModalTransferirMasivo({ jugadores, onTransferido, onCerr
                   activeOpacity={0.7}
                 >
                   <Text className="text-base text-zinc-100">{equipo.nombre}</Text>
-                  {equipo.torneo && (
-                    <Text className="text-sm text-zinc-500">{equipo.torneo}</Text>
-                  )}
+                  {equipo.torneo && <Text className="text-sm text-zinc-500">{equipo.torneo}</Text>}
                 </TouchableOpacity>
               ))}
             </ScrollView>

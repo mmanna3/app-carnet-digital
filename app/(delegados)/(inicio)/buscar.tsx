@@ -66,7 +66,9 @@ export default function BuscarScreen() {
     .sort((a, b) => a - b)
 
   const hayDelegados = delegados.length > 0
-  const secciones = hayDelegados ? (['delegados' as const, ...categoriasAño] as const) : categoriasAño
+  const secciones = hayDelegados
+    ? (['delegados' as const, ...categoriasAño] as const)
+    : categoriasAño
   const temaTorneo = jugadores.length > 0 ? temaFranjaEquipo(jugadores) : undefined
   const colorAgrupadorDelEquipo = jugadores.length > 0 ? colorAgrupadorEquipo(jugadores) : undefined
 
