@@ -104,17 +104,36 @@ function celdaResultadoCategoria(
   return '—'
 }
 
-/** `esc` / `equipo` / `pt` / `pj` alineados con posiciones; `cat` más ancho para títulos ~9 caracteres en una línea (padding de Celda). */
+/** Ancho por header: el título manda (contenido ≤ 2 caracteres). Misma lógica para P.T. / P.J. */
+const ANCHO_CHAR_HEADER = 9
+const PADDING_HEADER = 16
+const ANCHO_MIN_COL = 28
+
+function anchoColumnaPorHeader(texto: string): number {
+  const n = texto.trim().length
+  return Math.max(ANCHO_MIN_COL, n * ANCHO_CHAR_HEADER + PADDING_HEADER)
+}
+
 const ANCHO = {
   esc: 44,
   equipo: 148,
-  cat: 102,
-  pt: 40,
-  pj: 40,
+  pt: anchoColumnaPorHeader('P.T.'),
+  pj: anchoColumnaPorHeader('P.J.'),
 } as const
 
-function anchoTablaJornadas(nCategorias: number): number {
-  return ANCHO.esc + ANCHO.equipo + nCategorias * ANCHO.cat + ANCHO.pt + ANCHO.pj
+function anchosColumnasCategorias(nombres: string[]): number[] {
+  return nombres.map(anchoColumnaPorHeader)
+}
+
+function anchoTablaJornadas(nombresCategorias: string[]): number {
+  const cats = anchosColumnasCategorias(nombresCategorias)
+  return ANCHO.esc + ANCHO.equipo + cats.reduce((a, b) => a + b, 0) + ANCHO.pt + ANCHO.pj
+}
+
+function numeroDeTituloFecha(titulo: string | undefined): string {
+  const t = (titulo ?? '').trim()
+  const sinPrefijo = t.replace(/^Fecha\s+/i, '').trim()
+  return sinPrefijo.length > 0 ? sinPrefijo : textoOGuion(titulo)
 }
 
 /** Misma idea que `Celda` en posiciones.tsx (sin líneas verticales entre columnas). */
@@ -153,17 +172,23 @@ function Celda({
   )
 }
 
-function FilaEncabezadoTablaJornadas({ nombresCategorias }: { nombresCategorias: string[] }) {
+function FilaEncabezadoTablaJornadas({
+  nombresCategorias,
+  anchosCategorias,
+}: {
+  nombresCategorias: string[]
+  anchosCategorias: number[]
+}) {
   return (
-    <View className="flex-row border-b border-zinc-700 bg-zinc-900">
+    <View className="flex-row rounded-t-2xl border-b border-zinc-700 bg-zinc-900">
       <Celda ancho={ANCHO.esc} alinear="center" negrita encabezado>
         Esc
       </Celda>
       <Celda ancho={ANCHO.equipo} alinear="left" negrita encabezado>
         Equipo
       </Celda>
-      {nombresCategorias.map((cat) => (
-        <Celda key={cat} ancho={ANCHO.cat} alinear="center" negrita encabezado numberOfLines={4}>
+      {nombresCategorias.map((cat, i) => (
+        <Celda key={cat} ancho={anchosCategorias[i]} alinear="center" negrita encabezado>
           {cat}
         </Celda>
       ))}
@@ -180,12 +205,14 @@ function FilaEncabezadoTablaJornadas({ nombresCategorias }: { nombresCategorias:
 function FilaEquipoTabla({
   equipo,
   nombresCategorias,
+  anchosCategorias,
   lado,
   apiUrl,
   visitanteConMasPartidosDebajo,
 }: {
   equipo: JornadaPorEquipoDTO | undefined
   nombresCategorias: string[]
+  anchosCategorias: number[]
   lado: 'local' | 'visitante'
   apiUrl: string | undefined
   /** Solo para la fila visitante: borde más marcado si sigue otro partido. */
@@ -219,8 +246,8 @@ function FilaEquipoTabla({
       <Celda ancho={ANCHO.equipo} alinear="left">
         {textoOGuion(equipo?.equipo)}
       </Celda>
-      {nombresCategorias.map((cat) => (
-        <Celda key={cat} ancho={ANCHO.cat} alinear="center" tabular>
+      {nombresCategorias.map((cat, i) => (
+        <Celda key={cat} ancho={anchosCategorias[i]} alinear="center" tabular>
           {celdaResultadoCategoria(equipo?.categorias, cat, lado)}
         </Celda>
       ))}
@@ -243,7 +270,11 @@ function CardFechaJornadas({
 }) {
   const jornadas = fecha.jornadas ?? []
   const nombresCategorias = useMemo(() => nombresCategoriasDeFecha(fecha), [fecha])
-  const anchoTotal = anchoTablaJornadas(nombresCategorias.length)
+  const anchosCategorias = useMemo(
+    () => anchosColumnasCategorias(nombresCategorias),
+    [nombresCategorias]
+  )
+  const anchoTotal = anchoTablaJornadas(nombresCategorias)
   const ultimoIndicePartido = jornadas.length - 1
 
   return (
@@ -264,8 +295,11 @@ function CardFechaJornadas({
             No hay partidos en esta fecha.
           </Text>
         ) : (
-          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }} className="px-1 py-1">
-            <FilaEncabezadoTablaJornadas nombresCategorias={nombresCategorias} />
+          <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
+            <FilaEncabezadoTablaJornadas
+              nombresCategorias={nombresCategorias}
+              anchosCategorias={anchosCategorias}
+            />
             {jornadas.map((j, i) => {
               const hayMasPartidos = i < ultimoIndicePartido
               return (
@@ -273,12 +307,14 @@ function CardFechaJornadas({
                   <FilaEquipoTabla
                     equipo={j.local}
                     nombresCategorias={nombresCategorias}
+                    anchosCategorias={anchosCategorias}
                     lado="local"
                     apiUrl={apiUrl}
                   />
                   <FilaEquipoTabla
                     equipo={j.visitante}
                     nombresCategorias={nombresCategorias}
+                    anchosCategorias={anchosCategorias}
                     lado="visitante"
                     apiUrl={apiUrl}
                     visitanteConMasPartidosDebajo={hayMasPartidos}
@@ -390,19 +426,20 @@ function JornadasConSelectorFecha({
             return (
               <TouchableOpacity
                 key={`fecha-${index}`}
-                className={`rounded-full px-4 py-2 ${seleccionada ? '' : 'border border-border-glass bg-white/10'}`}
+                className={`rounded-full px-5 py-2.5 ${seleccionada ? '' : 'border border-border-glass bg-white/10'}`}
                 style={seleccionada ? { backgroundColor: colorFondoChipSeleccionado } : undefined}
                 onPress={() => setIndiceElegido(index)}
                 accessibilityRole="button"
                 accessibilityState={{ selected: seleccionada }}
                 accessibilityLabel={textoOGuion(fecha.titulo)}
               >
-                <Text
-                  className={`text-sm font-semibold ${seleccionada ? 'text-black' : 'text-zinc-400'}`}
+                <Texto
+                  variante="titulo"
+                  className={`${Platform.OS === 'web' ? 'text-xl' : 'text-lg'} ${seleccionada ? 'text-black' : 'text-zinc-400'}`}
                   numberOfLines={1}
                 >
-                  {textoOGuion(fecha.titulo)}
-                </Text>
+                  {numeroDeTituloFecha(fecha.titulo)}
+                </Texto>
               </TouchableOpacity>
             )
           })}
