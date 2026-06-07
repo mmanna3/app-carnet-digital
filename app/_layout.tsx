@@ -57,7 +57,8 @@ function useProtectedRoute(loaded: boolean) {
     if (!navigationState?.key) return
     if (!loaded) return
 
-    const inAuth = tieneSegmento(segments, 'login') || tieneSegmento(segments, 'cambiar-password')
+    const inAuth =
+      tieneSegmento(segments, 'inicio-de-sesion') || tieneSegmento(segments, 'cambiar-password')
     const inSeleccionEquipo = tieneSegmento(segments, 'seleccion-de-equipo')
     const inSeleccionLiga = tieneSegmento(segments, 'seleccion-de-liga')
     const inHome = tieneSegmento(segments, 'home')

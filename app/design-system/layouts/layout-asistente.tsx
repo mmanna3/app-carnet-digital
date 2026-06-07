@@ -22,7 +22,7 @@ export function LayoutAsistente({
 }: Props) {
   return (
     <PantallaPublica scroll={scroll} className="bg-surface">
-      <View testID={testID} className="gap-4 pt-2">
+      <View testID={testID} className={`gap-4 px-4 pt-2 ${scroll ? '' : 'flex-1'}`}>
         <View className="flex-row items-center gap-2">
           {onVolver ? (
             <TouchableOpacity

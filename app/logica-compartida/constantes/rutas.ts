@@ -7,7 +7,7 @@ export const RUTAS = {
   FICHAJE_DELEGADO: '/fichaje-delegado',
   SELECCION_LIGA: '/seleccion-de-liga',
   SELECCION_EQUIPO: '/seleccion-de-equipo',
-  LOGIN: '/login',
+  LOGIN: '/inicio-de-sesion',
   CAMBIAR_PASSWORD: '/cambiar-password',
   MIS_JUGADORES: '/mis-jugadores',
   BUSCAR: '/buscar',

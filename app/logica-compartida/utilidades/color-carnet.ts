@@ -1,5 +1,5 @@
 import { getConfigLiga, getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
-import { getTemaAgrupador } from '@/design-system/tokens/tema-agrupador'
+import { getTemaAgrupador, hexLinkAgrupadorOnLight } from '@/design-system/tokens/tema-agrupador'
 import { COLOR_TARJETA, type ColorTarjeta } from '@/design-system/tokens/tarjeta-accion'
 
 type JugadorConColor = { color?: string | undefined; esDelegado?: boolean }
@@ -34,6 +34,19 @@ export function temaPillEquipo(hexLink: string): TemaDegradadoEquipo {
     degradado: [hexLink, fondoOscuro],
     borde: hexConOpacidad(fondoOscuro, 0.85),
   }
+}
+
+const COLOR_BOTON_A_AGRUPADOR: Record<string, string> = {
+  verde: 'verde',
+  rojo: 'rojo',
+  azul: 'azul',
+  ambar: 'amarillo',
+}
+
+/** Degradado por defecto del Boton primario (misma estética que pill del carnet / botón buscar). */
+export function temaBotonPrimario(color: string = getConfigLiga()?.colorBase ?? 'verde'): TemaDegradadoEquipo {
+  const agrupador = COLOR_BOTON_A_AGRUPADOR[color] ?? color
+  return temaPillEquipo(hexLinkAgrupadorOnLight(agrupador))
 }
 
 const COLOR_A_TEMA_FRANJA: Record<string, TemaFranjaCarnet> = {

@@ -3,20 +3,11 @@ import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'rea
 import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
 import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
-import type { TemaDegradadoEquipo } from '@/lib/utilidades/color-carnet'
-import {
-  TEMA_BOTON_WIZARD,
-  TEMA_BOTON_WIZARD_AMBAR,
-  TEMA_BOTON_WIZARD_AZUL,
-  TEMA_BOTON_WIZARD_ROJO,
-} from '@/design-system/tokens/tarjeta-accion'
+import { getConfigLiga } from '@/lib/config/liga'
+import { temaBotonPrimario, type TemaDegradadoEquipo } from '@/lib/utilidades/color-carnet'
 
-const TEMAS_BOTON = {
-  verde: TEMA_BOTON_WIZARD,
-  rojo: TEMA_BOTON_WIZARD_ROJO,
-  azul: TEMA_BOTON_WIZARD_AZUL,
-  ambar: TEMA_BOTON_WIZARD_AMBAR,
-} as const
+const COLORES_BOTON = ['verde', 'rojo', 'azul', 'ambar'] as const
+type ColorBoton = (typeof COLORES_BOTON)[number]
 
 type IconoName = React.ComponentProps<typeof Feather>['name']
 
@@ -27,7 +18,7 @@ interface Props {
   /** true = CTA principal (degradado habilitado); false = acción secundaria glass */
   primario?: boolean
   /** Color del degradado cuando primario=true y no hay `tema` */
-  color?: keyof typeof TEMAS_BOTON
+  color?: ColorBoton
   /** Degradado personalizado (p. ej. pill de categoría del carnet). */
   tema?: TemaDegradadoEquipo
   deshabilitado?: boolean
@@ -48,8 +39,10 @@ export default function Boton({
 }: Props) {
   const isDisabled = deshabilitado || cargando
   const habilitado = primario && !isDisabled
-  const temaVisual = tema ?? TEMAS_BOTON[color]
-  const degradadoVertical = tema != null
+  const colorAgrupador =
+    color === 'verde' ? (getConfigLiga()?.colorBase ?? 'verde') : color === 'ambar' ? 'amarillo' : color
+  const temaVisual = tema ?? temaBotonPrimario(colorAgrupador)
+  const degradadoVertical = habilitado
 
   const colorTexto = habilitado ? '#fafafa' : isDisabled ? '#71717a' : '#e4e4e7'
   const colorIcono = colorTexto

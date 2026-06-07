@@ -4,7 +4,7 @@ import HeaderMenu from '@/delegados/_components/header-menu'
 export default function DelegadosLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="login" />
+      <Stack.Screen name="inicio-de-sesion" />
       <Stack.Screen name="cambiar-password" />
       <Stack.Screen name="(inicio)" />
       <Stack.Screen

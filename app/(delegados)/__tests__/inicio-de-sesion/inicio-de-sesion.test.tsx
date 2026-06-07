@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react-native'
-import LoginScreen from '@/delegados/login'
+import InicioDeSesionScreen from '@/delegados/inicio-de-sesion'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useRouter } from 'expo-router'
 import { LoginResponseDTO } from '@/lib/api/clients'
@@ -13,7 +13,7 @@ const mockLogin = jest.fn()
 const mockRouterPush = jest.fn()
 const mockRouterBack = jest.fn()
 
-describe('LoginScreen', () => {
+describe('InicioDeSesionScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useAuth as unknown as jest.Mock).mockReturnValue({ login: mockLogin })
@@ -25,30 +25,30 @@ describe('LoginScreen', () => {
 
   describe('renderizado', () => {
     it('muestra el título de inicio de sesión', () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
       expect(screen.getByText('Inicio de sesión')).toBeTruthy()
     })
 
     it('muestra los campos de usuario y contraseña', () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
       expect(screen.getByPlaceholderText('Usuario')).toBeTruthy()
       expect(screen.getByPlaceholderText('Contraseña')).toBeTruthy()
     })
 
     it('muestra el botón Iniciar sesión', () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
       expect(screen.getByText('Iniciar sesión')).toBeTruthy()
     })
 
     it('muestra el botón atrás', () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
       expect(screen.getByTestId('boton-atras')).toBeTruthy()
     })
   })
 
   describe('validación', () => {
     it('muestra error cuando se envía sin usuario ni contraseña', async () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.press(screen.getByText('Iniciar sesión'))
 
@@ -57,7 +57,7 @@ describe('LoginScreen', () => {
     })
 
     it('muestra error cuando solo falta contraseña', async () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Usuario'), 'delegado1')
       fireEvent.press(screen.getByText('Iniciar sesión'))
@@ -76,7 +76,7 @@ describe('LoginScreen', () => {
           )
       )
 
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Usuario'), 'delegado1')
       fireEvent.changeText(screen.getByPlaceholderText('Contraseña'), 'miPassword123')
@@ -88,7 +88,7 @@ describe('LoginScreen', () => {
     it('no muestra error cuando el login es exitoso', async () => {
       mockLogin.mockResolvedValue(new LoginResponseDTO({ exito: true, token: 'jwt-123' }))
 
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Usuario'), 'delegado1')
       fireEvent.changeText(screen.getByPlaceholderText('Contraseña'), 'password')
@@ -107,7 +107,7 @@ describe('LoginScreen', () => {
         new LoginResponseDTO({ exito: false, error: 'Credenciales inválidas' })
       )
 
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Usuario'), 'delegado1')
       fireEvent.changeText(screen.getByPlaceholderText('Contraseña'), 'mal-password')
@@ -124,7 +124,7 @@ describe('LoginScreen', () => {
         })
       )
 
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.changeText(screen.getByPlaceholderText('Usuario'), 'delegado1')
       fireEvent.changeText(screen.getByPlaceholderText('Contraseña'), 'temp123')
@@ -141,7 +141,7 @@ describe('LoginScreen', () => {
 
   describe('navegación', () => {
     it('llama a router.back al presionar Volver', () => {
-      render(<LoginScreen />)
+      render(<InicioDeSesionScreen />)
 
       fireEvent.press(screen.getByTestId('boton-atras'))
 
