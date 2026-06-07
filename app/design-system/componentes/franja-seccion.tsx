@@ -49,7 +49,7 @@ export function FranjaSeccion({
       className={
         esSeparador
           ? 'overflow-hidden rounded-xl px-6 py-12'
-          : `glass overflow-hidden ${esPill ? 'rounded-full px-5 py-2' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
+          : `glass overflow-hidden ${esPill ? 'rounded-full' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
       }
       style={[
         {
@@ -68,11 +68,14 @@ export function FranjaSeccion({
       />
       <Text
         className="text-center uppercase text-zinc-50"
+        numberOfLines={esPill ? 1 : undefined}
+        adjustsFontSizeToFit={esPill}
+        minimumFontScale={esPill ? 0.75 : undefined}
         style={{
           fontFamily: FUENTE_DISPLAY,
-          fontSize: esSeparador ? 22 : esPill ? 14 : 17,
-          lineHeight: esSeparador ? 28 : esPill ? 18 : 22,
-          letterSpacing: esSeparador ? 2 : 0.5,
+          fontSize: esSeparador ? 22 : esPill ? 18 : 17,
+          lineHeight: esSeparador ? 28 : esPill ? 22 : 22,
+          letterSpacing: esSeparador ? 2 : esPill ? 0 : 0.5,
         }}
       >
         {children}

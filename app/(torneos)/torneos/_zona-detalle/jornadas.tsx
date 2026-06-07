@@ -456,6 +456,9 @@ function PillJornada({
           style={{
             width: DIAMETRO_PILL_JORNADA,
             height: DIAMETRO_PILL_JORNADA,
+            padding: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
           onPress={onPress}
         >
