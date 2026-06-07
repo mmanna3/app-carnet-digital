@@ -80,15 +80,13 @@ export default function TeamSelectionScreen() {
 
   return (
     <View testID="pantalla-seleccion-equipo" className="flex-1 bg-surface p-5">
-      <Texto variante="titulo" className="mb-2.5 mt-12 text-center text-zinc-100">
+      <Texto variante="titulo" className="mb-10 mt-12 text-center text-zinc-100">
         Seleccioná tu equipo
       </Texto>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {data?.clubsConEquipos?.map((club) => (
           <View key={club.nombre} className="mb-4">
-            <Texto variante="cuerpo" className="mb-2 font-semibold text-zinc-200">
-              {club.nombre}
-            </Texto>
+            <Texto className="mb-2 text-xl font-semibold text-zinc-200">{club.nombre}</Texto>
             {club.equipos?.map((equipo) => (
               <TouchableOpacity
                 key={equipo.id}
@@ -96,13 +94,11 @@ export default function TeamSelectionScreen() {
                 onPress={() => handleTeamSelect(equipo)}
                 className="glass my-2 rounded-xl border border-border-glass px-5 py-4"
               >
-                <Texto variante="cuerpo" className="font-semibold text-zinc-100">
-                  {equipo.nombre}
-                </Texto>
+                <Texto className="text-lg font-semibold text-zinc-100">{equipo.nombre}</Texto>
                 {equipo.torneo ? (
-                  <Text className="text-sm text-zinc-500 mt-1">Torneo: {equipo.torneo}</Text>
+                  <Text className="text-md text-zinc-400 mt-1">Torneo: {equipo.torneo}</Text>
                 ) : (
-                  <Text className="text-sm text-zinc-500 mt-1">Aún no juega ningún torneo</Text>
+                  <Text className="text-md text-zinc-400 mt-1">Aún no juega ningún torneo</Text>
                 )}
               </TouchableOpacity>
             ))}
