@@ -11,13 +11,11 @@ import { useAcentoEquipoSeleccionado } from '@/lib/hooks/use-acento-equipo-selec
 import { useConfigLiga } from '@/lib/config/liga'
 import { Texto } from '@/design-system/componentes/texto'
 
-export {
-  ErrorBoundary,
-}
+export { ErrorBoundary }
 
 SplashScreen.preventAutoHideAsync()
 
-const TAB_BAR_BASE_HEIGHT = 78
+const TAB_BAR_BASE_HEIGHT = 72
 
 export default function TabLayout() {
   const { equipoSeleccionadoNombre, equipoSeleccionadoCodigo } = useEquipoStore()
@@ -42,8 +40,8 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: hexAcento,
-          tabBarInactiveTintColor: '#71717a',
-          tabBarLabelStyle: { fontSize: 12 },
+          tabBarInactiveTintColor: '#e4e4e7',
+          tabBarLabelStyle: { fontSize: 12, letterSpacing: 0.5, marginTop: 1 },
           headerStyle: { backgroundColor: '#0a0a0b', height: 110 },
           headerTitleContainerStyle: { paddingVertical: 8 },
           headerTintColor: '#e4e4e7',
