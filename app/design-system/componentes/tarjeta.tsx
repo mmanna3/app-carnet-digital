@@ -117,7 +117,7 @@ function ContenidoArriba({
     >
       <CajaIcono icono={icono} tamano={tamanoIcono} tema={tema} />
       <Text
-        className={esCompacta ? 'mt-2' : 'mb-2 mt-3 min-h-[20px]'}
+        className={esCompacta ? 'mt-4' : 'mb-2 mt-3 min-h-[20px]'}
         style={{
           fontFamily: FUENTE_DISPLAY,
           fontSize: esCompacta ? 15 : 17,
@@ -135,7 +135,7 @@ function ContenidoArriba({
           fontSize: 13,
           lineHeight: 18,
           color: '#d4d4d8',
-          marginTop: esCompacta ? 2 : 0,
+          marginTop: esCompacta ? 4 : 0,
         }}
         numberOfLines={esCompacta ? 2 : 3}
       >
