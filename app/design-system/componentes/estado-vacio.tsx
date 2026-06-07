@@ -9,7 +9,7 @@ type Props = {
 
 export function EstadoVacio({ mensaje, className = '' }: Props) {
   return (
-    <View className={`flex-1 justify-center items-center px-6 py-8 ${className}`.trim()}>
+    <View className={`flex-1 justify-center items-center bg-surface px-6 py-8 ${className}`.trim()}>
       <Texto variante="cuerpo" className="text-center text-zinc-400">
         {mensaje}
       </Texto>
