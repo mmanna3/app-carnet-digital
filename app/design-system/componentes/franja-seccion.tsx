@@ -49,7 +49,7 @@ export function FranjaSeccion({
       className={
         esSeparador
           ? 'overflow-hidden rounded-xl px-6 py-12'
-          : `glass overflow-hidden ${esPill ? 'rounded-full' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
+          : `glass overflow-hidden ${esPill ? 'rounded-full px-5 py-2' : 'mb-4 rounded-2xl px-4 py-3'} ${className}`.trim()
       }
       style={[
         {
