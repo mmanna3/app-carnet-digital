@@ -52,7 +52,7 @@ function DireccionClub({ direccion, localidad, colorLink }: DireccionClubProps) 
 
   if (!url) {
     return (
-      <Text className="text-sm leading-5 text-zinc-600" numberOfLines={4}>
+      <Text className="text-base leading-6 text-zinc-600" numberOfLines={4}>
         {texto}
       </Text>
     )
@@ -66,9 +66,9 @@ function DireccionClub({ direccion, localidad, colorLink }: DireccionClubProps) 
       accessibilityLabel={`Abrir en Google Maps: ${texto}`}
       className="flex-row items-start gap-1.5"
     >
-      <Ionicons name="location-outline" size={16} color={colorLink} style={{ marginTop: 2 }} />
+      <Ionicons name="location-outline" size={18} color={colorLink} style={{ marginTop: 2 }} />
       <Text
-        className="min-w-0 flex-1 text-sm leading-5 underline"
+        className="min-w-0 flex-1 text-base leading-6 underline"
         style={{ color: colorLink }}
         numberOfLines={4}
       >
@@ -101,7 +101,7 @@ function ClubCard({ item, uriEscudo, colorLink }: ClubCardProps) {
           )}
         </View>
         <View className="min-w-0 flex-1 gap-1">
-          <Text className="text-base font-bold leading-5 text-zinc-900" numberOfLines={3}>
+          <Text className="text-lg font-bold leading-6 text-zinc-900" numberOfLines={3}>
             {textoOGuion(item.equipo)}
           </Text>
           <DireccionClub
@@ -109,7 +109,7 @@ function ClubCard({ item, uriEscudo, colorLink }: ClubCardProps) {
             localidad={item.localidad}
             colorLink={colorLink}
           />
-          <Text className="text-sm leading-5 text-zinc-600" numberOfLines={2}>
+          <Text className="text-base leading-6 text-zinc-600" numberOfLines={2}>
             Cancha: {textoOGuion(item.tipoCancha)}
           </Text>
         </View>

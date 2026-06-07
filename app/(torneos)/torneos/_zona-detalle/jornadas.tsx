@@ -154,6 +154,13 @@ function numeroDeTituloFecha(titulo: string | undefined): string {
 /** Mismo diámetro para seleccionada y no seleccionada → círculo, no óvalo. */
 const DIAMETRO_PILL_JORNADA = 48
 
+function clasePaddingCelda(encabezado: boolean, borde?: 'inicio' | 'fin'): string {
+  const py = 'py-2.5'
+  if (borde === 'inicio') return encabezado ? `pl-3 pr-2 ${py}` : `pl-3 pr-1.5 ${py}`
+  if (borde === 'fin') return encabezado ? `pl-2 pr-3 ${py}` : `pl-1.5 pr-3 ${py}`
+  return encabezado ? `px-2 ${py}` : `px-1.5 ${py}`
+}
+
 /** Misma idea que `Celda` en posiciones.tsx (sin líneas verticales entre columnas). */
 function Celda({
   children,
@@ -163,6 +170,7 @@ function Celda({
   tabular = false,
   numberOfLines = 2,
   encabezado = false,
+  borde,
 }: {
   children: React.ReactNode
   ancho: number
@@ -171,13 +179,14 @@ function Celda({
   tabular?: boolean
   numberOfLines?: number
   encabezado?: boolean
+  borde?: 'inicio' | 'fin'
 }) {
   const align = alinear === 'center' ? 'center' : alinear === 'right' ? 'right' : 'left'
   const colorTexto = encabezado ? 'text-zinc-100' : 'text-gray-900'
   return (
     <View
       style={{ width: ancho, minWidth: ancho }}
-      className={`shrink-0 justify-center ${encabezado ? 'px-2 py-2.5' : 'px-1.5 py-2.5'}`}
+      className={`shrink-0 justify-center ${clasePaddingCelda(encabezado, borde)}`}
     >
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
@@ -199,7 +208,7 @@ function FilaEncabezadoTablaJornadas({
 }) {
   return (
     <View className="flex-row rounded-t-2xl border-b border-zinc-700 bg-zinc-900">
-      <Celda ancho={ANCHO.esc} alinear="center" negrita encabezado>
+      <Celda ancho={ANCHO.esc} alinear="center" negrita encabezado borde="inicio">
         Esc
       </Celda>
       <Celda ancho={ANCHO.equipo} alinear="left" negrita encabezado>
@@ -213,7 +222,7 @@ function FilaEncabezadoTablaJornadas({
       <Celda ancho={ANCHO.pt} alinear="center" negrita encabezado tabular>
         P.T.
       </Celda>
-      <Celda ancho={ANCHO.pj} alinear="center" negrita encabezado tabular>
+      <Celda ancho={ANCHO.pj} alinear="center" negrita encabezado tabular borde="fin">
         P.J.
       </Celda>
     </View>
@@ -248,7 +257,7 @@ function FilaEquipoTabla({
     <View className={`flex-row ${bordeClase}`}>
       <View
         style={{ width: ANCHO.esc, minWidth: ANCHO.esc }}
-        className="shrink-0 items-center justify-center px-1 py-1.5"
+        className="shrink-0 items-center justify-center py-1.5 pl-3 pr-1"
       >
         {uri ? (
           <Image
@@ -272,7 +281,7 @@ function FilaEquipoTabla({
       <Celda ancho={ANCHO.pt} alinear="center" tabular>
         {numeroOGuion(equipo?.puntosTotales)}
       </Celda>
-      <Celda ancho={ANCHO.pj} alinear="center" tabular>
+      <Celda ancho={ANCHO.pj} alinear="center" tabular borde="fin">
         {numeroOGuion(equipo?.partidosJugados)}
       </Celda>
     </View>
