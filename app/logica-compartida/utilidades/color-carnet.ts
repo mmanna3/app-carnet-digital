@@ -1,5 +1,5 @@
 import { getConfigLiga, getColorLiga600, hexCabeceraPorColorAgrupadorApi } from '@/lib/config/liga'
-import { getTemaAgrupador, hexLinkAgrupadorOnLight } from '@/design-system/tokens/tema-agrupador'
+import { getTemaAgrupador, hexIconoAgrupador, hexLinkAgrupadorOnLight } from '@/design-system/tokens/tema-agrupador'
 import { COLOR_TARJETA, type ColorTarjeta } from '@/design-system/tokens/tarjeta-accion'
 
 type JugadorConColor = { color?: string | undefined; esDelegado?: boolean }
@@ -118,9 +118,7 @@ export function temaFranjaEquipo(jugadores: JugadorConColor[]): TemaFranjaCarnet
 
 /** Hex de acento para tabs e íconos activos del equipo seleccionado. */
 export function hexAcentoEquipo(jugadores: JugadorConColor[]): string {
-  const ref = jugadorReferenciaColorEquipo(jugadores)
-  if (!ref) return getColorLiga600()
-  return hexFranjaCarnet(ref)
+  return hexIconoAgrupador(colorAgrupadorEquipo(jugadores))
 }
 
 /** Hex de la pill de categoría / iconos del carnet para el equipo seleccionado. */

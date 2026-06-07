@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import type { ComponentProps } from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { hexIconoAgrupador } from '@/lib/design-system'
+import { BarraTabsInferior, TAB_ICON_SIZE } from '@/design-system/componentes/barra-tabs-inferior'
 import Clubes from '@/torneos/_zona-detalle/clubes'
 import FixtureEliminacionDirecta from '@/torneos/_zona-detalle/fixture-eliminacion-directa'
 import FixtureTodosContraTodos from '@/torneos/_zona-detalle/fixture-todos-contra-todos'
@@ -18,8 +18,6 @@ type IconName = ComponentProps<typeof Ionicons>['name']
 
 type TabDef = { titulo: string; icon: IconName; Contenido: React.ComponentType }
 
-const COLOR_INACTIVO = '#71717a'
-
 export default function ZonaDetalle() {
   const { zonaId: zonaIdParam, tipoDeFase: tipoDeFaseParam } = useLocalSearchParams<{
     zonaId?: string
@@ -30,7 +28,6 @@ export default function ZonaDetalle() {
 }
 
 function ZonaDetalleContenido() {
-  const insets = useSafeAreaInsets()
   const grande = usePantallaGrande()
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -75,7 +72,7 @@ function ZonaDetalleContenido() {
 
   const tituloHeader = TABS[tabIndex]?.titulo ?? 'Zona'
 
-  const colorIconoActivo = hexIconoAgrupador(colorAgrupador)
+  const hexAcento = hexIconoAgrupador(colorAgrupador)
 
   useHeaderConHome({ titulo: tituloHeader })
 
@@ -102,34 +99,18 @@ function ZonaDetalleContenido() {
         </View>
       </View>
 
-      <View
-        className="flex-row border-t border-border-glass bg-surface-elevated"
-        style={{ paddingBottom: Math.max(insets.bottom, 8) }}
-      >
-        <View
-          style={{ maxWidth: 1280, marginHorizontal: 'auto', width: '100%', flexDirection: 'row' }}
-        >
-          {TABS.map((t, i) => {
-            const activo = i === tabIndex
-            return (
-              <TouchableOpacity
-                key={t.titulo}
-                className="flex-1 items-center justify-center py-3"
-                onPress={() => setTabIndex(i)}
-                accessibilityRole="tab"
-                accessibilityLabel={t.titulo}
-                accessibilityState={{ selected: activo }}
-              >
-                <Ionicons
-                  name={t.icon}
-                  size={26}
-                  color={activo ? colorIconoActivo : COLOR_INACTIVO}
-                />
-              </TouchableOpacity>
-            )
-          })}
-        </View>
-      </View>
+      <BarraTabsInferior
+        hexAcento={hexAcento}
+        indiceActivo={tabIndex}
+        tabs={TABS.map((t, i) => ({
+          key: t.titulo,
+          titulo: t.titulo,
+          renderIcono: (color) => (
+            <Ionicons name={t.icon} size={TAB_ICON_SIZE} color={color} />
+          ),
+          onPress: () => setTabIndex(i),
+        }))}
+      />
     </View>
   )
 }
