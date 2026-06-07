@@ -6,6 +6,36 @@ type JugadorConColor = { color?: string | undefined; esDelegado?: boolean }
 
 export type TemaFranjaCarnet = ColorTarjeta | 'ambar'
 
+export type TemaDegradadoEquipo = {
+  degradado: readonly [string, string]
+  borde: string
+}
+
+export function hexConOpacidad(hex: string, alpha: number): string {
+  const h = hex.replace('#', '')
+  const r = parseInt(h.slice(0, 2), 16)
+  const g = parseInt(h.slice(2, 4), 16)
+  const b = parseInt(h.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+export function oscurecerHex(hex: string, factor: number): string {
+  const h = hex.replace('#', '')
+  const r = Math.min(255, Math.round(parseInt(h.slice(0, 2), 16) * factor))
+  const g = Math.min(255, Math.round(parseInt(h.slice(2, 4), 16) * factor))
+  const b = Math.min(255, Math.round(parseInt(h.slice(4, 6), 16) * factor))
+  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+}
+
+/** Mismo degradado que la pill de categoría en el carnet del jugador. */
+export function temaPillEquipo(hexLink: string): TemaDegradadoEquipo {
+  const fondoOscuro = oscurecerHex(hexLink, 0.72)
+  return {
+    degradado: [hexLink, fondoOscuro],
+    borde: hexConOpacidad(fondoOscuro, 0.85),
+  }
+}
+
 const COLOR_A_TEMA_FRANJA: Record<string, TemaFranjaCarnet> = {
   verde: COLOR_TARJETA.VERDE,
   rojo: COLOR_TARJETA.ROJO,
@@ -78,6 +108,12 @@ export function hexAcentoEquipo(jugadores: JugadorConColor[]): string {
   const ref = jugadorReferenciaColorEquipo(jugadores)
   if (!ref) return getColorLiga600()
   return hexFranjaCarnet(ref)
+}
+
+/** Hex de la pill de categoría / iconos del carnet para el equipo seleccionado. */
+export function hexLinkEquipo(jugadores: JugadorConColor[]): string {
+  const ref = jugadorReferenciaColorEquipo(jugadores)
+  return coloresDetalleCarnet(ref ?? {}).hexLink
 }
 
 /** Nombre de agrupador del equipo (p. ej. "azul" para FUTSAL). */

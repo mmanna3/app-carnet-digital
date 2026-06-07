@@ -68,3 +68,15 @@ export const TEMA_BOTON_WIZARD_ROJO = {
   degradado: ['#f87171', '#dc2626'] as const,
   borde: 'rgba(248, 113, 113, 0.85)',
 }
+
+/** CTA con acento azul (agrupador / equipo). */
+export const TEMA_BOTON_WIZARD_AZUL = {
+  degradado: ['#38bdf8', '#2563eb'] as const,
+  borde: 'rgba(56, 189, 248, 0.85)',
+}
+
+/** CTA con acento ámbar (agrupador amarillo/naranja). */
+export const TEMA_BOTON_WIZARD_AMBAR = {
+  degradado: ['#fbbf24', '#d97706'] as const,
+  borde: 'rgba(251, 191, 36, 0.85)',
+}

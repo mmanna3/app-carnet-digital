@@ -8,8 +8,10 @@ import { FUENTE_DISPLAY, FUENTE_SANS_BOLD, FUENTE_SANS_SEMIBOLD } from '@/lib/de
 import { getConfigLiga } from '@/lib/config/liga'
 import {
   coloresDetalleCarnet,
+  hexConOpacidad,
   hexFranjaCarnet,
   jugadorParaColoresCarnet,
+  temaPillEquipo,
 } from '@/lib/utilidades/color-carnet'
 import { EstadoJugador, obtenerTextoEstado, obtenerColorEstado } from '@/lib/types/estado-jugador'
 
@@ -87,7 +89,7 @@ function ColumnaCategoria({
   colorEquipo: string
   compacto?: boolean
 }) {
-  const fondoOscuro = oscurecerHex(colorEquipo, 0.72)
+  const tema = temaPillEquipo(colorEquipo)
 
   return (
     <View
@@ -98,11 +100,11 @@ function ColumnaCategoria({
         className={`overflow-hidden rounded-full ${compacto ? 'px-4 py-2' : 'px-7 py-2'}`}
         style={{
           borderWidth: 1.5,
-          borderColor: hexConOpacidad(fondoOscuro, 0.85),
+          borderColor: tema.borde,
         }}
       >
         <LinearGradient
-          colors={[colorEquipo, fondoOscuro]}
+          colors={[...tema.degradado]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
@@ -212,22 +214,6 @@ function FichaDatosJugador({
       />
     </View>
   )
-}
-
-function hexConOpacidad(hex: string, alpha: number): string {
-  const h = hex.replace('#', '')
-  const r = parseInt(h.slice(0, 2), 16)
-  const g = parseInt(h.slice(2, 4), 16)
-  const b = parseInt(h.slice(4, 6), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-function oscurecerHex(hex: string, factor: number): string {
-  const h = hex.replace('#', '')
-  const r = Math.min(255, Math.round(parseInt(h.slice(0, 2), 16) * factor))
-  const g = Math.min(255, Math.round(parseInt(h.slice(2, 4), 16) * factor))
-  const b = Math.min(255, Math.round(parseInt(h.slice(4, 6), 16) * factor))
-  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`
 }
 
 function DecoracionCarnet({ colorLiga }: { colorLiga: string }) {

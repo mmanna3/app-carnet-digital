@@ -3,6 +3,8 @@ import { Text, View } from 'react-native'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Texto } from '@/design-system/componentes/texto'
+import { useAcentoEquipoSeleccionado } from '@/lib/hooks/use-acento-equipo-seleccionado'
+import { temaPillEquipo } from '@/lib/utilidades/color-carnet'
 
 interface Props {
   codigoEquipo: string
@@ -29,6 +31,7 @@ export default function CuadroBuscador({
   isGeneratingPDF,
   isGeneratingPlanillas,
 }: Props) {
+  const { hexLink } = useAcentoEquipoSeleccionado()
   const accionesDeshabilitadas = isGeneratingPDF || isGeneratingPlanillas
 
   return (
@@ -41,7 +44,7 @@ export default function CuadroBuscador({
         <View className="w-30 shrink-0">
           <CampoTexto
             inputTestID="input-codigo-buscar"
-            placeholder="Ej: ABC1234"
+            placeholder="Ej:ABC1234"
             value={codigoEquipo}
             onChangeText={onChangeCodigoEquipo}
             autoCapitalize="characters"
@@ -52,8 +55,9 @@ export default function CuadroBuscador({
         <View className="min-w-0 flex-1">
           <Boton
             testID="boton-buscar"
-            texto={isLoading ? 'Buscando...' : 'Ver jugadores'}
+            texto={isLoading ? 'Buscando...' : 'Jugadores'}
             icono="search"
+            tema={temaPillEquipo(hexLink)}
             cargando={isLoading}
             onPress={onBuscar}
             deshabilitado={isLoading}
@@ -61,7 +65,9 @@ export default function CuadroBuscador({
         </View>
       </View>
 
-      {error && <Text className="mt-3 text-center text-sm text-red-400">{error}</Text>}
+      {error && (
+        <Text className="mt-4 text-center tracking-wide text-md text-red-400">{error}</Text>
+      )}
 
       {mostrarAcciones && (
         <View className="mt-3 flex-row gap-2.5">
