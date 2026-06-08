@@ -3,11 +3,7 @@ import { View, useWindowDimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { hexIconoAgrupador } from '@/lib/design-system'
 import { Texto } from '@/design-system/componentes/texto'
-
-function textoOGuion(s: string) {
-  const t = s.trim()
-  return t.length > 0 ? t : '—'
-}
+import { textoOGuion } from '@/lib/utilidades/recursos-api'
 
 function lineaFaseZona(fase: string, zona: string) {
   const f = fase.trim()

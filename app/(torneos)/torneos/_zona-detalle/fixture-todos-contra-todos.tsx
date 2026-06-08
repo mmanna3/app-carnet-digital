@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import {
   CabeceraBloque,
   ContenedorTabla,
@@ -12,38 +12,8 @@ import { api } from '@/lib/api/api'
 import type { FixtureFechaDTO, FixturePartidoDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
-
-function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
-  const r = (ruta ?? '').trim()
-  if (!r) return null
-  if (/^(https?:|data:)/i.test(r)) return r
-  const base = apiUrl?.trim()
-  if (!base) return null
-  return `${base.replace(/\/+$/, '')}${r.startsWith('/') ? r : `/${r}`}`
-}
-
-function textoOGuion(s: string | undefined) {
-  const t = (s ?? '').trim()
-  return t.length > 0 ? t : '—'
-}
-
-function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | undefined }) {
-  const u = uriRecursoPublicoApi(apiUrl, uri)
-  return (
-    <View style={{ width: 36, height: 36 }} className="shrink-0 items-center justify-center">
-      {u ? (
-        <Image
-          source={{ uri: u }}
-          style={{ width: 36, height: 36 }}
-          className="rounded-md"
-          resizeMode="contain"
-        />
-      ) : (
-        <View className="h-9 w-9 rounded-md bg-gray-100" />
-      )}
-    </View>
-  )
-}
+import { textoOGuion } from '@/lib/utilidades/recursos-api'
+import { EscudoEquipo } from '@/torneos/_zona-detalle/componentes/escudo-equipo'
 
 function FilaPartido({
   partido,
@@ -54,7 +24,12 @@ function FilaPartido({
 }) {
   return (
     <View className="flex-row items-center gap-2 border-b border-gray-100 py-2.5 last:border-b-0 px-2">
-      <Escudo uri={partido.localEscudo} apiUrl={apiUrl} />
+      <EscudoEquipo
+        rutaEscudo={partido.localEscudo}
+        apiUrl={apiUrl}
+        tamaño={36}
+        classNameContenedor="shrink-0 items-center justify-center"
+      />
       <Text
         className="min-w-0 flex-1 text-right text-base font-medium leading-6 text-gray-900"
         numberOfLines={2}
@@ -68,7 +43,12 @@ function FilaPartido({
       >
         {textoOGuion(partido.visitante)}
       </Text>
-      <Escudo uri={partido.visitanteEscudo} apiUrl={apiUrl} />
+      <EscudoEquipo
+        rutaEscudo={partido.visitanteEscudo}
+        apiUrl={apiUrl}
+        tamaño={36}
+        classNameContenedor="shrink-0 items-center justify-center"
+      />
     </View>
   )
 }

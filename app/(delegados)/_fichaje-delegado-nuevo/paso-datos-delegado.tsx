@@ -1,71 +1,17 @@
-import React, { useState, useRef, useCallback } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  KeyboardAvoidingView,
-  Keyboard,
-  Platform,
-  type LayoutChangeEvent,
-} from 'react-native'
+import React, { useState, useRef } from 'react'
+import { View, Text, ScrollView, KeyboardAvoidingView, Keyboard, Platform } from 'react-native'
 import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
+import { useScrollAlCampo } from '@/lib/hooks/use-scroll-al-campo'
 import Cabecera from '@/fichaje-jugador/_components/cabecera'
 import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
-import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import Boton from '@/design-system/componentes/boton'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import { Titulo } from '@/design-system/componentes'
-
-const formatearFecha = (d: Date) =>
-  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
-
-const capitalizar = (s: string) =>
-  s
-    .slice(0, 14)
-    .split(' ')
-    .map((p) => (p ? p.charAt(0).toUpperCase() + p.slice(1).toLowerCase() : ''))
-    .join(' ')
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-type ErroresCampos = {
-  nombre: string | null
-  apellido: string | null
-  dni: string | null
-  fechaNac: string | null
-  email: string | null
-  celular: string | null
-}
-
-function validarNombre(v: string): string | null {
-  if (!v.trim()) return 'El nombre es obligatorio'
-  return null
-}
-
-function validarApellido(v: string): string | null {
-  if (!v.trim()) return 'El apellido es obligatorio'
-  return null
-}
-
-function validarDni(v: string): string | null {
-  const n = v.trim()
-  if (!n) return 'El DNI es obligatorio'
-  if (n.length < 7 || n.length > 9) return 'El DNI debe tener entre 7 y 9 dígitos'
-  return null
-}
-
-function validarEmail(v: string): string | null {
-  if (!v.trim()) return 'El email es obligatorio'
-  if (!EMAIL_REGEX.test(v.trim())) return 'Ingresá un email válido'
-  return null
-}
-
-function validarCelular(v: string): string | null {
-  if (!v.trim()) return 'El celular es obligatorio'
-  if (v.trim().length < 8) return 'El celular debe tener al menos 8 dígitos'
-  return null
-}
+import FormularioDatosDelegado from './formulario-datos-delegado'
+import {
+  ERRORES_INICIALES,
+  type ErroresCamposDelegado,
+  puedeAvanzarDatosDelegado,
+} from './validacion-datos-delegado'
 
 export default function PasoDatosDelegado() {
   const {
@@ -90,52 +36,23 @@ export default function PasoDatosDelegado() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fechaSeleccionadaEnModal = useRef<Date | null>(null)
-  const [errores, setErrores] = useState<ErroresCampos>({
-    nombre: null,
-    apellido: null,
-    dni: null,
-    fechaNac: null,
-    email: null,
-    celular: null,
-  })
+  const [errores, setErrores] = useState<ErroresCamposDelegado>(ERRORES_INICIALES)
 
   const scrollViewRef = useRef<ScrollView>(null)
-  const formTopRef = useRef(0)
-  const fieldOffsets = useRef<Record<string, number>>({})
+  const { handleFormLayout, handleFieldLayout, scrollToField } = useScrollAlCampo(scrollViewRef)
 
-  const handleFieldLayout = useCallback(
-    (fieldKey: string) => (e: LayoutChangeEvent) => {
-      const { y } = e.nativeEvent.layout
-      fieldOffsets.current[fieldKey] = y
-    },
-    []
-  )
-
-  const scrollToField = useCallback((fieldKey: string) => {
-    const fieldY = fieldOffsets.current[fieldKey]
-    if (fieldY === undefined) return
-    const totalY = formTopRef.current + fieldY
-    const targetY = Math.max(0, totalY - 80)
-    // Pequeño delay para que el scroll ocurra después de que el teclado empiece a aparecer
-    setTimeout(() => {
-      scrollViewRef.current?.scrollTo({
-        y: targetY,
-        animated: true,
-      })
-    }, 100)
-  }, [])
-
-  const actualizarError = (campo: keyof ErroresCampos, mensaje: string | null) => {
+  const actualizarError = (campo: keyof ErroresCamposDelegado, mensaje: string | null) => {
     setErrores((prev) => ({ ...prev, [campo]: mensaje }))
   }
 
-  const puedeAvanzar =
-    !validarNombre(nombre) &&
-    !validarApellido(apellido) &&
-    !validarDni(dni) &&
-    !!fechaNac &&
-    !validarEmail(email) &&
-    !validarCelular(celular)
+  const puedeAvanzar = puedeAvanzarDatosDelegado({
+    nombre,
+    apellido,
+    dni,
+    fechaNac,
+    email,
+    celular,
+  })
 
   const handleContinuar = async () => {
     setError(null)
@@ -177,114 +94,33 @@ export default function PasoDatosDelegado() {
             )}
           </View>
 
-          <View
-            className="gap-3"
-            onLayout={(e) => {
-              formTopRef.current = e.nativeEvent.layout.y
+          <FormularioDatosDelegado
+            nombre={nombre}
+            apellido={apellido}
+            dni={dni}
+            fechaNac={fechaNac}
+            email={email}
+            celular={celular}
+            errores={errores}
+            error={error}
+            loading={loading}
+            puedeAvanzar={puedeAvanzar}
+            onFormLayout={handleFormLayout}
+            handleFieldLayout={handleFieldLayout}
+            scrollToField={scrollToField}
+            actualizarError={actualizarError}
+            setNombre={setNombre}
+            setApellido={setApellido}
+            setDni={setDni}
+            setEmail={setEmail}
+            setCelular={setCelular}
+            setError={setError}
+            onAbrirFecha={() => {
+              fechaSeleccionadaEnModal.current = fechaNac
+              setMostrarPicker(true)
             }}
-          >
-            <View onLayout={handleFieldLayout('nombre')}>
-              <CampoTexto
-                inputTestID="input-nombre-delegado"
-                label="Nombre"
-                placeholder="Ingresá tu nombre"
-                value={nombre}
-                onChangeText={(v) => setNombre(capitalizar(v))}
-                error={errores.nombre ?? undefined}
-                onBlur={() => actualizarError('nombre', validarNombre(nombre))}
-                onFocus={() => scrollToField('nombre')}
-              />
-            </View>
-            <View onLayout={handleFieldLayout('apellido')}>
-              <CampoTexto
-                inputTestID="input-apellido-delegado"
-                label="Apellido"
-                placeholder="Ingresá tu apellido"
-                value={apellido}
-                onChangeText={(v) => setApellido(capitalizar(v))}
-                error={errores.apellido ?? undefined}
-                onBlur={() => actualizarError('apellido', validarApellido(apellido))}
-                onFocus={() => scrollToField('apellido')}
-              />
-            </View>
-            <View onLayout={handleFieldLayout('dni')}>
-              <CampoTexto
-                inputTestID="input-dni-delegado"
-                label="DNI"
-                placeholder="Ingresá tu DNI (7-9 dígitos)"
-                value={dni}
-                onChangeText={(v) => {
-                  setDni(v.replace(/[^0-9]/g, '').slice(0, 9))
-                  setError(null)
-                }}
-                onBlur={() => actualizarError('dni', validarDni(dni))}
-                error={errores.dni ?? undefined}
-                keyboardType="numeric"
-                onFocus={() => scrollToField('dni')}
-              />
-            </View>
-
-            <View onLayout={handleFieldLayout('fecha')}>
-              <Text className="text-zinc-400 text-sm mb-1.5">Fecha de nacimiento</Text>
-              <TouchableOpacity
-                testID="input-fecha-nacimiento-delegado"
-                onPress={() => {
-                  Keyboard.dismiss()
-                  fechaSeleccionadaEnModal.current = fechaNac
-                  setMostrarPicker(true)
-                }}
-                className={`glass w-full px-4 py-5 rounded-2xl border ${
-                  errores.fechaNac ? 'border-red-500/80' : 'border-border-glass'
-                }`}
-              >
-                <Text className={fechaNac ? 'text-zinc-100' : 'text-zinc-500'}>
-                  {fechaNac ? formatearFecha(fechaNac) : 'Seleccioná la fecha de nacimiento'}
-                </Text>
-              </TouchableOpacity>
-              {errores.fechaNac ? (
-                <Text className="text-red-400 text-sm mt-1">{errores.fechaNac}</Text>
-              ) : null}
-            </View>
-
-            <View onLayout={handleFieldLayout('email')}>
-              <CampoTexto
-                inputTestID="input-email-delegado"
-                label="Email"
-                placeholder="ejemplo@correo.com"
-                value={email}
-                onChangeText={(v) => setEmail(v.trim())}
-                onBlur={() => actualizarError('email', validarEmail(email))}
-                error={errores.email ?? undefined}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onFocus={() => scrollToField('email')}
-              />
-            </View>
-            <View onLayout={handleFieldLayout('celular')}>
-              <CampoTexto
-                inputTestID="input-celular-delegado"
-                label="Celular"
-                placeholder="Ingresá tu número de celular"
-                value={celular}
-                onChangeText={(v) => setCelular(v.replace(/[^0-9]/g, ''))}
-                onBlur={() => actualizarError('celular', validarCelular(celular))}
-                error={errores.celular ?? undefined}
-                keyboardType="numeric"
-                onFocus={() => scrollToField('celular')}
-              />
-            </View>
-
-            {error && <Text className="text-red-400 text-sm text-center">{error}</Text>}
-
-            <Boton
-              testID="boton-continuar-datos"
-              texto={loading ? 'Verificando...' : 'Continuar'}
-              icono="arrow-right"
-              cargando={loading}
-              onPress={handleContinuar}
-              deshabilitado={!puedeAvanzar || loading}
-            />
-          </View>
+            onContinuar={handleContinuar}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
 

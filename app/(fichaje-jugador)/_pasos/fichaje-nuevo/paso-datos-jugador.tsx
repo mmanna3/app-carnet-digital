@@ -15,17 +15,8 @@ import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import { Titulo } from '@/design-system/componentes'
-
-const formatearFecha = (d: Date) =>
-  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
-
-/** Primera letra en mayúscula, resto en minúscula (por palabra) */
-const capitalizar = (s: string) =>
-  s
-    .slice(0, 14)
-    .split(' ')
-    .map((p) => (p ? p.charAt(0).toUpperCase() + p.slice(1).toLowerCase() : ''))
-    .join(' ')
+import { capitalizar, formatearFecha } from '@/lib/utilidades/formateo-formulario'
+import { dniTieneLongitudValida } from '@/lib/utilidades/validacion-formulario'
 
 export default function PasoDatosJugador() {
   const {
@@ -46,7 +37,7 @@ export default function PasoDatosJugador() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const dniValido = dni.trim().length >= 7 && dni.trim().length <= 9
+  const dniValido = dniTieneLongitudValida(dni)
   const puedeAvanzar = nombre.trim() && apellido.trim() && dniValido && !!fechaNac
 
   const handleContinuar = async () => {

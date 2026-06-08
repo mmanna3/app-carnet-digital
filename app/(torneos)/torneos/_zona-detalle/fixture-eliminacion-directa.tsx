@@ -13,20 +13,7 @@ import { api } from '@/lib/api/api'
 import type { InstanciasDTO, PartidoEliminacionDirectaDTO } from '@/lib/api/clients'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
-
-function uriRecursoPublicoApi(apiUrl: string | undefined, ruta: string | undefined): string | null {
-  const r = (ruta ?? '').trim()
-  if (!r) return null
-  if (/^(https?:|data:)/i.test(r)) return r
-  const base = apiUrl?.trim()
-  if (!base) return null
-  return `${base.replace(/\/+$/, '')}${r.startsWith('/') ? r : `/${r}`}`
-}
-
-function textoOGuion(s: string | undefined) {
-  const t = (s ?? '').trim()
-  return t.length > 0 ? t : '—'
-}
+import { textoOGuion, uriRecursoPublicoApi } from '@/lib/utilidades/recursos-api'
 
 function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | undefined }) {
   const u = uriRecursoPublicoApi(apiUrl, uri)
