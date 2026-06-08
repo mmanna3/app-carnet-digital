@@ -1,6 +1,7 @@
 appId: com.ykn.edefidelegados
+name: Delegado — navegación y contenido en todas las tabs
 ---
-# Flujo: login → seleccionar equipo → menú → "Cerrar sesión" → vuelve a pantalla login
+# Flujo: login → seleccionar equipo → Mis jugadores → Buscar → Pendientes
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
@@ -33,20 +34,37 @@ appId: com.ykn.edefidelegados
     timeout: 15000
 - tapOn:
     id: 'boton-iniciar-sesion'
-# PantallaSeleccionEquipo
+# PantallaSeleccionEquipo — tap en el primer equipo del mock
 - assertVisible:
     id: 'pantalla-seleccion-equipo'
 - tapOn:
     id: 'item-equipo-1'
-# Tab Mis Jugadores — abrir menú → Cerrar sesión
+# Tab Mis Jugadores
 - assertVisible:
     id: 'pantalla-mis-jugadores'
+- assertVisible:
+    id: 'carnet-jugador-1'
+# Tab Buscar
 - tapOn:
-    id: 'boton-menu-principal'
+    id: 'tab-buscar'
+- assertVisible:
+    id: 'pantalla-buscar'
 - tapOn:
-    id: 'menu-item-cerrar-sesion'
-# El auth guard redirige a home (intro) tras cerrar sesión
-- extendedWaitUntil:
-    visible:
-      id: 'card-delegados'
-    timeout: 15000
+    id: 'input-codigo-buscar'
+- inputText: 'MTD0001'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- tapOn:
+    id: 'boton-buscar'
+- assertVisible:
+    id: 'carnet-jugador-1'
+# Tab Pendientes
+- tapOn:
+    id: 'tab-pendientes'
+- assertVisible:
+    id: 'pantalla-pendientes'
+- assertVisible:
+    id: 'carnet-jugador-2'

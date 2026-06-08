@@ -1,4 +1,5 @@
 appId: com.ykn.edefidelegados
+name: Fichaje — jugador fichado en otro equipo
 ---
 # Flujo "jugador ya fichado": home → intro → código equipo → DNI → confirmación
 #

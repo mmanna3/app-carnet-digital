@@ -4,7 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
 import { FUENTE_DISPLAY } from '@/lib/design-system/fuentes'
 import { getConfigLiga } from '@/lib/config/liga'
+import { TEMAS_TARJETA_ACCION } from '@/design-system/tokens/tarjeta-accion'
 import { temaBotonPrimario, type TemaDegradadoEquipo } from '@/lib/utilidades/color-carnet'
+
+const temaVerdeNegro = TEMAS_TARJETA_ACCION.verde
 
 const COLORES_BOTON = ['verde', 'rojo', 'azul', 'ambar'] as const
 type ColorBoton = (typeof COLORES_BOTON)[number]
@@ -45,8 +48,13 @@ export default function Boton({
       : color === 'ambar'
         ? 'amarillo'
         : color
-  const temaVisual = tema ?? temaBotonPrimario(colorAgrupador)
-  const degradadoVertical = habilitado
+  const usaDegradadoVerde = !tema && color === 'verde' && colorAgrupador === 'verde'
+  const temaVisual =
+    tema ??
+    (usaDegradadoVerde
+      ? { degradado: temaVerdeNegro.degradado, borde: temaVerdeNegro.borde }
+      : temaBotonPrimario(colorAgrupador))
+  const degradadoHorizontal = usaDegradadoVerde
 
   const colorTexto = habilitado ? '#fafafa' : isDisabled ? '#71717a' : '#e4e4e7'
   const colorIcono = colorTexto
@@ -69,25 +77,27 @@ export default function Boton({
       >
         {habilitado ? (
           <LinearGradient
-            colors={[...temaVisual.degradado]}
-            start={degradadoVertical ? { x: 0, y: 0 } : { x: 0, y: 0.5 }}
-            end={degradadoVertical ? { x: 0, y: 1 } : { x: 1, y: 0.5 }}
+            colors={temaVisual.degradado}
+            start={degradadoHorizontal ? { x: 0, y: 0.5 } : { x: 0, y: 0 }}
+            end={degradadoHorizontal ? { x: 1, y: 0.5 } : { x: 0, y: 1 }}
             style={StyleSheet.absoluteFill}
             pointerEvents="none"
           />
         ) : null}
-        <View className="min-h-[48px] flex-row items-center justify-center gap-2 px-5 py-3">
+        <View className="min-h-[60px] flex-row items-center justify-center gap-2 px-5 py-5">
           {cargando ? (
             <ActivityIndicator color={colorIcono} size="small" />
           ) : icono ? (
             <Feather name={icono} size={20} color={colorIcono} />
           ) : null}
           <Text
-            className="text-sm uppercase tracking-wide"
+            className="uppercase"
             style={{
               fontFamily: FUENTE_DISPLAY,
               color: colorTexto,
-              lineHeight: 20,
+              fontSize: 17,
+              lineHeight: 26,
+              letterSpacing: 2,
               ...(icono || cargando ? { transform: [{ translateY: 2 }] } : {}),
             }}
           >

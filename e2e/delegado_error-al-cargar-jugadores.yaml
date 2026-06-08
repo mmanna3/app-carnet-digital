@@ -1,4 +1,5 @@
 appId: com.ykn.edefidelegados
+name: Delegado — error al cargar jugadores
 ---
 # Error de red al cargar mis jugadores: el servidor devuelve 500 → pantalla de error
 #

@@ -1,4 +1,5 @@
 appId: com.ykn.edefidelegados
+name: Delegado — transferir jugador
 ---
 # Transferir jugador individual: long press → modal acciones → seleccionar equipo destino → confirmar
 #

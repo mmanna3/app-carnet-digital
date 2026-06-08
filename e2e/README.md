@@ -64,13 +64,40 @@ También podés correr Maestro directamente si Metro y la app ya están corriend
 npm run test:e2e:ios
 ```
 
+## Convención de nombres
+
+Cada flow tiene un prefijo de dominio (`fichaje_`, `delegado_` o `torneo_`), palabras separadas con guiones medios, y un atributo `name` legible en español para los reportes de Maestro.
+
+Ejemplos: `fichaje_nuevo-jugador.yaml`, `delegado_navegacion-tabs-principal.yaml`.
+
 ## Correr un test puntual
 
 Con Metro y el mock server ya corriendo:
 
 ```bash
-npm run test:e2e:single e2e/01_fichaje_nuevo_jugador.yaml
+npm run test:e2e:single e2e/fichaje_nuevo-jugador.yaml
 ```
+
+## Suite actual (14 flows)
+
+| Archivo                                        | Qué cubre                                         |
+| ---------------------------------------------- | ------------------------------------------------- |
+| `fichaje_nuevo-jugador.yaml`                   | Fichaje anónimo — jugador nuevo (wizard completo) |
+| `fichaje_jugador-fichado-en-otro-equipo.yaml`  | Fichaje anónimo — jugador ya fichado              |
+| `delegado_fichaje-no-existente.yaml`           | Registro de delegado nuevo                        |
+| `delegado_fichaje-ya-existente.yaml`           | Registro de delegado ya existente                 |
+| `delegado_fichaje-nuevo-jugador.yaml`          | Fichaje autenticado — jugador nuevo               |
+| `delegado_fichaje-jugador-en-otro-equipo.yaml` | Fichaje autenticado — jugador en otro equipo      |
+| `delegado_navegacion-tabs-principal.yaml`      | Login, Mis jugadores, Buscar y Pendientes         |
+| `delegado_cerrar-sesion.yaml`                  | Cerrar sesión                                     |
+| `delegado_cambiar-equipo.yaml`                 | Cambiar equipo                                    |
+| `delegado_eliminar-jugador.yaml`               | Eliminar jugador individual                       |
+| `delegado_transferir-jugador.yaml`             | Transferir jugador                                |
+| `delegado_eliminar-jugadores-masivo.yaml`      | Eliminación masiva                                |
+| `delegado_error-al-eliminar.yaml`              | Error de API al eliminar                          |
+| `delegado_error-al-cargar-jugadores.yaml`      | Error de API al cargar jugadores                  |
+
+Las validaciones de formulario del paso datos (`fichaje_dni-formato-invalido`, `fichaje_campos-obligatorios`, `fichaje_codigo-invalido`) se cubren con tests unitarios en Jest.
 
 ## Escenarios del mock server
 

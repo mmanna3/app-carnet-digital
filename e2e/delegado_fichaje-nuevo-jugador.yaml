@@ -1,9 +1,17 @@
 appId: com.ykn.edefidelegados
+name: Delegado — fichaje nuevo jugador
 ---
-# Flujo completo "nuevo delegado" (azul): login → No estoy registrado → intro →
-# código club → datos → foto → fotos DNI → confirmación → completado
+# ⚠️  CONFLICTO CON BACKEND REAL: este test usa DNI 12345678, el mismo que el fichaje_nuevo-jugador
+# (fichaje anónimo nuevo jugador). Cuando se corre el suite completo, el fichaje_nuevo-jugador crea
+# ese jugador como Pendiente de aprobación, y este test falla con "El DNI está pendiente
+# de aprobación". Con el mock server no hay problema porque el servidor es stateless.
+# Solución: usar un DNI distinto en este test (y actualizar el mock server si corresponde).
 #
-# DNI 12345678: el mock devuelve false en el-dni-esta-fichado → validarDniNuevo pasa OK.
+# Flujo: login → seleccionar equipo → menú "Fichar jugadores" →
+# card nuevo (azul) → datos → foto → fotos DNI → autorización → confirmación
+#
+# El equipo ya está en el store (delegado autenticado), no hay paso de código equipo.
+# DNI 12345678: mock devuelve false en el-dni-esta-fichado.
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
@@ -19,52 +27,56 @@ appId: com.ykn.edefidelegados
       id: 'pantalla-login'
     timeout: 15000
 - tapOn:
-    id: 'boton-no-registrado'
-# PantallaIntroDelegado
-- assertVisible:
-    id: 'pantalla-intro-delegado'
+    id: 'input-usuario'
+- inputText: 'delegado-e2e'
 - tapOn:
-    id: 'card-nuevo-delegado'
-# PasoCodigoClub (paso 1 de 5)
-- assertVisible:
-    id: 'paso-codigo-club'
-- tapOn:
-    id: 'input-codigo-club'
-- inputText: 'MTD0001'
-- tapOn:
-    id: 'titulo-codigo-club'
-- extendedWaitUntil:
-    visible:
-      id: 'boton-validar-club'
-      enabled: true
-    timeout: 15000
-- tapOn:
-    id: 'boton-validar-club'
-# PasoDatosDelegado (paso 2 de 5)
-- assertVisible:
-    id: 'paso-datos-delegado'
-- tapOn:
-    id: 'input-nombre-delegado'
-- inputText: 'Juan'
-- tapOn:
-    id: 'input-apellido-delegado'
-- inputText: 'Perez'
-- tapOn:
-    id: 'input-dni-delegado'
-- inputText: '12345678'
+    id: 'input-password'
+- inputText: 'password123'
 - runFlow:
     when:
       platform: android
     commands:
       - hideKeyboard
-- runFlow:
-    when:
-      platform: ios
-    commands:
-      - tapOn:
-          text: 'Datos del delegado'
+- extendedWaitUntil:
+    visible:
+      id: 'boton-iniciar-sesion'
+      enabled: true
+    timeout: 15000
 - tapOn:
-    id: 'input-fecha-nacimiento-delegado'
+    id: 'boton-iniciar-sesion'
+# PantallaSeleccionEquipo
+- assertVisible:
+    id: 'pantalla-seleccion-equipo'
+- tapOn:
+    id: 'item-equipo-1'
+# Tab Mis Jugadores — abrir menú
+- assertVisible:
+    id: 'pantalla-mis-jugadores'
+- tapOn:
+    id: 'boton-menu-principal'
+- tapOn:
+    id: 'menu-item-fichar-jugadores'
+# PantallaIntroDelegado
+- assertVisible:
+    id: 'pantalla-intro-delegado'
+- tapOn:
+    id: 'card-nuevo'
+# PasoDatosJugador (paso 1 de 4)
+- assertVisible:
+    id: 'paso-datos-jugador'
+- tapOn:
+    id: 'input-nombre'
+- inputText: 'Juan'
+- tapOn:
+    id: 'input-apellido'
+- inputText: 'Perez'
+- tapOn:
+    id: 'input-dni-jugador'
+- inputText: '12345678'
+- tapOn:
+    text: 'Datos del jugador'
+- tapOn:
+    id: 'input-fecha-nacimiento'
 - waitForAnimationToEnd
 - runFlow:
     when:
@@ -86,34 +98,18 @@ appId: com.ykn.edefidelegados
       - tapOn:
           text: 'Aceptar'
           optional: true
-- tapOn:
-    id: 'input-email-delegado'
-- inputText: 'juan.perez@ejemplo.com'
-- runFlow:
-    when:
-      platform: android
-    commands:
-      - hideKeyboard
-- tapOn:
-    id: 'input-celular-delegado'
-- inputText: '1123456789'
-- runFlow:
-    when:
-      platform: android
-    commands:
-      - hideKeyboard
 - extendedWaitUntil:
     visible:
-      id: 'boton-continuar-datos'
+      id: 'boton-continuar'
       enabled: true
     timeout: 15000
 - tapOn:
-    id: 'boton-continuar-datos'
-# PasoFotoDelegado (paso 3 de 5) — seleccionar foto desde galería
+    id: 'boton-continuar'
+# PasoFoto (paso 2 de 4)
 - assertVisible:
-    id: 'paso-foto-delegado'
+    id: 'paso-foto'
 - tapOn:
-    id: 'boton-seleccionar-foto-delegado'
+    id: 'boton-seleccionar-foto'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -139,16 +135,16 @@ appId: com.ykn.edefidelegados
           optional: true
 - extendedWaitUntil:
     visible:
-      id: 'boton-subir-foto-delegado'
+      id: 'boton-subir-foto'
       enabled: true
     timeout: 15000
 - tapOn:
-    id: 'boton-subir-foto-delegado'
-# PasoFotosDniDelegado (paso 4 de 5) — frente y dorso desde galería
+    id: 'boton-subir-foto'
+# PasoFotosDni (paso 3 de 4)
 - assertVisible:
-    id: 'paso-fotos-dni-delegado'
+    id: 'paso-fotos-dni'
 - tapOn:
-    id: 'boton-seleccionar-frente-delegado'
+    id: 'boton-seleccionar-frente'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -175,7 +171,7 @@ appId: com.ykn.edefidelegados
 - waitForAnimationToEnd
 - scroll
 - tapOn:
-    id: 'boton-seleccionar-dorso-delegado'
+    id: 'boton-seleccionar-dorso'
 - tapOn: 'Elegir de galería'
 - runFlow:
     when:
@@ -201,21 +197,16 @@ appId: com.ykn.edefidelegados
           optional: true
 - extendedWaitUntil:
     visible:
-      id: 'boton-subir-dni-delegado'
+      id: 'boton-subir-dni'
       enabled: true
     timeout: 15000
 - tapOn:
-    id: 'boton-subir-dni-delegado'
-# PasoConfirmacionDelegado (paso 5 de 5) → POST /api/Delegado al mock server
+    id: 'boton-subir-dni'
+# PasoAutorizacion (paso 4 de 4) → POST /api/Jugador al mock server
 - assertVisible:
-    id: 'paso-confirmacion-delegado'
-- extendedWaitUntil:
-    visible:
-      id: 'boton-enviar-delegado'
-      enabled: true
-    timeout: 15000
+    id: 'paso-autorizacion'
 - tapOn:
-    id: 'boton-enviar-delegado'
-# PantallaCompletado
+    id: 'boton-enviar'
+# PantallaConfirmacion
 - assertVisible:
-    id: 'pantalla-completado-delegado'
+    id: 'pantalla-confirmacion'

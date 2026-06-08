@@ -1,4 +1,5 @@
 appId: com.ykn.edefidelegados
+name: Delegado — registro ya existente
 ---
 # Flujo "delegado ya registrado" (verde): login → No estoy registrado → intro →
 # código club → DNI → confirmación → completado
