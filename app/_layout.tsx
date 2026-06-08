@@ -3,13 +3,19 @@ import { LogBox } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { Slot, Stack, useSegments, useRouter, useRootNavigationState } from 'expo-router'
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
+import { Stack, useSegments, useRouter, useRootNavigationState, Slot } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import Constants from 'expo-constants'
 import 'react-native-reanimated'
 
-import { useColorScheme } from '@/components/useColorScheme'
+import { useColorScheme } from '@/logica-compartida/hooks/use-color-scheme'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { useEquipoStore } from '@/lib/hooks/use-equipo-store'
 import { useLigaStore } from '@/lib/hooks/use-liga-store'
@@ -18,26 +24,19 @@ import { LoginDTO } from '@/lib/api/clients'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MenuProvider } from 'react-native-popup-menu'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import HeaderMenu from './components/header-menu'
+import { tieneSegmento } from '@/logica-compartida/utilidades/segmentos-ruta'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
-export const unstable_settings = {
-  initialRouteName: 'home',
-}
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
-// En modo E2E, suprimir la overlay de warnings de LogBox para que Maestro no haga clic en ella accidentalmente.
 if (process.env.EXPO_PUBLIC_E2E_API_URL) {
   LogBox.ignoreAllLogs()
+} else if (__DEV__) {
+  LogBox.ignoreLogs(['[Reanimated] Reduced motion setting is enabled on this device.'])
 }
 
-// Conectar useAuth con api para romper el ciclo de require
 useAuth
   .getState()
   ._setLoginImpl(async (usuario, password) => api.login(new LoginDTO({ usuario, password })))
@@ -56,24 +55,25 @@ function useProtectedRoute(loaded: boolean) {
     if (!navigationState?.key) return
     if (!loaded) return
 
-    const inAuthGroup = segments[0] === '(auth)'
-    const inSeleccionEquipo = segments[0] === 'seleccion-de-equipo'
-    const inSeleccionLiga = (segments[0] as string) === 'seleccion-de-liga'
-    const inHome = (segments[0] as string) === 'home'
-    const inFichajes = (segments[0] as string) === 'fichajes'
-    const inRegistroDelegado = (segments[0] as string) === 'registro-delegado'
-    const inTorneos = (segments[0] as string) === 'torneos'
-    const inTorneoDetalle = (segments[0] as string) === 'torneo-detalle'
-    const inZonaDetalle = (segments[0] as string) === 'zona-detalle'
+    const inAuth =
+      tieneSegmento(segments, 'inicio-de-sesion') || tieneSegmento(segments, 'cambiar-password')
+    const inSeleccionEquipo = tieneSegmento(segments, 'seleccion-de-equipo')
+    const inSeleccionLiga = tieneSegmento(segments, 'seleccion-de-liga')
+    const inHome = tieneSegmento(segments, 'home')
+    const inFichajes = tieneSegmento(segments, 'fichajes')
+    const inRegistroDelegado = tieneSegmento(segments, 'registro-delegado')
+    const inTorneos = tieneSegmento(segments, 'torneos')
+    const inTorneoDetalle = tieneSegmento(segments, 'torneo-detalle')
+    const inZonaDetalle = tieneSegmento(segments, 'zona-detalle')
+
     if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
-      router.replace('/seleccion-de-liga' as any)
+      router.replace(RUTAS.SELECCION_LIGA)
       return
     }
 
-    // No autenticado: Home (UNILIGA o MULTILIGA con liga elegida), (auth), seleccion-de-liga, fichajes o registro-delegado
     if (
       !isAuthenticated &&
-      !inAuthGroup &&
+      !inAuth &&
       !inSeleccionLiga &&
       !inHome &&
       !inFichajes &&
@@ -82,11 +82,11 @@ function useProtectedRoute(loaded: boolean) {
       !inTorneoDetalle &&
       !inZonaDetalle
     ) {
-      router.replace('/home' as any)
-    } else if (isAuthenticated && inAuthGroup) {
-      router.replace('/seleccion-de-equipo')
+      router.replace(RUTAS.HOME)
+    } else if (isAuthenticated && inAuth) {
+      router.replace(RUTAS.SELECCION_EQUIPO)
     } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
-      router.replace('/seleccion-de-equipo')
+      router.replace(RUTAS.SELECCION_EQUIPO)
     }
   }, [
     esMultiliga,
@@ -109,8 +109,18 @@ const queryClient = new QueryClient({
   },
 })
 
+function RootStack() {
+  return <Stack screenOptions={{ headerShown: false }} />
+}
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
+    Coalition: require('../assets/fonts/Coalition.ttf'),
+    D3Euronism: require('../assets/fonts/D3Euronism.ttf'),
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })
@@ -129,8 +139,6 @@ export default function RootLayout() {
   useProtectedRoute(loaded)
 
   if (!loaded) {
-    // Slot es un navegador válido; evita el error de "navigate before mounting"
-    // QueryClientProvider necesario para rutas que se renderizan durante la carga (ej: redirect en web)
     return (
       <QueryClientProvider client={queryClient}>
         <Slot />
@@ -143,44 +151,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider>
           <MenuProvider skipInstanceCheck>
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen name="home" options={{ headerShown: false }} />
-              <Stack.Screen name="torneos" options={{ headerShown: false }} />
-              <Stack.Screen name="fichajes" options={{ headerShown: false }} />
-              <Stack.Screen name="registro-delegado" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerShown: false,
-                  title: 'Inicio', // Usado por el botón atrás al volver desde fichaje-delegado (evita "(tabs)")
-                }}
-              />
-              <Stack.Screen
-                name="fichaje-delegado"
-                options={{
-                  title: 'Fichar jugador',
-                  headerBackButtonDisplayMode: 'minimal', // Solo flecha, sin texto (RN 7+)
-                  headerStyle: { backgroundColor: '#ffffff' },
-                  headerTintColor: '#111827',
-                  headerTitleStyle: { color: '#111827' },
-                  headerRight: () => <HeaderMenu />,
-                }}
-              />
-              <Stack.Screen
-                name="seleccion-de-liga"
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name="seleccion-de-equipo"
-                options={{
-                  headerShown: false,
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-            </Stack>
+            <RootStack />
           </MenuProvider>
         </SafeAreaProvider>
       </ThemeProvider>

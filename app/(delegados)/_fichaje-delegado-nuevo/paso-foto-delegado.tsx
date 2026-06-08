@@ -1,0 +1,147 @@
+import React, { useState } from 'react'
+import { View, Text, Image, ScrollView, ActionSheetIOS, Alert, Platform } from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
+import { Feather } from '@expo/vector-icons'
+import { useFichajeDelegadoStore } from '@/lib/hooks/use-fichaje-delegado-store'
+import Cabecera from '@/fichaje-jugador/_components/cabecera'
+import ProgresoDelegado from '@/delegados/_registro-delegado/components/progreso-delegado'
+import Boton from '@/design-system/componentes/boton'
+import { Titulo } from '@/design-system/componentes'
+
+function mostrarSelectorImagen(onCamara: () => void, onGaleria: () => void) {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      { options: ['Cancelar', 'Sacar foto', 'Elegir de galería'], cancelButtonIndex: 0 },
+      (index) => {
+        if (index === 1) onCamara()
+        if (index === 2) onGaleria()
+      }
+    )
+  } else {
+    Alert.alert('Seleccionar foto', undefined, [
+      { text: 'Sacar foto', onPress: onCamara },
+      { text: 'Elegir de galería', onPress: onGaleria },
+      { text: 'Cancelar', style: 'cancel' },
+    ])
+  }
+}
+
+async function recortarCuadrado(uri: string, width: number, height: number) {
+  const lado = Math.min(width, height)
+  const originX = Math.floor((width - lado) / 2)
+  const originY = Math.floor((height - lado) / 2)
+
+  return ImageManipulator.manipulateAsync(
+    uri,
+    [{ crop: { originX, originY, width: lado, height: lado } }],
+    { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+  )
+}
+
+export default function PasoFotoDelegado() {
+  const { fotoUri, nombreClub, setFotoUri, setFotoBase64, irAlPasoAnterior, irAlPasoSiguiente } =
+    useFichajeDelegadoStore()
+  const [errorCamara, setErrorCamara] = useState<string | null>(null)
+
+  const procesarImagen = async (asset: ImagePicker.ImagePickerAsset) => {
+    const recortada = await recortarCuadrado(asset.uri, asset.width, asset.height)
+    setFotoUri(recortada.uri)
+    setFotoBase64(recortada.base64 ?? null)
+  }
+
+  const isE2E = !!process.env.EXPO_PUBLIC_E2E_API_URL
+  const elegirDeGaleria = async () => {
+    if (isE2E) {
+      const b64 =
+        '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAFA3PEY8MlBGQUZaVVBfeMiCeG5uePWvuZHI' +
+        '////////////////////////////////////////////////////wAALCAAKAAoBAREA' +
+        '/8QAFQABAQAAAAAAAAAAAAAAAAAAAAT/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEB' +
+        'AAA/AIgH/9k='
+      setFotoUri('data:image/jpeg;base64,' + b64)
+      setFotoBase64(b64)
+      return
+    }
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    })
+    if (!resultado.canceled) await procesarImagen(resultado.assets[0])
+  }
+
+  const sacarSelfie = async () => {
+    setErrorCamara(null)
+    try {
+      const permiso = await ImagePicker.requestCameraPermissionsAsync()
+      if (!permiso.granted) return
+
+      const resultado = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      })
+      if (!resultado.canceled) await procesarImagen(resultado.assets[0])
+    } catch {
+      setErrorCamara('La cámara no está disponible en este dispositivo')
+    }
+  }
+
+  const handleVolver = () => {
+    setFotoUri(null)
+    setFotoBase64(null)
+    irAlPasoAnterior()
+  }
+
+  return (
+    <View testID="paso-foto-delegado" className="flex-1 bg-surface">
+      <Cabecera titulo="Registro de nuevo delegado" onBack={handleVolver} />
+      <ProgresoDelegado />
+
+      <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 24 }}>
+        <View className="mb-6">
+          <Titulo>Foto de la cara del delegado</Titulo>
+          {nombreClub && (
+            <Text className="text-zinc-400 text-sm">
+              Fichándose en <Text className="font-bold text-zinc-100">{nombreClub}</Text>
+            </Text>
+          )}
+        </View>
+
+        <View className="gap-4">
+          <View className="items-center">
+            <View className="w-48 h-48 glass rounded-2xl border border-border-glass items-center justify-center overflow-hidden">
+              {fotoUri ? (
+                <Image
+                  source={{ uri: fotoUri }}
+                  style={{ width: '100%', height: '100%' }}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Feather name="user" size={64} color="#52525b" />
+              )}
+            </View>
+          </View>
+
+          <Boton
+            testID="boton-seleccionar-foto-delegado"
+            primario={false}
+            texto={fotoUri ? 'Cambiar foto' : 'Seleccionar foto'}
+            icono="camera"
+            onPress={() => mostrarSelectorImagen(sacarSelfie, elegirDeGaleria)}
+          />
+          {errorCamara && <Text className="text-red-400 text-sm text-center">{errorCamara}</Text>}
+          <Boton
+            testID="boton-subir-foto-delegado"
+            texto="Subir"
+            icono="upload"
+            onPress={() => irAlPasoSiguiente()}
+            deshabilitado={!fotoUri}
+          />
+        </View>
+      </ScrollView>
+    </View>
+  )
+}

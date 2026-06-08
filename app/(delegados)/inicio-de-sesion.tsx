@@ -1,0 +1,110 @@
+import { useState } from 'react'
+import { TouchableOpacity, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { useAuth } from '@/lib/hooks/use-auth'
+import Boton from '@/design-system/componentes/boton'
+import { Texto } from '@/design-system/componentes/texto'
+import { LayoutAsistente } from '@/design-system/layouts/layout-asistente'
+import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
+
+export default function InicioDeSesionScreen() {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const { login } = useAuth()
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      setError('Por favor ingrese usuario y contraseña')
+      return
+    }
+
+    try {
+      setError('')
+      setLoading(true)
+      const respuesta = await login(username, password)
+
+      if (respuesta.exito) {
+        // useProtectedRoute redirige al autenticarse
+      } else {
+        if (respuesta.error === 'El usuario debe cambiar la contraseña') {
+          router.push({
+            pathname: RUTAS.CAMBIAR_PASSWORD,
+            params: { usuario: username },
+          })
+        }
+        setError(
+          respuesta.error || 'Hubo en error no controlado. Comunicate con la administración.'
+        )
+      }
+    } catch (err) {
+      setError('Error comunicándose con el servidor')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <LayoutAsistente
+      testID="pantalla-login"
+      titulo="Inicio de sesión"
+      scroll={false}
+      onVolver={() => router.back()}
+    >
+      <View className="flex-1 justify-center pb-12">
+        <View className="mx-auto w-full max-w-[320px] gap-4">
+          <Texto variante="titulo" className="text-center text-zinc-300">
+            Para DTs y Delegados
+          </Texto>
+
+          <CampoTexto
+            inputTestID="input-usuario"
+            placeholder="Usuario"
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+            editable={!loading}
+          />
+
+          <CampoTexto
+            inputTestID="input-password"
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            editable={!loading}
+          />
+
+          {error ? (
+            <Texto variante="cuerpo" className="text-center text-red-400">
+              {error}
+            </Texto>
+          ) : null}
+
+          <Boton
+            testID="boton-iniciar-sesion"
+            texto={loading ? 'Iniciando sesión…' : 'Iniciar sesión'}
+            icono="log-in"
+            onPress={handleLogin}
+            deshabilitado={loading}
+            cargando={loading}
+          />
+
+          <TouchableOpacity
+            testID="boton-no-registrado"
+            onPress={() => router.push(RUTAS.REGISTRO_DELEGADO)}
+            className="mt-2"
+          >
+            <Texto variante="cuerpo" className="text-center text-zinc-300 underline">
+              No estoy registrado
+            </Texto>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </LayoutAsistente>
+  )
+}

@@ -1,6 +1,7 @@
 import { useRouter, usePathname, useSegments, Stack } from 'expo-router'
 import { View, Text } from 'react-native'
-import Boton from '@/components/boton'
+import Boton from '@/design-system/componentes/boton'
+import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 /**
  * Pantalla que Expo Router muestra cuando la ruta no existe (deep link inválido,
@@ -20,7 +21,7 @@ export default function NotFoundScreen() {
         : 'ruta-desconocida'
 
   const irAlHome = () => {
-    router.replace('/home' as any)
+    router.replace(RUTAS.HOME)
   }
 
   return (

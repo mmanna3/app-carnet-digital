@@ -4,7 +4,9 @@ Este archivo guía a Claude Code al trabajar con el código de este repositorio.
 
 ## Descripción del proyecto
 
-App React Native + Expo para gestionar carnets digitales de jugadores. Los delegados inician sesión, eligen su equipo y ven/buscan carnets con el estado de registro. Soporta iOS, Android y Web.
+App React Native + Expo **SDK 54** para gestionar carnets digitales de jugadores. Compatible con **Expo Go** (App Store, SDK 54) vía QR. Los delegados inician sesión, eligen su equipo y ven/buscan carnets con el estado de registro. Soporta iOS y Android (sin target web).
+
+**Stack:** Expo SDK 54, React Native 0.81, React 19.1, expo-router ~6.0. iOS mínimo 15.1.
 
 ## Comandos
 
@@ -12,7 +14,9 @@ App React Native + Expo para gestionar carnets digitales de jugadores. Los deleg
 
 ```bash
 # Desarrollo
-LIGA_ID=edefi npm start           # UNILIGA (app EDeFI). Muestra API URL en consola.
+LIGA_ID=edefi npm start           # UNILIGA — escanear QR con Expo Go SDK 54
+LIGA_ID=edefi npx expo start -c   # Con cache limpia
+LIGA_ID=edefi npx expo start --tunnel  # Si LAN falla (iPhone físico)
 LIGA_ID=multiliga npm start       # MULTILIGA (selección de liga)
 LIGA_ID=edefi npm run start:dev   # Con dev client
 
@@ -22,8 +26,10 @@ LIGA_ID=edefi npm run ios         # Simulador iOS
 LIGA_ID=edefi npm run android     # Emulador Android
 
 # Testing
+LIGA_ID=edefi npm run typecheck   # TypeScript
 LIGA_ID=edefi npm run test:ci     # Jest
-npm run test:e2e                    # Maestro E2E
+npm run e2e                  # Maestro E2E (Android, orquestado)
+npm run e2e:ios              # Maestro E2E (iOS, orquestado)
 
 # Build y deploy
 LIGA_ID=edefi npm run ios:build
@@ -43,58 +49,83 @@ npm run limpiar          # Limpiar dependencias y cachés
 - **UNILIGA:** Una app por liga (un ícono en el store). Liga fija en build. `APPS_UNILIGAS = ['edefi']`.
 - **MULTILIGA:** Una app "Carnet Digital" con varias ligas. Usuario selecciona liga al inicio. `LIGAS_DE_APP_MULTILIGA = ['luefi']`.
 
+### Capas del código
+
+| Capa                | Ruta                                                                          | Rol                                                     |
+| ------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(torneos)/` | Pantallas navegables por flujo                          |
+| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc.                        | UI y pasos de wizard (no son rutas)                     |
+| Design system       | `app/design-system/`                                                          | Tokens, componentes UI, layouts                         |
+| Lógica compartida   | `app/logica-compartida/`                                                      | API, hooks, config, utilidades, **constantes de rutas** |
+
+Expo Router ignora `design-system/`, `logica-compartida/` y carpetas colocated cuyo segmento empieza con `_` seguido de `/` (p. ej. `_components/`, `_pasos/`). **No** excluye `_layout.tsx`.
+
 ### Archivos clave
 
 - `configs-por-liga/datos.js` — Fuente única: LIGAS, APPS_UNILIGAS, LIGAS_DE_APP_MULTILIGA, CONFIG_APP_MULTILIGA
-- `configs-por-liga/color-base.js` — Color base para Tailwind y splash (verde→green, negro→gray, etc.)
-- `app.config.ts` — Config de Expo según LIGA_ID (uniliga o multiliga)
-- `app/config/liga.ts` — Config en runtime: `getConfigLiga()`, `useConfigLiga()`. UNILIGA: desde extra. MULTILIGA: desde useLigaStore + ligasDisponibles
-- `app/hooks/use-liga-store.ts` — Liga seleccionada (MULTILIGA); key `liga-storage`
-- `app/seleccion-de-liga.tsx` — Pantalla de selección de liga (MULTILIGA)
-- `assets/ligas/<id>/` — Assets por liga (icon.png, favicon.png)
+- `configs-por-liga/color-base.js` — Color base para Tailwind y splash
+- `app.config.ts` — Config de Expo según LIGA_ID
+- `app/logica-compartida/constantes/rutas.ts` — **`RUTAS`**: paths tipados para navegación (`router.push(RUTAS.HOME)`, etc.)
+- `app/logica-compartida/config/liga.ts` — `getConfigLiga()`, `useConfigLiga()`
+- `app/logica-compartida/hooks/use-liga-store.ts` — Liga seleccionada (MULTILIGA); key `liga-storage`
+- `app/(home)/seleccion-de-liga.tsx` — Selección de liga (MULTILIGA)
+- `assets/ligas/<id>/` — Assets por liga
 
-**Colores liga:** Cada liga define `colorBase` (verde, negro, azul, rojo). Clases NativeWind `liga-*`: `bg-liga-600`, `text-liga-500`, etc.
+**Colores liga:** Clases NativeWind `liga-*`: `bg-liga-600`, `text-liga-500`, etc.
 
-### Routing (Expo Router — file-based)
+### Routing (Expo Router)
 
 ```
 app/
-├── _layout.tsx                  # Root layout: auth guard + QueryClient
-├── (auth)/                      # Rutas sin auth
-│   ├── login.tsx
-│   └── cambiar-password.tsx
-├── (tabs)/                     # App principal (requiere auth + equipo)
-│   ├── mis-jugadores.tsx
-│   ├── buscar.tsx
-│   └── pendientes.tsx
-├── seleccion-de-liga.tsx       # Selección de liga (MULTILIGA, antes de login)
-└── seleccion-de-equipo.tsx     # Modal de selección de equipo
+├── _layout.tsx, index.tsx, +not-found.tsx
+├── design-system/, logica-compartida/
+├── (home)/                     # /home, /seleccion-de-liga
+├── (fichaje-jugador)/          # /fichajes (+ _pasos, _components)
+├── (delegados)/                # login, tabs (inicio), fichaje/registro delegado
+│   └── (inicio)/               # tabs: mis-jugadores, buscar, pendientes
+└── (torneos)/torneos/          # /torneos/*
 ```
 
-**Auth guard:** MULTILIGA sin liga → seleccion-de-liga. No autenticado → login. Autenticado sin equipo → seleccion-de-equipo.
+Los route groups `(home)`, `(fichaje-jugador)`, `(delegados)`, `(torneos)` y `(inicio)` no aparecen en la URL.
+
+**Navegación:** usar `RUTAS` de `@/logica-compartida/constantes/rutas` (alias `@/constants/rutas`).
+
+**Auth guard** (`app/_layout.tsx`): MULTILIGA sin liga → `RUTAS.SELECCION_LIGA`. No autenticado → `RUTAS.HOME`. Autenticado sin equipo → `RUTAS.SELECCION_EQUIPO`.
 
 ### State Management
 
-**Zustand stores** (persistidos):
+**Zustand** (persistidos) en `logica-compartida/hooks/`:
 
-- `app/hooks/use-auth.ts` — token, usuario; key `auth-storage`
-- `app/hooks/use-equipo-store.ts` — equipo seleccionado; key `equipo-storage`
-- `app/hooks/use-liga-store.ts` — liga seleccionada (MULTILIGA); key `liga-storage`
+- `use-auth.ts` — key `auth-storage`
+- `use-equipo-store.ts` — key `equipo-storage`
+- `use-liga-store.ts` — key `liga-storage`
 
 **TanStack React Query** para estado del servidor.
 
 ### API Layer
 
-- `app/api/clients.ts` — Cliente NSwag/OpenAPI **auto-generado**. No editar.
-- `app/api/http-client-wrapper.ts` — Interceptor JWT. 401 → logout.
-- `app/api/api.ts` — Proxy que usa `getConfigLiga().apiUrl`. En MULTILIGA, la API cambia según la liga seleccionada.
+- `logica-compartida/api/clients.ts` — Cliente NSwag **auto-generado**. No editar.
+- `logica-compartida/api/http-client-wrapper.ts` — JWT; 401 → logout.
+- `logica-compartida/api/api.ts` — Proxy con `getConfigLiga().apiUrl`.
 
-### Componentes clave
+Regenerar contrato: script `generar-contrato-be-en-app.sh` en el monorepo.
 
-- `app/components/carnet.tsx` — Tarjeta de jugador
-- `components/boton.tsx` — Botón unificado
-- `app/components/header-menu.tsx` — Menú (Cambiar liga en MULTILIGA, Cambiar equipo, Cerrar sesión)
+### Design system
 
-### Path alias
+- `design-system/componentes/` — `Texto`, `Boton`, `PantallaPublica`, etc.
+- `design-system/tokens/` — TOKENS, fuentes, tema agrupador
+- `design-system/layouts/layout-asistente.tsx` — shell oscuro para wizards
 
-`@/*` resuelve a la raíz del repo.
+`Boton` en `design-system/componentes/boton.tsx` — CTA con degradado (`primario`) o acción secundaria glass; props `color` (`verde` | `rojo`).
+
+### Path aliases (`tsconfig.json`)
+
+- `@/home/*` → `app/(home)/*`
+- `@/fichaje-jugador/*` → `app/(fichaje-jugador)/*`
+- `@/delegados/*` → `app/(delegados)/*`
+- `@/inicio-delegados/*` → `app/(delegados)/(inicio)/*`
+- `@/torneos/*` → `app/(torneos)/torneos/*`
+- `@/design-system/*` → `app/design-system/*`
+- `@/logica-compartida/*` → `app/logica-compartida/*`
+- `@/lib/*` → `app/logica-compartida/*` (compat)
+- `@/constants/*` → `app/logica-compartida/constantes/*` (incluye `rutas.ts`)

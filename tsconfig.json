@@ -2,8 +2,18 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "types": ["jest", "node"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/home/*": ["./app/(home)/*"],
+      "@/fichaje-jugador/*": ["./app/(fichaje-jugador)/*"],
+      "@/delegados/*": ["./app/(delegados)/*"],
+      "@/inicio-delegados/*": ["./app/(delegados)/(inicio)/*"],
+      "@/torneos/*": ["./app/(torneos)/torneos/*"],
+      "@/design-system/*": ["./app/design-system/*"],
+      "@/logica-compartida/*": ["./app/logica-compartida/*"],
+      "@/lib/*": ["./app/logica-compartida/*"],
+      "@/constants/*": ["./app/logica-compartida/constantes/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"],

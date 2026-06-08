@@ -72,13 +72,7 @@ export default (): ExpoConfig => ({
   icon: config.icon,
   scheme: config.scheme,
   userInterfaceStyle: 'automatic',
-  newArchEnabled: true,
   backgroundColor: splashHex,
-  splash: {
-    image: config.splashImage,
-    resizeMode: 'contain',
-    backgroundColor: splashHex,
-  },
   ios: {
     supportsTablet: true,
     bundleIdentifier: config.appId,
@@ -95,14 +89,11 @@ export default (): ExpoConfig => ({
     },
     package: config.appId,
   },
-  web: {
-    bundler: 'metro',
-    output: 'static',
-    favicon: config.favicon,
-  },
   plugins: [
     'expo-router',
     'expo-system-ui',
+    '@react-native-community/datetimepicker',
+    'expo-font',
     [
       'expo-splash-screen',
       {
@@ -114,6 +105,7 @@ export default (): ExpoConfig => ({
     [
       'expo-build-properties',
       {
+        ios: { deploymentTarget: '15.1' },
         android: { usesCleartextTraffic: true },
       },
     ],
