@@ -16,7 +16,7 @@ describe('obtenerTextoEstado', () => {
     [EstadoJugador.FichajePendienteDeAprobacion, 'PENDIENTE DE APROBACIÓN'],
     [EstadoJugador.FichajeRechazado, 'FICHAJE RECHAZADO'],
     [EstadoJugador.Activo, 'ACTIVO'],
-    [EstadoJugador.Suspendido, 'CARNET SUSPENDIDO'],
+    [EstadoJugador.Suspendido, 'SUSPENDIDO'],
     [EstadoJugador.Inhabilitado, 'INHABILITADO'],
     [EstadoJugador.AprobadoPendienteDePago, 'PENDIENTE DE PAGO'],
   ])('estado %i → "%s"', (estado, textoEsperado) => {
@@ -33,8 +33,8 @@ describe('obtenerColorEstado', () => {
     [EstadoJugador.FichajePendienteDeAprobacion, '#FFA726'],
     [EstadoJugador.FichajeRechazado, '#EF5350'],
     [EstadoJugador.Activo, '#66BB6A'],
-    [EstadoJugador.Suspendido, '#FF7043'],
-    [EstadoJugador.Inhabilitado, '#E53935'],
+    [EstadoJugador.Suspendido, '#B71C1C'],
+    [EstadoJugador.Inhabilitado, '#FACC15'],
     [EstadoJugador.AprobadoPendienteDePago, '#2513c2'],
   ])('estado %i → color "%s"', (estado, colorEsperado) => {
     expect(obtenerColorEstado(estado)).toBe(colorEsperado)

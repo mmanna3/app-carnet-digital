@@ -48,14 +48,14 @@ describe('Carnet', () => {
 
   describe('categoría', () => {
     // Usar constructor local (año, mes, día) para evitar problemas de timezone UTC vs local
-    it('muestra los últimos 2 dígitos del año de nacimiento', () => {
+    it('muestra el año de nacimiento como categoría', () => {
       render(<Carnet jugador={crearJugador({ fechaNacimiento: new Date(2008, 5, 15) })} />)
-      expect(screen.getByText("Cat '08")).toBeTruthy()
+      expect(screen.getByText('2008')).toBeTruthy()
     })
 
     it('calcula categoría correctamente para 2015', () => {
       render(<Carnet jugador={crearJugador({ fechaNacimiento: new Date(2015, 5, 1) })} />)
-      expect(screen.getByText("Cat '15")).toBeTruthy()
+      expect(screen.getByText('2015')).toBeTruthy()
     })
   })
 
@@ -67,9 +67,9 @@ describe('Carnet', () => {
       expect(screen.queryByText('ACTIVO')).toBeNull()
     })
 
-    it('muestra "CARNET SUSPENDIDO" automáticamente para jugadores Suspendidos', () => {
+    it('muestra la franja de clausura para jugadores Suspendidos', () => {
       render(<Carnet jugador={crearJugador({ estado: EstadoJugador.Suspendido })} />)
-      expect(screen.getByText('CARNET SUSPENDIDO')).toBeTruthy()
+      expect(screen.getByLabelText('Jugador suspendido')).toBeTruthy()
     })
 
     it('muestra "INHABILITADO" automáticamente para jugadores Inhabilitados', () => {

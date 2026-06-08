@@ -110,7 +110,7 @@ describe('PendientesScreen', () => {
       render(<PendientesScreen />)
 
       expect(screen.getByText('Pendientes de Aprobación')).toBeTruthy()
-      expect(screen.getByText('Maria')).toBeTruthy()
+      expect(screen.getByText('Garcia, Maria')).toBeTruthy()
     })
   })
 
@@ -125,7 +125,7 @@ describe('PendientesScreen', () => {
       render(<PendientesScreen />)
 
       expect(screen.getByText('Fichajes Rechazados')).toBeTruthy()
-      expect(screen.getByText('Pedro')).toBeTruthy()
+      expect(screen.getByText('Lopez, Pedro')).toBeTruthy()
       expect(screen.getByText('Documentación incompleta')).toBeTruthy()
     })
   })
@@ -141,7 +141,7 @@ describe('PendientesScreen', () => {
       render(<PendientesScreen />)
 
       expect(screen.getByText('Pendientes de Pago')).toBeTruthy()
-      expect(screen.getByText('Ana')).toBeTruthy()
+      expect(screen.getByText('Martinez, Ana')).toBeTruthy()
     })
   })
 

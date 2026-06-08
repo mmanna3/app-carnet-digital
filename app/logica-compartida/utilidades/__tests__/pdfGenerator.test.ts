@@ -121,10 +121,10 @@ describe('generatePDF', () => {
   })
 
   describe('contenido del HTML', () => {
-    it('muestra "CARNET SUSPENDIDO" para jugadores Suspendidos', async () => {
+    it('muestra "SUSPENDIDO" para jugadores Suspendidos', async () => {
       await generatePDF([crearJugador({ estado: EstadoJugador.Suspendido })] as any, 'EQUIPO-01')
 
-      expect(htmlGenerado()).toContain('CARNET SUSPENDIDO')
+      expect(htmlGenerado()).toContain('SUSPENDIDO')
     })
 
     it('muestra "INHABILITADO" para jugadores Inhabilitados', async () => {

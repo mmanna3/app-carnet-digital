@@ -13,6 +13,15 @@ jest.mock('@/lib/utils/pdfGenerator', () => ({
   generatePDF: jest.fn(),
 }))
 
+jest.mock('@/lib/hooks/use-acento-equipo-seleccionado', () => ({
+  useAcentoEquipoSeleccionado: () => ({
+    jugadores: [],
+    temaFranja: 'verde',
+    hexAcento: '#16a34a',
+    hexLink: '#15803d',
+  }),
+}))
+
 const mockCarnet = {
   id: 1,
   dni: '12345678',
@@ -33,8 +42,8 @@ describe('BuscarScreen', () => {
   describe('renderizado', () => {
     it('muestra el input de código y el botón de búsqueda', () => {
       render(<BuscarScreen />)
-      expect(screen.getByPlaceholderText('Ej: ABC1234')).toBeTruthy()
-      expect(screen.getByText('Ver jugadores')).toBeTruthy()
+      expect(screen.getByPlaceholderText('Ej:ABC1234')).toBeTruthy()
+      expect(screen.getByText('Jugadores')).toBeTruthy()
     })
   })
 
@@ -42,7 +51,7 @@ describe('BuscarScreen', () => {
     it('muestra error cuando se busca sin código', async () => {
       render(<BuscarScreen />)
 
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
         expect(screen.getByText('Ingresá un código de equipo')).toBeTruthy()
@@ -56,11 +65,11 @@ describe('BuscarScreen', () => {
       ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockResolvedValue([mockCarnet])
 
       render(<BuscarScreen />)
-      fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'ABC1234')
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.changeText(screen.getByPlaceholderText('Ej:ABC1234'), 'ABC1234')
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
-        expect(screen.getByText('Juan')).toBeTruthy()
+        expect(screen.getByText('Perez, Juan')).toBeTruthy()
       })
       expect(api.carnetsPorCodigoAlfanumerico).toHaveBeenCalledWith('ABC1234')
     })
@@ -69,11 +78,11 @@ describe('BuscarScreen', () => {
       ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockResolvedValue([mockCarnet])
 
       render(<BuscarScreen />)
-      fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'MTD0001')
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.changeText(screen.getByPlaceholderText('Ej:ABC1234'), 'MTD0001')
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
-        expect(screen.getByText('Generar PDF')).toBeTruthy()
+        expect(screen.getByText('PDF')).toBeTruthy()
       })
     })
 
@@ -81,8 +90,8 @@ describe('BuscarScreen', () => {
       ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockResolvedValue([mockCarnet])
 
       render(<BuscarScreen />)
-      fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'ABC1234')
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.changeText(screen.getByPlaceholderText('Ej:ABC1234'), 'ABC1234')
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
         expect(screen.getByText('Categoría 2010')).toBeTruthy()
@@ -95,8 +104,8 @@ describe('BuscarScreen', () => {
       ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockResolvedValue([])
 
       render(<BuscarScreen />)
-      fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'XXXXXX')
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.changeText(screen.getByPlaceholderText('Ej:ABC1234'), 'XXXXXX')
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
         expect(screen.getByText('No se encontraron jugadores para este equipo')).toBeTruthy()
@@ -109,12 +118,12 @@ describe('BuscarScreen', () => {
       ;(api.carnetsPorCodigoAlfanumerico as jest.Mock).mockRejectedValue(new Error('Network error'))
 
       render(<BuscarScreen />)
-      fireEvent.changeText(screen.getByPlaceholderText('Ej: ABC1234'), 'ABC1234')
-      fireEvent.press(screen.getByText('Ver jugadores'))
+      fireEvent.changeText(screen.getByPlaceholderText('Ej:ABC1234'), 'ABC1234')
+      fireEvent.press(screen.getByText('Jugadores'))
 
       await waitFor(() => {
         // El botón vuelve a su estado normal (no "Buscando...")
-        expect(screen.getByText('Ver jugadores')).toBeTruthy()
+        expect(screen.getByText('Jugadores')).toBeTruthy()
       })
     })
   })
