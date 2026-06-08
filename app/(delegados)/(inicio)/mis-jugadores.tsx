@@ -1,14 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { View, Text, ScrollView, ActivityIndicator, RefreshControl } from 'react-native'
 import ModalAccionesJugador from '@/delegados/_components/mis-jugadores/modal-acciones-jugador'
 import ModalEliminarJugador from '@/delegados/_components/mis-jugadores/modal-eliminar-jugador'
 import ModalTransferirJugador from '@/delegados/_components/mis-jugadores/modal-transferir-jugador'
 import ModalEliminarMasivo from '@/delegados/_components/mis-jugadores/modal-eliminar-masivo'
 import ModalTransferirMasivo from '@/delegados/_components/mis-jugadores/modal-transferir-masivo'
+import {
+  agruparJugadoresPorCategoria,
+  jugadoresSeleccionadosParaAccionMasiva,
+} from '@/inicio-delegados/_components/mis-jugadores/agrupar-jugadores'
 import BarraSeleccionMasiva from '@/inicio-delegados/_components/mis-jugadores/barra-seleccion-masiva'
 import ListaCarnetsEquipo from '@/inicio-delegados/_components/mis-jugadores/lista-carnets-equipo'
 import SelectorCategorias from '@/inicio-delegados/_components/mis-jugadores/selector-categorias'
-import { useMisJugadores } from '@/inicio-delegados/_components/mis-jugadores/use-mis-jugadores'
+import { useCarnetsEquipo } from '@/inicio-delegados/_components/mis-jugadores/use-carnets-equipo'
+import { useModalesMisJugadores } from '@/inicio-delegados/_components/mis-jugadores/use-modales-mis-jugadores'
+import { useSeleccionJugadores } from '@/lib/hooks/use-seleccion-jugadores'
+import { colorAgrupadorEquipo, temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
 
 export default function MisJugadoresScreen() {
   const scrollViewRef = useRef<ScrollView>(null)
@@ -22,31 +29,30 @@ export default function MisJugadoresScreen() {
     isError,
     refreshing,
     handleActualizar,
-    delegados,
-    hayDelegados,
-    categoriasAño,
-    jugadoresPorCategoria,
-    secciones,
-    temaTorneo,
-    colorAgrupadorDelEquipo,
-    modoSeleccion,
-    jugadoresSeleccionados,
-    toggle,
-    desactivar,
-    handleLongPress,
-    jugadorSeleccionado,
-    modalActiva,
-    setModalActiva,
-    modalBulk,
-    setModalBulk,
-    cerrarModales,
-    handleEliminado,
-    handleTransferido,
-    handleEliminadoMasivo,
-    handleTransferidoMasivo,
-    jugadoresParaAccionMasiva,
-    haySeleccionados,
-  } = useMisJugadores()
+    invalidarCarnets,
+  } = useCarnetsEquipo()
+
+  const { modoSeleccion, jugadoresSeleccionados, toggle, desactivar } = useSeleccionJugadores()
+
+  const modales = useModalesMisJugadores({
+    invalidarCarnets,
+    desactivarSeleccion: desactivar,
+  })
+
+  useEffect(() => {
+    desactivar()
+  }, [equipoSeleccionadoId, desactivar])
+
+  const { delegados, hayDelegados, categoriasAño, jugadoresPorCategoria, secciones } = useMemo(
+    () => agruparJugadoresPorCategoria(jugadores),
+    [jugadores]
+  )
+  const temaTorneo = useMemo(() => temaFranjaEquipo(jugadores), [jugadores])
+  const colorAgrupadorDelEquipo = useMemo(() => colorAgrupadorEquipo(jugadores), [jugadores])
+  const jugadoresParaAccionMasiva = useMemo(
+    () => jugadoresSeleccionadosParaAccionMasiva(jugadores, jugadoresSeleccionados),
+    [jugadores, jugadoresSeleccionados]
+  )
 
   const scrollToSection = (seccion: number | string) => {
     const position = categoryPositions[seccion]
@@ -140,51 +146,51 @@ export default function MisJugadoresScreen() {
           modoSeleccion={modoSeleccion}
           jugadoresSeleccionados={jugadoresSeleccionados}
           onSectionLayout={handleSectionLayout}
-          onLongPress={handleLongPress}
+          onLongPress={modales.handleLongPress}
           onToggle={toggle}
         />
       </ScrollView>
 
       {modoSeleccion && (
         <BarraSeleccionMasiva
-          haySeleccionados={haySeleccionados}
-          onEliminar={() => setModalBulk('eliminar')}
-          onTransferir={() => setModalBulk('transferir')}
+          haySeleccionados={jugadoresParaAccionMasiva.length > 0}
+          onEliminar={() => modales.setModalBulk('eliminar')}
+          onTransferir={() => modales.setModalBulk('transferir')}
           onCancelar={desactivar}
         />
       )}
 
       <ModalAccionesJugador
-        jugador={modalActiva === 'acciones' ? jugadorSeleccionado : null}
-        onEliminar={() => setModalActiva('eliminar')}
-        onTransferir={() => setModalActiva('transferir')}
-        onCerrar={cerrarModales}
+        jugador={modales.modalActiva === 'acciones' ? modales.jugadorSeleccionado : null}
+        onEliminar={() => modales.setModalActiva('eliminar')}
+        onTransferir={() => modales.setModalActiva('transferir')}
+        onCerrar={modales.cerrarModales}
       />
 
       <ModalEliminarJugador
-        jugador={modalActiva === 'eliminar' ? jugadorSeleccionado : null}
+        jugador={modales.modalActiva === 'eliminar' ? modales.jugadorSeleccionado : null}
         equipoId={equipoSeleccionadoId}
-        onEliminado={handleEliminado}
-        onCerrar={cerrarModales}
+        onEliminado={modales.handleEliminado}
+        onCerrar={modales.cerrarModales}
       />
 
       <ModalTransferirJugador
-        jugador={modalActiva === 'transferir' ? jugadorSeleccionado : null}
-        onTransferido={handleTransferido}
-        onCerrar={cerrarModales}
+        jugador={modales.modalActiva === 'transferir' ? modales.jugadorSeleccionado : null}
+        onTransferido={modales.handleTransferido}
+        onCerrar={modales.cerrarModales}
       />
 
       <ModalEliminarMasivo
-        jugadores={modalBulk === 'eliminar' ? jugadoresParaAccionMasiva : null}
+        jugadores={modales.modalBulk === 'eliminar' ? jugadoresParaAccionMasiva : null}
         equipoId={equipoSeleccionadoId}
-        onEliminado={handleEliminadoMasivo}
-        onCerrar={() => setModalBulk(null)}
+        onEliminado={modales.handleEliminadoMasivo}
+        onCerrar={() => modales.setModalBulk(null)}
       />
 
       <ModalTransferirMasivo
-        jugadores={modalBulk === 'transferir' ? jugadoresParaAccionMasiva : null}
-        onTransferido={handleTransferidoMasivo}
-        onCerrar={() => setModalBulk(null)}
+        jugadores={modales.modalBulk === 'transferir' ? jugadoresParaAccionMasiva : null}
+        onTransferido={modales.handleTransferidoMasivo}
+        onCerrar={() => modales.setModalBulk(null)}
       />
     </View>
   )
