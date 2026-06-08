@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    name: Lint, types y tests
+    name: Validaciones estáticas
     runs-on: ubuntu-latest
 
     steps:
@@ -32,42 +32,8 @@ jobs:
       - name: Tests
         run: npm run test:ci
 
-  deploy-web:
-    name: Deploy web (EDeFI)
-    needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      - name: Export web
-        run: LIGA_ID=edefi npx expo export --platform web && node scripts/postprocess-web-export.js
-
-      - name: Sync files (FTP)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          # Por defecto la acción excluye **/node_modules/**. El script postprocess-web-export
-          # mueve dist/assets/node_modules → dist/assets/vendor y reescribe el bundle.
-          exclude: |
-            **/.git*
-            **/.git*/**
-
   count-e2e:
-    name: Count E2E tests
+    name: Contar tests E2E
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     outputs:
