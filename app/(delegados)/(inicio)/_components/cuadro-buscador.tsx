@@ -3,8 +3,6 @@ import { Text, View } from 'react-native'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Texto } from '@/design-system/componentes/texto'
-import { useAcentoEquipoSeleccionado } from '@/lib/hooks/use-acento-equipo-seleccionado'
-import { temaPillEquipo } from '@/lib/utilidades/color-carnet'
 
 interface Props {
   codigoEquipo: string
@@ -31,7 +29,6 @@ export default function CuadroBuscador({
   isGeneratingPDF,
   isGeneratingPlanillas,
 }: Props) {
-  const { hexLink } = useAcentoEquipoSeleccionado()
   const accionesDeshabilitadas = isGeneratingPDF || isGeneratingPlanillas
 
   return (
@@ -55,9 +52,9 @@ export default function CuadroBuscador({
         <View className="min-w-0 flex-1">
           <Boton
             testID="boton-buscar"
+            tamanio="maschico"
             texto={isLoading ? 'Buscando...' : 'Jugadores'}
             icono="search"
-            tema={temaPillEquipo(hexLink)}
             cargando={isLoading}
             onPress={onBuscar}
             deshabilitado={isLoading}
@@ -74,6 +71,7 @@ export default function CuadroBuscador({
           <View className="flex-1">
             <Boton
               testID="boton-generar-pdf"
+              tamanio="maschico"
               primario={false}
               texto={isGeneratingPDF ? 'Generando...' : 'PDF'}
               icono="file-text"
@@ -85,6 +83,7 @@ export default function CuadroBuscador({
           <View className="flex-1">
             <Boton
               testID="boton-generar-planillas"
+              tamanio="maschico"
               primario={false}
               texto={isGeneratingPlanillas ? 'Generando...' : 'Planilla'}
               icono="clipboard"

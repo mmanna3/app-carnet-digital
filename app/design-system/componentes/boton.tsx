@@ -14,6 +14,40 @@ type ColorBoton = (typeof COLORES_BOTON)[number]
 
 type IconoName = React.ComponentProps<typeof Feather>['name']
 
+export type TamanioBoton = 'normal' | 'maschico'
+
+const ESTILOS_TAMANIO = {
+  normal: {
+    contenedor: 'min-h-[60px] gap-2 px-5 py-5',
+    redondeo: 'rounded-2xl',
+    icono: 20,
+    fontSize: 17,
+    lineHeight: 26,
+    letterSpacing: 2,
+    translateYIcono: 2,
+  },
+  maschico: {
+    contenedor: 'min-h-[48px] gap-1.5 px-4 py-3',
+    redondeo: 'rounded-xl',
+    icono: 17,
+    fontSize: 14,
+    lineHeight: 20,
+    letterSpacing: 1.5,
+    translateYIcono: 1,
+  },
+} as const satisfies Record<
+  TamanioBoton,
+  {
+    contenedor: string
+    redondeo: string
+    icono: number
+    fontSize: number
+    lineHeight: number
+    letterSpacing: number
+    translateYIcono: number
+  }
+>
+
 interface Props {
   texto: string
   onPress: () => void
@@ -24,6 +58,7 @@ interface Props {
   color?: ColorBoton
   /** Degradado personalizado (p. ej. pill de categoría del carnet). */
   tema?: TemaDegradadoEquipo
+  tamanio?: TamanioBoton
   deshabilitado?: boolean
   cargando?: boolean
   testID?: string
@@ -36,10 +71,12 @@ export default function Boton({
   primario = true,
   color = 'verde',
   tema,
+  tamanio = 'normal',
   deshabilitado = false,
   cargando = false,
   testID,
 }: Props) {
+  const estiloTamanio = ESTILOS_TAMANIO[tamanio]
   const isDisabled = deshabilitado || cargando
   const habilitado = primario && !isDisabled
   const colorAgrupador =
@@ -65,11 +102,11 @@ export default function Boton({
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.85}
-      className={`w-full overflow-hidden rounded-2xl ${isDisabled ? 'opacity-50' : ''}`}
+      className={`w-full overflow-hidden ${estiloTamanio.redondeo} ${isDisabled ? 'opacity-50' : ''}`}
       accessibilityRole="button"
     >
       <View
-        className="glass overflow-hidden rounded-2xl"
+        className={`glass overflow-hidden ${estiloTamanio.redondeo}`}
         style={{
           borderWidth: 1.5,
           borderColor: habilitado ? temaVisual.borde : 'rgba(255, 255, 255, 0.08)',
@@ -84,21 +121,23 @@ export default function Boton({
             pointerEvents="none"
           />
         ) : null}
-        <View className="min-h-[60px] flex-row items-center justify-center gap-2 px-5 py-5">
+        <View className={`flex-row items-center justify-center ${estiloTamanio.contenedor}`}>
           {cargando ? (
             <ActivityIndicator color={colorIcono} size="small" />
           ) : icono ? (
-            <Feather name={icono} size={20} color={colorIcono} />
+            <Feather name={icono} size={estiloTamanio.icono} color={colorIcono} />
           ) : null}
           <Text
             className="uppercase"
             style={{
               fontFamily: FUENTE_DISPLAY,
               color: colorTexto,
-              fontSize: 17,
-              lineHeight: 26,
-              letterSpacing: 2,
-              ...(icono || cargando ? { transform: [{ translateY: 2 }] } : {}),
+              fontSize: estiloTamanio.fontSize,
+              lineHeight: estiloTamanio.lineHeight,
+              letterSpacing: estiloTamanio.letterSpacing,
+              ...(icono || cargando
+                ? { transform: [{ translateY: estiloTamanio.translateYIcono }] }
+                : {}),
             }}
           >
             {texto}
