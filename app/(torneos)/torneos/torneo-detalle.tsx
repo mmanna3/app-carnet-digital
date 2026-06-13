@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react'
-import { View, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useApiQuery from '@/lib/api/custom-hooks/use-api-query'
 import { api } from '@/lib/api/api'
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
-import { TarjetaTorneo } from '@/torneos/_components/tarjeta-torneo'
 import type { InformacionInicialAgrupadorDTO } from '@/lib/api/clients'
 import { useHeaderConHome } from '@/torneos/_components/cabecera-publica'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
-import { EstadoCarga, EstadoVacio, Texto } from '@/design-system/componentes'
+import { EstadoCarga, EstadoVacio } from '@/design-system/componentes'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
+import { SeccionElementoTorneo } from '@/torneos/_components/seccion-grupo-fases'
 
 function buscarTorneoEnAgrupadores(
   agrupadores: InformacionInicialAgrupadorDTO[],
@@ -85,7 +85,7 @@ export default function TorneoDetalle() {
   }
 
   const { torneo, color } = resuelto
-  const fases = torneo.fases ?? []
+  const elementos = torneo.elementos ?? []
 
   return (
     <ScrollView
@@ -99,45 +99,29 @@ export default function TorneoDetalle() {
         width: '100%',
       }}
     >
-      {fases.map((fase) => (
-        <View key={fase.id ?? fase.nombre} className="mb-6">
-          {fase.nombre ? (
-            <Texto
-              variante="eyebrow"
-              className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
-            >
-              {fase.nombre}
-            </Texto>
-          ) : null}
-          <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
-            {(fase.zonas ?? []).map((zona) => (
-              <View
-                key={zona.id ?? zona.nombre}
-                style={grande ? { flex: 1, minWidth: '30%', maxWidth: '33.33%' } : undefined}
-              >
-                <TarjetaTorneo
-                  nombre={zona.nombre?.trim() || 'Sin nombre'}
-                  color={color}
-                  iconName="map"
-                  onPress={() =>
-                    router.push({
-                      pathname: RUTAS.ZONA_DETALLE,
-                      params: {
-                        torneoId: String(torneo.id ?? ''),
-                        zonaId: zona.id != null ? String(zona.id) : '',
-                        zonaNombre: zona.nombre ?? '',
-                        color: color ?? '',
-                        torneoNombre: torneo.nombre ?? '',
-                        faseNombre: fase.nombre ?? '',
-                        tipoDeFase: fase.tipoDeFase ?? '',
-                      },
-                    })
-                  }
-                />
-              </View>
-            ))}
-          </View>
-        </View>
+      {elementos.map((el, i) => (
+        <SeccionElementoTorneo
+          key={(el.tipo ?? 'fase') === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
+          elemento={el}
+          torneoId={torneo.id}
+          torneoNombre={torneo.nombre ?? ''}
+          color={color}
+          grande={grande}
+          onNavegarZona={({ torneoId, zonaId, zonaNombre, faseNombre, tipoDeFase }) =>
+            router.push({
+              pathname: RUTAS.ZONA_DETALLE,
+              params: {
+                torneoId,
+                zonaId,
+                zonaNombre,
+                color: color ?? '',
+                torneoNombre: torneo.nombre ?? '',
+                faseNombre,
+                tipoDeFase,
+              },
+            })
+          }
+        />
       ))}
     </ScrollView>
   )
