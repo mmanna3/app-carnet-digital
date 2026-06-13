@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useMemo, useState, useRef } from 'react'
 import { Alert, ScrollView, View } from 'react-native'
 import { api } from '@/lib/api/api'
 import { parseApiError } from '@/lib/utils/parse-api-error'
@@ -8,7 +8,12 @@ import { generatePDF } from '@/lib/utils/pdfGenerator'
 import { generatePlanillas } from '@/lib/utils/planillas-generador'
 import { FranjaSeccion } from '@/design-system/componentes'
 import CuadroBuscador from '@/inicio-delegados/_components/cuadro-buscador'
-import { colorAgrupadorEquipo, temaFranjaEquipo } from '@/lib/utilidades/color-carnet'
+import {
+  colorAgrupadorEquipo,
+  temaFranjaEquipo,
+  temaPillEquipo,
+} from '@/lib/utilidades/color-carnet'
+import { useAcentoEquipoSeleccionado } from '@/lib/hooks/use-acento-equipo-seleccionado'
 
 export default function BuscarScreen() {
   const [codigoEquipo, setCodigoEquipo] = useState('')
@@ -19,6 +24,8 @@ export default function BuscarScreen() {
   const [error, setError] = useState<string | null>(null)
   const scrollViewRef = useRef<ScrollView>(null)
   const [categoryPositions, setCategoryPositions] = useState<Record<number | string, number>>({})
+  const { hexLink } = useAcentoEquipoSeleccionado()
+  const temaBotonBuscar = useMemo(() => temaPillEquipo(hexLink), [hexLink])
 
   const buscarJugadores = async () => {
     if (!codigoEquipo.trim()) {
@@ -157,6 +164,7 @@ export default function BuscarScreen() {
           onGenerarPlanillas={handleGeneratePlanillas}
           isGeneratingPDF={isGeneratingPDF}
           isGeneratingPlanillas={isGeneratingPlanillas}
+          temaBoton={temaBotonBuscar}
         />
 
         {jugadores.length > 0 && (

@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
 import Boton from '@/design-system/componentes/boton'
 import { Texto } from '@/design-system/componentes/texto'
+import type { TemaDegradadoEquipo } from '@/lib/utilidades/color-carnet'
 
 interface Props {
   codigoEquipo: string
@@ -15,6 +16,7 @@ interface Props {
   onGenerarPlanillas: () => void
   isGeneratingPDF: boolean
   isGeneratingPlanillas: boolean
+  temaBoton?: TemaDegradadoEquipo
 }
 
 export default function CuadroBuscador({
@@ -28,6 +30,7 @@ export default function CuadroBuscador({
   onGenerarPlanillas,
   isGeneratingPDF,
   isGeneratingPlanillas,
+  temaBoton,
 }: Props) {
   const accionesDeshabilitadas = isGeneratingPDF || isGeneratingPlanillas
 
@@ -58,6 +61,7 @@ export default function CuadroBuscador({
             cargando={isLoading}
             onPress={onBuscar}
             deshabilitado={isLoading}
+            tema={temaBoton}
           />
         </View>
       </View>
