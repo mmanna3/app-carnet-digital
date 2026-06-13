@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform, Text, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import type { CategoriasConPosicionesDTO, PosicionDelEquipoDTO } from '@/lib/api/clients'
 import { ContenedorTabla, Texto } from '@/design-system/componentes'
 import { useAnchoColumnaEquipo } from '@/torneos/_zona-detalle/anchos-tabla'
@@ -92,7 +92,11 @@ function LeyendaDebajoTabla({
 }) {
   const t = (texto ?? '').trim()
   if (!t) return null
-  const cuerpo = <Text className="px-0.5 text-sm leading-5 text-gray-600">{t}</Text>
+  const cuerpo = (
+    <Texto variante="cuerpo" className="px-0.5 text-zinc-200">
+      {t}
+    </Texto>
+  )
   if (Platform.OS !== 'web') {
     return <View className="mt-2">{cuerpo}</View>
   }
