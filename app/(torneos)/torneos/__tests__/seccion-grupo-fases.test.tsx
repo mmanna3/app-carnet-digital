@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react-native'
 import { SeccionElementoTorneo } from '@/torneos/_components/seccion-grupo-fases'
-import type { InformacionInicialElementoTorneoDTO } from '@/lib/api/clients'
+import { InformacionInicialElementoTorneoDTO } from '@/lib/api/clients'
 
 jest.mock('@/torneos/_components/tarjeta-torneo', () => ({
   TarjetaTorneo: ({ nombre, onPress }: { nombre: string; onPress?: () => void }) => {
@@ -16,13 +16,13 @@ jest.mock('@/torneos/_components/tarjeta-torneo', () => ({
 
 describe('SeccionElementoTorneo', () => {
   it('renderiza fase con zonas', () => {
-    const elemento: InformacionInicialElementoTorneoDTO = {
+    const elemento = InformacionInicialElementoTorneoDTO.fromJS({
       tipo: 'fase',
       id: 1,
       nombre: 'Fase A',
       tipoDeFase: 'Regular',
       zonas: [{ id: 10, nombre: 'Zona Norte', orden: 1 }],
-    }
+    })
 
     const { getByText } = render(
       <SeccionElementoTorneo
@@ -39,7 +39,7 @@ describe('SeccionElementoTorneo', () => {
   })
 
   it('renderiza grupo anidado con fases', () => {
-    const elemento: InformacionInicialElementoTorneoDTO = {
+    const elemento = InformacionInicialElementoTorneoDTO.fromJS({
       tipo: 'grupo',
       grupoId: 5,
       nombreGrupo: 'Grupo A',
@@ -52,7 +52,7 @@ describe('SeccionElementoTorneo', () => {
           zonas: [{ id: 11, nombre: 'Zona Sur', orden: 1 }],
         },
       ],
-    }
+    })
 
     const onNavegar = jest.fn()
     const { getByText, getByTestId } = render(
