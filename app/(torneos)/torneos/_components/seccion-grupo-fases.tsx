@@ -1,6 +1,8 @@
 import React from 'react'
 import { View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import type { InformacionInicialElementoTorneoDTO } from '@/lib/api/clients'
+import { getTemaAgrupador } from '@/lib/design-system'
 import { Texto } from '@/design-system/componentes'
 import { TarjetaTorneo } from '@/torneos/_components/tarjeta-torneo'
 
@@ -32,25 +34,32 @@ interface SeccionElementoTorneoProps {
   grande: boolean
   onNavegarZona: NavegarZona
   profundidadGrupo?: number
+  dentroDeGrupo?: boolean
 }
 
 function renderZonasDeFase(
   elemento: InformacionInicialElementoTorneoDTO,
   props: Omit<SeccionElementoTorneoProps, 'elemento' | 'profundidadGrupo'>
 ) {
-  const { torneoId, torneoNombre, color, grande, onNavegarZona } = props
+  const { torneoId, torneoNombre, color, grande, onNavegarZona, dentroDeGrupo = false } = props
   const faseNombre = elemento.nombre ?? ''
   const tipoDeFase = elemento.tipoDeFase ?? ''
 
   return (
-    <View className="mb-6">
+    <View className={dentroDeGrupo ? 'mb-4' : 'mb-6'}>
       {faseNombre ? (
-        <Texto
-          variante="eyebrow"
-          className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
-        >
-          {faseNombre}
-        </Texto>
+        dentroDeGrupo ? (
+          <Texto variante="eyebrow" className="mb-2 text-zinc-100">
+            {faseNombre}
+          </Texto>
+        ) : (
+          <Texto
+            variante="eyebrow"
+            className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
+          >
+            {faseNombre}
+          </Texto>
+        )
       ) : null}
       <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
         {(elemento.zonas ?? []).map((zona) => (
@@ -87,6 +96,7 @@ export function SeccionElementoTorneo({
   grande,
   onNavegarZona,
   profundidadGrupo = 0,
+  dentroDeGrupo = false,
 }: SeccionElementoTorneoProps) {
   const tipo = (elemento.tipo ?? 'fase').toLowerCase()
 
@@ -111,6 +121,7 @@ export function SeccionElementoTorneo({
     color,
     grande,
     onNavegarZona,
+    dentroDeGrupo,
   })
 }
 
@@ -124,28 +135,41 @@ export function SeccionGrupoFases({
   onNavegarZona,
   profundidad = 1,
 }: SeccionGrupoFasesProps) {
-  const indent =
-    profundidad > 1
-      ? { marginLeft: 12, borderLeftWidth: 1, borderLeftColor: '#3f3f46', paddingLeft: 12 }
-      : undefined
+  const tema = getTemaAgrupador(color)
+  const esAnidado = profundidad > 1
+  const esRaiz = profundidad === 1
 
   return (
-    <View className="mb-6" style={indent}>
-      <Texto variante="eyebrow" className="mb-3 text-base text-zinc-400 normal-case tracking-wide">
-        {nombreGrupo}
-      </Texto>
-      {elementos.map((el, i) => (
-        <SeccionElementoTorneo
-          key={el.tipo === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
-          elemento={el}
-          torneoId={torneoId}
-          torneoNombre={torneoNombre}
-          color={color}
-          grande={grande}
-          onNavegarZona={onNavegarZona}
-          profundidadGrupo={profundidad}
-        />
-      ))}
+    <View className={esRaiz ? 'mb-8' : 'mb-3'}>
+      <View
+        className={`overflow-hidden rounded-2xl border ${tema.border} p-4 ${esAnidado ? 'bg-white/[0.03]' : 'bg-white/5'}`}
+        style={esAnidado ? { borderLeftWidth: 3, borderLeftColor: tema.iconColor } : undefined}
+      >
+        <View className="mb-4 flex-row items-center gap-2.5 border-b border-white/10 pb-3">
+          <View
+            className={`h-8 w-8 items-center justify-center rounded-lg border ${tema.border} ${tema.iconBg}`}
+          >
+            <Ionicons name="layers-outline" size={18} color={tema.iconColor} />
+          </View>
+          <Texto variante="titulo" className="flex-1 text-base leading-5">
+            {nombreGrupo}
+          </Texto>
+        </View>
+
+        {elementos.map((el, i) => (
+          <SeccionElementoTorneo
+            key={el.tipo === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
+            elemento={el}
+            torneoId={torneoId}
+            torneoNombre={torneoNombre}
+            color={color}
+            grande={grande}
+            onNavegarZona={onNavegarZona}
+            profundidadGrupo={profundidad}
+            dentroDeGrupo
+          />
+        ))}
+      </View>
     </View>
   )
 }
