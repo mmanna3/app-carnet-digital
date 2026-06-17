@@ -67,7 +67,7 @@ const ligasDisponibles = esMultiliga
 export default (): ExpoConfig => ({
   name: config.splashScreenName ?? config.appName,
   slug: config.expoSlug,
-  version: '5.1.0',
+  version: '6.0.0',
   orientation: 'portrait',
   icon: config.icon,
   scheme: config.scheme,
