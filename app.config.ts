@@ -95,6 +95,16 @@ export default (): ExpoConfig => ({
     '@react-native-community/datetimepicker',
     'expo-font',
     [
+      'expo-image-picker',
+      {
+        cameraPermission:
+          '$(PRODUCT_NAME) usa la cámara para sacar la foto del jugador y del documento durante el fichaje. Por ejemplo, al ficharte en un equipo podés sacar una selfie que aparecerá en tu carnet digital.',
+        photosPermission:
+          '$(PRODUCT_NAME) accede a tus fotos para que puedas elegir la imagen del carnet del jugador o del DNI desde la galería durante el fichaje. Por ejemplo, podés seleccionar una foto existente en lugar de tomarla con la cámara.',
+        microphonePermission: false,
+      },
+    ],
+    [
       'expo-splash-screen',
       {
         image: config.splashImage,
