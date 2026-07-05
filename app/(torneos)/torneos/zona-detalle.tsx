@@ -36,12 +36,16 @@ function ZonaDetalleContenido() {
     torneoNombre,
     faseNombre,
     zonaNombre,
+    grupoDeFasesNombre,
+    subgrupoNombre,
     tipoDeFase: tipoDeFaseParam,
   } = useLocalSearchParams<{
     zonaNombre?: string
     color?: string
     torneoNombre?: string
     faseNombre?: string
+    grupoDeFasesNombre?: string
+    subgrupoNombre?: string
     zonaId?: string
     tipoDeFase?: string
   }>()
@@ -81,6 +85,12 @@ function ZonaDetalleContenido() {
   const textoTorneo = torneoNombre != null ? String(torneoNombre) : ''
   const textoFase = faseNombre != null ? String(faseNombre) : ''
   const textoZona = zonaNombre != null ? String(zonaNombre) : ''
+  const textoGrupoDeFases =
+    grupoDeFasesNombre != null && String(grupoDeFasesNombre).length > 0
+      ? String(grupoDeFasesNombre)
+      : undefined
+  const textoSubgrupo =
+    subgrupoNombre != null && String(subgrupoNombre).length > 0 ? String(subgrupoNombre) : undefined
 
   return (
     <View className="flex-1 bg-surface">
@@ -92,6 +102,8 @@ function ZonaDetalleContenido() {
           torneo={textoTorneo}
           fase={textoFase}
           zona={textoZona}
+          grupoDeFases={textoGrupoDeFases}
+          subgrupo={textoSubgrupo}
           colorAgrupador={colorAgrupador}
         />
         <View className={`flex-1${grande ? ' px-24' : ''}`}>

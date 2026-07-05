@@ -11,10 +11,16 @@ type NavegarZona = (params: {
   zonaNombre: string
   faseNombre: string
   tipoDeFase: string
-  grupoNombre?: string
+  grupoDeFasesNombre?: string
+  subgrupoNombre?: string
 }) => void
 
-interface PropsCompartidos {
+interface ContextoJerarquia {
+  nombreGrupoDeFases?: string
+  nombreSubgrupo?: string
+}
+
+interface PropsCompartidos extends ContextoJerarquia {
   torneoId: number | undefined
   torneoNombre: string
   color?: string
@@ -84,6 +90,8 @@ function GrillaZonas({
   faseNombre,
   tipoDeFase,
   onNavegarZona,
+  nombreGrupoDeFases,
+  nombreSubgrupo,
 }: {
   elemento: InformacionInicialElementoTorneoDTO
   torneoId: number | undefined
@@ -92,6 +100,8 @@ function GrillaZonas({
   faseNombre: string
   tipoDeFase: string
   onNavegarZona: NavegarZona
+  nombreGrupoDeFases?: string
+  nombreSubgrupo?: string
 }) {
   return (
     <View style={grande ? { flexDirection: 'row', flexWrap: 'wrap', gap: 12 } : undefined}>
@@ -111,6 +121,8 @@ function GrillaZonas({
                 zonaNombre: zona.nombre ?? '',
                 faseNombre,
                 tipoDeFase,
+                grupoDeFasesNombre: nombreGrupoDeFases,
+                subgrupoNombre: nombreSubgrupo,
               })
             }
           />
@@ -134,6 +146,8 @@ function renderZonasDeFase(
     hijoDeSubgrupo = false,
     esRaiz = false,
     nivelIndentacion = 0,
+    nombreGrupoDeFases,
+    nombreSubgrupo,
   } = props
   const faseNombre = elemento.nombre?.trim() || 'Fase'
   const tipoDeFase = elemento.tipoDeFase ?? ''
@@ -148,6 +162,8 @@ function renderZonasDeFase(
       faseNombre={faseNombre}
       tipoDeFase={tipoDeFase}
       onNavegarZona={onNavegarZona}
+      nombreGrupoDeFases={nombreGrupoDeFases}
+      nombreSubgrupo={nombreSubgrupo}
     />
   ) : null
 
@@ -212,6 +228,8 @@ function renderSubgrupo(
           hijoDeSubgrupo
           nivelIndentacion={nivelIndentacion + 1}
           expandidoInicialHabilitado={props.expandidoInicialHabilitado}
+          nombreGrupoDeFases={props.nombreGrupoDeFases}
+          nombreSubgrupo={nombreGrupo}
         />
       ) : null}
     </View>
@@ -232,6 +250,8 @@ export function SeccionElementoTorneo({
   nivelIndentacion = 0,
   esRaiz = false,
   expandidoInicialHabilitado = false,
+  nombreGrupoDeFases,
+  nombreSubgrupo,
 }: SeccionElementoTorneoProps) {
   const tipo = (elemento.tipo ?? 'fase').toLowerCase()
 
@@ -251,6 +271,8 @@ export function SeccionElementoTorneo({
         nivelIndentacion,
         esRaiz,
         expandidoInicialHabilitado,
+        nombreGrupoDeFases,
+        nombreSubgrupo,
       })
     }
 
@@ -282,6 +304,8 @@ export function SeccionElementoTorneo({
     hijoDeSubgrupo,
     nivelIndentacion,
     esRaiz,
+    nombreGrupoDeFases,
+    nombreSubgrupo,
   })
 }
 
@@ -318,6 +342,7 @@ export function SeccionGrupoFases({
           hijoDirectoDeGrupo
           nivelIndentacion={1}
           expandidoInicialHabilitado={expandidoInicialHabilitado}
+          nombreGrupoDeFases={nombreGrupo}
         />
       ) : null}
     </View>
@@ -336,6 +361,8 @@ export function ListaElementosTorneo({
   nivelIndentacion = 0,
   esRaiz = false,
   expandidoInicialHabilitado = false,
+  nombreGrupoDeFases,
+  nombreSubgrupo,
 }: ListaElementosTorneoProps) {
   const [expandidoKey, setExpandidoKey] = useState<string | null>(() =>
     claveExpandidaInicial(elementos, expandidoInicialHabilitado)
@@ -365,6 +392,8 @@ export function ListaElementosTorneo({
             nivelIndentacion={nivelIndentacion}
             esRaiz={esRaiz}
             expandidoInicialHabilitado={expandidoInicialHabilitado}
+            nombreGrupoDeFases={nombreGrupoDeFases}
+            nombreSubgrupo={nombreSubgrupo}
           />
         )
       })}

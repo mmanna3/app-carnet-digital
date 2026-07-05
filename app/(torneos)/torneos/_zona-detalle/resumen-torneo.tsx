@@ -5,23 +5,37 @@ import { hexIconoAgrupador } from '@/lib/design-system'
 import { Texto } from '@/design-system/componentes/texto'
 import { textoOGuion } from '@/lib/utilidades/recursos-api'
 
-function lineaFaseZona(fase: string, zona: string) {
-  const f = fase.trim()
-  const z = zona.trim()
-  if (!f && !z) return '—'
-  if (!f) return z
-  if (!z) return f
-  return `${f} · ${z}`
+export function lineaContextoZona(partes: {
+  grupoDeFases?: string
+  subgrupo?: string
+  fase?: string
+  zona?: string
+}) {
+  const segmentos = [partes.grupoDeFases, partes.subgrupo, partes.fase, partes.zona]
+    .map((s) => s?.trim())
+    .filter(Boolean)
+
+  if (segmentos.length === 0) return '—'
+  return segmentos.join(' · ')
 }
 
 export type ResumenTorneoProps = {
   torneo: string
   fase: string
   zona: string
+  grupoDeFases?: string
+  subgrupo?: string
   colorAgrupador?: string
 }
 
-export function ResumenTorneo({ torneo, fase, zona, colorAgrupador }: ResumenTorneoProps) {
+export function ResumenTorneo({
+  torneo,
+  fase,
+  zona,
+  grupoDeFases,
+  subgrupo,
+  colorAgrupador,
+}: ResumenTorneoProps) {
   const { width: anchoVentana } = useWindowDimensions()
   const colorIcono = hexIconoAgrupador(colorAgrupador)
   const anchoMaxTitulo = Math.max(120, anchoVentana - 64)
@@ -40,8 +54,8 @@ export function ResumenTorneo({ torneo, fase, zona, colorAgrupador }: ResumenTor
             {textoOGuion(torneo)}
           </Texto>
         </View>
-        <Texto className="text-center text-lg ml-3" numberOfLines={3}>
-          {lineaFaseZona(fase, zona)}
+        <Texto className="text-center text-lg ml-3" numberOfLines={4}>
+          {lineaContextoZona({ grupoDeFases, subgrupo, fase, zona })}
         </Texto>
       </View>
     </View>

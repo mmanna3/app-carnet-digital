@@ -101,6 +101,39 @@ describe('SeccionElementoTorneo', () => {
     )
   })
 
+  it('incluye grupo de fases y subgrupo al navegar', () => {
+    const elemento = InformacionInicialElementoTorneoDTO.fromJS({
+      tipo: 'fase',
+      id: 2,
+      nombre: 'Fase B',
+      tipoDeFase: 'Regular',
+      zonas: [{ id: 11, nombre: 'Zona Sur', orden: 1 }],
+    })
+
+    const onNavegar = jest.fn()
+    const { getByTestId } = render(
+      <SeccionElementoTorneo
+        elemento={elemento}
+        {...propsBase}
+        onNavegarZona={onNavegar}
+        expandido={true}
+        onToggle={jest.fn()}
+        nombreGrupoDeFases="Grupo A"
+        nombreSubgrupo="Subfase X"
+      />
+    )
+
+    fireEvent.press(getByTestId('tarjeta-Zona Sur'))
+    expect(onNavegar).toHaveBeenCalledWith(
+      expect.objectContaining({
+        grupoDeFasesNombre: 'Grupo A',
+        subgrupoNombre: 'Subfase X',
+        faseNombre: 'Fase B',
+        zonaNombre: 'Zona Sur',
+      })
+    )
+  })
+
   it('renderiza grupo anidado con fases colapsadas', () => {
     const elemento = InformacionInicialElementoTorneoDTO.fromJS({
       tipo: 'grupo',

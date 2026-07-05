@@ -108,7 +108,15 @@ export default function TorneoDetalle() {
         grande={grande}
         esRaiz
         expandidoInicialHabilitado={expandidoInicialHabilitado}
-        onNavegarZona={({ torneoId, zonaId, zonaNombre, faseNombre, tipoDeFase }) =>
+        onNavegarZona={({
+          torneoId,
+          zonaId,
+          zonaNombre,
+          faseNombre,
+          tipoDeFase,
+          grupoDeFasesNombre,
+          subgrupoNombre,
+        }) =>
           router.push({
             pathname: RUTAS.ZONA_DETALLE,
             params: {
@@ -119,6 +127,8 @@ export default function TorneoDetalle() {
               torneoNombre: torneo.nombre ?? '',
               faseNombre,
               tipoDeFase,
+              grupoDeFasesNombre: grupoDeFasesNombre ?? '',
+              subgrupoNombre: subgrupoNombre ?? '',
             },
           })
         }
