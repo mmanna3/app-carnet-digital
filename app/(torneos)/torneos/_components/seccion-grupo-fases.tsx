@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import type { InformacionInicialElementoTorneoDTO } from '@/lib/api/clients'
-import { getTemaAgrupador } from '@/lib/design-system'
 import { TarjetaTorneo } from '@/torneos/_components/tarjeta-torneo'
 import { EncabezadoDesplegable } from '@/torneos/_components/encabezado-desplegable'
 
@@ -143,7 +142,6 @@ function renderZonasDeFase(
     onNavegarZona,
     expandido,
     onToggle,
-    hijoDeSubgrupo = false,
     esRaiz = false,
     nivelIndentacion = 0,
     nombreGrupoDeFases,
@@ -151,7 +149,6 @@ function renderZonasDeFase(
   } = props
   const faseNombre = elemento.nombre?.trim() || 'Fase'
   const tipoDeFase = elemento.tipoDeFase ?? ''
-  const tema = getTemaAgrupador(color)
 
   const grilla = expandido ? (
     <GrillaZonas
@@ -178,17 +175,6 @@ function renderZonasDeFase(
       nivelIndentacion={nivelIndentacion}
     />
   )
-
-  if (hijoDeSubgrupo) {
-    return (
-      <View
-        className={`mb-4 overflow-hidden rounded-2xl border ${tema.border} bg-white/[0.03] p-3`}
-      >
-        {encabezado}
-        {grilla}
-      </View>
-    )
-  }
 
   return (
     <View className={esRaiz ? 'mb-6' : 'mb-4'}>
