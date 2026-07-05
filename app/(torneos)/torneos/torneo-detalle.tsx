@@ -10,7 +10,7 @@ import { useHeaderConHome } from '@/torneos/_components/cabecera-publica'
 import { usePantallaGrande } from '@/lib/hooks/use-pantalla-grande'
 import { EstadoCarga, EstadoVacio } from '@/design-system/componentes'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
-import { SeccionElementoTorneo } from '@/torneos/_components/seccion-grupo-fases'
+import { ListaElementosTorneo, contarFases } from '@/torneos/_components/seccion-grupo-fases'
 
 function buscarTorneoEnAgrupadores(
   agrupadores: InformacionInicialAgrupadorDTO[],
@@ -86,6 +86,7 @@ export default function TorneoDetalle() {
 
   const { torneo, color } = resuelto
   const elementos = torneo.elementos ?? []
+  const expandidoInicialHabilitado = contarFases(elementos) === 1
 
   return (
     <ScrollView
@@ -99,30 +100,29 @@ export default function TorneoDetalle() {
         width: '100%',
       }}
     >
-      {elementos.map((el, i) => (
-        <SeccionElementoTorneo
-          key={(el.tipo ?? 'fase') === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
-          elemento={el}
-          torneoId={torneo.id}
-          torneoNombre={torneo.nombre ?? ''}
-          color={color}
-          grande={grande}
-          onNavegarZona={({ torneoId, zonaId, zonaNombre, faseNombre, tipoDeFase }) =>
-            router.push({
-              pathname: RUTAS.ZONA_DETALLE,
-              params: {
-                torneoId,
-                zonaId,
-                zonaNombre,
-                color: color ?? '',
-                torneoNombre: torneo.nombre ?? '',
-                faseNombre,
-                tipoDeFase,
-              },
-            })
-          }
-        />
-      ))}
+      <ListaElementosTorneo
+        elementos={elementos}
+        torneoId={torneo.id}
+        torneoNombre={torneo.nombre ?? ''}
+        color={color}
+        grande={grande}
+        esRaiz
+        expandidoInicialHabilitado={expandidoInicialHabilitado}
+        onNavegarZona={({ torneoId, zonaId, zonaNombre, faseNombre, tipoDeFase }) =>
+          router.push({
+            pathname: RUTAS.ZONA_DETALLE,
+            params: {
+              torneoId,
+              zonaId,
+              zonaNombre,
+              color: color ?? '',
+              torneoNombre: torneo.nombre ?? '',
+              faseNombre,
+              tipoDeFase,
+            },
+          })
+        }
+      />
     </ScrollView>
   )
 }

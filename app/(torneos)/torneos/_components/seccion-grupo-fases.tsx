@@ -1,12 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import type { InformacionInicialElementoTorneoDTO } from '@/lib/api/clients'
 import { getTemaAgrupador } from '@/lib/design-system'
-import { Texto } from '@/design-system/componentes'
 import { TarjetaTorneo } from '@/torneos/_components/tarjeta-torneo'
-
-type IoniconsName = React.ComponentProps<typeof Ionicons>['name']
+import { EncabezadoDesplegable } from '@/torneos/_components/encabezado-desplegable'
 
 type NavegarZona = (params: {
   torneoId: string
@@ -17,9 +14,7 @@ type NavegarZona = (params: {
   grupoNombre?: string
 }) => void
 
-interface SeccionGrupoFasesProps {
-  nombreGrupo: string
-  elementos: InformacionInicialElementoTorneoDTO[]
+interface PropsCompartidos {
   torneoId: number | undefined
   torneoNombre: string
   color?: string
@@ -27,73 +22,58 @@ interface SeccionGrupoFasesProps {
   onNavegarZona: NavegarZona
 }
 
-interface SeccionElementoTorneoProps {
+interface SeccionGrupoFasesProps extends PropsCompartidos {
+  nombreGrupo: string
+  elementos: InformacionInicialElementoTorneoDTO[]
+  expandido: boolean
+  onToggle: () => void
+  expandidoInicialHabilitado?: boolean
+}
+
+interface SeccionElementoTorneoProps extends PropsCompartidos {
   elemento: InformacionInicialElementoTorneoDTO
-  torneoId: number | undefined
-  torneoNombre: string
-  color?: string
-  grande: boolean
-  onNavegarZona: NavegarZona
+  expandido: boolean
+  onToggle: () => void
   /** Hijo directo de un grupo de fases raíz (fase o subgrupo: estilo liviano, sin caja). */
   hijoDirectoDeGrupo?: boolean
   /** Hijo de un subgrupo (fase: caja sutil, título chico sin ícono). */
   hijoDeSubgrupo?: boolean
+  nivelIndentacion?: number
+  esRaiz?: boolean
+  expandidoInicialHabilitado?: boolean
 }
 
-function TituloHijoGrupo({ titulo }: { titulo: string }) {
-  return (
-    <Texto variante="eyebrow" className="mb-2 text-zinc-100">
-      {titulo}
-    </Texto>
-  )
+interface ListaElementosTorneoProps extends PropsCompartidos {
+  elementos: InformacionInicialElementoTorneoDTO[]
+  hijoDirectoDeGrupo?: boolean
+  hijoDeSubgrupo?: boolean
+  nivelIndentacion?: number
+  /** Hijos directos del torneo: misma estética liviana para fases y grupos. */
+  esRaiz?: boolean
+  /** Si el torneo tiene una sola fase, expandir el único camino al entrar. */
+  expandidoInicialHabilitado?: boolean
 }
 
-function EncabezadoBloque({
-  titulo,
-  color,
-  iconName,
-}: {
-  titulo: string
-  color?: string
-  iconName: IoniconsName
-}) {
-  const tema = getTemaAgrupador(color)
-
-  return (
-    <View className="mb-3 flex-row items-center gap-2.5 border-b border-white/10 pb-3">
-      <View
-        className={`h-8 w-8 items-center justify-center rounded-lg border ${tema.border} ${tema.iconBg}`}
-      >
-        <Ionicons name={iconName} size={18} color={tema.iconColor} />
-      </View>
-      <Texto variante="titulo" className="flex-1 text-base leading-5">
-        {titulo}
-      </Texto>
-    </View>
-  )
+function claveElemento(el: InformacionInicialElementoTorneoDTO, i: number): string {
+  return (el.tipo ?? 'fase').toLowerCase() === 'grupo'
+    ? `grupo-${el.grupoId ?? i}`
+    : `fase-${el.id ?? i}`
 }
 
-function ContenedorFaseSubgrupo({
-  titulo,
-  color,
-  children,
-}: {
-  titulo: string
-  color?: string
-  children: React.ReactNode
-}) {
-  const tema = getTemaAgrupador(color)
+function contarFases(elementos: InformacionInicialElementoTorneoDTO[]): number {
+  return elementos.reduce((acc, el) => {
+    const tipo = (el.tipo ?? 'fase').toLowerCase()
+    if (tipo === 'fase') return acc + 1
+    return acc + contarFases(el.elementos ?? [])
+  }, 0)
+}
 
-  return (
-    <View className={`mb-4 overflow-hidden rounded-2xl border ${tema.border} bg-white/[0.03] p-3`}>
-      {titulo ? (
-        <Texto variante="eyebrow" className="mb-2 normal-case tracking-wide text-zinc-400">
-          {titulo}
-        </Texto>
-      ) : null}
-      {children}
-    </View>
-  )
+function claveExpandidaInicial(
+  elementos: InformacionInicialElementoTorneoDTO[],
+  habilitado: boolean
+): string | null {
+  if (!habilitado || elementos.length !== 1) return null
+  return claveElemento(elementos[0], 0)
 }
 
 function GrillaZonas({
@@ -149,13 +129,17 @@ function renderZonasDeFase(
     color,
     grande,
     onNavegarZona,
-    hijoDirectoDeGrupo = false,
+    expandido,
+    onToggle,
     hijoDeSubgrupo = false,
+    esRaiz = false,
+    nivelIndentacion = 0,
   } = props
-  const faseNombre = elemento.nombre ?? ''
+  const faseNombre = elemento.nombre?.trim() || 'Fase'
   const tipoDeFase = elemento.tipoDeFase ?? ''
+  const tema = getTemaAgrupador(color)
 
-  const grilla = (
+  const grilla = expandido ? (
     <GrillaZonas
       elemento={elemento}
       torneoId={torneoId}
@@ -165,35 +149,34 @@ function renderZonasDeFase(
       tipoDeFase={tipoDeFase}
       onNavegarZona={onNavegarZona}
     />
+  ) : null
+
+  const encabezado = (
+    <EncabezadoDesplegable
+      titulo={faseNombre}
+      expandido={expandido}
+      onToggle={onToggle}
+      color={color}
+      variante="fase"
+      testID={`desplegable-${faseNombre}`}
+      nivelIndentacion={nivelIndentacion}
+    />
   )
 
   if (hijoDeSubgrupo) {
     return (
-      <ContenedorFaseSubgrupo titulo={faseNombre.trim() || 'Fase'} color={color}>
-        {grilla}
-      </ContenedorFaseSubgrupo>
-    )
-  }
-
-  if (hijoDirectoDeGrupo) {
-    return (
-      <View className="mb-4">
-        {faseNombre ? <TituloHijoGrupo titulo={faseNombre} /> : null}
+      <View
+        className={`mb-4 overflow-hidden rounded-2xl border ${tema.border} bg-white/[0.03] p-3`}
+      >
+        {encabezado}
         {grilla}
       </View>
     )
   }
 
   return (
-    <View className="mb-6">
-      {faseNombre ? (
-        <Texto
-          variante="eyebrow"
-          className="mb-3 text-base text-zinc-300 normal-case tracking-wide"
-        >
-          {faseNombre}
-        </Texto>
-      ) : null}
+    <View className={esRaiz ? 'mb-6' : 'mb-4'}>
+      {encabezado}
       {grilla}
     </View>
   )
@@ -205,22 +188,32 @@ function renderSubgrupo(
 ) {
   const nombreGrupo = elemento.nombreGrupo ?? elemento.nombre ?? 'Grupo'
   const elementos = elemento.elementos ?? []
+  const { expandido, onToggle, nivelIndentacion = 0 } = props
 
   return (
     <View className="mb-4">
-      <TituloHijoGrupo titulo={nombreGrupo} />
-      {elementos.map((el, i) => (
-        <SeccionElementoTorneo
-          key={el.tipo === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
-          elemento={el}
+      <EncabezadoDesplegable
+        titulo={nombreGrupo}
+        expandido={expandido}
+        onToggle={onToggle}
+        color={props.color}
+        variante="subgrupo"
+        testID={`desplegable-${nombreGrupo}`}
+        nivelIndentacion={nivelIndentacion}
+      />
+      {expandido ? (
+        <ListaElementosTorneo
+          elementos={elementos}
           torneoId={props.torneoId}
           torneoNombre={props.torneoNombre}
           color={props.color}
           grande={props.grande}
           onNavegarZona={props.onNavegarZona}
           hijoDeSubgrupo
+          nivelIndentacion={nivelIndentacion + 1}
+          expandidoInicialHabilitado={props.expandidoInicialHabilitado}
         />
-      ))}
+      ) : null}
     </View>
   )
 }
@@ -232,8 +225,13 @@ export function SeccionElementoTorneo({
   color,
   grande,
   onNavegarZona,
+  expandido,
+  onToggle,
   hijoDirectoDeGrupo = false,
   hijoDeSubgrupo = false,
+  nivelIndentacion = 0,
+  esRaiz = false,
+  expandidoInicialHabilitado = false,
 }: SeccionElementoTorneoProps) {
   const tipo = (elemento.tipo ?? 'fase').toLowerCase()
 
@@ -246,8 +244,13 @@ export function SeccionElementoTorneo({
         color,
         grande,
         onNavegarZona,
+        expandido,
+        onToggle,
         hijoDirectoDeGrupo,
         hijoDeSubgrupo,
+        nivelIndentacion,
+        esRaiz,
+        expandidoInicialHabilitado,
       })
     }
 
@@ -260,6 +263,9 @@ export function SeccionElementoTorneo({
         color={color}
         grande={grande}
         onNavegarZona={onNavegarZona}
+        expandido={expandido}
+        onToggle={onToggle}
+        expandidoInicialHabilitado={expandidoInicialHabilitado}
       />
     )
   }
@@ -270,8 +276,12 @@ export function SeccionElementoTorneo({
     color,
     grande,
     onNavegarZona,
+    expandido,
+    onToggle,
     hijoDirectoDeGrupo,
     hijoDeSubgrupo,
+    nivelIndentacion,
+    esRaiz,
   })
 }
 
@@ -283,29 +293,84 @@ export function SeccionGrupoFases({
   color,
   grande,
   onNavegarZona,
+  expandido,
+  onToggle,
+  expandidoInicialHabilitado = false,
 }: SeccionGrupoFasesProps) {
-  const tema = getTemaAgrupador(color)
+  return (
+    <View className="mb-6">
+      <EncabezadoDesplegable
+        titulo={nombreGrupo}
+        expandido={expandido}
+        onToggle={onToggle}
+        color={color}
+        variante="fase"
+        testID={`desplegable-${nombreGrupo}`}
+      />
+      {expandido ? (
+        <ListaElementosTorneo
+          elementos={elementos}
+          torneoId={torneoId}
+          torneoNombre={torneoNombre}
+          color={color}
+          grande={grande}
+          onNavegarZona={onNavegarZona}
+          hijoDirectoDeGrupo
+          nivelIndentacion={1}
+          expandidoInicialHabilitado={expandidoInicialHabilitado}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+export function ListaElementosTorneo({
+  elementos,
+  torneoId,
+  torneoNombre,
+  color,
+  grande,
+  onNavegarZona,
+  hijoDirectoDeGrupo = false,
+  hijoDeSubgrupo = false,
+  nivelIndentacion = 0,
+  esRaiz = false,
+  expandidoInicialHabilitado = false,
+}: ListaElementosTorneoProps) {
+  const [expandidoKey, setExpandidoKey] = useState<string | null>(() =>
+    claveExpandidaInicial(elementos, expandidoInicialHabilitado)
+  )
+
+  const toggle = (key: string) => {
+    setExpandidoKey((prev) => (prev === key ? null : key))
+  }
 
   return (
-    <View className="mb-8">
-      <View className={`overflow-hidden rounded-2xl border ${tema.border} bg-white/5 p-4`}>
-        <EncabezadoBloque titulo={nombreGrupo} color={color} iconName="layers-outline" />
-
-        {elementos.map((el, i) => (
+    <>
+      {elementos.map((el, i) => {
+        const key = claveElemento(el, i)
+        return (
           <SeccionElementoTorneo
-            key={el.tipo === 'grupo' ? `grupo-${el.grupoId ?? i}` : `fase-${el.id ?? i}`}
+            key={key}
             elemento={el}
             torneoId={torneoId}
             torneoNombre={torneoNombre}
             color={color}
             grande={grande}
             onNavegarZona={onNavegarZona}
-            hijoDirectoDeGrupo
+            expandido={expandidoKey === key}
+            onToggle={() => toggle(key)}
+            hijoDirectoDeGrupo={hijoDirectoDeGrupo}
+            hijoDeSubgrupo={hijoDeSubgrupo}
+            nivelIndentacion={nivelIndentacion}
+            esRaiz={esRaiz}
+            expandidoInicialHabilitado={expandidoInicialHabilitado}
           />
-        ))}
-      </View>
-    </View>
+        )
+      })}
+    </>
   )
 }
 
 export type { NavegarZona }
+export { contarFases }
