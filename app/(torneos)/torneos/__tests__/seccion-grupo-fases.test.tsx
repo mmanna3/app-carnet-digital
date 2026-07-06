@@ -134,7 +134,7 @@ describe('SeccionElementoTorneo', () => {
     )
   })
 
-  it('renderiza grupo anidado con fases colapsadas', () => {
+  it('despliega la fase al expandir un grupo con una sola fase', () => {
     const elemento = InformacionInicialElementoTorneoDTO.fromJS({
       tipo: 'grupo',
       grupoId: 5,
@@ -150,7 +150,7 @@ describe('SeccionElementoTorneo', () => {
       ],
     })
 
-    const { getByText, queryByTestId } = render(
+    const { getByText, getByTestId } = render(
       <SeccionElementoTorneo
         elemento={elemento}
         {...propsBase}
@@ -161,7 +161,43 @@ describe('SeccionElementoTorneo', () => {
 
     expect(getByText('Grupo A')).toBeTruthy()
     expect(getByText('Fase B')).toBeTruthy()
-    expect(queryByTestId('tarjeta-Zona Sur')).toBeNull()
+    expect(getByTestId('tarjeta-Zona Sur')).toBeTruthy()
+  })
+
+  it('despliega subgrupo y fase si el grupo tiene un subgrupo con una sola fase', () => {
+    const elemento = InformacionInicialElementoTorneoDTO.fromJS({
+      tipo: 'grupo',
+      grupoId: 5,
+      nombreGrupo: 'Grupo A',
+      elementos: [
+        {
+          tipo: 'grupo',
+          grupoId: 6,
+          nombreGrupo: 'Subfase X',
+          elementos: [
+            {
+              tipo: 'fase',
+              id: 2,
+              nombre: 'Fase B',
+              tipoDeFase: 'Regular',
+              zonas: [{ id: 11, nombre: 'Zona Sur', orden: 1 }],
+            },
+          ],
+        },
+      ],
+    })
+
+    const { getByTestId } = render(
+      <SeccionElementoTorneo
+        elemento={elemento}
+        {...propsBase}
+        expandido={true}
+        onToggle={jest.fn()}
+        hijoDirectoDeGrupo
+      />
+    )
+
+    expect(getByTestId('tarjeta-Zona Sur')).toBeTruthy()
   })
 })
 
@@ -249,6 +285,40 @@ describe('ListaElementosTorneo', () => {
     )
 
     expect(getByTestId('tarjeta-Zona Sur')).toBeTruthy()
+  })
+
+  it('no despliega fase si el grupo tiene más de una fase', () => {
+    const elementos = [
+      InformacionInicialElementoTorneoDTO.fromJS({
+        tipo: 'grupo',
+        grupoId: 5,
+        nombreGrupo: 'Grupo A',
+        elementos: [
+          {
+            tipo: 'fase',
+            id: 2,
+            nombre: 'Fase B',
+            tipoDeFase: 'Regular',
+            zonas: [{ id: 11, nombre: 'Zona Sur', orden: 1 }],
+          },
+          {
+            tipo: 'fase',
+            id: 3,
+            nombre: 'Fase C',
+            tipoDeFase: 'Regular',
+            zonas: [{ id: 12, nombre: 'Zona Este', orden: 1 }],
+          },
+        ],
+      }),
+    ]
+
+    const { getByTestId, queryByTestId } = render(
+      <ListaElementosTorneo elementos={elementos} {...propsBase} esRaiz />
+    )
+
+    fireEvent.press(getByTestId('desplegable-Grupo A'))
+    expect(queryByTestId('tarjeta-Zona Sur')).toBeNull()
+    expect(queryByTestId('tarjeta-Zona Este')).toBeNull()
   })
 
   it('comportamiento acordeón: abrir una fase cierra la otra', () => {

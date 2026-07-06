@@ -32,7 +32,6 @@ interface SeccionGrupoFasesProps extends PropsCompartidos {
   elementos: InformacionInicialElementoTorneoDTO[]
   expandido: boolean
   onToggle: () => void
-  expandidoInicialHabilitado?: boolean
 }
 
 interface SeccionElementoTorneoProps extends PropsCompartidos {
@@ -55,7 +54,7 @@ interface ListaElementosTorneoProps extends PropsCompartidos {
   nivelIndentacion?: number
   /** Hijos directos del torneo: misma estética liviana para fases y grupos. */
   esRaiz?: boolean
-  /** Si el torneo tiene una sola fase, expandir el único camino al entrar. */
+  /** Si el torneo tiene una sola fase, expandir el único camino al entrar (solo en raíz). */
   expandidoInicialHabilitado?: boolean
 }
 
@@ -73,11 +72,22 @@ function contarFases(elementos: InformacionInicialElementoTorneoDTO[]): number {
   }, 0)
 }
 
+function debeAutoExpandirUnicaFase(
+  elementos: InformacionInicialElementoTorneoDTO[],
+  esRaiz: boolean,
+  expandidoInicialHabilitado: boolean
+): boolean {
+  if (elementos.length !== 1 || contarFases(elementos) !== 1) return false
+  if (!esRaiz) return true
+  return expandidoInicialHabilitado
+}
+
 function claveExpandidaInicial(
   elementos: InformacionInicialElementoTorneoDTO[],
-  habilitado: boolean
+  esRaiz: boolean,
+  expandidoInicialHabilitado: boolean
 ): string | null {
-  if (!habilitado || elementos.length !== 1) return null
+  if (!debeAutoExpandirUnicaFase(elementos, esRaiz, expandidoInicialHabilitado)) return null
   return claveElemento(elementos[0], 0)
 }
 
@@ -213,7 +223,6 @@ function renderSubgrupo(
           onNavegarZona={props.onNavegarZona}
           hijoDeSubgrupo
           nivelIndentacion={nivelIndentacion + 1}
-          expandidoInicialHabilitado={props.expandidoInicialHabilitado}
           nombreGrupoDeFases={props.nombreGrupoDeFases}
           nombreSubgrupo={nombreGrupo}
         />
@@ -273,7 +282,6 @@ export function SeccionElementoTorneo({
         onNavegarZona={onNavegarZona}
         expandido={expandido}
         onToggle={onToggle}
-        expandidoInicialHabilitado={expandidoInicialHabilitado}
       />
     )
   }
@@ -305,7 +313,6 @@ export function SeccionGrupoFases({
   onNavegarZona,
   expandido,
   onToggle,
-  expandidoInicialHabilitado = false,
 }: SeccionGrupoFasesProps) {
   return (
     <View className="mb-6">
@@ -327,7 +334,6 @@ export function SeccionGrupoFases({
           onNavegarZona={onNavegarZona}
           hijoDirectoDeGrupo
           nivelIndentacion={1}
-          expandidoInicialHabilitado={expandidoInicialHabilitado}
           nombreGrupoDeFases={nombreGrupo}
         />
       ) : null}
@@ -351,7 +357,7 @@ export function ListaElementosTorneo({
   nombreSubgrupo,
 }: ListaElementosTorneoProps) {
   const [expandidoKey, setExpandidoKey] = useState<string | null>(() =>
-    claveExpandidaInicial(elementos, expandidoInicialHabilitado)
+    claveExpandidaInicial(elementos, esRaiz, expandidoInicialHabilitado)
   )
 
   const toggle = (key: string) => {
@@ -388,4 +394,4 @@ export function ListaElementosTorneo({
 }
 
 export type { NavegarZona }
-export { contarFases }
+export { contarFases, debeAutoExpandirUnicaFase }
