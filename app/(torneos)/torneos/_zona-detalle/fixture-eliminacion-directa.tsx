@@ -5,6 +5,7 @@ import {
   ContenedorTabla,
   EstadoCarga,
   EstadoVacio,
+  Texto,
 } from '@/design-system/componentes'
 import { Ionicons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
@@ -14,15 +15,27 @@ import type { InstanciasDTO, PartidoEliminacionDirectaDTO } from '@/lib/api/clie
 import { queryKeys } from '@/lib/api/query-keys'
 import { useConfigLiga } from '@/lib/config/liga'
 import { textoOGuion, uriRecursoPublicoApi } from '@/lib/utilidades/recursos-api'
+import { useAnchoColumnaEquipo } from '@/torneos/_zona-detalle/anchos-tabla'
+
+const ANCHO_ESCUDO = 36
+const GAP_FILA = 6
+const PADDING_FILA = 16
+const ANCHO_RESULTADO_MIN = 88
+const ANCHO_CHAR_RESULTADO = 7
+const PADDING_RESULTADO = 16
+const CLASS_TEXTO_EQUIPO = 'text-[12px] font-medium leading-4'
 
 function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | undefined }) {
   const u = uriRecursoPublicoApi(apiUrl, uri)
   return (
-    <View style={{ width: 36, height: 36 }} className="shrink-0 items-center justify-center">
+    <View
+      style={{ width: ANCHO_ESCUDO, minWidth: ANCHO_ESCUDO }}
+      className="shrink-0 items-center justify-center"
+    >
       {u ? (
         <Image
           source={{ uri: u }}
-          style={{ width: 36, height: 36 }}
+          style={{ width: ANCHO_ESCUDO, height: ANCHO_ESCUDO }}
           className="rounded-md"
           resizeMode="contain"
         />
@@ -36,6 +49,38 @@ function Escudo({ uri, apiUrl }: { uri: string | undefined; apiUrl: string | und
 function textoPenal(p: string | undefined) {
   const t = (p ?? '').trim()
   return t.length > 0 ? t : null
+}
+
+function textoResultadoPartido(partido: PartidoEliminacionDirectaDTO): string {
+  const pLoc = textoPenal(partido.penalesLocal)
+  const pVis = textoPenal(partido.penalesVisitante)
+  const resL = textoOGuion(partido.resultadoLocal)
+  const resV = textoOGuion(partido.resultadoVisitante)
+  return `${resL}${pLoc != null ? `(${pLoc})` : ''} vs ${resV}${pVis != null ? `(${pVis})` : ''}`
+}
+
+function anchoResultadoPartidos(partidos: PartidoEliminacionDirectaDTO[]): number {
+  let maxLen = '— vs —'.length
+  for (const p of partidos) {
+    maxLen = Math.max(maxLen, textoResultadoPartido(p).length)
+  }
+  return Math.max(ANCHO_RESULTADO_MIN, maxLen * ANCHO_CHAR_RESULTADO + PADDING_RESULTADO)
+}
+
+function anchoFilaPartido(anchoEquipo: number, anchoResultado: number): number {
+  return (
+    PADDING_FILA +
+    ANCHO_ESCUDO +
+    GAP_FILA +
+    anchoEquipo +
+    GAP_FILA +
+    anchoResultado +
+    GAP_FILA +
+    anchoEquipo +
+    GAP_FILA +
+    ANCHO_ESCUDO +
+    PADDING_FILA
+  )
 }
 
 /** Parsea un resultado numérico; devuelve null si no hay valor jugable. */
@@ -79,9 +124,13 @@ function partidoFinalConResultados(instancia: InstanciasDTO): PartidoEliminacion
 function FilaPartido({
   partido,
   apiUrl,
+  anchoEquipo,
+  anchoResultado,
 }: {
   partido: PartidoEliminacionDirectaDTO
   apiUrl: string | undefined
+  anchoEquipo: number
+  anchoResultado: number
 }) {
   const pLoc = textoPenal(partido.penalesLocal)
   const pVis = textoPenal(partido.penalesVisitante)
@@ -89,15 +138,20 @@ function FilaPartido({
   const resV = textoOGuion(partido.resultadoVisitante)
 
   return (
-    <View className="flex-row items-center gap-1.5 border-b border-gray-100 py-2.5 last:border-b-0 px-2">
+    <View className="flex-row items-center border-b border-gray-100 py-2.5 last:border-b-0 px-2">
       <Escudo uri={partido.escudoLocal} apiUrl={apiUrl} />
-      <Text
-        className="min-w-0 flex-1 text-right text-[12px] font-medium text-gray-900"
-        numberOfLines={2}
+      <View
+        style={{ width: anchoEquipo, minWidth: anchoEquipo, marginLeft: GAP_FILA }}
+        className="shrink-0 justify-center"
       >
-        {textoOGuion(partido.local)}
-      </Text>
-      <View className="shrink-0 flex-row flex-wrap items-center justify-center gap-x-0.5 rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5">
+        <Text className={`text-right ${CLASS_TEXTO_EQUIPO} text-gray-900`} numberOfLines={2}>
+          {textoOGuion(partido.local)}
+        </Text>
+      </View>
+      <View
+        style={{ width: anchoResultado, minWidth: anchoResultado, marginLeft: GAP_FILA }}
+        className="shrink-0 flex-row items-center justify-center rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5"
+      >
         <Text className="text-[12px] font-semibold tabular-nums text-gray-800">
           {resL}
           {pLoc != null ? `(${pLoc})` : ''}
@@ -108,13 +162,17 @@ function FilaPartido({
           {pVis != null ? `(${pVis})` : ''}
         </Text>
       </View>
-      <Text
-        className="min-w-0 flex-1 text-left text-[12px] font-medium text-gray-900"
-        numberOfLines={2}
+      <View
+        style={{ width: anchoEquipo, minWidth: anchoEquipo, marginLeft: GAP_FILA }}
+        className="shrink-0 justify-center"
       >
-        {textoOGuion(partido.visitante)}
-      </Text>
-      <Escudo uri={partido.escudoVisitante} apiUrl={apiUrl} />
+        <Text className={`text-left ${CLASS_TEXTO_EQUIPO} text-gray-900`} numberOfLines={2}>
+          {textoOGuion(partido.visitante)}
+        </Text>
+      </View>
+      <View style={{ marginLeft: GAP_FILA }}>
+        <Escudo uri={partido.escudoVisitante} apiUrl={apiUrl} />
+      </View>
     </View>
   )
 }
@@ -127,19 +185,42 @@ function CardInstancia({
   apiUrl: string | undefined
 }) {
   const partidos = instancia.partidos ?? []
+  const nombresEquipos = useMemo(() => partidos.flatMap((p) => [p.local, p.visitante]), [partidos])
+  const { anchoEquipo, medidorAnchoEquipo } = useAnchoColumnaEquipo(nombresEquipos, {
+    classNameTextoEncabezado: `${CLASS_TEXTO_EQUIPO} font-semibold`,
+    classNameTextoContenido: CLASS_TEXTO_EQUIPO,
+  })
+  const anchoResultado = useMemo(() => anchoResultadoPartidos(partidos), [partidos])
+  const anchoFila = anchoFilaPartido(anchoEquipo, anchoResultado)
+
   return (
     <View className="mb-3">
-      <ContenedorTabla>
-        <CabeceraBloque
-          titulo={textoOGuion(instancia.titulo)}
-          subtitulo={textoOGuion(instancia.dia)}
-          centrado
-        />
-        <View className="px-3 py-2">
-          {partidos.map((p, i) => (
-            <FilaPartido key={`${p.local}-${p.visitante}-${i}`} partido={p} apiUrl={apiUrl} />
-          ))}
-        </View>
+      {medidorAnchoEquipo}
+      <ContenedorTabla
+        horizontal={partidos.length > 0}
+        encabezado={
+          <CabeceraBloque
+            titulo={textoOGuion(instancia.titulo)}
+            subtitulo={textoOGuion(instancia.dia)}
+            centrado
+          />
+        }
+      >
+        {partidos.length === 0 ? (
+          <Text className="px-3 py-4 text-sm leading-5 text-gray-600">No hay partidos.</Text>
+        ) : (
+          <View style={{ width: anchoFila, alignSelf: 'flex-start' }} className="py-2">
+            {partidos.map((p, i) => (
+              <FilaPartido
+                key={`${p.local}-${p.visitante}-${i}`}
+                partido={p}
+                apiUrl={apiUrl}
+                anchoEquipo={anchoEquipo}
+                anchoResultado={anchoResultado}
+              />
+            ))}
+          </View>
+        )}
       </ContenedorTabla>
     </View>
   )
@@ -161,17 +242,20 @@ function BloqueCampeonFinal({
 
   return (
     <View className="my-6 items-center px-2 pt-1">
-      <Ionicons name="trophy" size={48} color="#ca8a04" accessibilityLabel="Trofeo" />
+      <Ionicons
+        className="mb-2"
+        name="trophy"
+        size={64}
+        color="#ca8a04"
+        accessibilityLabel="Trofeo"
+      />
       <Escudo uri={escudo} apiUrl={apiUrl} />
       <View className="mt-2 flex-row items-center gap-2">
-        <Text
-          className="max-w-[220px] text-center text-base font-semibold text-gray-900"
-          numberOfLines={2}
-        >
+        <Texto variante="titulo" className="max-w-[220px] text-center text-base" numberOfLines={2}>
           {nombreLimpio}
-        </Text>
+        </Texto>
       </View>
-      <Text className="mt-1 text-center text-xs font-semibold uppercase tracking-wide text-amber-700">
+      <Text className="mt-1 text-center text-md font-semibold uppercase tracking-wide text-amber-400">
         Campeón
       </Text>
     </View>
@@ -229,9 +313,6 @@ export default function FixtureEliminacionDirecta() {
       contentContainerStyle={{ paddingBottom: 24 }}
       showsVerticalScrollIndicator
     >
-      {partidoDeLaFinal != null ? (
-        <BloqueCampeonFinal partido={partidoDeLaFinal} apiUrl={apiUrl} />
-      ) : null}
       {instancias.map((inst, idx) => (
         <CardInstancia
           key={`${inst.titulo ?? 'inst'}-${inst.dia ?? idx}-${idx}`}
@@ -239,6 +320,9 @@ export default function FixtureEliminacionDirecta() {
           apiUrl={apiUrl}
         />
       ))}
+      {partidoDeLaFinal != null ? (
+        <BloqueCampeonFinal partido={partidoDeLaFinal} apiUrl={apiUrl} />
+      ) : null}
     </ScrollView>
   )
 }

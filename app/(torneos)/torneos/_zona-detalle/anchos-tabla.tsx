@@ -48,10 +48,20 @@ function anchoDesdeMedidas(m: MedidasEquipo): number {
 type MedidorAnchoEquipoProps = {
   nombres: (string | undefined)[]
   onAncho: (ancho: number) => void
+  classNameTextoEncabezado?: string
+  classNameTextoContenido?: string
 }
 
+const CLASS_ENCABEZADO_DEFAULT = 'text-base font-semibold leading-6'
+const CLASS_CONTENIDO_DEFAULT = 'text-base font-medium leading-6'
+
 /** Mide off-screen el header y el nombre más largo para calcular el ancho real de la columna. */
-export function MedidorAnchoEquipo({ nombres, onAncho }: MedidorAnchoEquipoProps) {
+export function MedidorAnchoEquipo({
+  nombres,
+  onAncho,
+  classNameTextoEncabezado = CLASS_ENCABEZADO_DEFAULT,
+  classNameTextoContenido = CLASS_CONTENIDO_DEFAULT,
+}: MedidorAnchoEquipoProps) {
   const masLargo = useMemo(() => nombreMasLargoEquipo(nombres), [nombres])
   const medidasRef = useRef<MedidasEquipo>({ encabezado: 0, contenido: 0 })
   const onAnchoRef = useRef(onAncho)
@@ -79,7 +89,7 @@ export function MedidorAnchoEquipo({ nombres, onAncho }: MedidorAnchoEquipoProps
       importantForAccessibility="no-hide-descendants"
     >
       <Text
-        className="text-base font-semibold leading-6"
+        className={classNameTextoEncabezado}
         onTextLayout={(e) => {
           const w = Math.max(0, ...e.nativeEvent.lines.map((l) => l.width))
           registrar('encabezado', w)
@@ -88,7 +98,7 @@ export function MedidorAnchoEquipo({ nombres, onAncho }: MedidorAnchoEquipoProps
         {TITULO_COLUMNA_EQUIPO}
       </Text>
       <Text
-        className="text-base font-medium leading-6"
+        className={classNameTextoContenido}
         onTextLayout={(e) => {
           const w = Math.max(0, ...e.nativeEvent.lines.map((l) => l.width))
           registrar('contenido', w)
@@ -100,13 +110,30 @@ export function MedidorAnchoEquipo({ nombres, onAncho }: MedidorAnchoEquipoProps
   )
 }
 
+export type OpcionesAnchoColumnaEquipo = {
+  classNameTextoEncabezado?: string
+  classNameTextoContenido?: string
+}
+
 /** Ancho medido de la columna Equipo (estimación inicial, luego ajuste fino vía MedidorAnchoEquipo). */
-export function useAnchoColumnaEquipo(nombres: (string | undefined)[]) {
+export function useAnchoColumnaEquipo(
+  nombres: (string | undefined)[],
+  opciones?: OpcionesAnchoColumnaEquipo
+) {
   const [anchoEquipo, setAnchoEquipo] = useState(() => estimacionAnchoEquipo(nombres))
+  const classNameTextoEncabezado = opciones?.classNameTextoEncabezado ?? CLASS_ENCABEZADO_DEFAULT
+  const classNameTextoContenido = opciones?.classNameTextoContenido ?? CLASS_CONTENIDO_DEFAULT
 
   const medidor = useMemo(
-    () => <MedidorAnchoEquipo nombres={nombres} onAncho={setAnchoEquipo} />,
-    [nombres]
+    () => (
+      <MedidorAnchoEquipo
+        nombres={nombres}
+        onAncho={setAnchoEquipo}
+        classNameTextoEncabezado={classNameTextoEncabezado}
+        classNameTextoContenido={classNameTextoContenido}
+      />
+    ),
+    [nombres, classNameTextoEncabezado, classNameTextoContenido]
   )
 
   return { anchoEquipo, medidorAnchoEquipo: medidor }
