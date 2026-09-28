@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Platform, View } from 'react-native'
 import type { CategoriasConPosicionesDTO, PosicionDelEquipoDTO } from '@/lib/api/clients'
 import { ContenedorTabla, Texto } from '@/design-system/componentes'
@@ -7,27 +7,20 @@ import { CeldaTabla } from '@/torneos/_zona-detalle/componentes/celda-tabla'
 import { EscudoEquipo } from '@/torneos/_zona-detalle/componentes/escudo-equipo'
 import { textoOGuion } from '@/lib/utilidades/recursos-api'
 import {
-  anchoColumna,
+  anchosColumnasPosiciones,
   anchoTablaTotal,
   titulosTabla,
   valorCeldaPosicion,
 } from './utilidades-posiciones'
 
-function FilaEncabezado({
-  mostrarGoles,
-  anchoEquipo,
-}: {
-  mostrarGoles: boolean
-  anchoEquipo: number
-}) {
+function FilaEncabezado({ mostrarGoles, anchos }: { mostrarGoles: boolean; anchos: number[] }) {
   const titulos = titulosTabla(mostrarGoles)
-  const n = titulos.length
   return (
     <View className="flex-row rounded-t-2xl border-b border-zinc-700 bg-zinc-900">
       {titulos.map((h, i) => (
         <CeldaTabla
           key={h}
-          ancho={anchoColumna(i, mostrarGoles, n, anchoEquipo)}
+          ancho={anchos[i]}
           alinear={i <= 2 ? 'left' : 'center'}
           negrita
           encabezado
@@ -45,20 +38,19 @@ function FilaEquipo({
   r,
   apiUrl,
   mostrarGoles,
-  anchoEquipo,
+  anchos,
 }: {
   r: PosicionDelEquipoDTO
   apiUrl: string | undefined
   mostrarGoles: boolean
-  anchoEquipo: number
+  anchos: number[]
 }) {
   const titulos = titulosTabla(mostrarGoles)
-  const n = titulos.length
 
   return (
     <View className="flex-row border-b border-gray-100">
       {titulos.map((label, i) => {
-        const ancho = anchoColumna(i, mostrarGoles, n, anchoEquipo)
+        const ancho = anchos[i]
         if (label === 'Esc') {
           return (
             <View key="esc" style={{ width: ancho, minWidth: ancho }}>
@@ -116,9 +108,13 @@ export function TablaCategoria({
   apiUrl: string | undefined
   mostrarGoles: boolean
 }) {
-  const renglones = bloque.renglones ?? []
+  const renglones = useMemo(() => bloque.renglones ?? [], [bloque.renglones])
   const { anchoEquipo, medidorAnchoEquipo } = useAnchoColumnaEquipo(renglones.map((r) => r.equipo))
-  const anchoTotal = anchoTablaTotal(mostrarGoles, anchoEquipo)
+  const anchos = useMemo(
+    () => anchosColumnasPosiciones(renglones, mostrarGoles, anchoEquipo),
+    [renglones, mostrarGoles, anchoEquipo]
+  )
+  const anchoTotal = anchoTablaTotal(anchos)
   return (
     <View className="my-5">
       {medidorAnchoEquipo}
@@ -136,14 +132,14 @@ export function TablaCategoria({
       ) : (
         <ContenedorTabla horizontal>
           <View style={{ width: anchoTotal, alignSelf: 'flex-start' }}>
-            <FilaEncabezado mostrarGoles={mostrarGoles} anchoEquipo={anchoEquipo} />
+            <FilaEncabezado mostrarGoles={mostrarGoles} anchos={anchos} />
             {renglones.map((r, i) => (
               <FilaEquipo
                 key={`${r.equipo ?? 'eq'}-${i}`}
                 r={r}
                 apiUrl={apiUrl}
                 mostrarGoles={mostrarGoles}
-                anchoEquipo={anchoEquipo}
+                anchos={anchos}
               />
             ))}
           </View>

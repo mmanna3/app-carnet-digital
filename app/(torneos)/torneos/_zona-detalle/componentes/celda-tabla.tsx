@@ -46,7 +46,7 @@ export function CeldaTabla({
       <Text
         className={`text-base leading-6 ${encabezado ? 'font-semibold' : 'font-medium'} ${colorTexto} ${tabular ? 'tabular-nums' : ''}`}
         style={{ textAlign: align }}
-        numberOfLines={columnaEquipo ? 1 : numberOfLines}
+        numberOfLines={columnaEquipo || tabular ? 1 : numberOfLines}
       >
         {children}
       </Text>
