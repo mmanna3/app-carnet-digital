@@ -70,6 +70,10 @@ Cada flow tiene un prefijo de dominio (`fichaje_`, `delegado_` o `torneo_`), pal
 
 Ejemplos: `fichaje_nuevo-jugador.yaml`, `delegado_navegacion-tabs-principal.yaml`.
 
+## CI
+
+En GitHub Actions la suite E2E (Android) corre en cada push a `main`. En un PR corre solo si tiene el label `e2e`: al agregarlo se dispara la corrida, y mientras lo tenga se vuelve a correr en cada push.
+
 ## Correr un test puntual
 
 Con Metro y el mock server ya corriendo:
