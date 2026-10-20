@@ -60,7 +60,26 @@ function alternar(lista: string[], valor: string): string[] {
   return lista.includes(valor) ? lista.filter((item) => item !== valor) : [...lista, valor]
 }
 
-export function armarPayloadRegistroArbitro(estado: DatosRegistroArbitro): DatosRegistroArbitro {
+export type PayloadRegistroArbitro = {
+  dni: string
+  apellido: string
+  nombre: string
+  telefonoCelular: string
+  direccion: string
+  localidad: string
+  fechaNacimiento: Date
+  tipoMovilidad: TipoMovilidad
+  torneosInteres: string[]
+  disponibilidadHoraria: string[]
+  tieneRelacionInstitucional: boolean
+  institucion?: string
+}
+
+export function armarPayloadRegistroArbitro(
+  estado: DatosRegistroArbitro
+): PayloadRegistroArbitro | null {
+  const { fechaNacimiento, tipoMovilidad, tieneRelacionInstitucional } = estado
+  if (!fechaNacimiento || !tipoMovilidad || tieneRelacionInstitucional === null) return null
   return {
     dni: estado.dni,
     apellido: estado.apellido,
@@ -68,21 +87,20 @@ export function armarPayloadRegistroArbitro(estado: DatosRegistroArbitro): Datos
     telefonoCelular: estado.telefonoCelular,
     direccion: estado.direccion,
     localidad: estado.localidad,
-    fechaNacimiento: estado.fechaNacimiento,
-    tipoMovilidad: estado.tipoMovilidad,
+    fechaNacimiento,
+    tipoMovilidad,
     torneosInteres: [...estado.torneosInteres],
     disponibilidadHoraria: [...estado.disponibilidadHoraria],
-    tieneRelacionInstitucional: estado.tieneRelacionInstitucional,
-    institucion: estado.tieneRelacionInstitucional ? estado.institucion : '',
+    tieneRelacionInstitucional,
+    institucion: tieneRelacionInstitucional ? estado.institucion : undefined,
   }
 }
 
 /** Punto de enganche del alta. El test espía `enviar` para simular el fallo de red. */
 export const envioRegistroArbitro = {
-  enviar: async (datos: DatosRegistroArbitro): Promise<void> => {
-    // TODO: await api.<metodo>(datos) cuando el contrato NSwag exponga el alta de árbitro.
-    // clients.ts es autogenerado: no editarlo. El mock de e2e tampoco tiene handler
-    // hasta conocer la ruta real.
+  enviar: async (datos: PayloadRegistroArbitro): Promise<void> => {
+    // TODO: reemplazar por la llamada NSwag cuando el backend exponga el alta de árbitro
+    // (ver docs/superpowers/plans/2026-10-20-referee-registration-backend-contract.md).
     void datos
   },
 }
@@ -107,8 +125,12 @@ export const useRegistroArbitroStore = create<RegistroArbitroState>((set, get) =
   irAlPasoAnterior: () => set({ paso: Math.max(get().paso - 1, 1) }),
   resetear: () => set(inicial),
   enviarRegistro: async () => {
+    const payload = armarPayloadRegistroArbitro(get())
+    if (!payload) {
+      return { ok: false, error: 'Faltan datos del formulario. Revisá los pasos anteriores.' }
+    }
     try {
-      await envioRegistroArbitro.enviar(armarPayloadRegistroArbitro(get()))
+      await envioRegistroArbitro.enviar(payload)
       return { ok: true }
     } catch (error) {
       return { ok: false, error: parseApiError(error) }
