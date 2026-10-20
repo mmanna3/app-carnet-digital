@@ -62,6 +62,7 @@ function useProtectedRoute(loaded: boolean) {
     const inHome = tieneSegmento(segments, 'home')
     const inFichajes = tieneSegmento(segments, 'fichajes')
     const inRegistroDelegado = tieneSegmento(segments, 'registro-delegado')
+    const inRegistroArbitro = tieneSegmento(segments, 'registro-arbitro')
     const inTorneos = tieneSegmento(segments, 'torneos')
     const inTorneoDetalle = tieneSegmento(segments, 'torneo-detalle')
     const inZonaDetalle = tieneSegmento(segments, 'zona-detalle')
@@ -78,6 +79,7 @@ function useProtectedRoute(loaded: boolean) {
       !inHome &&
       !inFichajes &&
       !inRegistroDelegado &&
+      !inRegistroArbitro &&
       !inTorneos &&
       !inTorneoDetalle &&
       !inZonaDetalle

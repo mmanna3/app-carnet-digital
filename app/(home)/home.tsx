@@ -93,6 +93,10 @@ export default function HomeMobile() {
     router.push(RUTAS.TORNEOS)
   }
 
+  const handleRegistrarArbitro = () => {
+    router.push(RUTAS.REGISTRO_ARBITRO)
+  }
+
   const handleSeleccionarOtraLiga = () => {
     logout()
     limpiarEquipoSeleccionado()
@@ -177,6 +181,17 @@ export default function HomeMobile() {
               tamanoIcono={20}
               onPress={handleDelegadosDT}
               accessibilityLabel="Delegados. Accedé a tu panel de gestión"
+            />
+            <Tarjeta
+              testID="card-arbitros"
+              className="flex-1"
+              variante={VARIANTE_TARJETA.COMPACTA}
+              icono="flag"
+              titulo="Árbitros"
+              subtitulo="Exclusivo para árbitros."
+              color={COLOR_TARJETA.VERDE}
+              onPress={handleRegistrarArbitro}
+              accessibilityLabel="Árbitros. Registro de datos de árbitro."
             />
           </View>
 

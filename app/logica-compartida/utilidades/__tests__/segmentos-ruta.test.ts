@@ -17,6 +17,8 @@ describe('segmentos-ruta', () => {
   it('detecta grupos y segmentos', () => {
     expect(enGrupo(['(delegados)', 'inicio-de-sesion'], '(delegados)')).toBe(true)
     expect(tieneSegmento(['(fichaje-jugador)', 'fichajes'], 'fichajes')).toBe(true)
+    expect(tieneSegmento(['(arbitros)', 'registro-arbitro'], 'registro-arbitro')).toBe(true)
+    expect(segmentosVisibles(['(arbitros)', 'registro-arbitro'])).toEqual(['registro-arbitro'])
     expect(tieneSegmento(['(home)', 'home'], 'torneos')).toBe(false)
   })
 })
