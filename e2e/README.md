@@ -66,7 +66,7 @@ npm run test:e2e:ios
 
 ## Convención de nombres
 
-Cada flow tiene un prefijo de dominio (`fichaje_`, `delegado_` o `torneo_`), palabras separadas con guiones medios, y un atributo `name` legible en español para los reportes de Maestro.
+Cada flow tiene un prefijo de dominio (`fichaje_`, `delegado_`, `arbitro_` o `torneo_`), palabras separadas con guiones medios, y un atributo `name` legible en español para los reportes de Maestro.
 
 Ejemplos: `fichaje_nuevo-jugador.yaml`, `delegado_navegacion-tabs-principal.yaml`.
 
@@ -78,7 +78,7 @@ Con Metro y el mock server ya corriendo:
 npm run test:e2e:single e2e/fichaje_nuevo-jugador.yaml
 ```
 
-## Suite actual (14 flows)
+## Suite actual (15 flows)
 
 | Archivo                                        | Qué cubre                                         |
 | ---------------------------------------------- | ------------------------------------------------- |
@@ -96,6 +96,7 @@ npm run test:e2e:single e2e/fichaje_nuevo-jugador.yaml
 | `delegado_eliminar-jugadores-masivo.yaml`      | Eliminación masiva                                |
 | `delegado_error-al-eliminar.yaml`              | Error de API al eliminar                          |
 | `delegado_error-al-cargar-jugadores.yaml`      | Error de API al cargar jugadores                  |
+| `arbitro_registro.yaml`                        | Registro de árbitro (wizard completo)             |
 
 Las validaciones de formulario del paso datos (`fichaje_dni-formato-invalido`, `fichaje_campos-obligatorios`, `fichaje_codigo-invalido`) se cubren con tests unitarios en Jest.
 
