@@ -8,6 +8,16 @@ Alcance: **solo EDeFI** (app unilliga, `LIGA_ID=edefi`). La app multiliga queda 
 
 Depende del PR de registro de árbitros (mmanna3/app-carnet-digital#1). Esto se hace sobre ese PR mergeado.
 
+## Antes de empezar
+
+1. **El back tiene que estar listo y deployado.** Los archivos `.well-known` y la página que manda al store salen de liga-be: ver `liga-be/docs/requerimientos/deep-link-registro-arbitro.md`. Ese requerimiento también explica, paso a paso, cómo conseguir el **Team ID de Apple**, el **ID de la app en el App Store** y la **huella SHA-256 de Android**. Los tiene que conseguir un admin antes de arrancar. Sin eso, el link no abre la app.
+2. **Capability "Associated Domains" en Apple** (también la tiene que hacer un admin):
+   1. Entrar a <https://developer.apple.com/account> y abrir **Certificates, Identifiers & Profiles → Identifiers**.
+   2. Abrir `com.ykn.edefidelegados`.
+   3. Tildar **Associated Domains** y guardar.
+
+   Si EAS maneja las credenciales, la activa solo en el próximo build, pero conviene confirmar que quedó tildada.
+
 ## 1. Sacar la card del Home
 
 - Borrar la `Tarjeta` `card-arbitros` de `app/(home)/home.tsx`, junto con su `handleRegistrarArbitro`.
@@ -33,24 +43,17 @@ Qué pasa al tocar el link:
 ### iOS (Universal Links)
 
 - En `app.config.ts`: `ios.associatedDomains: ['applinks:<dominio>']`, solo si la liga tiene `dominioDeepLinks`.
-- El dominio tiene que servir `https://<dominio>/.well-known/apple-app-site-association` (JSON, **sin extensión**, con `Content-Type: application/json` y sin redirects). Ahí van el `appID` (`<TeamID>.com.ykn.edefidelegados`) y el path `/registro-arbitro`.
+- iOS verifica el dominio con `https://<dominio>/.well-known/apple-app-site-association`, que sirve liga-be.
 
 ### Android (App Links)
 
 Es el equivalente a Universal Links:
 
 - En `app.config.ts`: `android.intentFilters` con `autoVerify: true`, `action: VIEW`, categorías `BROWSABLE` y `DEFAULT`, y `data: { scheme: 'https', host: <dominio>, pathPrefix: '/registro-arbitro' }`.
-- El dominio tiene que servir `https://<dominio>/.well-known/assetlinks.json` con el package (`com.ykn.edefidelegados`) y el **SHA-256 del certificado de firma**. Ojo: si se usa Play App Signing, es el de la Play Console (_Integridad de la app → Firma de apps_), no el del keystore local.
+- Android verifica el dominio con `https://<dominio>/.well-known/assetlinks.json`, que sirve liga-be.
 - Cuando se instala la app, Android verifica el dominio. Si la verificación sale bien, el link abre la app directo. Si falla, se abre el navegador y cae en la página que manda al store, así que nunca queda roto.
 
-### Del lado del dominio (liga-be)
-
-`admin.edefi.com.ar` lo sirve liga-be (`UseStaticFiles` y `MapFallbackToFile("index.html")`). Hay que:
-
-- Servir los dos archivos de `.well-known/`. `UseStaticFiles` por defecto **no sirve archivos sin extensión**, así que hay que mapear `apple-app-site-association` a `application/json`.
-- Servir la página que manda al store en `/registro-arbitro`, antes del fallback del SPA. Puede ser un HTML estático o una ruta pública de liga-fe; lo que sea más simple, pero que no choque con las rutas del front.
-
-Esto es un cambio en liga-be, pero lo dejo acá para que el requerimiento quede completo.
+La página que manda al store, si no está la app, también la sirve liga-be (ver su requerimiento).
 
 ## 3. En la app
 
