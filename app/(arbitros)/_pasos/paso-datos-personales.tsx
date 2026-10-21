@@ -1,10 +1,35 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
+import { Keyboard, Text, TouchableOpacity, View } from 'react-native'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
+import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { pasoDatosPersonalesCompleto } from '@/logica-compartida/utilidades/validacion-registro-arbitro'
-import { capitalizar } from '@/logica-compartida/utilidades/formateo-formulario'
+import {
+  pasoDatosPersonalesCompleto,
+  validarApellido,
+  validarCelular,
+  validarDni,
+  validarFechaNacimiento,
+  validarNombre,
+} from '@/arbitros/validacion-registro-arbitro'
+import { capitalizar, formatearFecha } from '@/logica-compartida/utilidades/formateo-formulario'
+
+type Errores = {
+  nombre: string | null
+  apellido: string | null
+  dni: string | null
+  telefonoCelular: string | null
+  fechaNacimiento: string | null
+}
+
+const ERRORES_INICIALES: Errores = {
+  nombre: null,
+  apellido: null,
+  dni: null,
+  telefonoCelular: null,
+  fechaNacimiento: null,
+}
 
 type Props = {
   onVolverInicio: () => void
@@ -17,17 +42,33 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
     apellido,
     nombre,
     telefonoCelular,
+    fechaNacimiento,
     setDni,
     setApellido,
     setNombre,
     setTelefonoCelular,
+    setFechaNacimiento,
     irAlPasoSiguiente,
   } = useRegistroArbitroStore()
+  const [mostrarPicker, setMostrarPicker] = useState(false)
+  const [errores, setErrores] = useState<Errores>(ERRORES_INICIALES)
+  const fechaSeleccionadaEnModal = useRef<Date | null>(null)
 
-  const puedeAvanzar = pasoDatosPersonalesCompleto({ dni, apellido, nombre, telefonoCelular })
+  const actualizarError = (campo: keyof Errores, mensaje: string | null) => {
+    setErrores((prev) => ({ ...prev, [campo]: mensaje }))
+  }
+
+  const puedeAvanzar = pasoDatosPersonalesCompleto({
+    dni,
+    apellido,
+    nombre,
+    telefonoCelular,
+    fechaNacimiento,
+  })
 
   return (
     <MarcoPaso
+      testID="paso-datos-personales"
       paso={paso}
       titulo="Datos personales"
       subtitulo="Identificación y contacto"
@@ -39,6 +80,8 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         placeholder="Ingresá el nombre"
         value={nombre}
         onChangeText={(valor) => setNombre(capitalizar(valor))}
+        error={errores.nombre ?? undefined}
+        onBlur={() => actualizarError('nombre', validarNombre(nombre))}
       />
       <CampoTexto
         inputTestID="input-apellido"
@@ -46,6 +89,8 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         placeholder="Ingresá los apellidos"
         value={apellido}
         onChangeText={(valor) => setApellido(capitalizar(valor))}
+        error={errores.apellido ?? undefined}
+        onBlur={() => actualizarError('apellido', validarApellido(apellido))}
       />
       <CampoTexto
         inputTestID="input-dni"
@@ -53,6 +98,8 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         placeholder="Ingresá el DNI (7-9 dígitos)"
         value={dni}
         onChangeText={(valor) => setDni(valor.replace(/\D/g, '').slice(0, 9))}
+        error={errores.dni ?? undefined}
+        onBlur={() => actualizarError('dni', validarDni(dni))}
         keyboardType="numeric"
       />
       <CampoTexto
@@ -61,14 +108,55 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         placeholder="Ingresá el teléfono celular"
         value={telefonoCelular}
         onChangeText={(valor) => setTelefonoCelular(valor.replace(/\D/g, ''))}
+        error={errores.telefonoCelular ?? undefined}
+        onBlur={() => actualizarError('telefonoCelular', validarCelular(telefonoCelular))}
         keyboardType="phone-pad"
       />
+      <View>
+        <Text className="mb-1.5 text-sm text-zinc-400">Fecha de nacimiento</Text>
+        <TouchableOpacity
+          testID="input-fecha-nacimiento"
+          onPress={() => {
+            Keyboard.dismiss()
+            fechaSeleccionadaEnModal.current = fechaNacimiento
+            setMostrarPicker(true)
+          }}
+          className={`glass w-full rounded-2xl border px-4 py-5 ${
+            errores.fechaNacimiento ? 'border-red-500/80' : 'border-border-glass'
+          }`}
+        >
+          <Text className={fechaNacimiento ? 'text-zinc-100' : 'text-zinc-500'}>
+            {fechaNacimiento
+              ? formatearFecha(fechaNacimiento)
+              : 'Seleccioná la fecha de nacimiento'}
+          </Text>
+        </TouchableOpacity>
+        {errores.fechaNacimiento ? (
+          <Text className="mt-1 text-sm text-red-400">{errores.fechaNacimiento}</Text>
+        ) : null}
+      </View>
       <Boton
         testID="boton-continuar"
         texto="Continuar"
         icono="arrow-right"
         onPress={irAlPasoSiguiente}
         deshabilitado={!puedeAvanzar}
+      />
+      <ModalFechaNacimiento
+        visible={mostrarPicker}
+        value={fechaNacimiento}
+        onClose={() => {
+          Keyboard.dismiss()
+          setMostrarPicker(false)
+          const fechaActual = fechaSeleccionadaEnModal.current ?? fechaNacimiento
+          actualizarError('fechaNacimiento', validarFechaNacimiento(fechaActual))
+          fechaSeleccionadaEnModal.current = null
+        }}
+        onChange={(fecha) => {
+          fechaSeleccionadaEnModal.current = fecha
+          setFechaNacimiento(fecha)
+          actualizarError('fechaNacimiento', null)
+        }}
       />
     </MarcoPaso>
   )

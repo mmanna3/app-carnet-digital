@@ -4,7 +4,7 @@ import PasoDatosPersonales from '@/arbitros/_pasos/paso-datos-personales'
 import PasoUbicacion from '@/arbitros/_pasos/paso-ubicacion'
 import PasoPreferencias from '@/arbitros/_pasos/paso-preferencias'
 import PasoAntecedentes from '@/arbitros/_pasos/paso-antecedentes'
-import PantallaCompletado from '@/arbitros/_pasos/pantalla-completado'
+import PantallaCompletado from '@/design-system/componentes/pantalla-completado'
 import {
   TOTAL_PASOS,
   useRegistroArbitroStore,
@@ -17,7 +17,7 @@ export default function RegistroArbitroScreen() {
 
   useEffect(() => {
     resetear()
-    console.log('Reset')
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- init solo al montar; las deps del store no deben re-ejecutar
   }, [])
 
   const handleVolverInicio = () => {
@@ -28,7 +28,17 @@ export default function RegistroArbitroScreen() {
   if (paso === 2) return <PasoUbicacion />
   if (paso === 3) return <PasoPreferencias />
   if (paso === 4) return <PasoAntecedentes />
-  if (paso === TOTAL_PASOS + 1) return <PantallaCompletado onVolverInicio={handleVolverInicio} />
+  if (paso === TOTAL_PASOS + 1) {
+    return (
+      <PantallaCompletado
+        titulo="¡Registro enviado!"
+        mensaje="La liga se va a comunicar con vos."
+        testID="pantalla-completado-arbitro"
+        testIDBoton="boton-volver-inicio-arbitro"
+        onVolverInicio={handleVolverInicio}
+      />
+    )
+  }
 
   return null
 }

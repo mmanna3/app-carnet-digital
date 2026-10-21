@@ -75,11 +75,11 @@ describe('RegistroArbitroScreen', () => {
     ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(TOTAL_PASOS + 1))
     render(<RegistroArbitroScreen />)
 
+    expect(mockResetear).toHaveBeenCalledTimes(1)
     expect(screen.getByTestId('pantalla-completado-arbitro')).toBeTruthy()
     expect(screen.getByText('¡Registro enviado!')).toBeTruthy()
 
     fireEvent.press(screen.getByTestId('boton-volver-inicio-arbitro'))
-    expect(mockResetear).toHaveBeenCalledTimes(1)
     expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.HOME)
   })
 

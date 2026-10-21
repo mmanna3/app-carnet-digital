@@ -32,6 +32,9 @@ describe('PasoPreferencias', () => {
   it('muestra torneos y franjas horarias', () => {
     render(<PasoPreferencias />)
 
+    expect(screen.getByTestId('paso-preferencias')).toBeTruthy()
+    expect(screen.getByTestId('chip-torneo-BABY FUTBOL')).toBeTruthy()
+    expect(screen.getByTestId('chip-franja-SABADOS 8 A 14')).toBeTruthy()
     expect(screen.getByText('Preferencias deportivas')).toBeTruthy()
     expect(screen.getByText('Qué torneos quiere arbitrar y cuándo puede hacerlo')).toBeTruthy()
     expect(screen.getByText('BABY FUTBOL')).toBeTruthy()

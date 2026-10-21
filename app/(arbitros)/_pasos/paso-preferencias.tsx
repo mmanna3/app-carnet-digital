@@ -3,8 +3,8 @@ import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { FRANJAS_HORARIAS, TORNEOS_INTERES } from '@/logica-compartida/constantes/registro-arbitro'
-import { pasoPreferenciasCompleto } from '@/logica-compartida/utilidades/validacion-registro-arbitro'
+import { FRANJAS_HORARIAS, TORNEOS_INTERES } from '@/arbitros/catalogos'
+import { pasoPreferenciasCompleto } from '@/arbitros/validacion-registro-arbitro'
 
 export default function PasoPreferencias() {
   const {
@@ -20,18 +20,21 @@ export default function PasoPreferencias() {
 
   return (
     <MarcoPaso
+      testID="paso-preferencias"
       paso={paso}
       titulo="Preferencias deportivas"
       subtitulo="Qué torneos quiere arbitrar y cuándo puede hacerlo"
       onBack={irAlPasoAnterior}
     >
       <GrupoOpciones
+        testIDPrefijo="chip-torneo"
         etiqueta="Torneo de interés"
         opciones={TORNEOS_INTERES}
         seleccionadas={torneosInteres}
         onPress={alternarTorneo}
       />
       <GrupoOpciones
+        testIDPrefijo="chip-franja"
         etiqueta="Disponibilidad horaria"
         opciones={FRANJAS_HORARIAS}
         seleccionadas={disponibilidadHoraria}

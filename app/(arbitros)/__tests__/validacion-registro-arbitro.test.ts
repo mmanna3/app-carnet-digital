@@ -1,20 +1,19 @@
-import {
-  FRANJAS_HORARIAS,
-  TIPOS_MOVILIDAD,
-  TORNEOS_INTERES,
-} from '@/logica-compartida/constantes/registro-arbitro'
+import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/catalogos'
 import {
   pasoAntecedentesCompleto,
   pasoDatosPersonalesCompleto,
   pasoPreferenciasCompleto,
   pasoUbicacionCompleto,
-} from '@/logica-compartida/utilidades/validacion-registro-arbitro'
+} from '@/arbitros/validacion-registro-arbitro'
+
+const FECHA_NACIMIENTO = new Date(1990, 0, 1)
 
 const DATOS_PERSONALES = {
   dni: '12345678',
   apellido: 'Perez',
   nombre: 'Juan',
   telefonoCelular: '1122334455',
+  fechaNacimiento: FECHA_NACIMIENTO,
 }
 
 describe('catálogos de registro de árbitro', () => {
@@ -57,18 +56,16 @@ describe('pasoDatosPersonalesCompleto', () => {
     expect(pasoDatosPersonalesCompleto({ ...DATOS_PERSONALES, telefonoCelular: '1234567' })).toBe(
       false
     )
+    expect(pasoDatosPersonalesCompleto({ ...DATOS_PERSONALES, fechaNacimiento: null })).toBe(false)
   })
 })
 
-const FECHA_NACIMIENTO = new Date(1990, 0, 1)
-
 describe('pasoUbicacionCompleto', () => {
-  it('exige dirección, localidad, fecha de nacimiento y un tipo de movilidad del catálogo', () => {
+  it('exige dirección, localidad y un tipo de movilidad del catálogo', () => {
     expect(
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: 'Quilmes',
-        fechaNacimiento: FECHA_NACIMIENTO,
         tipoMovilidad: 'MOTO',
       })
     ).toBe(true)
@@ -76,7 +73,6 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: '  ',
         localidad: 'Quilmes',
-        fechaNacimiento: FECHA_NACIMIENTO,
         tipoMovilidad: 'MOTO',
       })
     ).toBe(false)
@@ -84,7 +80,6 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: '',
-        fechaNacimiento: FECHA_NACIMIENTO,
         tipoMovilidad: 'AUTO',
       })
     ).toBe(false)
@@ -92,15 +87,6 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: 'Quilmes',
-        fechaNacimiento: null,
-        tipoMovilidad: 'MOTO',
-      })
-    ).toBe(false)
-    expect(
-      pasoUbicacionCompleto({
-        direccion: 'Calle 123',
-        localidad: 'Quilmes',
-        fechaNacimiento: FECHA_NACIMIENTO,
         tipoMovilidad: null,
       })
     ).toBe(false)
@@ -108,7 +94,6 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: 'Quilmes',
-        fechaNacimiento: FECHA_NACIMIENTO,
         tipoMovilidad: 'CAMINANDO',
       })
     ).toBe(false)

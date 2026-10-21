@@ -1,42 +1,43 @@
 import React, { useState } from 'react'
-import { Keyboard, Text, TouchableOpacity, View } from 'react-native'
 import CampoTexto from '@/fichaje-jugador/_components/campo-texto'
-import ModalFechaNacimiento from '@/fichaje-jugador/_components/modal-fecha-nacimiento'
 import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
+import { TIPOS_MOVILIDAD, type TipoMovilidad } from '@/arbitros/catalogos'
 import {
-  TIPOS_MOVILIDAD,
-  type TipoMovilidad,
-} from '@/logica-compartida/constantes/registro-arbitro'
-import { pasoUbicacionCompleto } from '@/logica-compartida/utilidades/validacion-registro-arbitro'
-import { formatearFecha } from '@/logica-compartida/utilidades/formateo-formulario'
+  pasoUbicacionCompleto,
+  validarDireccion,
+  validarLocalidad,
+} from '@/arbitros/validacion-registro-arbitro'
+
+type Errores = {
+  direccion: string | null
+  localidad: string | null
+}
 
 export default function PasoUbicacion() {
   const {
     paso,
     direccion,
     localidad,
-    fechaNacimiento,
     tipoMovilidad,
     setDireccion,
     setLocalidad,
-    setFechaNacimiento,
     setTipoMovilidad,
     irAlPasoSiguiente,
     irAlPasoAnterior,
   } = useRegistroArbitroStore()
-  const [mostrarPicker, setMostrarPicker] = useState(false)
-  const puedeAvanzar = pasoUbicacionCompleto({
-    direccion,
-    localidad,
-    fechaNacimiento,
-    tipoMovilidad,
-  })
+  const [errores, setErrores] = useState<Errores>({ direccion: null, localidad: null })
+  const puedeAvanzar = pasoUbicacionCompleto({ direccion, localidad, tipoMovilidad })
+
+  const actualizarError = (campo: keyof Errores, mensaje: string | null) => {
+    setErrores((prev) => ({ ...prev, [campo]: mensaje }))
+  }
 
   return (
     <MarcoPaso
+      testID="paso-ubicacion"
       paso={paso}
       titulo="Ubicación y movilidad"
       subtitulo="Dónde vive y cómo se traslada"
@@ -48,6 +49,8 @@ export default function PasoUbicacion() {
         placeholder="Ingresá la dirección"
         value={direccion}
         onChangeText={setDireccion}
+        error={errores.direccion ?? undefined}
+        onBlur={() => actualizarError('direccion', validarDireccion(direccion))}
       />
       <CampoTexto
         inputTestID="input-localidad"
@@ -55,25 +58,11 @@ export default function PasoUbicacion() {
         placeholder="Ingresá la localidad"
         value={localidad}
         onChangeText={setLocalidad}
+        error={errores.localidad ?? undefined}
+        onBlur={() => actualizarError('localidad', validarLocalidad(localidad))}
       />
-      <View>
-        <Text className="mb-1.5 text-sm text-zinc-400">Fecha de nacimiento</Text>
-        <TouchableOpacity
-          testID="input-fecha-nacimiento"
-          onPress={() => {
-            Keyboard.dismiss()
-            setMostrarPicker(true)
-          }}
-          className="glass w-full rounded-2xl border border-border-glass px-4 py-5"
-        >
-          <Text className={fechaNacimiento ? 'text-zinc-100' : 'text-zinc-500'}>
-            {fechaNacimiento
-              ? formatearFecha(fechaNacimiento)
-              : 'Seleccioná la fecha de nacimiento'}
-          </Text>
-        </TouchableOpacity>
-      </View>
       <GrupoOpciones
+        testIDPrefijo="chip-movilidad"
         etiqueta="Tipo de movilidad"
         opciones={TIPOS_MOVILIDAD}
         seleccionadas={tipoMovilidad ? [tipoMovilidad] : []}
@@ -85,12 +74,6 @@ export default function PasoUbicacion() {
         icono="arrow-right"
         onPress={irAlPasoSiguiente}
         deshabilitado={!puedeAvanzar}
-      />
-      <ModalFechaNacimiento
-        visible={mostrarPicker}
-        value={fechaNacimiento}
-        onClose={() => setMostrarPicker(false)}
-        onChange={setFechaNacimiento}
       />
     </MarcoPaso>
   )

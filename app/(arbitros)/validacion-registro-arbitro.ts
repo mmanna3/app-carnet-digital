@@ -1,9 +1,10 @@
-import { validarCelular, validarDni } from '@/logica-compartida/utilidades/validacion-formulario'
 import {
-  FRANJAS_HORARIAS,
-  TIPOS_MOVILIDAD,
-  TORNEOS_INTERES,
-} from '@/logica-compartida/constantes/registro-arbitro'
+  validarApellido,
+  validarCelular,
+  validarDni,
+  validarNombre,
+} from '@/logica-compartida/utilidades/validacion-formulario'
+import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/catalogos'
 
 function dniSoloDigitosValido(dni: string): boolean {
   return validarDni(dni) === null && /^\d+$/.test(dni.trim())
@@ -20,30 +21,50 @@ function seleccionValida<T extends string>(
   return valores.length > 0 && valores.every((valor) => perteneceA(valor, catalogo))
 }
 
+export function validarDireccion(valor: string): string | null {
+  if (!valor.trim()) return 'La dirección es obligatoria'
+  return null
+}
+
+export function validarLocalidad(valor: string): string | null {
+  if (!valor.trim()) return 'La localidad es obligatoria'
+  return null
+}
+
+export function validarInstitucion(valor: string): string | null {
+  if (!valor.trim()) return 'La institución es obligatoria'
+  return null
+}
+
+export function validarFechaNacimiento(fecha: Date | null): string | null {
+  if (!fecha) return 'La fecha de nacimiento es obligatoria'
+  return null
+}
+
 export function pasoDatosPersonalesCompleto(datos: {
   dni: string
   apellido: string
   nombre: string
   telefonoCelular: string
+  fechaNacimiento: Date | null
 }): boolean {
   return (
     dniSoloDigitosValido(datos.dni) &&
-    datos.apellido.trim().length > 0 &&
-    datos.nombre.trim().length > 0 &&
-    validarCelular(datos.telefonoCelular) === null
+    validarApellido(datos.apellido) === null &&
+    validarNombre(datos.nombre) === null &&
+    validarCelular(datos.telefonoCelular) === null &&
+    validarFechaNacimiento(datos.fechaNacimiento) === null
   )
 }
 
 export function pasoUbicacionCompleto(datos: {
   direccion: string
   localidad: string
-  fechaNacimiento: Date | null
   tipoMovilidad: string | null
 }): boolean {
   return (
-    datos.direccion.trim().length > 0 &&
-    datos.localidad.trim().length > 0 &&
-    datos.fechaNacimiento !== null &&
+    validarDireccion(datos.direccion) === null &&
+    validarLocalidad(datos.localidad) === null &&
     perteneceA(datos.tipoMovilidad, TIPOS_MOVILIDAD)
   )
 }
@@ -64,5 +85,7 @@ export function pasoAntecedentesCompleto(datos: {
 }): boolean {
   if (datos.tieneRelacionInstitucional === null) return false
   if (!datos.tieneRelacionInstitucional) return true
-  return datos.institucion.trim().length > 0
+  return validarInstitucion(datos.institucion) === null
 }
+
+export { validarApellido, validarCelular, validarDni, validarNombre }

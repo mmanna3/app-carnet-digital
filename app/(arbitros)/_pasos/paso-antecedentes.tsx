@@ -6,7 +6,10 @@ import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useConfigLiga } from '@/logica-compartida/config/liga'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { pasoAntecedentesCompleto } from '@/logica-compartida/utilidades/validacion-registro-arbitro'
+import {
+  pasoAntecedentesCompleto,
+  validarInstitucion,
+} from '@/arbitros/validacion-registro-arbitro'
 
 function preguntaRelacionInstitucional(nombreLiga: string | undefined): string {
   const nombre = nombreLiga?.trim()
@@ -28,6 +31,7 @@ export default function PasoAntecedentes() {
   const nombreLiga = useConfigLiga()?.leagueDisplayName
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [errorInstitucion, setErrorInstitucion] = useState<string | null>(null)
   const puedeFinalizar = pasoAntecedentesCompleto({ tieneRelacionInstitucional, institucion })
   const seleccion =
     tieneRelacionInstitucional === null ? [] : [tieneRelacionInstitucional ? 'Sí' : 'No']
@@ -46,12 +50,14 @@ export default function PasoAntecedentes() {
 
   return (
     <MarcoPaso
+      testID="paso-antecedentes"
       paso={paso}
       titulo="Antecedentes institucionales"
       subtitulo="Relaciones con clubes de la liga"
       onBack={irAlPasoAnterior}
     >
       <GrupoOpciones
+        testIDPrefijo="chip-relacion"
         etiqueta={preguntaRelacionInstitucional(nombreLiga)}
         opciones={['Sí', 'No']}
         seleccionadas={seleccion}
@@ -64,6 +70,8 @@ export default function PasoAntecedentes() {
           placeholder="Indicar nombre de la institución"
           value={institucion}
           onChangeText={setInstitucion}
+          error={errorInstitucion ?? undefined}
+          onBlur={() => setErrorInstitucion(validarInstitucion(institucion))}
         />
       ) : null}
       {error ? (

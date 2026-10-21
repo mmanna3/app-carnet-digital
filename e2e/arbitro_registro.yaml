@@ -18,7 +18,7 @@ name: Árbitro — registro
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
-      id: 'input-nombre'
+      id: 'paso-datos-personales'
     timeout: 15000
 # Paso datos personales (paso 1 de 4)
 - tapOn:
@@ -28,57 +28,32 @@ name: Árbitro — registro
     id: 'input-apellido'
 - inputText: 'Gomez'
 - tapOn:
-    text: 'Datos personales'
+    id: 'titulo-cabecera'
 - tapOn:
     id: 'input-dni'
 - inputText: '30123456'
 - tapOn:
-    text: 'Datos personales'
+    id: 'titulo-cabecera'
 - tapOn:
     id: 'input-telefono'
 - inputText: '1123456789'
-# El título del paso queda fuera de pantalla con el teclado del teléfono.
-# El de la cabecera sigue visible y cierra el teclado en iOS.
-- tapOn:
-    text: 'DNI'
 - runFlow:
     when:
       platform: ios
     commands:
       - tapOn:
-          text: 'Registro de árbitro'
+          id: 'titulo-cabecera'
 - runFlow:
     when:
       platform: android
     commands:
       - hideKeyboard
-- extendedWaitUntil:
-    visible:
-      id: 'boton-continuar'
-      enabled: true
-    timeout: 15000
-- tapOn:
-    id: 'boton-continuar'
-# Paso ubicación y movilidad (paso 2 de 4) — fecha de nacimiento vía date picker
-- extendedWaitUntil:
-    visible:
-      id: 'input-direccion'
-    timeout: 15000
-- tapOn:
-    id: 'input-direccion'
-- inputText: 'Calle 12 345'
-- tapOn:
-    text: 'Ubicación y movilidad'
-- tapOn:
-    id: 'input-localidad'
-- inputText: 'La Plata'
-- tapOn:
-    text: 'Ubicación y movilidad'
 - tapOn:
     id: 'input-fecha-nacimiento'
 - waitForAnimationToEnd
 # iOS: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro;
-# se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical)
+# se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical).
+# Android: los botones OK/Aceptar son del diálogo nativo.
 - runFlow:
     when:
       platform: ios
@@ -99,13 +74,40 @@ name: Árbitro — registro
       - tapOn:
           text: 'Aceptar'
           optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: 'boton-continuar'
+# Paso ubicación y movilidad (paso 2 de 4)
+- extendedWaitUntil:
+    visible:
+      id: 'paso-ubicacion'
+    timeout: 15000
+- tapOn:
+    id: 'input-direccion'
+- inputText: 'Calle 12 345'
+- tapOn:
+    id: 'titulo-cabecera'
+- tapOn:
+    id: 'input-localidad'
+- inputText: 'La Plata'
+- tapOn:
+    id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
 - scrollUntilVisible:
     element:
-      text: 'MOTO'
+      id: 'chip-movilidad-MOTO'
     direction: DOWN
     timeout: 10000
 - tapOn:
-    text: 'MOTO'
+    id: 'chip-movilidad-MOTO'
 - scrollUntilVisible:
     element:
       id: 'boton-continuar'
@@ -121,22 +123,22 @@ name: Árbitro — registro
 # Paso preferencias deportivas (paso 3 de 4)
 - extendedWaitUntil:
     visible:
-      text: 'Preferencias deportivas'
+      id: 'paso-preferencias'
     timeout: 15000
 - scrollUntilVisible:
     element:
-      text: 'BABY FUTBOL'
+      id: 'chip-torneo-BABY FUTBOL'
     direction: DOWN
     timeout: 10000
 - tapOn:
-    text: 'BABY FUTBOL'
+    id: 'chip-torneo-BABY FUTBOL'
 - scrollUntilVisible:
     element:
-      text: 'SABADOS 8 A 14'
+      id: 'chip-franja-SABADOS 8 A 14'
     direction: DOWN
     timeout: 10000
 - tapOn:
-    text: 'SABADOS 8 A 14'
+    id: 'chip-franja-SABADOS 8 A 14'
 - scrollUntilVisible:
     element:
       id: 'boton-continuar'
@@ -152,10 +154,10 @@ name: Árbitro — registro
 # Paso antecedentes institucionales (paso 4 de 4)
 - extendedWaitUntil:
     visible:
-      text: 'Antecedentes institucionales'
+      id: 'paso-antecedentes'
     timeout: 15000
 - tapOn:
-    text: 'Sí'
+    id: 'chip-relacion-Sí'
 - extendedWaitUntil:
     visible:
       id: 'input-institucion'
@@ -164,7 +166,7 @@ name: Árbitro — registro
     id: 'input-institucion'
 - inputText: 'Club Mock'
 - tapOn:
-    text: 'Antecedentes institucionales'
+    id: 'titulo-cabecera'
 - runFlow:
     when:
       platform: android

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { TipoMovilidad } from '@/logica-compartida/constantes/registro-arbitro'
+import type { TipoMovilidad } from '@/arbitros/catalogos'
 import { parseApiError } from '@/logica-compartida/utilidades/parsear-error-api'
 
 /** Pasos del formulario. El paso siguiente es la pantalla de completado. */
@@ -82,17 +82,17 @@ export function armarPayloadRegistroArbitro(
   if (!fechaNacimiento || !tipoMovilidad || tieneRelacionInstitucional === null) return null
   return {
     dni: estado.dni,
-    apellido: estado.apellido,
-    nombre: estado.nombre,
+    apellido: estado.apellido.trim(),
+    nombre: estado.nombre.trim(),
     telefonoCelular: estado.telefonoCelular,
-    direccion: estado.direccion,
-    localidad: estado.localidad,
+    direccion: estado.direccion.trim(),
+    localidad: estado.localidad.trim(),
     fechaNacimiento,
     tipoMovilidad,
     torneosInteres: [...estado.torneosInteres],
     disponibilidadHoraria: [...estado.disponibilidadHoraria],
     tieneRelacionInstitucional,
-    institucion: tieneRelacionInstitucional ? estado.institucion : undefined,
+    institucion: tieneRelacionInstitucional ? estado.institucion.trim() : undefined,
   }
 }
 

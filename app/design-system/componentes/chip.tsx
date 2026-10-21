@@ -7,6 +7,7 @@ type Props = {
   onPress?: () => void
   classNameActivo?: string
   classNameInactivo?: string
+  testID?: string
 }
 
 export function Chip({
@@ -15,6 +16,7 @@ export function Chip({
   onPress,
   classNameActivo = 'bg-accent-hot',
   classNameInactivo = 'bg-white/10 border border-border-glass',
+  testID,
 }: Props) {
   const base = 'rounded-full px-4 py-2'
   const estilo = activo ? classNameActivo : classNameInactivo
@@ -25,6 +27,7 @@ export function Chip({
   if (onPress) {
     return (
       <TouchableOpacity
+        testID={testID}
         className={`${base} ${estilo}`}
         onPress={onPress}
         activeOpacity={0.85}
@@ -37,7 +40,7 @@ export function Chip({
   }
 
   return (
-    <TouchableOpacity className={`${base} ${estilo}`} disabled>
+    <TouchableOpacity testID={testID} className={`${base} ${estilo}`} disabled>
       {contenido}
     </TouchableOpacity>
   )

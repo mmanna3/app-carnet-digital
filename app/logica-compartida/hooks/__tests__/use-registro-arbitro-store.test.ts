@@ -118,6 +118,26 @@ describe('useRegistroArbitroStore', () => {
     expect(armarPayloadRegistroArbitro(estado)?.torneosInteres).not.toBe(estado.torneosInteres)
   })
 
+  it('recorta espacios de apellido, nombre, dirección, localidad e institución', () => {
+    expect(
+      armarPayloadRegistroArbitro({
+        ...DATOS_COMPLETOS,
+        apellido: '  Gomez  ',
+        nombre: ' Ana ',
+        direccion: '  Calle 12 ',
+        localidad: ' La Plata ',
+        tieneRelacionInstitucional: true,
+        institucion: '  Club Sur  ',
+      })
+    ).toMatchObject({
+      apellido: 'Gomez',
+      nombre: 'Ana',
+      direccion: 'Calle 12',
+      localidad: 'La Plata',
+      institucion: 'Club Sur',
+    })
+  })
+
   it('incluye la institución cuando la respuesta es sí', () => {
     expect(
       armarPayloadRegistroArbitro({

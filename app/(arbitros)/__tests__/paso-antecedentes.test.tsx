@@ -41,6 +41,8 @@ describe('PasoAntecedentes', () => {
   it('pregunta por la relación institucional y oculta el detalle hasta responder sí', () => {
     render(<PasoAntecedentes />)
 
+    expect(screen.getByTestId('paso-antecedentes')).toBeTruthy()
+    expect(screen.getByTestId('chip-relacion-Sí')).toBeTruthy()
     expect(screen.getByText('Antecedentes institucionales')).toBeTruthy()
     expect(screen.getByText(PREGUNTA)).toBeTruthy()
     expect(screen.queryByPlaceholderText('Indicar nombre de la institución')).toBeNull()
@@ -59,6 +61,17 @@ describe('PasoAntecedentes', () => {
 
     fireEvent.press(screen.getByText('Sí'))
     expect(mockSetRelacion).toHaveBeenCalledWith(true)
+  })
+
+  it('muestra el error de institución vacía al salir del campo', () => {
+    ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(
+      mockStore({ tieneRelacionInstitucional: true, institucion: '  ' })
+    )
+
+    render(<PasoAntecedentes />)
+    fireEvent(screen.getByTestId('input-institucion'), 'blur')
+
+    expect(screen.getByText('La institución es obligatoria')).toBeTruthy()
   })
 
   it('avanza cuando el envío sale bien', async () => {
