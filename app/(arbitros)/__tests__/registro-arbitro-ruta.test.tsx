@@ -80,11 +80,20 @@ describe('RegistroArbitroScreen', () => {
     expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.HOME)
   })
 
-  it('al volver desde el paso 1 resetea y regresa al home', () => {
-    ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(1))
+  it('al montarse de nuevo tras un pop deja el formulario en blanco', () => {
+    const { useRegistroArbitroStore: storeReal } = jest.requireActual(
+      '@/logica-compartida/hooks/use-registro-arbitro-store'
+    )
+    ;(useRegistroArbitroStore as unknown as jest.Mock).mockImplementation(storeReal)
+    storeReal.setState({ paso: 3, nombre: 'Ana', dni: '30111222' })
+    const { unmount } = render(<RegistroArbitroScreen />)
+
+    expect(storeReal.getState()).toMatchObject({ paso: 1, nombre: '', dni: '' })
+    storeReal.setState({ paso: 3, nombre: 'Ana', dni: '30111222' })
+    unmount()
+
+    expect(storeReal.getState().nombre).toBe('Ana')
     render(<RegistroArbitroScreen />)
-    fireEvent.press(screen.getByTestId('boton-atras'))
-    expect(mockResetear).toHaveBeenCalledTimes(1)
-    expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.HOME)
+    expect(storeReal.getState()).toMatchObject({ paso: 1, nombre: '', dni: '' })
   })
 })

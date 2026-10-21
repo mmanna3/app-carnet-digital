@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'expo-router'
 import PasoDatosPersonales from '@/arbitros/_pasos/paso-datos-personales'
 import PasoUbicacion from '@/arbitros/_pasos/paso-ubicacion'
@@ -12,8 +12,12 @@ export default function RegistroArbitroScreen() {
   const router = useRouter()
   const { paso, resetear } = useRegistroArbitroStore()
 
-  const handleVolverInicio = () => {
+  useEffect(() => {
     resetear()
+    console.log('Reset')
+  }, [])
+
+  const handleVolverInicio = () => {
     router.replace(RUTAS.HOME)
   }
 
