@@ -1,7 +1,10 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react-native'
 import RegistroArbitroScreen from '@/arbitros/registro-arbitro'
-import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
+import {
+  TOTAL_PASOS,
+  useRegistroArbitroStore,
+} from '@/logica-compartida/hooks/use-registro-arbitro-store'
 import { useRouter } from 'expo-router'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
@@ -68,8 +71,8 @@ describe('RegistroArbitroScreen', () => {
     expect(screen.getByText(titulo)).toBeTruthy()
   })
 
-  it('en el paso 5 muestra el registro enviado y vuelve al inicio', () => {
-    ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(5))
+  it('en el último paso muestra el registro enviado y vuelve al inicio', () => {
+    ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(TOTAL_PASOS + 1))
     render(<RegistroArbitroScreen />)
 
     expect(screen.getByTestId('pantalla-completado-arbitro')).toBeTruthy()

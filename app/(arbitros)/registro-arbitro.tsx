@@ -5,7 +5,10 @@ import PasoUbicacion from '@/arbitros/_pasos/paso-ubicacion'
 import PasoPreferencias from '@/arbitros/_pasos/paso-preferencias'
 import PasoAntecedentes from '@/arbitros/_pasos/paso-antecedentes'
 import PantallaCompletado from '@/arbitros/_pasos/pantalla-completado'
-import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
+import {
+  TOTAL_PASOS,
+  useRegistroArbitroStore,
+} from '@/logica-compartida/hooks/use-registro-arbitro-store'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 export default function RegistroArbitroScreen() {
@@ -25,7 +28,7 @@ export default function RegistroArbitroScreen() {
   if (paso === 2) return <PasoUbicacion />
   if (paso === 3) return <PasoPreferencias />
   if (paso === 4) return <PasoAntecedentes />
-  if (paso === 5) return <PantallaCompletado onVolverInicio={handleVolverInicio} />
+  if (paso === TOTAL_PASOS + 1) return <PantallaCompletado onVolverInicio={handleVolverInicio} />
 
   return null
 }
