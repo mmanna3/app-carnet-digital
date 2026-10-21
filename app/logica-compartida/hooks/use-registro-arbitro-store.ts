@@ -99,8 +99,6 @@ export function armarPayloadRegistroArbitro(
 /** Punto de enganche del alta. El test espía `enviar` para simular el fallo de red. */
 export const envioRegistroArbitro = {
   enviar: async (datos: PayloadRegistroArbitro): Promise<void> => {
-    // TODO: reemplazar por la llamada NSwag cuando el backend exponga el alta de árbitro
-    // (ver docs/superpowers/plans/2026-10-20-referee-registration-backend-contract.md).
     void datos
   },
 }
