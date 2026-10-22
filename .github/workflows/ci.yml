@@ -98,6 +98,7 @@ jobs:
         if: always()
         with:
           name: maestro-e2e-report
+          include-hidden-files: true
           path: |
             e2e-report.html
             e2e-debug/
