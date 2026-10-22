@@ -32,8 +32,23 @@ name: Árbitro — registro
 - tapOn:
     id: 'input-dni'
 - inputText: '30123456'
-- tapOn:
-    id: 'titulo-cabecera'
+# En Android tocar la cabecera no cierra el teclado, y el teclado tapa el teléfono.
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: 'input-telefono'
+    direction: DOWN
+    timeout: 10000
 - tapOn:
     id: 'input-telefono'
 - inputText: '23456789'
@@ -48,51 +63,44 @@ name: Árbitro — registro
       platform: android
     commands:
       - hideKeyboard
-- waitForAnimationToEnd
 - assertVisible:
     text: '30123456'
 - assertVisible:
     text: '23456789'
 # La fecha queda debajo del teléfono y en pantallas chicas puede quedar fuera de la vista.
-# Al cerrar el teclado el layout se reacomoda; en emuladores lentos el tap puede caer
-# antes de que termine y el picker no abre, por eso se reintenta hasta ver la fecha cargada.
-- retry:
-    maxRetries: 3
+- scrollUntilVisible:
+    element:
+      id: 'input-fecha-nacimiento'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'input-fecha-nacimiento'
+- waitForAnimationToEnd
+# iOS: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro;
+# se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical).
+# Android: los botones OK/Aceptar son del diálogo nativo.
+- runFlow:
+    when:
+      platform: ios
     commands:
-      - scrollUntilVisible:
-          element:
-            id: 'input-fecha-nacimiento'
-          direction: DOWN
-          timeout: 10000
-      - waitForAnimationToEnd
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
       - tapOn:
-          id: 'input-fecha-nacimiento'
-      - waitForAnimationToEnd
-      # iOS: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro;
-      # se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical).
-      # Android: los botones OK/Aceptar son del diálogo nativo.
-      - runFlow:
-          when:
-            platform: ios
-          commands:
-            - swipe:
-                start: '75%, 70%'
-                end: '75%, 50%'
-                duration: 500
-            - tapOn:
-                point: '50%, 93%'
-      - runFlow:
-          when:
-            platform: android
-          commands:
-            - tapOn:
-                text: 'OK'
-                optional: true
-            - tapOn:
-                text: 'Aceptar'
-                optional: true
-      - assertNotVisible:
-          text: 'Seleccioná la fecha de nacimiento'
+          point: '50%, 93%'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          text: 'OK'
+          optional: true
+      - tapOn:
+          text: 'Aceptar'
+          optional: true
+- assertNotVisible:
+    text: 'Seleccioná la fecha de nacimiento'
 - scrollUntilVisible:
     element:
       id: 'boton-continuar'
