@@ -75,7 +75,7 @@ describe('PasoDatosPersonales', () => {
         dni: '12345678',
         apellido: 'Perez',
         nombre: 'Juan',
-        telefonoCelular: '1122334455',
+        telefonoCelular: '11223344',
         fechaNacimiento: new Date(1990, 0, 1),
       })
     )
@@ -98,7 +98,15 @@ describe('PasoDatosPersonales', () => {
     expect(mockSetDni).toHaveBeenCalledWith('123456789')
     expect(mockSetApellido).toHaveBeenCalledWith('Perez Garcia')
     expect(mockSetNombre).toHaveBeenCalledWith('Juan')
-    expect(mockSetTelefono).toHaveBeenCalledWith('1122334455')
+    expect(mockSetTelefono).toHaveBeenCalledWith('11223344')
+  })
+
+  it('limita nombre y apellido a 50 caracteres y el teléfono a 8 dígitos', () => {
+    render(<PasoDatosPersonales onVolverInicio={mockOnVolverInicio} />)
+
+    expect(screen.getByTestId('input-nombre').props.maxLength).toBe(50)
+    expect(screen.getByTestId('input-apellido').props.maxLength).toBe(50)
+    expect(screen.getByTestId('input-telefono').props.maxLength).toBe(8)
   })
 
   it('muestra el error de nombre y apellido vacíos al salir del campo', () => {
@@ -120,7 +128,7 @@ describe('PasoDatosPersonales', () => {
     fireEvent(screen.getByTestId('input-telefono'), 'blur')
 
     expect(screen.getByText('El DNI debe tener entre 7 y 9 dígitos')).toBeTruthy()
-    expect(screen.getByText('El celular debe tener al menos 8 dígitos')).toBeTruthy()
+    expect(screen.getByText('El celular debe tener 8 dígitos')).toBeTruthy()
   })
 
   it('vuelve al inicio desde atrás', () => {

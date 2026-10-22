@@ -6,13 +6,15 @@ import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
 import {
+  DIGITOS_CELULAR,
+  LARGO_MAXIMO_NOMBRE,
   pasoDatosPersonalesCompleto,
   validarApellido,
   validarCelular,
   validarDni,
   validarFechaNacimiento,
   validarNombre,
-} from '@/arbitros/validacion-registro-arbitro'
+} from '@/arbitros/_logica/validacion-registro-arbitro'
 import { capitalizar, formatearFecha } from '@/logica-compartida/utilidades/formateo-formulario'
 
 type Errores = {
@@ -82,6 +84,7 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         onChangeText={(valor) => setNombre(capitalizar(valor))}
         error={errores.nombre ?? undefined}
         onBlur={() => actualizarError('nombre', validarNombre(nombre))}
+        maxLength={LARGO_MAXIMO_NOMBRE}
       />
       <CampoTexto
         inputTestID="input-apellido"
@@ -91,6 +94,7 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         onChangeText={(valor) => setApellido(capitalizar(valor))}
         error={errores.apellido ?? undefined}
         onBlur={() => actualizarError('apellido', validarApellido(apellido))}
+        maxLength={LARGO_MAXIMO_NOMBRE}
       />
       <CampoTexto
         inputTestID="input-dni"
@@ -107,10 +111,13 @@ export default function PasoDatosPersonales({ onVolverInicio }: Props) {
         label="Teléfono celular"
         placeholder="Ingresá el teléfono celular"
         value={telefonoCelular}
-        onChangeText={(valor) => setTelefonoCelular(valor.replace(/\D/g, ''))}
+        onChangeText={(valor) =>
+          setTelefonoCelular(valor.replace(/\D/g, '').slice(0, DIGITOS_CELULAR))
+        }
         error={errores.telefonoCelular ?? undefined}
         onBlur={() => actualizarError('telefonoCelular', validarCelular(telefonoCelular))}
         keyboardType="phone-pad"
+        maxLength={DIGITOS_CELULAR}
       />
       <View>
         <Text className="mb-1.5 text-sm text-zinc-400">Fecha de nacimiento</Text>

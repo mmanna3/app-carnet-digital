@@ -9,7 +9,7 @@ import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-
 import {
   pasoAntecedentesCompleto,
   validarInstitucion,
-} from '@/arbitros/validacion-registro-arbitro'
+} from '@/arbitros/_logica/validacion-registro-arbitro'
 
 function preguntaRelacionInstitucional(nombreLiga: string | undefined): string {
   const nombre = nombreLiga?.trim()

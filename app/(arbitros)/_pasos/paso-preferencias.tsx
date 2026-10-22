@@ -3,8 +3,8 @@ import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { FRANJAS_HORARIAS, TORNEOS_INTERES } from '@/arbitros/catalogos'
-import { pasoPreferenciasCompleto } from '@/arbitros/validacion-registro-arbitro'
+import { FRANJAS_HORARIAS, TORNEOS_INTERES } from '@/arbitros/_logica/catalogos'
+import { pasoPreferenciasCompleto } from '@/arbitros/_logica/validacion-registro-arbitro'
 
 export default function PasoPreferencias() {
   const {

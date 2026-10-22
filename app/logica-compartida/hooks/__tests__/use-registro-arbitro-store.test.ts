@@ -8,7 +8,7 @@ const DATOS_COMPLETOS = {
   dni: '30111222',
   apellido: 'Gomez',
   nombre: 'Ana',
-  telefonoCelular: '1199887766',
+  telefonoCelular: '99887766',
   direccion: 'Mitre 10',
   localidad: 'Bernal',
   fechaNacimiento: new Date(1990, 4, 2),
@@ -17,6 +17,12 @@ const DATOS_COMPLETOS = {
   disponibilidadHoraria: ['SABADOS 8 A 14'],
   tieneRelacionInstitucional: false,
   institucion: '',
+}
+
+const PAYLOAD_ESPERADO = {
+  ...DATOS_COMPLETOS,
+  telefonoCelular: '+5491199887766',
+  institucion: undefined,
 }
 
 const INICIAL = {
@@ -55,7 +61,7 @@ describe('useRegistroArbitroStore', () => {
     store.setDni('30111222')
     store.setApellido('Gomez')
     store.setNombre('Ana')
-    store.setTelefonoCelular('1199887766')
+    store.setTelefonoCelular('99887766')
     store.setDireccion('Mitre 10')
     store.setLocalidad('Bernal')
     store.setFechaNacimiento(fecha)
@@ -67,7 +73,7 @@ describe('useRegistroArbitroStore', () => {
       dni: '30111222',
       apellido: 'Gomez',
       nombre: 'Ana',
-      telefonoCelular: '1199887766',
+      telefonoCelular: '99887766',
       direccion: 'Mitre 10',
       localidad: 'Bernal',
       fechaNacimiento: fecha,
@@ -108,13 +114,10 @@ describe('useRegistroArbitroStore', () => {
     expect(disponibilidadHoraria).toEqual([])
   })
 
-  it('arma el payload y omite la institución si no hay relación', () => {
+  it('arma el payload con el prefijo del celular y omite la institución si no hay relación', () => {
     const estado = { ...DATOS_COMPLETOS, institucion: 'No debería salir' }
 
-    expect(armarPayloadRegistroArbitro(estado)).toEqual({
-      ...DATOS_COMPLETOS,
-      institucion: undefined,
-    })
+    expect(armarPayloadRegistroArbitro(estado)).toEqual(PAYLOAD_ESPERADO)
     expect(armarPayloadRegistroArbitro(estado)?.torneosInteres).not.toBe(estado.torneosInteres)
   })
 
@@ -161,7 +164,7 @@ describe('useRegistroArbitroStore', () => {
     useRegistroArbitroStore.setState(DATOS_COMPLETOS)
 
     await expect(useRegistroArbitroStore.getState().enviarRegistro()).resolves.toEqual({ ok: true })
-    expect(enviar).toHaveBeenCalledWith({ ...DATOS_COMPLETOS, institucion: undefined })
+    expect(enviar).toHaveBeenCalledWith(PAYLOAD_ESPERADO)
   })
 
   it('no envía si faltan datos obligatorios', async () => {

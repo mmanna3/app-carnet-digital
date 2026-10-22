@@ -1,9 +1,12 @@
 import { create } from 'zustand'
-import type { TipoMovilidad } from '@/arbitros/catalogos'
+import type { TipoMovilidad } from '@/arbitros/_logica/catalogos'
 import { parseApiError } from '@/logica-compartida/utilidades/parsear-error-api'
 
 /** Pasos del formulario. El paso siguiente es la pantalla de completado. */
 export const TOTAL_PASOS = 4
+
+/** El back espera el celular completo; el formulario solo pide los 8 dígitos finales. */
+export const PREFIJO_CELULAR = '+54911'
 
 export type DatosRegistroArbitro = {
   dni: string
@@ -84,7 +87,7 @@ export function armarPayloadRegistroArbitro(
     dni: estado.dni,
     apellido: estado.apellido.trim(),
     nombre: estado.nombre.trim(),
-    telefonoCelular: estado.telefonoCelular,
+    telefonoCelular: `${PREFIJO_CELULAR}${estado.telefonoCelular}`,
     direccion: estado.direccion.trim(),
     localidad: estado.localidad.trim(),
     fechaNacimiento,

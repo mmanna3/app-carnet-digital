@@ -1,10 +1,11 @@
-import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/catalogos'
+import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/_logica/catalogos'
 import {
   pasoAntecedentesCompleto,
   pasoDatosPersonalesCompleto,
   pasoPreferenciasCompleto,
   pasoUbicacionCompleto,
-} from '@/arbitros/validacion-registro-arbitro'
+  validarCelular,
+} from '@/arbitros/_logica/validacion-registro-arbitro'
 
 const FECHA_NACIMIENTO = new Date(1990, 0, 1)
 
@@ -12,7 +13,7 @@ const DATOS_PERSONALES = {
   dni: '12345678',
   apellido: 'Perez',
   nombre: 'Juan',
-  telefonoCelular: '1122334455',
+  telefonoCelular: '11223344',
   fechaNacimiento: FECHA_NACIMIENTO,
 }
 
@@ -57,6 +58,19 @@ describe('pasoDatosPersonalesCompleto', () => {
       false
     )
     expect(pasoDatosPersonalesCompleto({ ...DATOS_PERSONALES, fechaNacimiento: null })).toBe(false)
+  })
+})
+
+describe('validarCelular', () => {
+  it('acepta exactamente 8 dígitos', () => {
+    expect(validarCelular('11223344')).toBeNull()
+  })
+
+  it('rechaza vacío, menos o más de 8 dígitos y caracteres no numéricos', () => {
+    expect(validarCelular('')).toBe('El celular es obligatorio')
+    expect(validarCelular('1122334')).toBe('El celular debe tener 8 dígitos')
+    expect(validarCelular('112233445')).toBe('El celular debe tener 8 dígitos')
+    expect(validarCelular('1122-334')).toBe('El celular debe tener 8 dígitos')
   })
 })
 

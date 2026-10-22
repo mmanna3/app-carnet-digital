@@ -36,7 +36,7 @@ name: Árbitro — registro
     id: 'titulo-cabecera'
 - tapOn:
     id: 'input-telefono'
-- inputText: '1123456789'
+- inputText: '23456789'
 - runFlow:
     when:
       platform: ios
@@ -48,6 +48,12 @@ name: Árbitro — registro
       platform: android
     commands:
       - hideKeyboard
+# La fecha queda debajo del teléfono y en pantallas chicas puede quedar fuera de la vista.
+- scrollUntilVisible:
+    element:
+      id: 'input-fecha-nacimiento'
+    direction: DOWN
+    timeout: 10000
 - tapOn:
     id: 'input-fecha-nacimiento'
 - waitForAnimationToEnd
@@ -74,6 +80,11 @@ name: Árbitro — registro
       - tapOn:
           text: 'Aceptar'
           optional: true
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 10000
 - extendedWaitUntil:
     visible:
       id: 'boton-continuar'

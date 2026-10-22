@@ -1,10 +1,9 @@
 import {
   validarApellido,
-  validarCelular,
   validarDni,
   validarNombre,
 } from '@/logica-compartida/utilidades/validacion-formulario'
-import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/catalogos'
+import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/_logica/catalogos'
 
 function dniSoloDigitosValido(dni: string): boolean {
   return validarDni(dni) === null && /^\d+$/.test(dni.trim())
@@ -19,6 +18,17 @@ function seleccionValida<T extends string>(
   catalogo: readonly T[]
 ): boolean {
   return valores.length > 0 && valores.every((valor) => perteneceA(valor, catalogo))
+}
+
+export const DIGITOS_CELULAR = 8
+export const LARGO_MAXIMO_NOMBRE = 50
+
+export function validarCelular(valor: string): string | null {
+  if (!valor.trim()) return 'El celular es obligatorio'
+  if (!/^\d+$/.test(valor) || valor.length !== DIGITOS_CELULAR) {
+    return `El celular debe tener ${DIGITOS_CELULAR} dígitos`
+  }
+  return null
 }
 
 export function validarDireccion(valor: string): string | null {
@@ -88,4 +98,4 @@ export function pasoAntecedentesCompleto(datos: {
   return validarInstitucion(datos.institucion) === null
 }
 
-export { validarApellido, validarCelular, validarDni, validarNombre }
+export { validarApellido, validarDni, validarNombre }

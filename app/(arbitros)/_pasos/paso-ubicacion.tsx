@@ -4,12 +4,12 @@ import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { TIPOS_MOVILIDAD, type TipoMovilidad } from '@/arbitros/catalogos'
+import { TIPOS_MOVILIDAD, type TipoMovilidad } from '@/arbitros/_logica/catalogos'
 import {
   pasoUbicacionCompleto,
   validarDireccion,
   validarLocalidad,
-} from '@/arbitros/validacion-registro-arbitro'
+} from '@/arbitros/_logica/validacion-registro-arbitro'
 
 type Errores = {
   direccion: string | null
