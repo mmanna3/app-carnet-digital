@@ -51,12 +51,12 @@ npm run limpiar          # Limpiar dependencias y cachés
 
 ### Capas del código
 
-| Capa                | Ruta                                                                          | Rol                                                     |
-| ------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(torneos)/` | Pantallas navegables por flujo                          |
-| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc.                        | UI y pasos de wizard (no son rutas)                     |
-| Design system       | `app/design-system/`                                                          | Tokens, componentes UI, layouts                         |
-| Lógica compartida   | `app/logica-compartida/`                                                      | API, hooks, config, utilidades, **constantes de rutas** |
+| Capa                | Ruta                                                                                             | Rol                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| Rutas (Expo Router) | `app/(home)/`, `app/(fichaje-jugador)/`, `app/(delegados)/`, `app/(arbitros)/`, `app/(torneos)/` | Pantallas navegables por flujo                          |
+| Colocated por flujo | `_components/`, `_pasos/`, `_registro-delegado/`, etc.                                           | UI y pasos de wizard (no son rutas)                     |
+| Design system       | `app/design-system/`                                                                             | Tokens, componentes UI, layouts                         |
+| Lógica compartida   | `app/logica-compartida/`                                                                         | API, hooks, config, utilidades, **constantes de rutas** |
 
 Expo Router ignora `design-system/`, `logica-compartida/` y carpetas colocated cuyo segmento empieza con `_` seguido de `/` (p. ej. `_components/`, `_pasos/`). **No** excluye `_layout.tsx`.
 
@@ -81,12 +81,13 @@ app/
 ├── design-system/, logica-compartida/
 ├── (home)/                     # /home, /seleccion-de-liga
 ├── (fichaje-jugador)/          # /fichajes (+ _pasos, _components)
+├── (arbitros)/                 # /registro-arbitro (+ _pasos, _components)
 ├── (delegados)/                # login, tabs (inicio), fichaje/registro delegado
 │   └── (inicio)/               # tabs: mis-jugadores, buscar, pendientes
 └── (torneos)/torneos/          # /torneos/*
 ```
 
-Los route groups `(home)`, `(fichaje-jugador)`, `(delegados)`, `(torneos)` y `(inicio)` no aparecen en la URL.
+Los route groups `(home)`, `(fichaje-jugador)`, `(arbitros)`, `(delegados)`, `(torneos)` y `(inicio)` no aparecen en la URL.
 
 **Navegación:** usar `RUTAS` de `@/logica-compartida/constantes/rutas` (alias `@/constants/rutas`).
 
@@ -122,6 +123,7 @@ Regenerar contrato: script `generar-contrato-be-en-app.sh` en el monorepo.
 
 - `@/home/*` → `app/(home)/*`
 - `@/fichaje-jugador/*` → `app/(fichaje-jugador)/*`
+- `@/arbitros/*` → `app/(arbitros)/*`
 - `@/delegados/*` → `app/(delegados)/*`
 - `@/inicio-delegados/*` → `app/(delegados)/(inicio)/*`
 - `@/torneos/*` → `app/(torneos)/torneos/*`

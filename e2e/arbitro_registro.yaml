@@ -1,0 +1,228 @@
+appId: com.ykn.edefidelegados
+name: Árbitro — registro
+---
+# Flujo completo de registro de árbitro: home → datos → ubicación → preferencias →
+# antecedentes → completado → inicio
+#
+# Datos de prueba del formulario. Finalizar todavía no llama a la API: el store
+# resuelve ok y muestra la pantalla de completado.
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'card-arbitros'
+    timeout: 15000
+- tapOn:
+    id: 'card-arbitros'
+# Esperar la navegación
+- extendedWaitUntil:
+    visible:
+      id: 'paso-datos-personales'
+    timeout: 15000
+# Paso datos personales (paso 1 de 4)
+- tapOn:
+    id: 'input-nombre'
+- inputText: 'Ana'
+- tapOn:
+    id: 'input-apellido'
+- inputText: 'Gomez'
+- tapOn:
+    id: 'titulo-cabecera'
+- tapOn:
+    id: 'input-dni'
+- inputText: '30123456'
+# En Android tocar la cabecera no cierra el teclado, y el teclado tapa el teléfono.
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: 'input-telefono'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'input-telefono'
+- inputText: '23456789'
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- assertVisible:
+    text: '30123456'
+- assertVisible:
+    text: '23456789'
+# La fecha queda debajo del teléfono y en pantallas chicas puede quedar fuera de la vista.
+- scrollUntilVisible:
+    element:
+      id: 'input-fecha-nacimiento'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'input-fecha-nacimiento'
+- waitForAnimationToEnd
+# iOS: el Modal del date picker no expone sus elementos al árbol de accesibilidad de Maestro;
+# se gira la rueda del año con swipe (dispara onChange) y se cierra con tap en "Listo" (~93% vertical).
+# Android: los botones OK/Aceptar son del diálogo nativo.
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - swipe:
+          start: '75%, 70%'
+          end: '75%, 50%'
+          duration: 500
+      - tapOn:
+          point: '50%, 93%'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - tapOn:
+          text: 'OK'
+          optional: true
+      - tapOn:
+          text: 'Aceptar'
+          optional: true
+- assertNotVisible:
+    text: 'Seleccioná la fecha de nacimiento'
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: 'boton-continuar'
+# Paso ubicación y movilidad (paso 2 de 4)
+- extendedWaitUntil:
+    visible:
+      id: 'paso-ubicacion'
+    timeout: 15000
+- tapOn:
+    id: 'input-direccion'
+- inputText: 'Calle 12 345'
+- tapOn:
+    id: 'titulo-cabecera'
+- tapOn:
+    id: 'input-localidad'
+- inputText: 'La Plata'
+- tapOn:
+    id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: 'chip-movilidad-MOTO'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'chip-movilidad-MOTO'
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: 'boton-continuar'
+# Paso preferencias deportivas (paso 3 de 4)
+- extendedWaitUntil:
+    visible:
+      id: 'paso-preferencias'
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: 'chip-torneo-BABY FUTBOL'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'chip-torneo-BABY FUTBOL'
+- scrollUntilVisible:
+    element:
+      id: 'chip-franja-SABADOS 8 A 14'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'chip-franja-SABADOS 8 A 14'
+- scrollUntilVisible:
+    element:
+      id: 'boton-continuar'
+    direction: DOWN
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'boton-continuar'
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: 'boton-continuar'
+# Paso antecedentes institucionales (paso 4 de 4)
+- extendedWaitUntil:
+    visible:
+      id: 'paso-antecedentes'
+    timeout: 15000
+- tapOn:
+    id: 'chip-relacion-Sí'
+- extendedWaitUntil:
+    visible:
+      id: 'input-institucion'
+    timeout: 15000
+- tapOn:
+    id: 'input-institucion'
+- inputText: 'Club Mock'
+- tapOn:
+    id: 'titulo-cabecera'
+- runFlow:
+    when:
+      platform: android
+    commands:
+      - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: 'boton-finalizar'
+    direction: DOWN
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'boton-finalizar'
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: 'boton-finalizar'
+- extendedWaitUntil:
+    visible:
+      id: 'pantalla-completado-arbitro'
+    timeout: 15000
+- tapOn:
+    id: 'boton-volver-inicio-arbitro'
+- extendedWaitUntil:
+    visible:
+      id: 'card-arbitros'
+    timeout: 15000

@@ -50,6 +50,7 @@
     "moduleNameMapper": {
       "^@/home/(.*)$": "<rootDir>/app/(home)/$1",
       "^@/fichaje-jugador/(.*)$": "<rootDir>/app/(fichaje-jugador)/$1",
+      "^@/arbitros/(.*)$": "<rootDir>/app/(arbitros)/$1",
       "^@/delegados/(.*)$": "<rootDir>/app/(delegados)/$1",
       "^@/inicio-delegados/(.*)$": "<rootDir>/app/(delegados)/(inicio)/$1",
       "^@/torneos/(.*)$": "<rootDir>/app/(torneos)/torneos/$1",

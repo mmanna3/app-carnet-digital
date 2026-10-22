@@ -12,7 +12,7 @@ import PasoFotosDniDelegado from '@/delegados/_fichaje-delegado-nuevo/paso-fotos
 import PasoConfirmacionDelegado from '@/delegados/_fichaje-delegado-nuevo/paso-confirmacion-delegado'
 import PasoDniDelegado from '@/delegados/_fichaje-delegado-existente/paso-dni-delegado'
 import PasoConfirmacionYaRegistrado from '@/delegados/_fichaje-delegado-existente/paso-confirmacion-ya-registrado'
-import PantallaCompletado from '@/delegados/_registro-delegado/components/pantalla-completado'
+import PantallaCompletado from '@/design-system/componentes/pantalla-completado'
 import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 export default function RegistroDelegadoScreen() {
@@ -25,6 +25,16 @@ export default function RegistroDelegadoScreen() {
     resetear()
     router.replace(RUTAS.HOME)
   }
+
+  const completado = (
+    <PantallaCompletado
+      titulo="¡Solicitud enviada!"
+      mensaje="La administración de la liga revisará tu solicitud y te habilitará el acceso."
+      testID="pantalla-completado-delegado"
+      testIDBoton="boton-volver-inicio-delegado"
+      onVolverInicio={handleVolverInicio}
+    />
+  )
 
   if (fichajeEstaHabilitado === null || cargando) {
     return (
@@ -53,14 +63,14 @@ export default function RegistroDelegadoScreen() {
     if (paso === 3) return <PasoFotoDelegado />
     if (paso === 4) return <PasoFotosDniDelegado />
     if (paso === 5) return <PasoConfirmacionDelegado />
-    if (paso === 6) return <PantallaCompletado onVolverInicio={handleVolverInicio} />
+    if (paso === 6) return completado
   }
 
   if (flujo === 'verde') {
     if (paso === 1) return <PasoCodigoClub />
     if (paso === 2) return <PasoDniDelegado />
     if (paso === 3) return <PasoConfirmacionYaRegistrado />
-    if (paso === 4) return <PantallaCompletado onVolverInicio={handleVolverInicio} />
+    if (paso === 4) return completado
   }
 
   return null

@@ -4,6 +4,7 @@ const GRUPOS_OCULTOS = [
   '(delegados)',
   '(torneos)',
   '(inicio)',
+  '(arbitros)',
 ] as const
 
 /** Segmentos visibles en la URL (sin route groups). */

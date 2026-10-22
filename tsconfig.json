@@ -7,6 +7,7 @@
       "@/*": ["./*"],
       "@/home/*": ["./app/(home)/*"],
       "@/fichaje-jugador/*": ["./app/(fichaje-jugador)/*"],
+      "@/arbitros/*": ["./app/(arbitros)/*"],
       "@/delegados/*": ["./app/(delegados)/*"],
       "@/inicio-delegados/*": ["./app/(delegados)/(inicio)/*"],
       "@/torneos/*": ["./app/(torneos)/torneos/*"],
