@@ -237,6 +237,18 @@ function BloqueCampeonFinal({
   if (lado === null) return null
   const nombre = lado === 'local' ? partido.local : partido.visitante
   const escudo = lado === 'local' ? partido.escudoLocal : partido.escudoVisitante
+  return <BloqueCampeon nombre={nombre} escudo={escudo} apiUrl={apiUrl} />
+}
+
+function BloqueCampeon({
+  nombre,
+  escudo,
+  apiUrl,
+}: {
+  nombre: string | undefined
+  escudo: string | undefined
+  apiUrl: string | undefined
+}) {
   const nombreLimpio = (nombre ?? '').trim()
   if (!nombreLimpio) return null
 
@@ -297,12 +309,24 @@ export default function FixtureEliminacionDirecta() {
   }
 
   const instancias = data?.instancias ?? []
+  const apiUrl = configLiga?.apiUrl
+
+  // Zona de un único equipo: no hay partidos, ese equipo es campeón directo.
+  if (data?.campeonSinJugar != null) {
+    return (
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }}>
+        <BloqueCampeon
+          nombre={data.campeonSinJugar.equipo}
+          escudo={data.campeonSinJugar.escudo}
+          apiUrl={apiUrl}
+        />
+      </ScrollView>
+    )
+  }
 
   if (instancias.length === 0) {
     return <EstadoVacio mensaje="No hay partidos para esta zona." />
   }
-
-  const apiUrl = configLiga?.apiUrl
 
   const instanciaFinal = instancias.find((i) => esInstanciaFinal(i))
   const partidoDeLaFinal = instanciaFinal ? partidoFinalConResultados(instanciaFinal) : null
