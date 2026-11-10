@@ -42,7 +42,7 @@ describe('PasoAntecedentes', () => {
     render(<PasoAntecedentes />)
 
     expect(screen.getByTestId('paso-antecedentes')).toBeTruthy()
-    expect(screen.getByTestId('chip-relacion-Sí')).toBeTruthy()
+    expect(screen.getByTestId('chip-relacion-SI')).toBeTruthy()
     expect(screen.getByText('Antecedentes institucionales')).toBeTruthy()
     expect(screen.getByText(PREGUNTA)).toBeTruthy()
     expect(screen.queryByPlaceholderText('Indicar nombre de la institución')).toBeNull()

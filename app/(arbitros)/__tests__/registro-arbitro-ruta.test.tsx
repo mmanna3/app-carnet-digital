@@ -10,6 +10,14 @@ import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 jest.mock('@/logica-compartida/hooks/use-registro-arbitro-store')
 jest.mock('expo-router')
+jest.mock('@/arbitros/_logica/use-torneos-para-arbitros', () => ({
+  useTorneosParaArbitros: () => ({
+    torneos: [],
+    cargando: false,
+    huboError: false,
+    reintentar: jest.fn(),
+  }),
+}))
 jest.mock('@/fichaje-jugador/_components/modal-fecha-nacimiento', () => {
   const { View } = require('react-native')
   return function MockModalFechaNacimiento() {
@@ -32,8 +40,8 @@ function mockStore(paso: number) {
     localidad: '',
     fechaNacimiento: null,
     tipoMovilidad: null,
-    torneosInteres: [],
-    disponibilidadHoraria: [],
+    torneoAgrupadorIds: [],
+    franjasHorarias: [],
     tieneRelacionInstitucional: null,
     institucion: '',
     setDni: jest.fn(),

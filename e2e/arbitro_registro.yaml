@@ -4,8 +4,8 @@ name: Árbitro — registro
 # Flujo completo de registro de árbitro: home → datos → ubicación → preferencias →
 # antecedentes → completado → inicio
 #
-# Datos de prueba del formulario. Finalizar todavía no llama a la API: el store
-# resuelve ok y muestra la pantalla de completado.
+# Datos de prueba del formulario. Finalizar llama al mock (POST registro-arbitro) y muestra
+# la pantalla de completado.
 - launchApp:
     clearState: true
 - waitForAnimationToEnd
@@ -159,18 +159,18 @@ name: Árbitro — registro
     timeout: 15000
 - scrollUntilVisible:
     element:
-      id: 'chip-torneo-BABY FUTBOL'
+      id: 'chip-torneo-1'
     direction: DOWN
     timeout: 10000
 - tapOn:
-    id: 'chip-torneo-BABY FUTBOL'
+    id: 'chip-torneo-1'
 - scrollUntilVisible:
     element:
-      id: 'chip-franja-SABADOS 8 A 14'
+      id: 'chip-franja-1'
     direction: DOWN
     timeout: 10000
 - tapOn:
-    id: 'chip-franja-SABADOS 8 A 14'
+    id: 'chip-franja-1'
 - scrollUntilVisible:
     element:
       id: 'boton-continuar'
@@ -189,7 +189,7 @@ name: Árbitro — registro
       id: 'paso-antecedentes'
     timeout: 15000
 - tapOn:
-    id: 'chip-relacion-Sí'
+    id: 'chip-relacion-SI'
 - extendedWaitUntil:
     visible:
       id: 'input-institucion'

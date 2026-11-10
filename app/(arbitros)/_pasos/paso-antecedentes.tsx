@@ -11,6 +11,11 @@ import {
   validarInstitucion,
 } from '@/arbitros/_logica/validacion-registro-arbitro'
 
+const OPCIONES_RELACION = [
+  { valor: true, etiqueta: 'Sí', testID: 'chip-relacion-SI' },
+  { valor: false, etiqueta: 'No', testID: 'chip-relacion-NO' },
+]
+
 function preguntaRelacionInstitucional(nombreLiga: string | undefined): string {
   const nombre = nombreLiga?.trim()
   const liga = nombre ? `la liga ${nombre}` : 'la liga'
@@ -33,8 +38,7 @@ export default function PasoAntecedentes() {
   const [error, setError] = useState<string | null>(null)
   const [errorInstitucion, setErrorInstitucion] = useState<string | null>(null)
   const puedeFinalizar = pasoAntecedentesCompleto({ tieneRelacionInstitucional, institucion })
-  const seleccion =
-    tieneRelacionInstitucional === null ? [] : [tieneRelacionInstitucional ? 'Sí' : 'No']
+  const seleccion = tieneRelacionInstitucional === null ? [] : [tieneRelacionInstitucional]
 
   const handleFinalizar = async () => {
     setError(null)
@@ -57,11 +61,10 @@ export default function PasoAntecedentes() {
       onBack={irAlPasoAnterior}
     >
       <GrupoOpciones
-        testIDPrefijo="chip-relacion"
         etiqueta={preguntaRelacionInstitucional(nombreLiga)}
-        opciones={['Sí', 'No']}
+        opciones={OPCIONES_RELACION}
         seleccionadas={seleccion}
-        onPress={(valor) => setTieneRelacionInstitucional(valor === 'Sí')}
+        onPress={setTieneRelacionInstitucional}
       />
       {tieneRelacionInstitucional ? (
         <CampoTexto

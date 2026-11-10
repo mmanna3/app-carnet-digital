@@ -1,4 +1,5 @@
-import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/_logica/catalogos'
+import type { FranjaHorariaArbitroEnum, TipoMovilidadArbitroEnum } from '@/lib/api/clients'
+import { OPCIONES_FRANJAS, OPCIONES_MOVILIDAD } from '@/arbitros/_logica/catalogos'
 import {
   pasoAntecedentesCompleto,
   pasoDatosPersonalesCompleto,
@@ -18,26 +19,22 @@ const DATOS_PERSONALES = {
 }
 
 describe('catálogos de registro de árbitro', () => {
-  it('incluye los tipos de movilidad', () => {
-    expect(TIPOS_MOVILIDAD).toEqual(['MOTO', 'AUTO', 'BICICLETA', 'TRANSPORTE PUBLICO'])
-  })
-
-  it('incluye los torneos de interés', () => {
-    expect(TORNEOS_INTERES).toEqual([
-      'BABY FUTBOL',
-      'FUTSAL MASCULINO / MAYORES',
-      'FUTSAL FEMENINO',
-      'FUTBOL 11',
+  it('mapea movilidad a los valores del enum del back, con etiquetas y testID estables', () => {
+    expect(OPCIONES_MOVILIDAD).toEqual([
+      { valor: 1, etiqueta: 'MOTO', testID: 'chip-movilidad-MOTO' },
+      { valor: 2, etiqueta: 'AUTO', testID: 'chip-movilidad-AUTO' },
+      { valor: 3, etiqueta: 'BICICLETA', testID: 'chip-movilidad-BICICLETA' },
+      { valor: 4, etiqueta: 'TRANSPORTE PUBLICO', testID: 'chip-movilidad-TRANSPORTE_PUBLICO' },
     ])
   })
 
-  it('incluye las franjas horarias', () => {
-    expect(FRANJAS_HORARIAS).toEqual([
-      'SABADOS 8 A 14',
-      'SABADOS 13 A 20',
-      'DOMINGOS 9 A 15',
-      'DOMINGOS 15 A 22',
-      'MARTES A VIERNES DE 20 A 23:30',
+  it('mapea las franjas a los valores del enum del back', () => {
+    expect(OPCIONES_FRANJAS.map((o) => [o.valor, o.etiqueta, o.testID])).toEqual([
+      [1, 'SABADOS 8 A 14', 'chip-franja-1'],
+      [2, 'SABADOS 13 A 20', 'chip-franja-2'],
+      [3, 'DOMINGOS 9 A 15', 'chip-franja-3'],
+      [4, 'DOMINGOS 15 A 22', 'chip-franja-4'],
+      [5, 'MARTES A VIERNES DE 20 A 23:30', 'chip-franja-5'],
     ])
   })
 })
@@ -80,21 +77,21 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: 'Quilmes',
-        tipoMovilidad: 'MOTO',
+        tipoMovilidad: 1,
       })
     ).toBe(true)
     expect(
       pasoUbicacionCompleto({
         direccion: '  ',
         localidad: 'Quilmes',
-        tipoMovilidad: 'MOTO',
+        tipoMovilidad: 1,
       })
     ).toBe(false)
     expect(
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: '',
-        tipoMovilidad: 'AUTO',
+        tipoMovilidad: 2,
       })
     ).toBe(false)
     expect(
@@ -108,38 +105,31 @@ describe('pasoUbicacionCompleto', () => {
       pasoUbicacionCompleto({
         direccion: 'Calle 123',
         localidad: 'Quilmes',
-        tipoMovilidad: 'CAMINANDO',
+        tipoMovilidad: 99 as TipoMovilidadArbitroEnum,
       })
     ).toBe(false)
   })
 })
 
 describe('pasoPreferenciasCompleto', () => {
-  it('exige al menos un torneo y una franja del catálogo', () => {
+  const base = {
+    torneoAgrupadorIds: [7],
+    torneosDisponibles: [7, 8],
+    franjasHorarias: [3] as FranjaHorariaArbitroEnum[],
+  }
+
+  it('exige al menos un torneo disponible y una franja del catálogo', () => {
+    expect(pasoPreferenciasCompleto(base)).toBe(true)
+    expect(pasoPreferenciasCompleto({ ...base, torneoAgrupadorIds: [] })).toBe(false)
+    expect(pasoPreferenciasCompleto({ ...base, franjasHorarias: [] })).toBe(false)
+    expect(pasoPreferenciasCompleto({ ...base, torneoAgrupadorIds: [99] })).toBe(false)
     expect(
-      pasoPreferenciasCompleto({
-        torneosInteres: ['FUTBOL 11'],
-        disponibilidadHoraria: ['DOMINGOS 9 A 15'],
-      })
-    ).toBe(true)
-    expect(
-      pasoPreferenciasCompleto({
-        torneosInteres: [],
-        disponibilidadHoraria: ['DOMINGOS 9 A 15'],
-      })
+      pasoPreferenciasCompleto({ ...base, franjasHorarias: [9 as FranjaHorariaArbitroEnum] })
     ).toBe(false)
-    expect(
-      pasoPreferenciasCompleto({
-        torneosInteres: ['FUTBOL 11'],
-        disponibilidadHoraria: [],
-      })
-    ).toBe(false)
-    expect(
-      pasoPreferenciasCompleto({
-        torneosInteres: ['OTRO'],
-        disponibilidadHoraria: ['DOMINGOS 9 A 15'],
-      })
-    ).toBe(false)
+  })
+
+  it('no deja avanzar si el back no devolvió torneos', () => {
+    expect(pasoPreferenciasCompleto({ ...base, torneosDisponibles: [] })).toBe(false)
   })
 })
 

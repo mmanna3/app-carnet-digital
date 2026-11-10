@@ -1,4 +1,7 @@
 export const queryKeys = {
+  arbitros: {
+    torneos: ['arbitros', 'torneos'] as const,
+  },
   equipos: {
     all: ['equipos'] as const,
   },

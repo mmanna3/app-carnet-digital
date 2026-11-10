@@ -3,21 +3,15 @@ import {
   validarDni,
   validarNombre,
 } from '@/logica-compartida/utilidades/validacion-formulario'
-import { FRANJAS_HORARIAS, TIPOS_MOVILIDAD, TORNEOS_INTERES } from '@/arbitros/_logica/catalogos'
+import { OPCIONES_FRANJAS, OPCIONES_MOVILIDAD } from '@/arbitros/_logica/catalogos'
+import type { FranjaHorariaArbitroEnum, TipoMovilidadArbitroEnum } from '@/lib/api/clients'
 
 function dniSoloDigitosValido(dni: string): boolean {
   return validarDni(dni) === null && /^\d+$/.test(dni.trim())
 }
 
-function perteneceA<T extends string>(valor: string | null, catalogo: readonly T[]): valor is T {
-  return valor !== null && (catalogo as readonly string[]).includes(valor)
-}
-
-function seleccionValida<T extends string>(
-  valores: readonly string[],
-  catalogo: readonly T[]
-): boolean {
-  return valores.length > 0 && valores.every((valor) => perteneceA(valor, catalogo))
+function seleccionValida<T>(valores: readonly T[], validos: readonly T[]): boolean {
+  return valores.length > 0 && valores.every((valor) => validos.includes(valor))
 }
 
 export const DIGITOS_CELULAR = 8
@@ -70,22 +64,28 @@ export function pasoDatosPersonalesCompleto(datos: {
 export function pasoUbicacionCompleto(datos: {
   direccion: string
   localidad: string
-  tipoMovilidad: string | null
+  tipoMovilidad: TipoMovilidadArbitroEnum | null
 }): boolean {
   return (
     validarDireccion(datos.direccion) === null &&
     validarLocalidad(datos.localidad) === null &&
-    perteneceA(datos.tipoMovilidad, TIPOS_MOVILIDAD)
+    datos.tipoMovilidad !== null &&
+    OPCIONES_MOVILIDAD.some((opcion) => opcion.valor === datos.tipoMovilidad)
   )
 }
 
+/** `torneosDisponibles` son los ids que devolvió el back: sin ninguno no se puede avanzar. */
 export function pasoPreferenciasCompleto(datos: {
-  torneosInteres: readonly string[]
-  disponibilidadHoraria: readonly string[]
+  torneoAgrupadorIds: readonly number[]
+  torneosDisponibles: readonly number[]
+  franjasHorarias: readonly FranjaHorariaArbitroEnum[]
 }): boolean {
   return (
-    seleccionValida(datos.torneosInteres, TORNEOS_INTERES) &&
-    seleccionValida(datos.disponibilidadHoraria, FRANJAS_HORARIAS)
+    seleccionValida(datos.torneoAgrupadorIds, datos.torneosDisponibles) &&
+    seleccionValida(
+      datos.franjasHorarias,
+      OPCIONES_FRANJAS.map((opcion) => opcion.valor)
+    )
   )
 }
 

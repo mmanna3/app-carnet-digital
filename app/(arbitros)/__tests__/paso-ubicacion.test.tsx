@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react-native'
+import { TipoMovilidadArbitroEnum } from '@/lib/api/clients'
 import PasoUbicacion from '@/arbitros/_pasos/paso-ubicacion'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
 
@@ -46,6 +47,7 @@ describe('PasoUbicacion', () => {
     expect(screen.getByText('AUTO')).toBeTruthy()
     expect(screen.getByText('BICICLETA')).toBeTruthy()
     expect(screen.getByText('TRANSPORTE PUBLICO')).toBeTruthy()
+    expect(screen.getByTestId('chip-movilidad-TRANSPORTE_PUBLICO')).toBeTruthy()
   })
 
   it('exige localidad y tipo de movilidad para continuar', () => {
@@ -55,7 +57,7 @@ describe('PasoUbicacion', () => {
       mockStore({
         direccion: 'Calle 1',
         localidad: 'Quilmes',
-        tipoMovilidad: 'MOTO',
+        tipoMovilidad: TipoMovilidadArbitroEnum._1,
       })
     )
     screen.unmount()
@@ -68,7 +70,7 @@ describe('PasoUbicacion', () => {
   it('elige un tipo de movilidad', () => {
     render(<PasoUbicacion />)
     fireEvent.press(screen.getByTestId('chip-movilidad-BICICLETA'))
-    expect(mockSetTipoMovilidad).toHaveBeenCalledWith('BICICLETA')
+    expect(mockSetTipoMovilidad).toHaveBeenCalledWith(TipoMovilidadArbitroEnum._3)
   })
 
   it('muestra el error de dirección al salir del campo vacío', () => {
