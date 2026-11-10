@@ -1,8 +1,12 @@
+import { ApiException } from '@/lib/api/clients'
+import { api } from '@/lib/api/api'
 import {
   armarPayloadRegistroArbitro,
   envioRegistroArbitro,
   useRegistroArbitroStore,
 } from '@/logica-compartida/hooks/use-registro-arbitro-store'
+
+jest.mock('@/lib/api/api', () => ({ api: { registroArbitro: jest.fn() } }))
 
 const DATOS_COMPLETOS = {
   dni: '30111222',
@@ -12,9 +16,9 @@ const DATOS_COMPLETOS = {
   direccion: 'Mitre 10',
   localidad: 'Bernal',
   fechaNacimiento: new Date(1990, 4, 2),
-  tipoMovilidad: 'AUTO' as const,
-  torneosInteres: ['FUTBOL 11'],
-  disponibilidadHoraria: ['SABADOS 8 A 14'],
+  tipoMovilidad: 2 as const,
+  torneoAgrupadorIds: [11, 12],
+  franjasHorarias: [1, 5] as number[],
   tieneRelacionInstitucional: false,
   institucion: '',
 }
@@ -35,8 +39,8 @@ const INICIAL = {
   localidad: '',
   fechaNacimiento: null,
   tipoMovilidad: null,
-  torneosInteres: [],
-  disponibilidadHoraria: [],
+  torneoAgrupadorIds: [],
+  franjasHorarias: [],
   tieneRelacionInstitucional: null,
   institucion: '',
 }
@@ -65,7 +69,7 @@ describe('useRegistroArbitroStore', () => {
     store.setDireccion('Mitre 10')
     store.setLocalidad('Bernal')
     store.setFechaNacimiento(fecha)
-    store.setTipoMovilidad('AUTO')
+    store.setTipoMovilidad(2)
     store.setTieneRelacionInstitucional(true)
     store.setInstitucion('Club Sur')
 
@@ -77,7 +81,7 @@ describe('useRegistroArbitroStore', () => {
       direccion: 'Mitre 10',
       localidad: 'Bernal',
       fechaNacimiento: fecha,
-      tipoMovilidad: 'AUTO',
+      tipoMovilidad: 2,
       tieneRelacionInstitucional: true,
       institucion: 'Club Sur',
     })
@@ -103,22 +107,24 @@ describe('useRegistroArbitroStore', () => {
 
   it('alterna torneos y franjas sin duplicar', () => {
     const { alternarTorneo, alternarFranja } = useRegistroArbitroStore.getState()
-    alternarTorneo('FUTBOL 11')
-    alternarTorneo('FUTSAL FEMENINO')
-    alternarTorneo('FUTBOL 11')
-    alternarFranja('DOMINGOS 9 A 15')
-    alternarFranja('DOMINGOS 9 A 15')
+    alternarTorneo(11)
+    alternarTorneo(12)
+    alternarTorneo(11)
+    alternarFranja(3)
+    alternarFranja(3)
 
-    const { torneosInteres, disponibilidadHoraria } = useRegistroArbitroStore.getState()
-    expect(torneosInteres).toEqual(['FUTSAL FEMENINO'])
-    expect(disponibilidadHoraria).toEqual([])
+    const { torneoAgrupadorIds, franjasHorarias } = useRegistroArbitroStore.getState()
+    expect(torneoAgrupadorIds).toEqual([12])
+    expect(franjasHorarias).toEqual([])
   })
 
   it('arma el payload con el prefijo del celular y omite la institución si no hay relación', () => {
     const estado = { ...DATOS_COMPLETOS, institucion: 'No debería salir' }
 
     expect(armarPayloadRegistroArbitro(estado)).toEqual(PAYLOAD_ESPERADO)
-    expect(armarPayloadRegistroArbitro(estado)?.torneosInteres).not.toBe(estado.torneosInteres)
+    expect(armarPayloadRegistroArbitro(estado)?.torneoAgrupadorIds).not.toBe(
+      estado.torneoAgrupadorIds
+    )
   })
 
   it('recorta espacios de apellido, nombre, dirección, localidad e institución', () => {
@@ -161,10 +167,12 @@ describe('useRegistroArbitroStore', () => {
 
   it('envía el payload y resuelve ok', async () => {
     const enviar = jest.spyOn(envioRegistroArbitro, 'enviar')
+    ;(api.registroArbitro as jest.Mock).mockResolvedValue(5)
     useRegistroArbitroStore.setState(DATOS_COMPLETOS)
 
     await expect(useRegistroArbitroStore.getState().enviarRegistro()).resolves.toEqual({ ok: true })
     expect(enviar).toHaveBeenCalledWith(PAYLOAD_ESPERADO)
+    expect(api.registroArbitro).toHaveBeenCalledWith(PAYLOAD_ESPERADO)
   })
 
   it('no envía si faltan datos obligatorios', async () => {
@@ -184,6 +192,24 @@ describe('useRegistroArbitroStore', () => {
     await expect(useRegistroArbitroStore.getState().enviarRegistro()).resolves.toEqual({
       ok: false,
       error: 'No se pudo conectar',
+    })
+  })
+
+  it('muestra el mensaje del back cuando responde 400', async () => {
+    ;(api.registroArbitro as jest.Mock).mockRejectedValue(
+      new ApiException(
+        'An unexpected server error occurred.',
+        400,
+        JSON.stringify({ status: 400, title: 'Ya hay un árbitro registrado con ese DNI' }),
+        {},
+        null
+      )
+    )
+    useRegistroArbitroStore.setState(DATOS_COMPLETOS)
+
+    await expect(useRegistroArbitroStore.getState().enviarRegistro()).resolves.toEqual({
+      ok: false,
+      error: 'Ya hay un árbitro registrado con ese DNI',
     })
   })
 })

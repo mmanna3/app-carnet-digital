@@ -48,6 +48,15 @@ const RESPONSES = {
     happy: { hayError: false, clubNombre: 'Club de Prueba', clubId: 42 },
     codigo_invalido: { hayError: true, mensajeError: 'Código inválido' },
   },
+  'GET:/api/publico/torneo-agrupadores-para-arbitros': {
+    happy: [
+      { id: 1, nombre: 'BABY FUTBOL' },
+      { id: 2, nombre: 'FUTSAL MASCULINO / MAYORES' },
+    ],
+  },
+  'POST:/api/publico/registro-arbitro': {
+    happy: 99,
+  },
   'GET:/api/publico/obtener-nombre-usuario-disponible': {
     happy: 'juan.perez',
   },

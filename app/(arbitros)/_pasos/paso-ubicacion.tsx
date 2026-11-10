@@ -4,7 +4,7 @@ import Boton from '@/design-system/componentes/boton'
 import MarcoPaso from '@/arbitros/_components/marco-paso'
 import GrupoOpciones from '@/arbitros/_components/grupo-opciones'
 import { useRegistroArbitroStore } from '@/logica-compartida/hooks/use-registro-arbitro-store'
-import { TIPOS_MOVILIDAD, type TipoMovilidad } from '@/arbitros/_logica/catalogos'
+import { OPCIONES_MOVILIDAD } from '@/arbitros/_logica/catalogos'
 import {
   pasoUbicacionCompleto,
   validarDireccion,
@@ -62,11 +62,10 @@ export default function PasoUbicacion() {
         onBlur={() => actualizarError('localidad', validarLocalidad(localidad))}
       />
       <GrupoOpciones
-        testIDPrefijo="chip-movilidad"
         etiqueta="Tipo de movilidad"
-        opciones={TIPOS_MOVILIDAD}
-        seleccionadas={tipoMovilidad ? [tipoMovilidad] : []}
-        onPress={(valor) => setTipoMovilidad(valor as TipoMovilidad)}
+        opciones={OPCIONES_MOVILIDAD}
+        seleccionadas={tipoMovilidad === null ? [] : [tipoMovilidad]}
+        onPress={setTipoMovilidad}
       />
       <Boton
         testID="boton-continuar"
