@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { BackHandler } from 'react-native'
 import { useRouter } from 'expo-router'
 import PasoDatosPersonales from '@/arbitros/_pasos/paso-datos-personales'
 import PasoUbicacion from '@/arbitros/_pasos/paso-ubicacion'
@@ -13,7 +14,7 @@ import { RUTAS } from '@/logica-compartida/constantes/rutas'
 
 export default function RegistroArbitroScreen() {
   const router = useRouter()
-  const { paso, resetear } = useRegistroArbitroStore()
+  const { paso, resetear, irAlPasoAnterior } = useRegistroArbitroStore()
 
   useEffect(() => {
     resetear()
@@ -23,6 +24,20 @@ export default function RegistroArbitroScreen() {
   const handleVolverInicio = () => {
     router.replace(RUTAS.HOME)
   }
+
+  // Botón atrás de Android. Si la app arrancó por el link, no hay pantalla anterior en el stack:
+  // en el paso 1 y en la pantalla final se va al Home en vez de cerrar la app.
+  useEffect(() => {
+    const suscripcion = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (paso > 1 && paso <= TOTAL_PASOS) {
+        irAlPasoAnterior()
+      } else {
+        router.replace(RUTAS.HOME)
+      }
+      return true
+    })
+    return () => suscripcion.remove()
+  }, [paso, irAlPasoAnterior, router])
 
   if (paso === 1) return <PasoDatosPersonales onVolverInicio={handleVolverInicio} />
   if (paso === 2) return <PasoUbicacion />

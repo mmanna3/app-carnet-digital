@@ -32,6 +32,8 @@ const configEdefi = {
   adaptiveIconForeground: './assets/ligas/edefi/icon.png',
   favicon: './assets/ligas/edefi/favicon.png',
   apiUrl: 'https://admin.edefi.com.ar',
+  /** Dominio de los Universal Links (iOS) y App Links (Android). Ej: https://admin.edefi.com.ar/registro-arbitro */
+  dominioDeepLinks: 'admin.edefi.com.ar',
   colorBase: 'verde',
   ios: { supportsTablet: true, infoPlist: { ITSAppUsesNonExemptEncryption: false } },
 }

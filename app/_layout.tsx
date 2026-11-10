@@ -24,8 +24,7 @@ import { LoginDTO } from '@/lib/api/clients'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MenuProvider } from 'react-native-popup-menu'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { tieneSegmento } from '@/logica-compartida/utilidades/segmentos-ruta'
-import { RUTAS } from '@/logica-compartida/constantes/rutas'
+import { redireccionAuthGuard } from '@/logica-compartida/utilidades/redireccion-auth-guard'
 
 export { ErrorBoundary } from 'expo-router'
 
@@ -55,41 +54,14 @@ function useProtectedRoute(loaded: boolean) {
     if (!navigationState?.key) return
     if (!loaded) return
 
-    const inAuth =
-      tieneSegmento(segments, 'inicio-de-sesion') || tieneSegmento(segments, 'cambiar-password')
-    const inSeleccionEquipo = tieneSegmento(segments, 'seleccion-de-equipo')
-    const inSeleccionLiga = tieneSegmento(segments, 'seleccion-de-liga')
-    const inHome = tieneSegmento(segments, 'home')
-    const inFichajes = tieneSegmento(segments, 'fichajes')
-    const inRegistroDelegado = tieneSegmento(segments, 'registro-delegado')
-    const inRegistroArbitro = tieneSegmento(segments, 'registro-arbitro')
-    const inTorneos = tieneSegmento(segments, 'torneos')
-    const inTorneoDetalle = tieneSegmento(segments, 'torneo-detalle')
-    const inZonaDetalle = tieneSegmento(segments, 'zona-detalle')
-
-    if (esMultiliga && !ligaSeleccionadaId && !inSeleccionLiga) {
-      router.replace(RUTAS.SELECCION_LIGA)
-      return
-    }
-
-    if (
-      !isAuthenticated &&
-      !inAuth &&
-      !inSeleccionLiga &&
-      !inHome &&
-      !inFichajes &&
-      !inRegistroDelegado &&
-      !inRegistroArbitro &&
-      !inTorneos &&
-      !inTorneoDetalle &&
-      !inZonaDetalle
-    ) {
-      router.replace(RUTAS.HOME)
-    } else if (isAuthenticated && inAuth) {
-      router.replace(RUTAS.SELECCION_EQUIPO)
-    } else if (isAuthenticated && !equipoSeleccionadoId && !inSeleccionEquipo) {
-      router.replace(RUTAS.SELECCION_EQUIPO)
-    }
+    const destino = redireccionAuthGuard({
+      segments,
+      esMultiliga,
+      ligaSeleccionadaId,
+      isAuthenticated,
+      equipoSeleccionadoId,
+    })
+    if (destino) router.replace(destino)
   }, [
     esMultiliga,
     ligaSeleccionadaId,
