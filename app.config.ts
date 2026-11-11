@@ -7,6 +7,7 @@ const {
   CONFIG_APP_MULTILIGA,
 } = require('./configs-por-liga/datos.js')
 const { splashHex } = require('./configs-por-liga/color-base.js')
+const { configDeepLinks } = require('./configs-por-liga/deep-links.js')
 
 const leagueId = process.env.LIGA_ID
 if (!leagueId) {
@@ -31,6 +32,7 @@ let config: {
   leagueId?: string
   leagueDisplayName?: string
   apiUrl?: string
+  dominioDeepLinks?: string
   colorBase?: string
 }
 
@@ -64,10 +66,12 @@ const ligasDisponibles = esMultiliga
     }).filter(Boolean)
   : undefined
 
+const deepLinks = configDeepLinks(config.dominioDeepLinks)
+
 export default (): ExpoConfig => ({
   name: config.splashScreenName ?? config.appName,
   slug: config.expoSlug,
-  version: '6.0.1',
+  version: '6.1.0',
   orientation: 'portrait',
   icon: config.icon,
   scheme: config.scheme,
@@ -80,6 +84,7 @@ export default (): ExpoConfig => ({
       ITSAppUsesNonExemptEncryption: false,
       CFBundleDevelopmentRegion: 'es',
     },
+    ...deepLinks.ios,
   },
   android: {
     backgroundColor: splashHex,
@@ -88,6 +93,7 @@ export default (): ExpoConfig => ({
       backgroundColor: splashHex,
     },
     package: config.appId,
+    ...deepLinks.android,
   },
   plugins: [
     'expo-router',

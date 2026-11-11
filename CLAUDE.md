@@ -64,6 +64,7 @@ Expo Router ignora `design-system/`, `logica-compartida/` y carpetas colocated c
 
 - `configs-por-liga/datos.js` — Fuente única: LIGAS, APPS_UNILIGAS, LIGAS_DE_APP_MULTILIGA, CONFIG_APP_MULTILIGA
 - `configs-por-liga/color-base.js` — Color base para Tailwind y splash
+- `configs-por-liga/deep-links.js` — `configDeepLinks(dominio)`: arma `associatedDomains` e `intentFilters` desde `dominioDeepLinks` de la liga
 - `app.config.ts` — Config de Expo según LIGA_ID
 - `app/logica-compartida/constantes/rutas.ts` — **`RUTAS`**: paths tipados para navegación (`router.push(RUTAS.HOME)`, etc.)
 - `app/logica-compartida/config/liga.ts` — `getConfigLiga()`, `useConfigLiga()`
@@ -91,7 +92,22 @@ Los route groups `(home)`, `(fichaje-jugador)`, `(arbitros)`, `(delegados)`, `(t
 
 **Navegación:** usar `RUTAS` de `@/logica-compartida/constantes/rutas` (alias `@/constants/rutas`).
 
-**Auth guard** (`app/_layout.tsx`): MULTILIGA sin liga → `RUTAS.SELECCION_LIGA`. No autenticado → `RUTAS.HOME`. Autenticado sin equipo → `RUTAS.SELECCION_EQUIPO`.
+**Auth guard** (`app/_layout.tsx`, decisión en `logica-compartida/utilidades/redireccion-auth-guard.ts`): MULTILIGA sin liga → `RUTAS.SELECCION_LIGA`. No autenticado → `RUTAS.HOME`. Autenticado sin equipo → `RUTAS.SELECCION_EQUIPO` (salvo en `registro-arbitro`).
+
+### Deep link del registro de árbitros
+
+Al registro de árbitros se entra **solo** por el link que la liga manda por WhatsApp; no hay card en el Home:
+
+```
+https://admin.edefi.com.ar/registro-arbitro
+```
+
+- Son Universal Links (iOS) y App Links (Android) sobre `dominioDeepLinks` de la liga (`configs-por-liga/datos.js`). Hoy solo EDeFI. liga-be sirve `/.well-known/apple-app-site-association`, `/.well-known/assetlinks.json` y la página que manda al store si no está la app.
+- Cambiar el dominio o los paths requiere **build nativa nueva** (no alcanza con OTA).
+- **Expo Go:** el link `https` no anda. Probar con `exp://<ip>:8081/--/registro-arbitro` (por ejemplo, `npx uri-scheme open exp://<ip>:8081/--/registro-arbitro --ios`).
+- **Build nativa:** `carnet-edefi://registro-arbitro` abre la app con el scheme (es lo que usa el E2E). El link `https` solo abre la app en una build nativa con el dominio verificado.
+- **Android:** `adb shell pm get-app-links com.ykn.edefidelegados` muestra si el dominio quedó `verified`. Para forzar la verificación: `adb shell pm verify-app-links --re-verify com.ykn.edefidelegados`.
+- **iOS:** validar el AASA con `https://app-site-association.cdn-apple.com/a/v1/admin.edefi.com.ar`.
 
 ### State Management
 

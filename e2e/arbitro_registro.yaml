@@ -1,20 +1,28 @@
 appId: com.ykn.edefidelegados
 name: Árbitro — registro
 ---
-# Flujo completo de registro de árbitro: home → datos → ubicación → preferencias →
+# Flujo completo de registro de árbitro: link → datos → ubicación → preferencias →
 # antecedentes → completado → inicio
+#
+# Al registro se entra solo por el link https://admin.edefi.com.ar/registro-arbitro (no hay card
+# en el Home). El emulador no verifica App Links, así que acá se usa el scheme de la app.
+# La app arranca en frío por el link: clearState la deja cerrada y sin datos.
 #
 # Datos de prueba del formulario. Finalizar llama al mock (POST registro-arbitro) y muestra
 # la pantalla de completado.
-- launchApp:
-    clearState: true
-- waitForAnimationToEnd
-- extendedWaitUntil:
-    visible:
-      id: 'card-arbitros'
-    timeout: 15000
-- tapOn:
-    id: 'card-arbitros'
+- clearState
+- openLink: 'carnet-edefi://registro-arbitro'
+# iOS pide confirmar la apertura de un scheme propio.
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - tapOn:
+          text: 'Open'
+          optional: true
+      - tapOn:
+          text: 'Abrir'
+          optional: true
 # Esperar la navegación
 - extendedWaitUntil:
     visible:
@@ -224,5 +232,7 @@ name: Árbitro — registro
     id: 'boton-volver-inicio-arbitro'
 - extendedWaitUntil:
     visible:
-      id: 'card-arbitros'
+      id: 'card-fichaje'
     timeout: 15000
+- assertNotVisible:
+    id: 'card-arbitros'

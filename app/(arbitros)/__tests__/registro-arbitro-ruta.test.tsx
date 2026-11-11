@@ -1,4 +1,5 @@
 import React from 'react'
+import { BackHandler } from 'react-native'
 import { render, screen, fireEvent } from '@testing-library/react-native'
 import RegistroArbitroScreen from '@/arbitros/registro-arbitro'
 import {
@@ -27,6 +28,7 @@ jest.mock('@/fichaje-jugador/_components/modal-fecha-nacimiento', () => {
 
 const mockResetear = jest.fn()
 const mockRouterReplace = jest.fn()
+const mockIrAlPasoAnterior = jest.fn()
 
 function mockStore(paso: number) {
   return {
@@ -57,7 +59,7 @@ function mockStore(paso: number) {
     setTieneRelacionInstitucional: jest.fn(),
     setInstitucion: jest.fn(),
     irAlPasoSiguiente: jest.fn(),
-    irAlPasoAnterior: jest.fn(),
+    irAlPasoAnterior: mockIrAlPasoAnterior,
     enviarRegistro: jest.fn(),
   }
 }
@@ -106,5 +108,71 @@ describe('RegistroArbitroScreen', () => {
     expect(storeReal.getState().nombre).toBe('Ana')
     render(<RegistroArbitroScreen />)
     expect(storeReal.getState()).toMatchObject({ paso: 1, nombre: '', dni: '' })
+  })
+
+  describe('botón atrás de Android', () => {
+    type ManejadorAtras = () => boolean | null | undefined
+    let manejadores: ManejadorAtras[]
+
+    beforeEach(() => {
+      manejadores = []
+      jest.spyOn(BackHandler, 'addEventListener').mockImplementation((_evento, manejador) => {
+        manejadores.push(manejador)
+        return {
+          remove: () => {
+            manejadores = manejadores.filter((m) => m !== manejador)
+          },
+        }
+      })
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    function apretarAtras() {
+      expect(manejadores).toHaveLength(1)
+      return manejadores[0]()
+    }
+
+    it.each([2, 3, 4])('en el paso %s vuelve al paso anterior', (paso) => {
+      ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(paso))
+      render(<RegistroArbitroScreen />)
+
+      expect(apretarAtras()).toBe(true)
+      expect(mockIrAlPasoAnterior).toHaveBeenCalledTimes(1)
+      expect(mockRouterReplace).not.toHaveBeenCalled()
+    })
+
+    it.each([
+      ['el paso 1', 1],
+      ['la pantalla final', TOTAL_PASOS + 1],
+    ])('en %s va al Home en vez de cerrar la app', (_nombre, paso) => {
+      ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(paso))
+      render(<RegistroArbitroScreen />)
+
+      expect(apretarAtras()).toBe(true)
+      expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.HOME)
+      expect(mockIrAlPasoAnterior).not.toHaveBeenCalled()
+    })
+
+    it('sin pantalla anterior en el stack (arranque en frío por el link) vuelve al Home', () => {
+      ;(useRouter as jest.Mock).mockReturnValue({
+        replace: mockRouterReplace,
+        canGoBack: () => false,
+      })
+      ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(1))
+      render(<RegistroArbitroScreen />)
+
+      expect(apretarAtras()).toBe(true)
+      expect(mockRouterReplace).toHaveBeenCalledWith(RUTAS.HOME)
+    })
+
+    it('al desmontarse deja de escuchar el botón atrás', () => {
+      ;(useRegistroArbitroStore as unknown as jest.Mock).mockReturnValue(mockStore(2))
+      const { unmount } = render(<RegistroArbitroScreen />)
+      unmount()
+      expect(manejadores).toHaveLength(0)
+    })
   })
 })

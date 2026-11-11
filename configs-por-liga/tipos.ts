@@ -22,6 +22,8 @@ export interface LigaConAppPropia {
   adaptiveIconForeground: string
   favicon: string
   apiUrl: string
+  /** Dominio de los Universal Links (iOS) y App Links (Android). Sin dominio, la app no los declara. */
+  dominioDeepLinks?: string
   colorBase: 'verde' | 'negro' | 'azul' | 'rojo'
   ios: {
     supportsTablet: boolean
